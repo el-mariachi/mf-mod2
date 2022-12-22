@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
-import './App.css'
+import { Route, Routes } from 'react-router-dom'
 import ForumPage from './components/ForumPage/ForumPage'
 import ServicePage from './components/ServicePage/ServicePage'
+import './App.css'
+import GameStub from './components/GameStub/GameStub'
 
 function App() {
   useEffect(() => {
@@ -15,10 +17,12 @@ function App() {
     fetchServerData()
   }, [])
   return (
-    <div className="App">
-      <ServicePage />
-      <ForumPage />
-    </div>
+    <Routes>
+      <Route path="/" element={<GameStub />} />
+      <Route path="/404" element={<ServicePage />} />
+      <Route path="/500" element={<ServicePage />} />
+      <Route path="/forum" element={<ForumPage />} />
+    </Routes>
   )
 }
 
