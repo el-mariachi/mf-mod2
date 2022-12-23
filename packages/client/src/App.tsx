@@ -17,12 +17,14 @@ function App() {
     fetchServerData()
   }, [])
   return (
-    <Routes>
-      <Route path="/" element={<GameStub />} />
-      <Route path="/404" element={<ServicePage />} />
-      <Route path="/500" element={<ServicePage />} />
-      <Route path="/forum" element={<ForumPage />} />
-    </Routes>
+    <div className="app">
+      <Routes>
+        <Route path="/" element={<GameStub />} />
+        <Route path="/404" element={<ServicePage />} />
+        <Route path="/500" element={<ServicePage />} />
+        <Route path="/forum" element={<ForumPage />} />
+      </Routes>
+    </div>
   )
 }
 
