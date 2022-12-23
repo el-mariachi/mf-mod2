@@ -1,6 +1,10 @@
 .topic {
   &__container {
     padding: 10px;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f8ff;
+    }
   }
   &__avatar {
     width: 50px;

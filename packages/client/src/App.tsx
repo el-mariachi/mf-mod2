@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import ForumPage from './components/ForumPage/ForumPage'
 import ServicePage from './components/ServicePage/ServicePage'
 import './App.css'
-import GameStub from './components/GameStub/GameStub'
+import GamePage from './components/GamePage/GamePage'
 
 function App() {
   useEffect(() => {
@@ -19,7 +19,7 @@ function App() {
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<GameStub />} />
+        <Route path="/" element={<GamePage />} />
         <Route
           path="/404"
           element={

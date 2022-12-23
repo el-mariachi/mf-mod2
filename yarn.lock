@@ -2771,14 +2771,16 @@
   "resolved" "https://registry.npmjs.org/cli-width/-/cli-width-3.0.0.tgz"
   "version" "3.0.0"
 
-"client@file:C:\\Users\\IbragimovMS\\develop\\mf-mod2\\packages\\client":
+"client@file:C:\\develop\\mf-mod2\\packages\\client":
   "resolved" "file:packages/client"
   "version" "0.0.0"
   dependencies:
+    "bootstrap" "^5.2.3"
     "dotenv" "^16.0.2"
     "eslint-config-prettier" "^8.5.0"
     "prettier" "^2.7.1"
     "react" "^18.2.0"
+    "react-bootstrap" "^2.7.0"
     "react-dom" "^18.2.0"
     "react-router-dom" "^6.6.0"
     "sass" "^1.57.1"
@@ -6959,7 +6961,7 @@
     "parseurl" "~1.3.3"
     "send" "0.18.0"
 
-"server@file:C:\\Users\\IbragimovMS\\develop\\mf-mod2\\packages\\server":
+"server@file:C:\\develop\\mf-mod2\\packages\\server":
   "resolved" "file:packages/server"
   "version" "1.0.0"
   dependencies:
