@@ -1,5 +1,5 @@
-import AddForumTopicForm from '../AddForumTopicForm/AddForumTopicForm'
-import ForumTopicsList from '../ForumTopicsList/ForumTopicsList'
+import AddForumTopicForm from '../../components/AddForumTopicForm/AddForumTopicForm'
+import ForumTopicsList from '../../components/ForumTopicsList/ForumTopicsList'
 import './ForumPage.scss'
 
 function ForumPage() {

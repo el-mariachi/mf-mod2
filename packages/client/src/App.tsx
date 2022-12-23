@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import ForumPage from './components/ForumPage/ForumPage'
-import ServicePage from './components/ServicePage/ServicePage'
+import ForumPage from './pages/ForumPage/ForumPage'
+import ServicePage from './pages/ServicePage/ServicePage'
 import './App.css'
-import GamePage from './components/GamePage/GamePage'
+import GamePage from './pages/GamePage/GamePage'
 
 function App() {
   useEffect(() => {
