@@ -1,0 +1,16 @@
+.topic {
+  &__container {
+    padding: 10px;
+  }
+  &__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  &__data {
+    margin-left: 10px;
+    p {
+      margin: 0;
+    }
+  }
+}

@@ -6,7 +6,7 @@ function ServicePage({ errorCode, errorText }: IServicePageProps) {
   const navigate = useNavigate()
   const goBack = () => navigate(-1)
   return (
-    <section className="d-flex justify-content-center vh-100">
+    <section className="service-page page d-flex justify-content-center vh-100">
       <div className="d-flex flex-column justify-content-center align-items-center">
         <h1>{errorCode}</h1>
         <p>{errorText}</p>

@@ -4,10 +4,10 @@ import './ForumPage.scss'
 
 function ForumPage() {
   return (
-    <div className="wrapper">
+    <section className="forum-page page d-flex flex-column">
       <AddForumTopicForm />
       <ForumTopicsList />
-    </div>
+    </section>
   )
 }
 
