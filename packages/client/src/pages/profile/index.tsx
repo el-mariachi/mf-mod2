@@ -1,27 +1,19 @@
-import React, { useState, useMemo, createRef, FC } from 'react';
-import { Container, Row, Col, Form, Button, Modal } from 'react-bootstrap';
-import { updatePassword, updateAvatar, updateProfile } from '../../services/userController';
+import React, { useState, createRef } from 'react';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { updatePassword, updateProfile } from '../../services/userController';
 import ProfileAvatar from '../../components/ProfileAvatar';
 import ProfileForm from '../../components/ProfileForm';
+import ConfirmPassword from '../../components/ConfirmPassword';
 import './index.css';
 
-const yaResources = 'https://ya-praktikum.tech/api/v2/resources';
-
-const EDIT = 'user-profile__data_edit';
-const READ = 'user-profile__data_read';
-
-
 type ProfileProps = {
-  user: UserDTO | undefined
-}
+  user: UserDTO | undefined;
+};
 
-const Profile = ({user} : ProfileProps) => {
+const Profile = ({ user }: ProfileProps) => {
   const [readOnly, setReadOnly] = useState(true);
-  //const [modalContent, setModalContent] = useState(() => <></>);
-  //const [show, setShow] = useState(false);
-
+  const [modalOptions, setModalOptions] = useState({});
   const refForm = createRef();
-
 
   const saveChanges = async () => {
     const form = refForm.current as HTMLFormElement;
@@ -29,17 +21,24 @@ const Profile = ({user} : ProfileProps) => {
     const newPassword = formData.get('password') as string;
     formData.delete('password');
     if (newPassword) {
-      //const passwords = await confirmNewPassword(newPassword);
-      // await updatePassword(passwords);
+      const promise = new Promise(res => {
+        setModalOptions({ res, newPassword });
+      });
+
+      const passwords = await promise;
+      setModalOptions({});
+      if(passwords) {
+        await updatePassword(passwords);
+      }  
     }
-    await updateProfile(FormData);
+    await updateProfile(formData);
   };
 
   const handleButtonClick = async () => {
     if (!readOnly) {
-      //await saveChanges();
+      await saveChanges();
     }
-    setReadOnly(!readOnly)
+    setReadOnly(!readOnly);
   };
 
   return (
@@ -50,7 +49,7 @@ const Profile = ({user} : ProfileProps) => {
             <Col sm={4} className="px-0">
               <ProfileAvatar avatar={user?.avatar} />
             </Col>
-            <Col sm={8} className='py-4 user-profile__form-wrapper'>
+            <Col sm={8} className="py-4 user-profile__form-wrapper">
               <ProfileForm user={user} readOnly={readOnly} />
 
               <Button variant="dark" onClick={handleButtonClick}>
@@ -60,18 +59,9 @@ const Profile = ({user} : ProfileProps) => {
           </Row>
         </Form>
       </Container>
+      {Object.keys(modalOptions).length !== 0 ? <ConfirmPassword options={modalOptions} /> : null}
     </div>
   );
 };
 
 export default Profile;
-
-/*
-  const confirmNewPassword = async (newPassword: string) => {
-    return new Promise((res, rej) => {
-      setModalContent(ConfirmPasswordView(res, rej, setShow));
-      setShow(true);
-    });
-  };
-
-*/
