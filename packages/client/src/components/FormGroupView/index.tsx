@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 
 type FormGroupViewProps = {
   data: ProfileInputProps,
-  readOnly: boolean,
+  readOnly?: boolean,
   onInputChange: React.ReactEventHandler
 }
 
