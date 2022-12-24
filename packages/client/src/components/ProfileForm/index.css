@@ -1,0 +1,8 @@
+.user-profile__form_read input {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+.user-profile__form_edit input {
+  border-color: #545a5f;
+}
