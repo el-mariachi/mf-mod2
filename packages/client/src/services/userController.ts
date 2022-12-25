@@ -1,34 +1,33 @@
-import userApi from '../api/userApi';
+import userApi from '../api/userApi'
+import { transformUser, transformUserT } from '../utils/transformUser'
+import apiHasError from '../utils/apiHasError';
 
-export async function updateProfile(data: any) {
-  await userApi.updateProfile(data);
+type AvatarFields = 'avatar'
+
+interface AvatarData extends FormData {
+  append(name: AvatarFields, value: Blob, fileName?: string): void
 }
 
-export async function updateAvatar(data: FormData) {
-  // ToDo заменить когда будет готово апи
-  const yaResources = 'https://ya-praktikum.tech/api/v2/resources';
-
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('POST', yaResources);
-
-    xhr.onload = () => {
-      if (xhr.status >= 300) {
-        reject(xhr);
-      } else {
-        resolve(xhr);
-      }
-    };
-    xhr.onabort = reject;
-    xhr.onerror = reject;
-
-    xhr.withCredentials = true;
-    xhr.responseType = 'json';
-    xhr.send(data);
-  });
+export async function updateProfile(data: ProfileDataT): Promise<UserDTO> {
+  const result = await userApi.updateProfile(transformUserT(data as unknown as UserDTO));
+  if (apiHasError(result)) {
+    throw { result };
+  }
+  return transformUser(result as User);
 }
 
-export async function updatePassword(data: any) {
-  await userApi.updatePassword(data);
+export async function updateAvatar(data: AvatarData): Promise<UserDTO> {
+  const result = await userApi.updateAvatar(data);
+  if (apiHasError(result)) {
+    throw { result };
+  }
+  return transformUser(result  as User);
+}
+
+export async function updatePassword(data: PasswordData) {
+  const result = await userApi.updatePassword(data);
+  if (apiHasError(result)) {
+    throw { result };
+  };
+  return;
 }

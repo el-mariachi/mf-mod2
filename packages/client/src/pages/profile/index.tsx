@@ -1,4 +1,4 @@
-import React, { useState, createRef } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { updatePassword, updateProfile } from '../../services/userController';
 import ProfileAvatar from '../../components/ProfileAvatar';
@@ -15,11 +15,17 @@ const Profile = ({ user }: ProfileProps) => {
   const [modalOptions, setModalOptions] = useState({});
   const refForm = createRef();
 
+
+
+  console.log('user', user);
+
   const saveChanges = async () => {
     const form = refForm.current as HTMLFormElement;
-    const formData = new FormData(form);
-    const newPassword = formData.get('password') as string;
-    formData.delete('password');
+
+    const formData = Object.fromEntries(new FormData(form).entries());
+    const { password: newPassword } = formData;
+    delete formData.password;
+
     if (newPassword) {
       const promise = new Promise(res => {
         setModalOptions({ res, newPassword });
@@ -27,11 +33,11 @@ const Profile = ({ user }: ProfileProps) => {
 
       const passwords = await promise;
       setModalOptions({});
-      if(passwords) {
-        await updatePassword(passwords);
-      }  
+      if (passwords !== null) {
+        await updatePassword(passwords as PasswordData);
+      }
     }
-    await updateProfile(formData);
+    await updateProfile(formData as ProfileData);
   };
 
   const handleButtonClick = async () => {
@@ -59,7 +65,9 @@ const Profile = ({ user }: ProfileProps) => {
           </Row>
         </Form>
       </Container>
-      {Object.keys(modalOptions).length !== 0 ? <ConfirmPassword options={modalOptions} /> : null}
+      {Object.keys(modalOptions).length !== 0 ? (
+        <ConfirmPassword options={modalOptions} />
+      ) : null}
     </div>
   );
 };
