@@ -6,30 +6,52 @@ import Col from 'react-bootstrap/Col'
 import { useForm } from 'react-hook-form'
 import '../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './sign_up.scss'
-import { inputData } from './constants'
+import { inputData, defaultValues } from './constants'
 import { MouseEvent, useState } from 'react'
-// import {} from 'react-router-dom'
+// TODO uncomment next line in router context
+//import { useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
-  const [inputs, setInputs] = useState(inputData)
+  type FormData = typeof defaultValues
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm({
+    // TODO decide if we need to reset form at any point
+    // reset,
+  } = useForm<FormData>({
     mode: 'onTouched',
     reValidateMode: 'onSubmit',
+    defaultValues,
   })
 
-  const formSubmit = (data: any) => {
+  const [customErrors, setCustomErrors] = useState(errors)
+
+  const formSubmit = (data: FormData) => {
+    // compare passwords
+    if (data.password2 !== data.password) {
+      setCustomErrors({
+        ...customErrors,
+        password2: {
+          type: 'value',
+          message: 'Пароли не совпадают',
+        },
+      })
+      return
+    }
+    setCustomErrors({})
+    // TODO send validated data to API
     console.log(data)
   }
+  // TODO uncomment next line in router context
+  // const navigate = useNavigate()
 
   const goToLogin = (e: MouseEvent) => {
     e.preventDefault()
-    console.log('nav')
+    // TODO replace console.log with navigate() in router context
+    console.log('navigate to login')
+    // navigate('/login')
   }
 
   return (
@@ -43,7 +65,7 @@ const SignUp = () => {
               </Col>
             </Row>
 
-            {inputs.map((input, index) => (
+            {inputData.map((input, index) => (
               <Form.Group
                 as={Row}
                 className="mb-3"
@@ -54,7 +76,10 @@ const SignUp = () => {
                 <Col sm={9}>
                   <Form.Control
                     type={input.type}
-                    isInvalid={errors[input.name] !== undefined}
+                    isInvalid={
+                      errors[input.name] !== undefined ||
+                      customErrors[input.name] !== undefined
+                    }
                     {...register(input.name, {
                       required: 'Поле должно быть заполнено',
                       pattern: {
@@ -64,7 +89,9 @@ const SignUp = () => {
                     })}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {String(errors[input.name]?.message)}
+                    {errors[input.name]
+                      ? String(errors[input.name]?.message)
+                      : String(customErrors[input.name]?.message)}
                   </Form.Control.Feedback>
                 </Col>
               </Form.Group>
