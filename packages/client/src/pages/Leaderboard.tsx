@@ -1,6 +1,6 @@
 import LeaderboardList from "../components/Leaderboard/List/Lb-List"
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './Leaderboard.scss'
+import 'bootstrap'
+import './Leaderboard.css'
 import { Button } from "react-bootstrap"
 
 function Leaderboard(){
