@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Minecraft';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('minecraft-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Minecraft';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url('minecraft-bold.woff2') format('woff2');
+}
