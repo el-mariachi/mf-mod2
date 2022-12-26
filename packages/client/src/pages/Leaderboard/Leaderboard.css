@@ -1,0 +1,36 @@
+.lb-cont {
+  width: 50%;
+  margin-top: 10%;
+}
+
+.btn-start {
+  display: block;
+  width: 50%;
+  font-size: 1.5rem;
+  height: 4rem;
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.users-list{
+  height: 40vh;
+  padding: 1rem;
+}
+
+.flex-1{
+  flex: 1;
+}
+
+.flex-2{
+  flex: 2;
+}
+
+.lb-avatar{
+  float: right;
+  margin-top: .5rem;
+  margin-right: .5rem;
+  width: 5rem;
+}
+
+
