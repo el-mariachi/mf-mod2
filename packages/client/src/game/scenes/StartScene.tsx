@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { ICanvasProps } from '../../types/CanvasProps'
+import { CanvasProps } from '../../types/CanvasProps'
 
-function StartScene({ width, height }: ICanvasProps) {
+function StartScene({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
     if (canvasRef.current) {
