@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import './App.css'
-import Leaderboard from './pages/Leaderboard'
 
 function App() {
   useEffect(() => {
