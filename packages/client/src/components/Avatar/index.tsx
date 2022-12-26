@@ -1,7 +1,6 @@
 import './index.css';
 
-export default (props: { image: string; className: string }) => {
-  const { image, className } = props;
+export default ({ image, className }: { image: string; className: string }) => {
 
   return (
     <div

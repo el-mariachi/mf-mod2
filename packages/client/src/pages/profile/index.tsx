@@ -15,10 +15,6 @@ const Profile = ({ user }: ProfileProps) => {
   const [modalOptions, setModalOptions] = useState({});
   const refForm = createRef();
 
-
-
-  console.log('user', user);
-
   const saveChanges = async () => {
     const form = refForm.current as HTMLFormElement;
 

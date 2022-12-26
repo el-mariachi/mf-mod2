@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import FormGroupView from '../../components/FormGroupView';
-import { PASSWORD_FILEDS } from './constants';
+import { PASSWORD_FIELDS } from './constants';
 
 type ConfirmPasswordProps = {
   options:
@@ -12,10 +12,9 @@ type ConfirmPasswordProps = {
     | Record<string, never>;
 };
 
-export default ({ options }: ConfirmPasswordProps) => {
-  const { res, newPassword } = options;
+export default ({ options: { res, newPassword } }: ConfirmPasswordProps) => {
   const [passwordData, setPasswordsData] = useState(
-    PASSWORD_FILEDS.map(el => (el.name === 'newPassword' ? ((el.value = newPassword), el) : el))
+    PASSWORD_FIELDS.map(el => (el.name === 'newPassword' ? ((el.value = newPassword), el) : el))
   );
 
   const onInputChange = (event: React.SyntheticEvent<HTMLInputElement>) => {

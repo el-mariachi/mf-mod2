@@ -1,4 +1,4 @@
-export const PASSWORD_FILEDS: ProfileInputProps[] = [
+export const PASSWORD_FIELDS: ProfileInputProps[] = [
   {
     name: 'oldPassword',
     type: 'password',
