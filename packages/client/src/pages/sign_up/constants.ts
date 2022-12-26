@@ -17,7 +17,6 @@ export type InputData = {
   type: string
   placeholder: string
   test: RegExp
-  valid: boolean
 }
 
 const inputData: InputData[] = [
@@ -28,7 +27,6 @@ const inputData: InputData[] = [
     type: 'text',
     placeholder: 'Имя',
     test: /^([A-Z][A-Za-z-]*$)|([А-Я][А-Яа-я-]*$)/,
-    valid: true,
   },
   {
     name: 'second_name',
@@ -37,7 +35,6 @@ const inputData: InputData[] = [
     type: 'text',
     placeholder: 'Фамилия',
     test: /^([A-Z][A-Za-z]*$)|([А-Я][А-Яа-я-]*$)/,
-    valid: true,
   },
   {
     name: 'login',
@@ -46,7 +43,6 @@ const inputData: InputData[] = [
     type: 'text',
     placeholder: 'Логин',
     test: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/,
-    valid: true,
   },
   {
     name: 'email',
@@ -55,7 +51,6 @@ const inputData: InputData[] = [
     type: 'email',
     placeholder: 'Email',
     test: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-    valid: true,
   },
   {
     name: 'phone',
@@ -64,7 +59,6 @@ const inputData: InputData[] = [
     type: 'text',
     placeholder: 'Телефон',
     test: /^\+?\d{10,15}$/i,
-    valid: true,
   },
   {
     name: 'password',
@@ -73,7 +67,6 @@ const inputData: InputData[] = [
     type: 'password',
     placeholder: 'Пароль',
     test: /^(?=.*\d)(?=.*[A-ZА-Я]).{8,40}$/,
-    valid: true,
   },
   {
     name: 'password2',
@@ -82,7 +75,6 @@ const inputData: InputData[] = [
     type: 'password',
     placeholder: 'Повторите пароль',
     test: /^(?=.*\d)(?=.*[A-ZА-Я]).{8,40}$/,
-    valid: true,
   },
 ]
 
