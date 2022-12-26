@@ -13,24 +13,22 @@
   margin-right: auto;
 }
 
-.users-list{
+.users-list {
   height: 40vh;
   padding: 1rem;
 }
 
-.flex-1{
+.flex-1 {
   flex: 1;
 }
 
-.flex-2{
+.flex-2 {
   flex: 2;
 }
 
-.lb-avatar{
+.lb-avatar {
   float: right;
-  margin-top: .5rem;
-  margin-right: .5rem;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
   width: 5rem;
 }
-
-
