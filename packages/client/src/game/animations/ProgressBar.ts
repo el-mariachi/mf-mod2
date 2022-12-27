@@ -21,14 +21,24 @@ export class ProgressBar {
       this._ctx.strokeRect(this._x, this._y, this._width, this._height)
     }
   }
-  private _drawRect(x: number, y: number, width: number, height: number) {
+  private _drawRect(x: number, y: number) {
     if (this._ctx) {
       this._ctx.fillStyle = this._color
-      this._ctx.fillRect(x, y, height, width)
+      this._ctx.fillRect(x, y, this._height, this._height)
     }
+  }
+  private _showAnimation() {
+    let delta = 0
+    const id = setInterval(() => {
+      this._drawRect(this._x + delta, this._y)
+      delta += this._height
+      if (delta >= this._width) {
+        clearInterval(id)
+      }
+    }, 1000)
   }
   draw() {
     this._drawContainer()
-    this._drawRect(this._x, this._y, this._height, this._height)
+    this._showAnimation()
   }
 }

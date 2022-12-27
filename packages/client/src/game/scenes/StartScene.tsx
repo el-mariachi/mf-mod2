@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { CanvasProps } from '../../types/CanvasProps'
-import '../../assets/fonts/minecraft/minecraft.css'
 import { ProgressBar } from '../animations/ProgressBar'
 
 function StartScene({ width, height }: CanvasProps) {
@@ -26,19 +25,19 @@ function StartScene({ width, height }: CanvasProps) {
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
-        ctx.font = '48px Minecraft'
+        ctx.font = '700 48px Minecraft'
         ctx.fillText('One Bit', centerWidth, centerHeight)
 
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
-        ctx.font = '40px Minecraft'
+        ctx.font = ' 700 40px Minecraft'
         ctx.fillText('Journey', centerWidth, centerHeight + 45)
 
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
-        ctx.font = '24px Minecraft'
+        ctx.font = ' 400 24px Minecraft'
         ctx.fillText('loading...', centerWidth, centerHeight + 115)
         progressBar.draw()
       }
