@@ -182,7 +182,7 @@ export default function AuthPage(props: AuthPageProps) {
   }
 
   return (
-    <div className="tsFormBg w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
+    <main className="tsFormBg w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
       <Container className="tsFormBox mx-auto">
         <div className="bg-light rounded-4 p-5">
           <Form
@@ -194,6 +194,6 @@ export default function AuthPage(props: AuthPageProps) {
           </Form>
         </div>
       </Container>
-    </div>
+    </main>
   )
 }
