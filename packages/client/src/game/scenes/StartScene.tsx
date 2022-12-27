@@ -1,11 +1,16 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CanvasProps } from '../../types/CanvasProps'
 import { ProgressBar } from '../animations/ProgressBar'
-
 function StartScene({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = width / 2
   const centerHeight = height / 2
+  const [fontLoaded, setFontLoaded] = useState(false)
+  document.fonts.ready.then(res => {
+    if (res.status === 'loaded') {
+      setFontLoaded(true)
+    }
+  })
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current
@@ -21,19 +26,16 @@ function StartScene({ width, height }: CanvasProps) {
       if (ctx) {
         ctx.fillStyle = 'black'
         ctx.fillRect(0, 0, width, height)
-
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = '700 48px Minecraft'
         ctx.fillText('One Bit', centerWidth, centerHeight)
-
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = ' 700 40px Minecraft'
         ctx.fillText('Journey', centerWidth, centerHeight + 45)
-
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
@@ -42,7 +44,8 @@ function StartScene({ width, height }: CanvasProps) {
         progressBar.draw()
       }
     }
-  }, [])
+  }, [fontLoaded])
+
   return <canvas ref={canvasRef} width={width} height={height}></canvas>
 }
 
