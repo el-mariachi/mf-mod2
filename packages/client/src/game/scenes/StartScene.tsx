@@ -4,29 +4,39 @@ import '../../assets/fonts/minecraft/minecraft.css'
 
 function StartScene({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const centerWidth = width / 2
+  const centerHeight = height / 2
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        ctx.rect(0, 0, width, height)
         ctx.fillStyle = 'black'
-        ctx.fill()
+        ctx.fillRect(0, 0, width, height)
 
+        ctx.textBaseline = 'middle'
+        ctx.fillStyle = 'white'
+        ctx.textAlign = 'center'
         ctx.font = '48px Minecraft'
+        ctx.fillText('One Bit', centerWidth, centerHeight)
+
+        ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
-        ctx.fillText('One Bit', width / 2, height / 2)
-
         ctx.font = '40px Minecraft'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.fillText('Journey', width / 2, height / 2 + 45)
+        ctx.fillText('Journey', centerWidth, centerHeight + 45)
 
-        ctx.font = '24px Minecraft'
+        ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
-        ctx.fillText('loading...', width / 2, height / 2 + 145)
+        ctx.font = '24px Minecraft'
+        ctx.fillText('loading...', centerWidth, centerHeight + 115)
+
+        ctx.strokeStyle = 'white'
+        ctx.strokeRect(centerWidth - 80, centerHeight + 140, 165, 15)
+
+        ctx.fillStyle = 'white'
+        ctx.fillRect(centerWidth - 80, centerHeight + 140, 15, 15)
       }
     }
   }, [])
