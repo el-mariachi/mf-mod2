@@ -5,7 +5,7 @@ const defaultValues = {
   email: '',
   phone: '',
   password: '',
-  password2: '',
+  confirmPassword: '',
 }
 
 export type FieldName = keyof typeof defaultValues
@@ -69,7 +69,7 @@ const inputData: InputData[] = [
     test: /^(?=.*\d)(?=.*[A-ZА-Я]).{8,40}$/,
   },
   {
-    name: 'password2',
+    name: 'confirmPassword',
     label: 'Повторите пароль',
     message: 'Пароль не соответствует требованиям',
     type: 'password',

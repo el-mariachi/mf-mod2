@@ -4,10 +4,9 @@ import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useForm } from 'react-hook-form'
-import '../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './sign_up.scss'
 import { inputData, defaultValues } from './constants'
-import { MouseEvent, useState } from 'react'
+import { MouseEvent } from 'react'
 // TODO uncomment next line in router context
 //import { useNavigate } from 'react-router-dom'
 
@@ -17,30 +16,25 @@ const SignUp = () => {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
-    // TODO decide if we need to reset form at any point
-    // reset,
   } = useForm<FormData>({
     mode: 'onTouched',
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues,
   })
 
-  const [customErrors, setCustomErrors] = useState(errors)
-
   const formSubmit = (data: FormData) => {
     // compare passwords
-    if (data.password2 !== data.password) {
-      setCustomErrors({
-        ...customErrors,
-        password2: {
-          type: 'value',
-          message: 'Пароли не совпадают',
-        },
+    if (data.confirmPassword !== data.password) {
+      setError('confirmPassword', {
+        type: 'custom',
+        message: 'Пароли не совпадают',
       })
       return
     }
-    setCustomErrors({})
+    clearErrors()
     // TODO send validated data to API
     console.log(data)
   }
@@ -76,10 +70,7 @@ const SignUp = () => {
                 <Col sm={9}>
                   <Form.Control
                     type={input.type}
-                    isInvalid={
-                      errors[input.name] !== undefined ||
-                      customErrors[input.name] !== undefined
-                    }
+                    isInvalid={errors[input.name] !== undefined}
                     {...register(input.name, {
                       required: 'Поле должно быть заполнено',
                       pattern: {
@@ -89,9 +80,7 @@ const SignUp = () => {
                     })}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors[input.name]
-                      ? String(errors[input.name]?.message)
-                      : String(customErrors[input.name]?.message)}
+                    {String(errors[input.name]?.message)}
                   </Form.Control.Feedback>
                 </Col>
               </Form.Group>
