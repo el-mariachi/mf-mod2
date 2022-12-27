@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { CanvasProps } from '../../types/CanvasProps'
 import '../../assets/fonts/minecraft/minecraft.css'
+import { ProgressBar } from '../animations/ProgressBar'
 
 function StartScene({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -10,6 +11,14 @@ function StartScene({ width, height }: CanvasProps) {
     if (canvasRef.current) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
+      const progressBar: ProgressBar = new ProgressBar({
+        color: 'white',
+        ctx,
+        x: centerWidth - 80,
+        y: centerHeight + 140,
+        width: 165,
+        heigth: 15,
+      })
       if (ctx) {
         ctx.fillStyle = 'black'
         ctx.fillRect(0, 0, width, height)
@@ -31,12 +40,7 @@ function StartScene({ width, height }: CanvasProps) {
         ctx.textAlign = 'center'
         ctx.font = '24px Minecraft'
         ctx.fillText('loading...', centerWidth, centerHeight + 115)
-
-        ctx.strokeStyle = 'white'
-        ctx.strokeRect(centerWidth - 80, centerHeight + 140, 165, 15)
-
-        ctx.fillStyle = 'white'
-        ctx.fillRect(centerWidth - 80, centerHeight + 140, 15, 15)
+        progressBar.draw()
       }
     }
   }, [])
