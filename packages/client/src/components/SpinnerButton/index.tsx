@@ -2,17 +2,22 @@ import { FC, ButtonHTMLAttributes } from 'react'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 
-type SpinnerButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type SpinnerButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading: boolean
   spinnerText?: string
 }
-const SpinnerButton: FC<SpinnerButtonProps> = ({ children, ...props }) => {
-  if (!props.spinnerText) {
-    props.spinnerText = 'Секундочку'
+const SpinnerButton: FC<SpinnerButtonProps> = ({
+  children,
+  spinnerText,
+  loading,
+  ...props
+}) => {
+  if (!spinnerText) {
+    spinnerText = 'Секундочку'
   }
   return (
-    <Button type="submit" disabled={props.loading}>
-      {props.loading ? (
+    <Button type="submit" disabled={loading} {...props}>
+      {loading ? (
         <>
           <Spinner
             as="span"
@@ -21,7 +26,7 @@ const SpinnerButton: FC<SpinnerButtonProps> = ({ children, ...props }) => {
             role="status"
             aria-hidden="true"
           />
-          {` ${props.spinnerText}...`}
+          {` ${spinnerText}...`}
         </>
       ) : (
         children
