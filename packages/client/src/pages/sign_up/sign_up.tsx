@@ -4,11 +4,12 @@ import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useForm } from 'react-hook-form'
-import './sign_up.scss'
 import { inputData, defaultValues } from './constants'
-import { MouseEvent } from 'react'
-// TODO uncomment next line in router context
-//import { useNavigate } from 'react-router-dom'
+import { MouseEvent, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { signUpUser } from '../../services/authController'
+import { formUserErrorHandler } from '../../utils/errors_handling'
+import './sign_up.scss'
 
 const SignUp = () => {
   type FormData = typeof defaultValues
@@ -24,6 +25,7 @@ const SignUp = () => {
     reValidateMode: 'onChange',
     defaultValues,
   })
+  const [submitError, setSubmitError] = useState('')
 
   const formSubmit = (data: FormData) => {
     // compare passwords
@@ -35,18 +37,13 @@ const SignUp = () => {
       return
     }
     clearErrors()
-    // TODO send validated data to API
-    console.log(data)
-  }
-  // TODO uncomment next line in router context
-  // const navigate = useNavigate()
 
-  const goToLogin = (e: MouseEvent) => {
-    e.preventDefault()
-    // TODO replace console.log with navigate() in router context
-    console.log('navigate to login')
-    // navigate('/login')
+    signUpUser(data)
+      // TODO it`s temporary, use connected-react-router
+      .then(() => navigate('/'))
+      .catch(error => formUserErrorHandler(error, setSubmitError))
   }
+  const navigate = useNavigate()
 
   return (
     <div className="sign_up w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
@@ -58,6 +55,12 @@ const SignUp = () => {
                 <h1 className="h3">Регистрация</h1>
               </Col>
             </Row>
+
+            {submitError ? (
+              <p className="text-danger mb-3">{submitError}</p>
+            ) : (
+              ''
+            )}
 
             {inputData.map((input, index) => (
               <Form.Group
@@ -89,9 +92,11 @@ const SignUp = () => {
             <Form.Group as={Row}>
               <Col sm={{ span: 9, offset: 3 }}>
                 <Button type="submit">Создать аккаунт</Button>
-                <Button as="a" variant="link" onClick={goToLogin}>
-                  Вход
-                </Button>
+                <Link to="/sign-in">
+                  <Button as="span" variant="link">
+                    Войти
+                  </Button>
+                </Link>
               </Col>
             </Form.Group>
           </Form>
