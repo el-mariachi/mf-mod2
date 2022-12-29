@@ -30,8 +30,11 @@ declare global {
   }
 
   export type APIError = { reason: string }
-  
 
+  export type AuthData = {
+    login?: string
+    password?: string
+  }
   export type PasswordData = {
     oldPassword: string
     newPassword: string
@@ -132,6 +135,20 @@ declare global {
   export type PasswordData = {
     oldPassword: string
     newPassword: string
+  }
+
+  export type FileData = {
+    id: number
+    user_id: number
+    path: string
+    filename: string
+    content_type: string
+    content_size: number
+    upload_date: string
+  }
+
+  export type PlainObject<T = unknown> = {
+    [key in string]: T
   }
 }
 
