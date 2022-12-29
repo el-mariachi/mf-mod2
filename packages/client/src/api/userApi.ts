@@ -1,16 +1,13 @@
-import { httpXML } from '../utils/http'
-
-const API_URL = 'https://ya-praktikum.tech/api/v2'
+import { muteRes } from '../utils'
+import { restUsersApi } from './restApi'
 
 type ProfileData = Omit<User, 'id' | 'avatar'>
 
-const updateProfile = async (data: ProfileData): Promise<User | APIError> =>
-  httpXML.put(`${API_URL}/user/profile`, { data }) as Promise<User | APIError>
+export const updProfile = (data: ProfileData) =>
+  restUsersApi.put<User>('/profile', data)
+export const updAvatar = (data: FormData) =>
+  restUsersApi.put<User>('/profile/avatar', data)
+export const updPassword = (data: PasswordData) =>
+  restUsersApi.put<User>('/password', data).then(muteRes)
 
-const updateAvatar = async (data: FormData): Promise<User| APIError> =>
-  httpXML.put(`${API_URL}/user/profile/avatar`, { data }) as Promise<User | APIError>
-
-const updatePassword = async (data: PasswordData): Promise<unknown | APIError> =>
-  httpXML.put(`${API_URL}/user/password`, { data }) as unknown | APIError
-
-export default { updateProfile, updateAvatar, updatePassword }
+export default { updProfile, updAvatar, updPassword }
