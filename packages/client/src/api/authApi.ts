@@ -1,8 +1,11 @@
-import { httpXML } from '../utils/http';
+import { muteRes } from '../utils'
+import { restAuthApi } from './restApi'
 
-const API_URL = 'https://ya-praktikum.tech/api/v2';
+export const signUp = (data: SignupData) =>
+  restAuthApi.post<User>('/sign-up', data)
+export const signIn = (data: SigninData) =>
+  restAuthApi.post('/sign-in', data).then(muteRes)
+export const getUser = () => restAuthApi.get<User>('/user')
+export const logout = () => restAuthApi.post('/logout').then(muteRes)
 
-const getUser = async (): Promise<User | APIError> =>
-  httpXML.get(`${API_URL}/auth/user`) as Promise<User | APIError>;
-
-export default { getUser };
+export default { signUp, signIn, getUser, logout }

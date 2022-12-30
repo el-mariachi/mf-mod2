@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
+import { defineUser } from '../../services/authController'
 import AuthPage from '../../pages/AuthPage'
 import ForumPage from '../../pages/ForumPage/ForumPage'
 import GamePage from '../../pages/GamePage/GamePage'
@@ -10,22 +11,22 @@ import SignUp from '../../pages/sign_up'
 import './App.scss'
 
 function App() {
-  // useEffect(() => {
-  //   const fetchServerData = async () => {
-  //     const url = `http://localhost:${__SERVER_PORT__}`
-  //     const response = await fetch(url)
-  //     const data = await response.json()
-  //     console.log(data)
-  //   }
-
-  //   fetchServerData()
-  // }, [])
+  const navigate = useNavigate()
+  useEffect(() => {
+    defineUser()
+      // TODO it`s temporary, use connected-react-router
+      .then(() => {
+        if (['/sign-in', '/sign-up'].includes(location.pathname)) {
+          navigate('/')
+        }
+      })
+  }, [])
   return (
     <div className="app">
       <Routes>
         <Route path="/" element={<GamePage />} />
-        <Route path="sign-in" element={<SignUp />} />
-        <Route path="sign-up" element={<AuthPage />} />
+        <Route path="sign-up" element={<SignUp />} />
+        <Route path="sign-in" element={<AuthPage />} />
         <Route path="leaderboard" element={<Leaderboard />} />
         <Route
           path="profile"

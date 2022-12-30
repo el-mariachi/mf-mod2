@@ -5,14 +5,12 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SpinnerButton from '../../components/SpinnerButton'
-import { getFormDataObject } from './helper'
-import '../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import { Link, useNavigate } from 'react-router-dom'
+import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
+import { signInUser } from '../../services/authController'
+import { getFormDataOf } from '../../utils'
 import './style.css'
 
-type AuthData = {
-  login?: string
-  password?: string
-}
 export type AuthPageProps = {
   signUpPageUrl?: string
 }
@@ -21,54 +19,73 @@ export default function AuthPage(props: AuthPageProps) {
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
   const [validated, setValidated] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [data, setData] = useState({})
+  const navigate = useNavigate()
+  const authData = data as AuthData
   const isAuthMode = 'auth' == mode
   const refForm = createRef()
 
   let { signUpPageUrl } = props
   if (!signUpPageUrl) {
-    signUpPageUrl = '/sign_up'
+    signUpPageUrl = '/sign-up'
   }
 
   const toggleMode = () => {
     setMode(isAuthMode ? 'recover' : 'auth')
+    setSubmitError('')
     setValidated(false)
   }
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const isValid = e.currentTarget.checkValidity()
-    const formData = getFormDataObject(refForm.current as HTMLFormElement)
+    const data = getFormDataOf<SigninData>(refForm.current as HTMLFormElement)
 
-    setData(formData)
+    setData(data)
     setValidated(true)
 
     if (isValid) {
       setLoading(true)
       setReadOnly(true)
 
-      // TODO it`s mock, need api: TS-68
-      new Promise(resolve => setTimeout(resolve, 3000)).finally(() => {
-        setLoading(false)
-        setReadOnly(false)
-      })
+      if (isAuthMode) {
+        signInUser(data)
+          // TODO it`s temporary, use connected-react-router
+          .then(() => navigate('/'))
+          .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
+          .finally(() => {
+            setLoading(false)
+            setReadOnly(false)
+            setValidated(false)
+          })
+      }
+      // TODO it`s mock, need restore password api
+      else
+        new Promise(resolve => setTimeout(resolve, 2000)).finally(() => {
+          setSubmitError('Функционал не готов :(')
+          setLoading(false)
+          setReadOnly(false)
+          setValidated(false)
+        })
     }
   }
 
-  const authData = data as AuthData
   const AuthFormControl = ({
+    label,
     name,
     type = 'text',
     value,
   }: {
+    label: string
     name: string
     type?: string
     value?: string
   }) => {
     return (
-      <Form.Group as={Row} className="mb-3" controlId="authFormLogin">
+      <Form.Group as={Row} className="mb-3" controlId={`authForm-${name}`}>
         <Form.Label column sm="3">
-          Логин:
+          {label}
         </Form.Label>
         <Col sm={9}>
           <Form.Control
@@ -85,34 +102,17 @@ export default function AuthPage(props: AuthPageProps) {
       </Form.Group>
     )
   }
-  // const LoginField = () =>
-  // {
-  //   return <Form.Group as={Row} className="mb-3" controlId="authFormLogin">
-  //     <Form.Label column sm="3">
-  //       Логин:
-  //     </Form.Label>
-  //     <Col sm={9}>
-  //       <Form.Control type="text" name="login" defaultValue={authData?.login} readOnly required />
-  //       <Form.Control.Feedback type="invalid">
-  //         Поле не должно быть пустым
-  //       </Form.Control.Feedback>
-  //     </Col>
-  //   </Form.Group>
-  // }
-  // const PasswordField = () =>
-  // {
-  //   return <Form.Group as={Row} className="mb-3" controlId="authFormPassword">
-  //     <Form.Label column sm="3">
-  //       Пароль:
-  //     </Form.Label>
-  //     <Col sm={9}>
-  //       <Form.Control type="password" name="password" defaultValue={authData?.password} readOnly required />
-  //       <Form.Control.Feedback type="invalid">
-  //         Поле не должно быть пустым
-  //       </Form.Control.Feedback>
-  //     </Col>
-  //   </Form.Group>
-  // }
+  const LoginControl = () => (
+    <AuthFormControl label="Логин" name="login" value={authData?.login} />
+  )
+  const PasswordControl = () => (
+    <AuthFormControl
+      label="Пароль"
+      name="password"
+      type="password"
+      value={authData?.password}
+    />
+  )
   const ButtonsBox = ({
     submitBtnTxt,
     toggleBtnTxt,
@@ -124,9 +124,9 @@ export default function AuthPage(props: AuthPageProps) {
       <>
         <Form.Group as={Row} className="mb-3">
           <Col sm={{ span: 9, offset: 3 }}>
-            <SpinnerButton loading={loading} className="mb-1">
+            <SpinnerButton loading={loading} className="mb-1 me-2">
               {submitBtnTxt}
-            </SpinnerButton>{' '}
+            </SpinnerButton>
             <Button
               onClick={toggleMode}
               variant="outline-primary"
@@ -137,9 +137,7 @@ export default function AuthPage(props: AuthPageProps) {
         </Form.Group>
         <Form.Group as={Row}>
           <Col sm={{ span: 9, offset: 3 }}>
-            <Button href={signUpPageUrl} variant="link">
-              Регистрация
-            </Button>
+            <Link to={signUpPageUrl as string}>Регистрация</Link>
           </Col>
         </Form.Group>
       </>
@@ -153,8 +151,9 @@ export default function AuthPage(props: AuthPageProps) {
             <h1 className="h3">Авторизация</h1>
           </Col>
         </Row>
-        <AuthFormControl name="login" value={authData?.login} />
-        <AuthFormControl name="password" value={authData?.password} />
+        {submitError ? <p className="text-danger mb-4">{submitError}</p> : ''}
+        <LoginControl />
+        <PasswordControl />
         <ButtonsBox submitBtnTxt="Войти" toggleBtnTxt="Не помню пароль" />
       </>
     )
@@ -167,12 +166,13 @@ export default function AuthPage(props: AuthPageProps) {
             <h1 className="h3">Восстановление пароля</h1>
           </Col>
         </Row>
+        {submitError ? <p className="text-danger mb-4">{submitError}</p> : ''}
         <p className="text-muted fs-6 mb-4">
           {
             'На указанный при регистрации e-mail придет письмо с новым паролем для входа.'
           }
         </p>
-        <AuthFormControl name="login" value={authData?.login} />
+        <LoginControl />
         <ButtonsBox
           submitBtnTxt="Восстановить"
           toggleBtnTxt="Вспомнил пароль"
@@ -180,7 +180,6 @@ export default function AuthPage(props: AuthPageProps) {
       </>
     )
   }
-
   return (
     <main className="tsFormBg w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
       <Container className="tsFormBox mx-auto">
