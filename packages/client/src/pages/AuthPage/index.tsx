@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SpinnerButton from '../../components/SpinnerButton'
 import { Link, useNavigate } from 'react-router-dom'
-import { formUserErrorHandler } from '../../utils/errors_handling'
+import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import { signInUser } from '../../services/authController'
 import { getFormDataOf } from '../../utils'
 import './style.css'
@@ -53,7 +53,7 @@ export default function AuthPage(props: AuthPageProps) {
         signInUser(data)
           // TODO it`s temporary, use connected-react-router
           .then(() => navigate('/'))
-          .catch(error => formUserErrorHandler(error, setSubmitError))
+          .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
           .finally(() => {
             setLoading(false)
             setReadOnly(false)

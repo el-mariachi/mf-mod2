@@ -5,10 +5,10 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useForm } from 'react-hook-form'
 import { inputData, defaultValues } from './constants'
-import { MouseEvent, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signUpUser } from '../../services/authController'
-import { formUserErrorHandler } from '../../utils/errors_handling'
+import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import './sign_up.scss'
 
 const SignUp = () => {
@@ -41,7 +41,7 @@ const SignUp = () => {
     signUpUser(data)
       // TODO it`s temporary, use connected-react-router
       .then(() => navigate('/'))
-      .catch(error => formUserErrorHandler(error, setSubmitError))
+      .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
   }
   const navigate = useNavigate()
 

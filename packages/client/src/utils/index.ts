@@ -1,5 +1,5 @@
 export function getFormDataOf<T = PlainObject>(form: HTMLFormElement) {
-  return Object.fromEntries(new FormData(form).entries()) as T
+  return Object.fromEntries(new FormData(form).entries()) as unknown as T
 }
 export function redirect2(path = '/', except: string[] = []) {
   if (path != location.pathname && !except.includes(location.pathname)) {

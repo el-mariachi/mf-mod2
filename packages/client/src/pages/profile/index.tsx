@@ -1,6 +1,6 @@
 import { useState, createRef } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
-import { formUserErrorHandler } from '../../utils/errors_handling'
+import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import { updatePassword, updateProfile } from '../../services/userController'
 import ProfileAvatar from '../../components/ProfileAvatar'
 import ProfileForm from '../../components/ProfileForm'
@@ -37,7 +37,7 @@ const Profile = ({ user }: ProfileProps) => {
       }
     }
     await updateProfile(formData)
-      .catch(error => formUserErrorHandler(error, setSubmitError))
+      .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
   }
 
   const handleButtonClick = async () => {
@@ -50,7 +50,7 @@ const Profile = ({ user }: ProfileProps) => {
   return (
     <div className="user-profile">
       <Container fluid="sm">
-        <Form className="user-profile__form mt-5" ref={refForm as any}>
+        <Form className="user-profile__form mt-5" ref={refForm as React.RefObject<HTMLFormElement>}>
           <Row>
             <Col sm={4} className="px-0">
               <ProfileAvatar avatar={user?.avatar} />
