@@ -12,7 +12,8 @@ import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import './sign_up.scss'
 
 const SignUp = () => {
-  type FormData = typeof defaultValues
+  type SignUpFormData = typeof defaultValues
+  const navigate = useNavigate()
 
   const {
     register,
@@ -20,14 +21,14 @@ const SignUp = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<SignUpFormData>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues,
   })
   const [submitError, setSubmitError] = useState('')
 
-  const formSubmit = (data: FormData) => {
+  const formSubmit = (data: SignUpFormData) => {
     // compare passwords
     if (data.confirmPassword !== data.password) {
       setError('confirmPassword', {
@@ -41,9 +42,8 @@ const SignUp = () => {
     signUpUser(data)
       // TODO it`s temporary, use connected-react-router
       .then(() => navigate('/'))
-      .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
+      .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
   }
-  const navigate = useNavigate()
 
   return (
     <div className="sign_up w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
@@ -68,7 +68,7 @@ const SignUp = () => {
                 className="mb-3"
                 controlId={`signUp-${index}`}>
                 <Form.Label column sm="3">
-                  {input.label}:
+                  {input.label}
                 </Form.Label>
                 <Col sm={9}>
                   <Form.Control

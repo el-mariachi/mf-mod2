@@ -1,30 +1,40 @@
-import React, { useState, createRef } from 'react'
+import { useState } from 'react'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SpinnerButton from '../../components/SpinnerButton'
+import { useForm } from 'react-hook-form'
+import { signInInputData, defaultValues } from './constants'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import { signInUser } from '../../services/authController'
-import { getFormDataOf } from '../../utils'
 import './style.css'
 
 export type AuthPageProps = {
   signUpPageUrl?: string
 }
+type SignInFormData = typeof defaultValues
+
 export default function AuthPage(props: AuthPageProps) {
   const [mode, setMode] = useState('auth')
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
   const [validated, setValidated] = useState(false)
   const [submitError, setSubmitError] = useState('')
-  const [data, setData] = useState({})
   const navigate = useNavigate()
-  const authData = data as AuthData
   const isAuthMode = 'auth' == mode
-  const refForm = createRef()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
+    defaultValues,
+  })
 
   let { signUpPageUrl } = props
   if (!signUpPageUrl) {
@@ -36,83 +46,61 @@ export default function AuthPage(props: AuthPageProps) {
     setSubmitError('')
     setValidated(false)
   }
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
 
-    const isValid = e.currentTarget.checkValidity()
-    const data = getFormDataOf<SigninData>(refForm.current as HTMLFormElement)
-
-    setData(data)
+  const formSubmit = (data: SignInFormData) => {
     setValidated(true)
+    setLoading(true)
+    setReadOnly(true)
 
-    if (isValid) {
-      setLoading(true)
-      setReadOnly(true)
-
-      if (isAuthMode) {
-        signInUser(data)
-          // TODO it`s temporary, use connected-react-router
-          .then(() => navigate('/'))
-          .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
-          .finally(() => {
-            setLoading(false)
-            setReadOnly(false)
-            setValidated(false)
-          })
-      }
-      // TODO it`s mock, need restore password api
-      else
-        new Promise(resolve => setTimeout(resolve, 2000)).finally(() => {
-          setSubmitError('Функционал не готов :(')
+    if (isAuthMode) {
+      signInUser(data)
+        // TODO it`s temporary, use connected-react-router
+        .then(() => navigate('/'))
+        .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
+        .finally(() => {
           setLoading(false)
           setReadOnly(false)
           setValidated(false)
         })
     }
+    // TODO it`s mock, need restore password api
+    else
+      new Promise(resolve => setTimeout(resolve, 2000)).finally(() => {
+        setSubmitError('Функционал не готов :(')
+        setLoading(false)
+        setReadOnly(false)
+        setValidated(false)
+      })
   }
 
-  const AuthFormControl = ({
-    label,
-    name,
-    type = 'text',
-    value,
-  }: {
-    label: string
-    name: string
-    type?: string
-    value?: string
-  }) => {
-    return (
-      <Form.Group as={Row} className="mb-3" controlId={`authForm-${name}`}>
-        <Form.Label column sm="3">
-          {label}
-        </Form.Label>
-        <Col sm={9}>
-          <Form.Control
-            type={type}
-            name={name}
-            defaultValue={value}
-            readOnly={readOnly}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Поле не должно быть пустым
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Group>
-    )
-  }
-  const LoginControl = () => (
-    <AuthFormControl label="Логин" name="login" value={authData?.login} />
-  )
-  const PasswordControl = () => (
-    <AuthFormControl
-      label="Пароль"
-      name="password"
-      type="password"
-      value={authData?.password}
-    />
-  )
+  const formControls = signInInputData.map(controlProps => (
+    <Form.Group
+      as={Row}
+      className="mb-3"
+      controlId={`authForm-${controlProps.name}`}>
+      <Form.Label column sm="3">
+        {controlProps.label}
+      </Form.Label>
+      <Col sm={9}>
+        <Form.Control
+          type={controlProps.type}
+          isInvalid={errors[controlProps.name] !== undefined}
+          {...register(controlProps.name, {
+            required: 'Поле должно быть заполнено',
+            pattern: {
+              value: controlProps.test,
+              message: controlProps.message,
+            },
+          })}
+          readOnly={readOnly}
+        />
+        <Form.Control.Feedback type="invalid">
+          {String(errors[controlProps.name]?.message)}
+        </Form.Control.Feedback>
+      </Col>
+    </Form.Group>
+  ))
+
   const ButtonsBox = ({
     submitBtnTxt,
     toggleBtnTxt,
@@ -143,53 +131,54 @@ export default function AuthPage(props: AuthPageProps) {
       </>
     )
   }
-  const AuthModeAuthForm = () => {
-    return (
-      <>
-        <Row className="mb-4">
-          <Col sm={{ span: 9, offset: 3 }}>
-            <h1 className="h3">Авторизация</h1>
-          </Col>
-        </Row>
-        {submitError ? <p className="text-danger mb-4">{submitError}</p> : ''}
-        <LoginControl />
-        <PasswordControl />
-        <ButtonsBox submitBtnTxt="Войти" toggleBtnTxt="Не помню пароль" />
-      </>
-    )
-  }
-  const RecoverModeAuthForm = () => {
-    return (
-      <>
-        <Row className="mb-2">
-          <Col>
-            <h1 className="h3">Восстановление пароля</h1>
-          </Col>
-        </Row>
-        {submitError ? <p className="text-danger mb-4">{submitError}</p> : ''}
-        <p className="text-muted fs-6 mb-4">
-          {
-            'На указанный при регистрации e-mail придет письмо с новым паролем для входа.'
-          }
-        </p>
-        <LoginControl />
-        <ButtonsBox
-          submitBtnTxt="Восстановить"
-          toggleBtnTxt="Вспомнил пароль"
-        />
-      </>
-    )
-  }
+
   return (
     <main className="tsFormBg w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
       <Container className="tsFormBox mx-auto">
         <div className="bg-light rounded-4 p-5">
-          <Form
-            ref={refForm as React.RefObject<HTMLFormElement>}
-            noValidate
-            validated={validated}
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
-            {isAuthMode ? <AuthModeAuthForm /> : <RecoverModeAuthForm />}
+          <Form validated={validated} onSubmit={handleSubmit(formSubmit)}>
+            {isAuthMode ? (
+              <>
+                <Row className="mb-4">
+                  <Col sm={{ span: 9, offset: 3 }}>
+                    <h1 className="h3">Авторизация</h1>
+                  </Col>
+                </Row>
+                {submitError ? (
+                  <p className="text-danger mb-4">{submitError}</p>
+                ) : (
+                  ''
+                )}
+                {formControls}
+                <ButtonsBox
+                  submitBtnTxt="Войти"
+                  toggleBtnTxt="Не помню пароль"
+                />
+              </>
+            ) : (
+              <>
+                <Row className="mb-2">
+                  <Col>
+                    <h1 className="h3">Восстановление пароля</h1>
+                  </Col>
+                </Row>
+                {submitError ? (
+                  <p className="text-danger mb-4">{submitError}</p>
+                ) : (
+                  ''
+                )}
+                <p className="text-muted fs-6 mb-4">
+                  {
+                    'На указанный при регистрации e-mail придет письмо с новым паролем для входа.'
+                  }
+                </p>
+                {formControls[0]}
+                <ButtonsBox
+                  submitBtnTxt="Восстановить"
+                  toggleBtnTxt="Вспомнил пароль"
+                />
+              </>
+            )}
           </Form>
         </div>
       </Container>
