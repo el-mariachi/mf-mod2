@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import FormControl from '../../components/FormControl'
 import { useForm } from 'react-hook-form'
 import { inputData, defaultValues } from './constants'
 import { useState } from 'react'
@@ -45,6 +46,15 @@ const SignUp = () => {
       .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
   }
 
+  const formControls = inputData.map(controlProps => (
+    <FormControl
+      formName="signUpForm"
+      register={register}
+      errors={errors}
+      controlProps={controlProps}
+    />
+  ))
+
   return (
     <div className="sign_up w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
       <Container className="sign_up-form mx-auto">
@@ -62,32 +72,7 @@ const SignUp = () => {
               ''
             )}
 
-            {inputData.map((input, index) => (
-              <Form.Group
-                as={Row}
-                className="mb-3"
-                controlId={`signUp-${index}`}>
-                <Form.Label column sm="3">
-                  {input.label}
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    type={input.type}
-                    isInvalid={errors[input.name] !== undefined}
-                    {...register(input.name, {
-                      required: 'Поле должно быть заполнено',
-                      pattern: {
-                        value: input.test,
-                        message: input.message,
-                      },
-                    })}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {String(errors[input.name]?.message)}
-                  </Form.Control.Feedback>
-                </Col>
-              </Form.Group>
-            ))}
+            {formControls}
 
             <Form.Group as={Row}>
               <Col sm={{ span: 9, offset: 3 }}>

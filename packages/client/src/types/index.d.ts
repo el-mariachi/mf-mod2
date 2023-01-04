@@ -34,7 +34,7 @@ declare global {
     label: string
     message: string
     type: string
-    placeholder: string
+    placeholder?: string
     test: RegExp
   }
 
