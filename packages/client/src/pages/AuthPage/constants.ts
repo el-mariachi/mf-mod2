@@ -33,3 +33,8 @@ const signInInputData: InputProps[] = [
 ]
 
 export { defaultValues, signInInputData }
+
+export type AuthFormStruct = Record<
+  typeof signInInputData[number]['name'],
+  string
+>

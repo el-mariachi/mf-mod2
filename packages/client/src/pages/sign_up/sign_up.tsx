@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import FormControl from '../../components/FormControl'
 import { useForm } from 'react-hook-form'
-import { inputData, defaultValues } from './constants'
+import { inputData, defaultValues, SignUpFormStruct } from './constants'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signUpUser } from '../../services/authController'
@@ -13,7 +13,6 @@ import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import './sign_up.scss'
 
 const SignUp = () => {
-  type SignUpFormData = typeof defaultValues
   const navigate = useNavigate()
 
   const {
@@ -22,14 +21,14 @@ const SignUp = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<SignUpFormData>({
+  } = useForm<SignUpFormStruct>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues,
   })
   const [submitError, setSubmitError] = useState('')
 
-  const formSubmit = (data: SignUpFormData) => {
+  const formSubmit = (data: SignUpFormStruct) => {
     // compare passwords
     if (data.confirmPassword !== data.password) {
       setError('confirmPassword', {

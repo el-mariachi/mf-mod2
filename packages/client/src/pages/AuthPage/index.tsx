@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 import SpinnerButton from '../../components/SpinnerButton'
 import FormControl from '../../components/FormControl'
 import { useForm } from 'react-hook-form'
-import { signInInputData, defaultValues } from './constants'
+import { signInInputData, defaultValues, AuthFormStruct } from './constants'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import { signInUser } from '../../services/authController'
@@ -16,7 +16,6 @@ import './style.css'
 export type AuthPageProps = {
   signUpPageUrl?: string
 }
-type SignInFormData = typeof defaultValues
 
 export default function AuthPage(props: AuthPageProps) {
   const [mode, setMode] = useState('auth')
@@ -31,7 +30,7 @@ export default function AuthPage(props: AuthPageProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInFormData>({
+  } = useForm<AuthFormStruct>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues,
@@ -48,7 +47,7 @@ export default function AuthPage(props: AuthPageProps) {
     setValidated(false)
   }
 
-  const formSubmit = (data: SignInFormData) => {
+  const formSubmit = (data: AuthFormStruct) => {
     setValidated(true)
     setLoading(true)
     setReadOnly(true)

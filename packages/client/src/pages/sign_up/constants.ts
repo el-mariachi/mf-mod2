@@ -79,3 +79,5 @@ const inputData: InputProps[] = [
 ]
 
 export { inputData, defaultValues }
+
+export type SignUpFormStruct = Record<typeof inputData[number]['name'], string>

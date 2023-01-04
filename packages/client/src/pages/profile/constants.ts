@@ -89,8 +89,8 @@ const DEFAULT_USER = {
   login: 'IvanIvanov',
   second_name: 'Ivanov',
   first_name: 'Ivan',
-  display_name: 'Ivan Ivanov',
-  phone: '+7 (909) 967 30 30',
+  display_name: 'IvanIvanov',
+  phone: '+79099673030',
   avatar: '/src/assets/king.png',
 }
 
