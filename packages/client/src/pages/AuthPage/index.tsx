@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SpinnerButton from '../../components/SpinnerButton'
+import FormControl from '../../components/FormControl'
 import { useForm } from 'react-hook-form'
 import { signInInputData, defaultValues } from './constants'
 import { Link, useNavigate } from 'react-router-dom'
@@ -74,31 +75,13 @@ export default function AuthPage(props: AuthPageProps) {
   }
 
   const formControls = signInInputData.map(controlProps => (
-    <Form.Group
-      as={Row}
-      className="mb-3"
-      controlId={`authForm-${controlProps.name}`}>
-      <Form.Label column sm="3">
-        {controlProps.label}
-      </Form.Label>
-      <Col sm={9}>
-        <Form.Control
-          type={controlProps.type}
-          isInvalid={errors[controlProps.name] !== undefined}
-          {...register(controlProps.name, {
-            required: 'Поле должно быть заполнено',
-            pattern: {
-              value: controlProps.test,
-              message: controlProps.message,
-            },
-          })}
-          readOnly={readOnly}
-        />
-        <Form.Control.Feedback type="invalid">
-          {String(errors[controlProps.name]?.message)}
-        </Form.Control.Feedback>
-      </Col>
-    </Form.Group>
+    <FormControl
+      formName="authForm"
+      register={register}
+      errors={errors}
+      readOnly={readOnly}
+      controlProps={controlProps}
+    />
   ))
 
   const ButtonsBox = ({

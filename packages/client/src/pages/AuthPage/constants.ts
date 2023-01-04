@@ -2,10 +2,10 @@ const defaultValues = {
   login: '',
   password: '',
 }
-type FieldName = keyof typeof defaultValues
+type FieldNameType = keyof typeof defaultValues
 
 type InputProps = {
-  name: FieldName
+  name: FieldNameType
   label: string
   message: string
   type: string

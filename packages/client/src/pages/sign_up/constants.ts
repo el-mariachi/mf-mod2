@@ -8,10 +8,10 @@ const defaultValues = {
   confirmPassword: '',
 }
 
-export type FieldName = keyof typeof defaultValues
+type FieldNameType = keyof typeof defaultValues
 
-export type InputData = {
-  name: FieldName
+type InputProps = {
+  name: FieldNameType
   label: string
   message: string
   type: string
@@ -19,7 +19,7 @@ export type InputData = {
   test: RegExp
 }
 
-const inputData: InputData[] = [
+const inputData: InputProps[] = [
   {
     name: 'first_name',
     label: 'Имя',

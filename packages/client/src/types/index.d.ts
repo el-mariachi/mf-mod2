@@ -29,6 +29,15 @@ declare global {
     label: string
   }
 
+  type ControlProps = {
+    name: FieldName
+    label: string
+    message: string
+    type: string
+    placeholder: string
+    test: RegExp
+  }
+
   export type APIError = { reason: string }
 
   export type AuthData = {
