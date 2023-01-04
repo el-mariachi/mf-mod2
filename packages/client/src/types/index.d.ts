@@ -21,6 +21,10 @@ declare global {
     email: string
   }
 
+  type ProfileFormProps = Omit<User, 'id' | 'avatar'> & {
+    password: string
+  }
+
   type ProfileInputProps = {
     type: string
     name: string

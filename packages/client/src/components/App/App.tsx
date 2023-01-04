@@ -28,24 +28,7 @@ function App() {
         <Route path="sign-up" element={<SignUp />} />
         <Route path="sign-in" element={<AuthPage />} />
         <Route path="leaderboard" element={<Leaderboard />} />
-        <Route
-          path="profile"
-          element={
-            <Profile
-              user={{
-                id: 1,
-                avatar:
-                  'https://cdn-icons-png.flaticon.com/512/5953/5953714.png',
-                displayName: 'Новый пользователь',
-                email: 'email@email.ru',
-                firstName: 'Пользователь',
-                login: 'user',
-                phone: '+7-999-99-99',
-                secondName: 'Пользователь',
-              }}
-            />
-          }
-        />
+        <Route path="profile" element={<Profile />} />
         <Route
           path="/404"
           element={

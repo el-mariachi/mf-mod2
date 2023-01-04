@@ -87,9 +87,9 @@ const DEFAULT_USER = {
   id: 0,
   email: 'mail@pochta.ru',
   login: 'IvanIvanov',
-  secondName: 'Ivanov',
-  firstName: 'Ivan',
-  displayName: 'Ivan Ivanov',
+  second_name: 'Ivanov',
+  first_name: 'Ivan',
+  display_name: 'Ivan Ivanov',
   phone: '+7 (909) 967 30 30',
   avatar: '/src/assets/king.png',
 }

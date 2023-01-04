@@ -5,41 +5,36 @@ import { updatePassword, updateProfile } from '../../services/userController'
 import ProfileAvatar from '../../components/ProfileAvatar'
 import FormGroupView from '../../components/FormGroupView'
 import ConfirmPassword from '../../components/ConfirmPassword'
-import {
-  profileFormInputs,
-  profileDefaultValues,
-  READ_CLASS,
-  EDIT_CLASS,
-} from './constants'
+import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import './index.css'
 import { useForm } from 'react-hook-form'
-
-type ProfileProps = {
-  user: UserDTO | undefined
-}
-type ProfileFormData = typeof profileDefaultValues
+import emulateStore from './loadUserEmul'
 
 enum Mode {
   Edit,
   View,
 }
 
-const Profile = ({ user }: ProfileProps) => {
+const Profile = () => {
   const [mode, setMode] = useState(Mode.View)
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
+  // TODO uncomment and edit next line when we have redux store
+  // const avatar = useSelector(state => state.user.avatar)
+  // TODO remove next line when we have redux store
+  const avatar = 'https://cdn-icons-png.flaticon.com/512/5953/5953714.png'
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProfileFormData>({
+  } = useForm<ProfileFormProps>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
-    defaultValues: profileDefaultValues,
+    defaultValues: async () => emulateStore(), // TODO replace emulateStore() call with useSelector() from redux
   })
 
-  const saveChanges = async (formData: ProfileFormData) => {
+  const saveChanges = async (formData: ProfileFormProps) => {
     const { password: newPassword } = formData
 
     if (newPassword) {
@@ -64,7 +59,7 @@ const Profile = ({ user }: ProfileProps) => {
     setMode(Mode.Edit)
   }
 
-  const formSubmit = async (data: ProfileFormData) => {
+  const formSubmit = async (data: ProfileFormProps) => {
     await saveChanges(data)
     setMode(Mode.View)
   }
@@ -87,7 +82,7 @@ const Profile = ({ user }: ProfileProps) => {
           onSubmit={handleSubmit(formSubmit)}>
           <Row>
             <Col sm={4} className="px-0">
-              <ProfileAvatar avatar={user?.avatar} />
+              <ProfileAvatar avatar={avatar} />
             </Col>
             <Col sm={8} className="py-4 user-profile__form-wrapper">
               {submitError ? (
