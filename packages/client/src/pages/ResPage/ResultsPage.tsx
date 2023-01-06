@@ -3,7 +3,7 @@ import ResultsProps from "../../components/ResultsScreen/Props/ResultsProps";
 
 function ResultsPage() {
 
-    let props : ResultsProps = {
+    const props : ResultsProps = {
         levelNum: 5,
         killCount: 10,
         coins: 10,
