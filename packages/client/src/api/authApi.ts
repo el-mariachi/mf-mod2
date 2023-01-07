@@ -2,9 +2,9 @@ import { muteRes } from '../utils'
 import { restAuthApi } from './restApi'
 
 export const signUp = (data: SignupData) =>
-  restAuthApi.post<User>('/sign-up', data)
+  restAuthApi.post<User>('/signup', data)
 export const signIn = (data: SigninData) =>
-  restAuthApi.post('/sign-in', data).then(muteRes)
+  restAuthApi.post('/signin', data).then(muteRes)
 export const getUser = () => restAuthApi.get<User>('/user')
 export const logout = () => restAuthApi.post('/logout').then(muteRes)
 
