@@ -73,8 +73,9 @@ export default function AuthPage(props: AuthPageProps) {
       })
   }
 
-  const formControls = signInInputData.map(controlProps => (
+  const formControls = signInInputData.map((controlProps, index) => (
     <FormControl
+      key={index}
       formName="authForm"
       register={register}
       errors={errors}

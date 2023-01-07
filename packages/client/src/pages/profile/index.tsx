@@ -36,6 +36,7 @@ const Profile = () => {
 
   const saveChanges = async (formData: ProfileFormProps) => {
     const { password: newPassword } = formData
+    delete formData.password
 
     if (newPassword) {
       const promise = new Promise(res => {
@@ -64,8 +65,9 @@ const Profile = () => {
     setMode(Mode.View)
   }
 
-  const formControls = profileFormInputs.map(controlProps => (
+  const formControls = profileFormInputs.map((controlProps, index) => (
     <FormGroupView
+      key={index}
       register={register}
       errors={errors}
       formName="userProfileForm"

@@ -38,7 +38,7 @@ export default ({
         {...register(name, {
           required: name === 'password' ? false : 'Поле должно быть заполнено',
           pattern,
-          validate,
+          validate: name === 'password' ? undefined : validate,
         })}
       />
       <Form.Control.Feedback type="invalid">

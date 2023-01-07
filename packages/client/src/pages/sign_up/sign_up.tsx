@@ -45,8 +45,9 @@ const SignUp = () => {
       .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
   }
 
-  const formControls = inputData.map(controlProps => (
+  const formControls = inputData.map((controlProps, index) => (
     <FormControl
+      key={index}
       formName="signUpForm"
       register={register}
       errors={errors}

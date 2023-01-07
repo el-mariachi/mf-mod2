@@ -1,3 +1,5 @@
 import { DEFAULT_USER } from './constants'
 
-export default () => Promise.resolve({ ...DEFAULT_USER, password: '' })
+const { id, ...user } = DEFAULT_USER
+
+export default () => Promise.resolve({ ...user, password: '' })
