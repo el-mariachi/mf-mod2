@@ -1,3 +1,5 @@
+import { minMax, aDigit, aCapital } from '../../utils/validations'
+
 export const PASSWORD_FIELDS: ProfileInputProps[] = [
   {
     name: 'oldPassword',
@@ -23,30 +25,27 @@ export const changePasswordInputData = [
   {
     name: 'newPassword',
     label: 'Новый пароль',
-    message: 'Пароль не соответствует требованиям',
     type: 'password',
     placeholder: 'Новый пароль',
-    test: /^(?=.*\d)(?=.*[A-ZА-Я]).{8,40}$/,
+    validate: { minMax: minMax(8, 40), aDigit, aCapital },
   },
   {
     name: 'confirmPassword',
     label: 'Повторите пароль',
-    message: 'Пароль не соответствует требованиям',
     type: 'password',
     placeholder: 'Повторите пароль',
-    test: /^(?=.*\d)(?=.*[A-ZА-Я]).{8,40}$/,
+    validate: { minMax: minMax(8, 40), aDigit, aCapital },
   },
   {
     name: 'oldPassword',
     label: 'Старый пароль',
-    message: 'Пароль не соответствует требованиям',
     type: 'password',
     placeholder: 'Старый пароль',
-    test: /^(?=.*\d)(?=.*[A-ZА-Я]).{8,40}$/,
+    validate: { minMax: minMax(8, 40), aDigit, aCapital },
   },
 ] as const
 
-export type ChangePasswordFormStruct = Record<
-  typeof changePasswordInputData[number]['name'],
-  string
->
+export type ChangePasswordFormFields =
+  typeof changePasswordInputData[number]['name']
+
+export type ChangePasswordFormStruct = Record<ChangePasswordFormFields, string>

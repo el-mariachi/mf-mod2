@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SpinnerButton from '../../components/SpinnerButton'
 import FormControl from '../../components/FormControl'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { signInInputData, defaultValues, AuthFormStruct } from './constants'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
@@ -47,7 +47,7 @@ export default function AuthPage(props: AuthPageProps) {
     setValidated(false)
   }
 
-  const formSubmit = (data: AuthFormStruct) => {
+  const formSubmit: SubmitHandler<AuthFormStruct> = data => {
     setValidated(true)
     setLoading(true)
     setReadOnly(true)

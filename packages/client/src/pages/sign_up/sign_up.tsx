@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import FormControl from '../../components/FormControl'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { inputData, defaultValues, SignUpFormStruct } from './constants'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -28,7 +28,7 @@ const SignUp = () => {
   })
   const [submitError, setSubmitError] = useState('')
 
-  const formSubmit = (data: SignUpFormStruct) => {
+  const formSubmit: SubmitHandler<SignUpFormStruct> = data => {
     // compare passwords
     if (data.confirmPassword !== data.password) {
       setError('confirmPassword', {

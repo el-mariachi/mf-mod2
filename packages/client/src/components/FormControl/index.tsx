@@ -21,29 +21,34 @@ const FormControl: FC<FormControlProps> = ({
   controlProps,
   readOnly,
 }) => {
+  const { name, type, label, placeholder, test, message, validate } =
+    controlProps
+  const pattern =
+    test !== undefined && message !== undefined
+      ? {
+          value: test,
+          message: message,
+        }
+      : undefined
   return (
-    <Form.Group
-      as={Row}
-      className="mb-3"
-      controlId={`${formName}-${controlProps.name}`}>
+    <Form.Group as={Row} className="mb-3" controlId={`${formName}-${name}`}>
       <Form.Label column sm="3">
-        {controlProps.label}
+        {label}
       </Form.Label>
       <Col sm={9}>
         <Form.Control
-          type={controlProps.type}
-          isInvalid={errors[controlProps.name] !== undefined}
-          {...register(controlProps.name, {
+          type={type}
+          isInvalid={errors[name] !== undefined}
+          placeholder={placeholder}
+          {...register(name, {
             required: 'Поле должно быть заполнено',
-            pattern: {
-              value: controlProps.test,
-              message: controlProps.message,
-            },
+            pattern,
+            validate,
           })}
           readOnly={readOnly}
         />
         <Form.Control.Feedback type="invalid">
-          {String(errors[controlProps.name]?.message)}
+          {String(errors[name]?.message)}
         </Form.Control.Feedback>
       </Col>
     </Form.Group>

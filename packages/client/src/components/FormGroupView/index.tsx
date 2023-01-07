@@ -18,7 +18,15 @@ export default ({
   errors,
   formName,
 }: FormGroupViewProps) => {
-  const { name, type, label, placeholder, test, message } = controlProps
+  const { name, type, label, placeholder, test, message, validate } =
+    controlProps
+  const pattern =
+    test !== undefined && message !== undefined
+      ? {
+          value: test,
+          message: message,
+        }
+      : undefined
   return (
     <Form.Group className="mb-3" controlId={`${formName}-${name}`}>
       <Form.Label>{label}</Form.Label>
@@ -29,10 +37,8 @@ export default ({
         disabled={readOnly}
         {...register(name, {
           required: name === 'password' ? false : 'Поле должно быть заполнено',
-          pattern: {
-            value: test,
-            message: message,
-          },
+          pattern,
+          validate,
         })}
       />
       <Form.Control.Feedback type="invalid">

@@ -36,10 +36,11 @@ declare global {
   type ControlProps = {
     name: FieldName
     label: string
-    message: string
+    message?: string
     type: string
     placeholder?: string
-    test: RegExp
+    test?: RegExp
+    validate?: Validate | Record<string, Validate>
   }
 
   export type APIError = { reason: string }

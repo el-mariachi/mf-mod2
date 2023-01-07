@@ -7,7 +7,7 @@ import FormGroupView from '../../components/FormGroupView'
 import ConfirmPassword from '../../components/ConfirmPassword'
 import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import './index.css'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import emulateStore from './loadUserEmul'
 
 enum Mode {
@@ -59,7 +59,7 @@ const Profile = () => {
     setMode(Mode.Edit)
   }
 
-  const formSubmit = async (data: ProfileFormProps) => {
+  const formSubmit: SubmitHandler<ProfileFormProps> = async data => {
     await saveChanges(data)
     setMode(Mode.View)
   }
