@@ -1,8 +1,7 @@
-
-interface ResultsProps{
-    levelNum : number,
-    killCount: number,
-    coins: number,
-    time : string
+interface ResultsProps {
+  levelNum: number
+  killCount: number
+  coins: number
+  time: string
 }
-export default ResultsProps;
+export default ResultsProps
