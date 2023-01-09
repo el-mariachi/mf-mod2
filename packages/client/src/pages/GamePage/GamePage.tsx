@@ -1,7 +1,7 @@
 import StartScene from '../../game/scenes/StartScene'
 
 function GamePage() {
-  return <StartScene width={window.innerWidth} height={window.innerHeight} />
+  return <StartScene />
 }
 
 export default GamePage
