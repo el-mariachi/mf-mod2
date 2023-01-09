@@ -1,8 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import ResultsProps from '../Props/ResultsProps'
-import './ResSceneStyle.scss'
+import './ResScene.scss'
 
-function ResScene({ levelNum, killCount, coins, time }: ResultsProps) {
+function ResScene({
+  levelNum,
+  killCount,
+  coins,
+  time,
+  steps,
+  restartCallback,
+  exitCallback,
+}: ResultsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = window.innerWidth / 2
   let curHeight = window.innerHeight / 4 - 50
@@ -14,6 +22,10 @@ function ResScene({ levelNum, killCount, coins, time }: ResultsProps) {
       setFontLoaded(true)
     }
   })
+
+  const date = new Date(0)
+  date.setSeconds(time)
+  const formatTime = date.toISOString().substring(11, 19)
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -50,9 +62,17 @@ function ResScene({ levelNum, killCount, coins, time }: ResultsProps) {
         ctx.fillStyle = 'white'
         ctx.textAlign = 'left'
         ctx.font = '400 24px Minecraft'
-        ctx.fillText('time wasted', centerWidth - margin, curHeight)
+        ctx.fillText('time spent', centerWidth - margin, curHeight)
         ctx.textAlign = 'right'
-        ctx.fillText(time, centerWidth + margin, curHeight)
+        ctx.fillText(formatTime, centerWidth + margin, curHeight)
+        curHeight += 24 * 2
+        ctx.textBaseline = 'middle'
+        ctx.fillStyle = 'white'
+        ctx.textAlign = 'left'
+        ctx.font = '400 24px Minecraft'
+        ctx.fillText('steps', centerWidth - margin, curHeight)
+        ctx.textAlign = 'right'
+        ctx.fillText(steps.toString(), centerWidth + margin, curHeight)
         curHeight += 24 * 2
       }
     }
@@ -63,10 +83,14 @@ function ResScene({ levelNum, killCount, coins, time }: ResultsProps) {
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
-        height={window.innerHeight / 2}></canvas>
+        height={window.innerHeight / 1.85}></canvas>
       <div className="res-buttons-sect">
-        <a className="mx-auto text-white">restart</a>
-        <a className="mx-auto text-white">exit</a>
+        <a className="mx-auto text-white" onClick={() => restartCallback()}>
+          restart
+        </a>
+        <a className="mx-auto text-white" onClick={() => exitCallback()}>
+          exit
+        </a>
       </div>
     </div>
   )
