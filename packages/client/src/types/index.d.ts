@@ -21,12 +21,26 @@ declare global {
     email: string
   }
 
+  type ProfileFormProps = Omit<User, 'id' | 'avatar'> & {
+    password?: string
+  }
+
   type ProfileInputProps = {
     type: string
     name: string
     placeholder?: string
     value: string
     label: string
+  }
+
+  type ControlProps = {
+    name: FieldName
+    label: string
+    message?: string
+    type: string
+    placeholder?: string
+    test?: RegExp
+    validate?: Validate | Record<string, Validate>
   }
 
   export type APIError = { reason: string }

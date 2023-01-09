@@ -1,26 +1,40 @@
-import { useState, createRef } from 'react'
+import React, { useState } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import { updatePassword, updateProfile } from '../../services/userController'
 import ProfileAvatar from '../../components/ProfileAvatar'
-import ProfileForm from '../../components/ProfileForm'
+import FormGroupView from '../../components/FormGroupView'
 import ConfirmPassword from '../../components/ConfirmPassword'
+import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import './index.css'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import emulateStore from './loadUserEmul'
 
-type ProfileProps = {
-  user: UserDTO | undefined
+enum Mode {
+  Edit,
+  View,
 }
 
-const Profile = ({ user }: ProfileProps) => {
-  const [readOnly, setReadOnly] = useState(true)
+const Profile = () => {
+  const [mode, setMode] = useState(Mode.View)
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
-  const refForm = createRef()
+  // TODO uncomment and edit next line when we have redux store
+  // const avatar = useSelector(state => state.user.avatar)
+  // TODO remove next line when we have redux store
+  const avatar = 'https://cdn-icons-png.flaticon.com/512/5953/5953714.png'
 
-  const saveChanges = async () => {
-    const form = refForm.current as HTMLFormElement
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProfileFormProps>({
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
+    defaultValues: async () => emulateStore(), // TODO replace emulateStore() call with useSelector() from redux
+  })
 
-    const formData = Object.fromEntries(new FormData(form).entries())
+  const saveChanges = async (formData: ProfileFormProps) => {
     const { password: newPassword } = formData
     delete formData.password
 
@@ -36,24 +50,41 @@ const Profile = ({ user }: ProfileProps) => {
         await updatePassword(passwords)
       }
     }
-    await updateProfile(formData)
-      .catch((error : AppError) => formUserErrorHandler(error, setSubmitError))
+    await updateProfile(formData).catch((error: AppError) =>
+      formUserErrorHandler(error, setSubmitError)
+    )
   }
 
-  const handleButtonClick = async () => {
-    if (!readOnly) {
-      await saveChanges()
-    }
-    setReadOnly(!readOnly)
+  const editMode = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    setMode(Mode.Edit)
   }
+
+  const formSubmit: SubmitHandler<ProfileFormProps> = async data => {
+    await saveChanges(data)
+    setMode(Mode.View)
+  }
+
+  const formControls = profileFormInputs.map((controlProps, index) => (
+    <FormGroupView
+      key={index}
+      register={register}
+      errors={errors}
+      formName="userProfileForm"
+      controlProps={controlProps}
+      readOnly={Boolean(mode)}
+    />
+  ))
 
   return (
     <div className="user-profile">
       <Container fluid="sm">
-        <Form className="user-profile__form mt-5" ref={refForm as React.RefObject<HTMLFormElement>}>
+        <Form
+          className="user-profile__form mt-5"
+          onSubmit={handleSubmit(formSubmit)}>
           <Row>
             <Col sm={4} className="px-0">
-              <ProfileAvatar avatar={user?.avatar} />
+              <ProfileAvatar avatar={avatar} />
             </Col>
             <Col sm={8} className="py-4 user-profile__form-wrapper">
               {submitError ? (
@@ -61,12 +92,21 @@ const Profile = ({ user }: ProfileProps) => {
               ) : (
                 ''
               )}
-
-              <ProfileForm user={user} readOnly={readOnly} />
-
-              <Button variant="dark" onClick={handleButtonClick}>
-                {readOnly ? 'Изменить данные профиля' : 'Сохранить'}
-              </Button>
+              <div
+                className={`user-profile__form ${
+                  mode ? READ_CLASS : EDIT_CLASS
+                }`}>
+                {formControls}
+              </div>
+              {mode ? (
+                <Button variant="dark" type="button" onClick={editMode}>
+                  Изменить данные профиля
+                </Button>
+              ) : (
+                <Button variant="dark" type="submit">
+                  Сохранить
+                </Button>
+              )}
             </Col>
           </Row>
         </Form>
