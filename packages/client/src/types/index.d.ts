@@ -21,6 +21,10 @@ declare global {
     email: string
   }
 
+  type ProfileFormProps = Omit<User, 'id' | 'avatar'> & {
+    password?: string
+  }
+
   type ProfileInputProps = {
     type: string
     name: string
@@ -29,9 +33,22 @@ declare global {
     label: string
   }
 
-  export type APIError = { reason: string }
-  
+  type ControlProps = {
+    name: FieldName
+    label: string
+    message?: string
+    type: string
+    placeholder?: string
+    test?: RegExp
+    validate?: Validate | Record<string, Validate>
+  }
 
+  export type APIError = { reason: string }
+
+  export type AuthData = {
+    login?: string
+    password?: string
+  }
   export type PasswordData = {
     oldPassword: string
     newPassword: string
@@ -132,6 +149,20 @@ declare global {
   export type PasswordData = {
     oldPassword: string
     newPassword: string
+  }
+
+  export type FileData = {
+    id: number
+    user_id: number
+    path: string
+    filename: string
+    content_type: string
+    content_size: number
+    upload_date: string
+  }
+
+  export type PlainObject<T = unknown> = {
+    [key in string]: T
   }
 }
 

@@ -7,4 +7,17 @@
   background-color: #efefef;
 }
 
+.user-profile__form_read input {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
 
+.user-profile__form_edit input {
+  border-color: #545a5f;
+}
+
+@media (max-width: 576px) {
+  .user-profile__form {
+    margin-top: 0 !important;
+  }
+}

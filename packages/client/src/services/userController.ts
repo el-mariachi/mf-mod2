@@ -1,6 +1,6 @@
 import userApi from '../api/userApi'
 import { transformUser, transformUserT } from '../utils/transformUser'
-import apiHasError from '../utils/apiHasError';
+import { apiErrorHandler } from '../utils/errors_handling'
 
 type AvatarFields = 'avatar'
 
@@ -8,26 +8,18 @@ interface AvatarData extends FormData {
   append(name: AvatarFields, value: Blob, fileName?: string): void
 }
 
-export async function updateProfile(data: ProfileDataT): Promise<UserDTO> {
-  const result = await userApi.updateProfile(transformUserT(data as unknown as UserDTO));
-  if (apiHasError(result)) {
-    throw { result };
-  }
-  return transformUser(result as User);
+export function updateProfile(data: ProfileData) {
+  return userApi
+    .updProfile(data)
+    .then(result => transformUser(result)) // TODO отсалось определиться с хранением пользователя
+    .catch(error => apiErrorHandler(error))
 }
-
-export async function updateAvatar(data: AvatarData): Promise<UserDTO> {
-  const result = await userApi.updateAvatar(data);
-  if (apiHasError(result)) {
-    throw { result };
-  }
-  return transformUser(result  as User);
+export function updateAvatar(data: AvatarData) {
+  return userApi
+    .updAvatar(data)
+    .then(result => transformUser(result))
+    .catch(error => apiErrorHandler(error))
 }
-
-export async function updatePassword(data: PasswordData) {
-  const result = await userApi.updatePassword(data);
-  if (apiHasError(result)) {
-    throw { result };
-  };
-  return;
+export function updatePassword(data: PasswordData) {
+  return userApi.updPassword(data).catch(error => apiErrorHandler(error))
 }

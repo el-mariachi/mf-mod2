@@ -3,15 +3,17 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { useForm } from 'react-hook-form'
+import FormControl from '../../components/FormControl'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { inputData, defaultValues, SignUpFormStruct } from './constants'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { signUpUser } from '../../services/authController'
+import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import './sign_up.scss'
-import { inputData, defaultValues } from './constants'
-import { MouseEvent } from 'react'
-// TODO uncomment next line in router context
-//import { useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
-  type FormData = typeof defaultValues
+  const navigate = useNavigate()
 
   const {
     register,
@@ -19,13 +21,14 @@ const SignUp = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<SignUpFormStruct>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues,
   })
+  const [submitError, setSubmitError] = useState('')
 
-  const formSubmit = (data: FormData) => {
+  const formSubmit: SubmitHandler<SignUpFormStruct> = data => {
     // compare passwords
     if (data.confirmPassword !== data.password) {
       setError('confirmPassword', {
@@ -35,18 +38,22 @@ const SignUp = () => {
       return
     }
     clearErrors()
-    // TODO send validated data to API
-    console.log(data)
-  }
-  // TODO uncomment next line in router context
-  // const navigate = useNavigate()
 
-  const goToLogin = (e: MouseEvent) => {
-    e.preventDefault()
-    // TODO replace console.log with navigate() in router context
-    console.log('navigate to login')
-    // navigate('/login')
+    signUpUser(data)
+      // TODO it`s temporary, use connected-react-router
+      .then(() => navigate('/'))
+      .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
   }
+
+  const formControls = inputData.map((controlProps, index) => (
+    <FormControl
+      key={index}
+      formName="signUpForm"
+      register={register}
+      errors={errors}
+      controlProps={controlProps}
+    />
+  ))
 
   return (
     <div className="sign_up w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
@@ -59,39 +66,22 @@ const SignUp = () => {
               </Col>
             </Row>
 
-            {inputData.map((input, index) => (
-              <Form.Group
-                as={Row}
-                className="mb-3"
-                controlId={`signUp-${index}`}>
-                <Form.Label column sm="3">
-                  {input.label}:
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    type={input.type}
-                    isInvalid={errors[input.name] !== undefined}
-                    {...register(input.name, {
-                      required: 'Поле должно быть заполнено',
-                      pattern: {
-                        value: input.test,
-                        message: input.message,
-                      },
-                    })}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {String(errors[input.name]?.message)}
-                  </Form.Control.Feedback>
-                </Col>
-              </Form.Group>
-            ))}
+            {submitError ? (
+              <p className="text-danger mb-3">{submitError}</p>
+            ) : (
+              ''
+            )}
+
+            {formControls}
 
             <Form.Group as={Row}>
               <Col sm={{ span: 9, offset: 3 }}>
                 <Button type="submit">Создать аккаунт</Button>
-                <Button as="a" variant="link" onClick={goToLogin}>
-                  Вход
-                </Button>
+                <Link to="/sign-in">
+                  <Button as="span" variant="link">
+                    Войти
+                  </Button>
+                </Link>
               </Col>
             </Form.Group>
           </Form>
