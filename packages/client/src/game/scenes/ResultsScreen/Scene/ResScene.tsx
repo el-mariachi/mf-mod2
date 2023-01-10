@@ -1,6 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
+import SecondsToHMS from '../../../../utils/secondsFormat'
 import ResultsProps from '../Props/ResultsProps'
 import './ResScene.scss'
+
+function _RenderStroke(
+  ctx: CanvasRenderingContext2D,
+  lStr: string,
+  rStr: string,
+  centerWidth: number,
+  margin: number,
+  curHeight: number
+) {
+  ctx.textAlign = 'left'
+  ctx.fillText(lStr, centerWidth - margin, curHeight)
+  ctx.textAlign = 'right'
+  ctx.fillText(rStr, centerWidth + margin, curHeight)
+}
 
 function ResScene({
   levelNum,
@@ -13,7 +28,7 @@ function ResScene({
 }: ResultsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = window.innerWidth / 2
-  let curHeight = window.innerHeight / 4 - 50
+  let curHeight = window.innerHeight / 4
   const margin = window.innerWidth * 0.4 > 200 ? 200 : window.innerWidth * 0.4
   const [fontLoaded, setFontLoaded] = useState(false)
 
@@ -23,9 +38,7 @@ function ResScene({
     }
   })
 
-  const date = new Date(0)
-  date.setSeconds(time)
-  const formatTime = date.toISOString().substring(11, 19)
+  const formatTime = SecondsToHMS(time)
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -42,53 +55,62 @@ function ResScene({
         ctx.fillText(`Level ${levelNum}`, centerWidth, curHeight)
         curHeight += 25
         curHeight += 48
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'left'
         ctx.font = ' 400 24px Minecraft'
-        ctx.fillText('killed enemies', centerWidth - margin, curHeight)
-        ctx.textAlign = 'right'
-        ctx.fillText(killCount.toString(), centerWidth + margin, curHeight)
+
+        _RenderStroke(
+          ctx,
+          'killed enemies',
+          killCount.toString(),
+          centerWidth,
+          margin,
+          curHeight
+        )
         curHeight += 24 * 2
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'left'
-        ctx.font = ' 400 24px Minecraft'
-        ctx.fillText('gathered coins', centerWidth - margin, curHeight)
-        ctx.textAlign = 'right'
-        ctx.fillText(coins.toString(), centerWidth + margin, curHeight)
+
+        _RenderStroke(
+          ctx,
+          'gathered coins',
+          coins.toString(),
+          centerWidth,
+          margin,
+          curHeight
+        )
         curHeight += 24 * 2
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'left'
-        ctx.font = '400 24px Minecraft'
-        ctx.fillText('time spent', centerWidth - margin, curHeight)
-        ctx.textAlign = 'right'
-        ctx.fillText(formatTime, centerWidth + margin, curHeight)
+
+        _RenderStroke(
+          ctx,
+          'time spent',
+          formatTime,
+          centerWidth,
+          margin,
+          curHeight
+        )
         curHeight += 24 * 2
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'left'
-        ctx.font = '400 24px Minecraft'
-        ctx.fillText('steps', centerWidth - margin, curHeight)
-        ctx.textAlign = 'right'
-        ctx.fillText(steps.toString(), centerWidth + margin, curHeight)
+
+        _RenderStroke(
+          ctx,
+          'steps',
+          steps.toString(),
+          centerWidth,
+          margin,
+          curHeight
+        )
         curHeight += 24 * 2
       }
     }
   }, [fontLoaded])
 
   return (
-    <div className="results">
+    <div className="res-scene_results">
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
-        height={window.innerHeight / 1.85}></canvas>
-      <div className="res-buttons-sect">
-        <a className="mx-auto text-white" onClick={() => restartCallback()}>
+        height={curHeight + 265}></canvas>
+      <div className="res-scene_buttons">
+        <a className="mx-auto text-white" onClick={restartCallback}>
           restart
         </a>
-        <a className="mx-auto text-white" onClick={() => exitCallback()}>
+        <a className="mx-auto text-white" onClick={exitCallback}>
           exit
         </a>
       </div>

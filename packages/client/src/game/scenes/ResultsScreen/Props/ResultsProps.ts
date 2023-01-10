@@ -4,7 +4,7 @@ interface ResultsProps {
   coins: number
   time: number
   steps: number
-  restartCallback: () => void
-  exitCallback: () => void
+  restartCallback: (e: React.SyntheticEvent) => void
+  exitCallback: (e: React.SyntheticEvent) => void
 }
 export default ResultsProps
