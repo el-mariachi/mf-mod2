@@ -10,6 +10,12 @@ const update = (dt: number) => {
 let lastTime: number = Date.now()
 
 const mainLoop = (ctx: CanvasRenderingContext2D) => {
+  let animationFrameId: number
+  let gameOver = false
+  setTimeout(() => {
+    gameOver = true
+    window.cancelAnimationFrame(animationFrameId)
+  }, 5 * 1000)
   const main = () => {
     const now = Date.now()
     const dt = (now - lastTime) / 1000.0
@@ -21,7 +27,9 @@ const mainLoop = (ctx: CanvasRenderingContext2D) => {
     drawPulsingCircle(ctx, dt)
 
     lastTime = now
-    requestAnimationFrame(main)
+    if (!gameOver) {
+      animationFrameId = window.requestAnimationFrame(main)
+    }
   }
   main()
 }

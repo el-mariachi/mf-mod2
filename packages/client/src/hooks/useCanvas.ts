@@ -8,19 +8,9 @@ const useCanvas = (draw: Draw) => {
     if (canvasRef.current) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
-      let animationFrameId: number
-
-      const render = () => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        draw(ctx!)
-        animationFrameId = window.requestAnimationFrame(render)
-      }
 
       if (ctx !== null) {
-        render()
-      }
-      return () => {
-        window.cancelAnimationFrame(animationFrameId)
+        draw(ctx)
       }
     }
   }, [draw])
