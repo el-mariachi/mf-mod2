@@ -1,0 +1,29 @@
+@import '../../../../assets/fonts/minecraft/minecraft.css';
+
+.res-scene_results {
+  background: black;
+  height: 100vh;
+  width: 100vw;
+}
+
+.res-scene_buttons {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    font: 400 24px Minecraft;
+    display: block;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  a + a {
+    margin: 1rem;
+  }
+
+  a:hover {
+    border-bottom: 2px solid white;
+  }
+}
