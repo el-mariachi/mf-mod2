@@ -8,10 +8,10 @@ interface AvatarData extends FormData {
   append(name: AvatarFields, value: Blob, fileName?: string): void
 }
 
-export function updateProfile(data: ProfileDataT) {
+export function updateProfile(data: ProfileData) {
   return userApi
-    .updProfile(transformUserT(data as unknown as UserDTO))
-    .then(result => transformUser(result))
+    .updProfile(data)
+    .then(result => transformUser(result)) // TODO отсалось определиться с хранением пользователя
     .catch(error => apiErrorHandler(error))
 }
 export function updateAvatar(data: AvatarData) {

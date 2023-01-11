@@ -12,7 +12,7 @@ import {
   aCapital,
 } from '../../utils/validations'
 
-const inputData = [
+const profileFormInputs = [
   {
     name: 'first_name',
     label: 'Имя',
@@ -26,6 +26,12 @@ const inputData = [
     type: 'text',
     placeholder: 'Фамилия',
     validate: { cap1st, latOrCyr, noSpecialChars },
+  },
+  {
+    name: 'display_name',
+    label: 'Ник',
+    type: 'text',
+    placeholder: 'Ник',
   },
   {
     name: 'login',
@@ -56,26 +62,45 @@ const inputData = [
     placeholder: 'Пароль',
     validate: { minMax: minMax(8, 40), aDigit, aCapital },
   },
-  {
-    name: 'confirmPassword',
-    label: 'Повторите пароль',
-    type: 'password',
-    placeholder: 'Повторите пароль',
-    validate: { minMax: minMax(8, 40), aDigit, aCapital },
-  },
-] as const
+]
 
-export type SignUpFormFields = typeof inputData[number]['name']
-export type SignUpFormStruct = Record<SignUpFormFields, string>
+export type ProfileFormFields = typeof profileFormInputs[number]['name']
+export type ProfileFormStruct = Record<ProfileFormFields, string>
 
-const defaultValues: SignUpFormStruct = {
+const profileDefaultValues: ProfileFormStruct = {
   first_name: '',
   second_name: '',
+  display_name: '',
   login: '',
   email: '',
   phone: '',
   password: '',
+}
+
+const passwordDefaultValues = {
+  password: '',
   confirmPassword: '',
 }
 
-export { inputData, defaultValues }
+const DEFAULT_USER = {
+  id: 0,
+  email: 'mail@pochta.ru',
+  login: 'IvanIvanov',
+  second_name: 'Ivanov',
+  first_name: 'Ivan',
+  display_name: 'IvanIvanov',
+  phone: '+79099673030',
+  avatar: '/src/assets/king.png',
+}
+
+const EDIT_CLASS = 'user-profile__form_edit'
+const READ_CLASS = 'user-profile__form_read'
+
+export {
+  profileFormInputs,
+  profileDefaultValues,
+  passwordDefaultValues,
+  DEFAULT_USER,
+  EDIT_CLASS,
+  READ_CLASS,
+}

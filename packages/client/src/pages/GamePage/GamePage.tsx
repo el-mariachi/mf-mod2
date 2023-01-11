@@ -1,5 +1,7 @@
+import StartScene from '../../game/scenes/StartScene'
+
 function GamePage() {
-  return <h2>Our best game will be here</h2>
+  return <StartScene />
 }
 
 export default GamePage
