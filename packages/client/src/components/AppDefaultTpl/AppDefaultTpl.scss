@@ -1,0 +1,10 @@
+@import '@vars';
+
+.app-def-tpl {
+  background: $bg-color;
+
+  &__wrapper {
+    width: 760px;
+    min-width: 360px;
+  }
+}
