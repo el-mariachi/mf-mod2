@@ -1,4 +1,4 @@
-import LeaderboardProps from '../../Props/Lb-Props'
+import LeaderboardProps from '../Props/Lb-Props'
 import Button from 'react-bootstrap/Button'
 import Collapse from 'react-bootstrap/Collapse'
 import dummyAvatarImg from '@images/king.png'
