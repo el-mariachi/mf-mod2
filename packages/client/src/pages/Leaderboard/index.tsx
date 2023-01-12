@@ -1,4 +1,4 @@
-import LeaderboardList from '../../components/Leaderboard/List/Lb-List'
+import LeaderboardList from '../../components/Leaderboard/List'
 import AppDefaultTpl from '../../components/AppDefaultTpl'
 import { Button } from 'react-bootstrap'
 import './Leaderboard.scss'

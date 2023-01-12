@@ -3,7 +3,7 @@ import { updateAvatar } from '../../services/userController'
 import { getFile } from '../../api/resourceApi'
 import Avatar from '../../components/Avatar'
 import UploadFile from '../../components/UploadFile'
-import './index.css'
+import './ProfileAvatar.scss'
 
 type AvatarType = string
 

@@ -43,21 +43,6 @@ declare global {
     validate?: Validate | Record<string, Validate>
   }
 
-  export type APIError = { reason: string }
-
-  export type AuthData = {
-    login?: string
-    password?: string
-  }
-  export type PasswordData = {
-    oldPassword: string
-    newPassword: string
-  }
-
-  export type APIError = {
-    response: { reason: string }
-  }
-
   export type ProfileData = Omit<User, 'id' | 'avatar'>
 
   export type ProfileDataT = Omit<UserT, 'id' | 'avatar'>

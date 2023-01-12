@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
-import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
+import { AppError, formUserErrorHandler } from '../../utils/errorsHandling'
 import { updatePassword, updateProfile } from '../../services/userController'
 import ProfileAvatar from '../../components/ProfileAvatar'
 import FormGroupView from '../../components/FormGroupView'
@@ -9,14 +9,14 @@ import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import emulateStore from './loadUserEmul'
 import AppDefaultTpl from '../../components/AppDefaultTpl'
-import './index.scss'
+import './UserProfile.scss'
 
 enum Mode {
   Edit,
   View,
 }
 
-const Profile = () => {
+const UserProfile = () => {
   const [mode, setMode] = useState(Mode.View)
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
@@ -111,4 +111,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default UserProfile

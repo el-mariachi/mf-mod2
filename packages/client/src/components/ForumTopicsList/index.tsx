@@ -1,4 +1,4 @@
-import ForumTopic from '../ForumTopic/ForumTopic'
+import ForumTopic from '../ForumTopic'
 import { IForumTopicProps } from '../ForumTopic/ForumTopicProps'
 import './ForumTopicsList.scss'
 const topics: IForumTopicProps[] = [
@@ -22,7 +22,7 @@ const topics: IForumTopicProps[] = [
 
 function ForumTopicsList() {
   return (
-    <ul className="topic-list d-flex flex-column">
+    <ul className="forum-topic-list d-flex flex-column">
       {topics.map(topic => (
         <ForumTopic
           topicAuthor={topic.topicAuthor}

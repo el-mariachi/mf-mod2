@@ -9,15 +9,15 @@ import AppDefaultTpl from '../../components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { signInInputData, defaultValues, AuthFormStruct } from './constants'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
+import { AppError, formUserErrorHandler } from '../../utils/errorsHandling'
 import { signInUser } from '../../services/authController'
-import './style.scss'
+import './SignIn.scss'
 
-export type AuthPageProps = {
+export type SignInProps = {
   signUpPageUrl?: string
 }
 
-export default function AuthPage(props: AuthPageProps) {
+export default function SignIn(props: SignInProps) {
   const [mode, setMode] = useState('auth')
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
@@ -115,7 +115,7 @@ export default function AuthPage(props: AuthPageProps) {
     )
   }
   return (
-    <AppDefaultTpl centered={true} className="auth-page">
+    <AppDefaultTpl centered={true} className="sign-in">
       <Form validated={validated} onSubmit={handleSubmit(formSubmit)}>
         {isAuthMode ? (
           <>

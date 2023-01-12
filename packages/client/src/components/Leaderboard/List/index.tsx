@@ -1,5 +1,5 @@
-import LeaderboardProps from '../Props/Lb-Props'
-import Lb_User from '../Element/Lb-ListElement'
+import LeaderboardProps from '../Props'
+import Lb_User from '../Element'
 import { Stack } from 'react-bootstrap'
 import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
@@ -126,7 +126,7 @@ function LeaderboardList() {
           <option value="4">Враги</option>
         </Form.Select>
       </div>
-      <div className="users-list overflow-auto">
+      <div className="overflow-auto">
         <Stack gap={2}>
           {inputData.map(user => {
             counter++

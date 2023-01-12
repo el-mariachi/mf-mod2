@@ -9,7 +9,7 @@ import { inputData, defaultValues, SignUpFormStruct } from './constants'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signUpUser } from '../../services/authController'
-import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
+import { AppError, formUserErrorHandler } from '../../utils/errorsHandling'
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -82,4 +82,4 @@ const SignUp = () => {
   )
 }
 
-export { SignUp }
+export default SignUp

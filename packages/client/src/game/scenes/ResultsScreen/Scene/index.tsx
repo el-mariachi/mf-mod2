@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import SecondsToHMS from '../../../../utils/secondsFormat'
-import ResultsProps from '../Props/ResultsProps'
+import ResultsProps from '../Props'
 import './ResScene.scss'
 
 function _RenderStroke(
@@ -101,12 +101,12 @@ function ResScene({
   }, [fontLoaded])
 
   return (
-    <div className="res-scene_results">
+    <div className="res-scene__results">
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
         height={curHeight + 265}></canvas>
-      <div className="res-scene_buttons">
+      <div className="res-scene__buttons">
         <a className="mx-auto text-white" onClick={restartCallback}>
           restart
         </a>

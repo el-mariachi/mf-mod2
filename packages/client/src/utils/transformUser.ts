@@ -8,7 +8,7 @@ export function transformUser(data: User): UserDTO {
     avatar: data.avatar,
     phone: data.phone,
     email: data.email,
-  };
+  }
 }
 
 export function transformUserT(data: UserDTO): User {
@@ -21,5 +21,5 @@ export function transformUserT(data: UserDTO): User {
     avatar: data.avatar,
     phone: data.phone,
     email: data.email,
-  };
+  }
 }
