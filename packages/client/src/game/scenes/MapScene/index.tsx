@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux'
 import { actions } from '../../../store'
 import './index.css'
 
-const { startGame } = actions
-function LoadScene({onExit}: {onExit: ()=>void}) {
+const { finishLevel } = actions
+function LoadScene({ onExit }: { onExit: () => void }) {
   const width = window.innerWidth
   const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -16,28 +16,25 @@ function LoadScene({onExit}: {onExit: ()=>void}) {
       setFontLoaded(true)
     }
   })
+
   const dispatch = useDispatch()
-  const onGameStart = ()=> {
-      dispatch(startGame())
+  const onGameFinish = () => {
+    dispatch(finishLevel({ time: 0 }))
   }
+
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
-
       if (ctx) {
         ctx.fillStyle = 'black'
         ctx.fillRect(0, 0, width, height)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '700 48px Minecraft'
-        ctx.fillText('One Bit', centerWidth, centerHeight)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '700 40px Minecraft'
-        ctx.fillText('Journey', centerWidth, centerHeight + 45)
+
+        const image = new Image()
+        image.src = '/src/assets/game_level_1_items.png'
+        image.onload = function () {
+          ctx.drawImage(image, centerWidth - 200, 180)
+        }
       }
     }
   }, [fontLoaded])
@@ -45,9 +42,13 @@ function LoadScene({onExit}: {onExit: ()=>void}) {
   return (
     <>
       <canvas ref={canvasRef} width={width} height={height}></canvas>
-      <div className="start-scene_buttons">
-        <a className="mx-auto text-white" onClick={onGameStart}>start game</a>
-        <a className="mx-auto text-white" onClick={onExit}>exit</a>
+      <div className="map-scene_buttons">
+        <a className="mx-auto text-white" onClick={onGameFinish}>
+          finish game
+        </a>
+        <a className="mx-auto text-white" onClick={onExit}>
+          exit
+        </a>
       </div>
     </>
   )

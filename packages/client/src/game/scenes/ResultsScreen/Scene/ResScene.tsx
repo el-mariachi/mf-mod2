@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '../../../../store'
 import { levelStats } from '../../../../store/selectors'
 
+const { restartGame } = actions
 function _RenderStroke(
   ctx: CanvasRenderingContext2D,
   lStr: string,
@@ -20,7 +21,7 @@ function _RenderStroke(
   ctx.fillText(rStr, centerWidth + margin, curHeight)
 }
 
-function ResScene() {
+function ResScene({onExit}: {onExit: ()=>void}) {
   const lvlStats = useSelector(levelStats) || {
     levelNum: 1,
     killCount: 0,
@@ -43,12 +44,9 @@ function ResScene() {
   })
 
   const formatTime = SecondsToHMS(time)
-  const restartCallback = () => {
-    console.log(actions.showLoader())
-    dispatch(actions.showLoader())
-  }
-  const exitCallback = () => {
-    ;('')
+
+  const onRestart = () => {
+    dispatch(restartGame())
   }
 
   useEffect(() => {
@@ -118,10 +116,10 @@ function ResScene() {
         width={window.innerWidth}
         height={curHeight + 265}></canvas>
       <div className="res-scene_buttons">
-        <a className="mx-auto text-white" onClick={restartCallback}>
+        <a className="mx-auto text-white" onClick={onRestart}>
           restart
         </a>
-        <a className="mx-auto text-white" onClick={exitCallback}>
+        <a className="mx-auto text-white" onClick={onExit}>
           exit
         </a>
       </div>

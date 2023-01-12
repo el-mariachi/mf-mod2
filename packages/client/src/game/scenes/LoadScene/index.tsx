@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { actions } from '../../../store'
 import { ProgressBar } from '../../animations/ProgressBar'
+const { showStartScene } = actions
+
 function StartScene() {
   const width = window.innerWidth
   const height = window.innerHeight
@@ -12,6 +16,11 @@ function StartScene() {
       setFontLoaded(true)
     }
   })
+  const dispatch = useDispatch()
+  setTimeout(() => {
+    dispatch(showStartScene())
+  }, 2500)
+
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current

@@ -3,12 +3,12 @@ import * as SCENES from '../../constants/scenes'
 
 export interface InitialState {
   currentScene: string
-  level: 1
+  level: number
   levelStats: ResultsProps
 }
 
 export const initialState: InitialState = {
-  currentScene: 'ResultScene',
+  currentScene: SCENES.LOAD_SCENE,
   level: 1,
   levelStats: {
     levelNum: 1,
@@ -33,7 +33,6 @@ export enum ActionType {
   nextLevel,
   showLoader,
   finishLevel,
-  exit,
 }
 
 const gameSlice = createSlice({
@@ -53,13 +52,13 @@ const gameSlice = createSlice({
     showLoader(state) {
       state.currentScene = SCENES.LOAD_SCENE
     },
+    showStartScene(state) {
+      state.currentScene = SCENES.START_SCENE
+    },
     finishLevel(state, action) {
       state.currentScene = SCENES.RESULT_SCENE
       state.levelStats = action.payload.stats
-    },
-    exit(state, action) {
-      //navigate('/liderboard')
-    },
+    }
   },
 })
 

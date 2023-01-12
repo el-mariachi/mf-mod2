@@ -12,7 +12,7 @@ import './App.scss'
 
 function App() {
   const navigate = useNavigate()
-  /*useEffect(() => {
+  useEffect(() => {
     defineUser()
       // TODO it`s temporary, use connected-react-router
       .then(() => {
@@ -20,12 +20,12 @@ function App() {
           navigate('/')
         }
       })
-  }, [])*/
+  }, [])
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<Navigate to="/game/*" replace />} />
-        <Route path="/game" element={<GamePage />} />
+        <Route path="/" element={<Navigate to="/game" replace />} />
+        <Route path="game" element={<GamePage />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="sign-in" element={<AuthPage />} />
         <Route path="leaderboard" element={<Leaderboard />} />
