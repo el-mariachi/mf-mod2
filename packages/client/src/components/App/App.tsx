@@ -8,7 +8,6 @@ import Leaderboard from '../../pages/Leaderboard/Leaderboard'
 import Profile from '../../pages/profile'
 import ServicePage from '../../pages/ServicePage/ServicePage'
 import SignUp from '../../pages/sign_up'
-import './App.scss'
 
 function App() {
   const navigate = useNavigate()
@@ -25,12 +24,12 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<GamePage />} />
-        <Route path="sign-up" element={<SignUp />} />
-        <Route path="sign-in" element={<AuthPage />} />
-        <Route path="leaderboard" element={<Leaderboard />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<AuthPage />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/profile" element={<Profile />} />
         <Route
-          path="/404"
+          path="*"
           element={
             <ServicePage
               errorCode={404}
