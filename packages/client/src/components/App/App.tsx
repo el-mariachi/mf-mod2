@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
 import { defineUser } from '../../services/authController'
 import AuthPage from '../../pages/AuthPage'
 import ForumPage from '../../pages/ForumPage/ForumPage'
@@ -12,7 +12,7 @@ import './App.scss'
 
 function App() {
   const navigate = useNavigate()
-  useEffect(() => {
+  /*useEffect(() => {
     defineUser()
       // TODO it`s temporary, use connected-react-router
       .then(() => {
@@ -20,11 +20,12 @@ function App() {
           navigate('/')
         }
       })
-  }, [])
+  }, [])*/
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<GamePage />} />
+        <Route path="/" element={<Navigate to="/game/*" replace />} />
+        <Route path="/game" element={<GamePage />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="sign-in" element={<AuthPage />} />
         <Route path="leaderboard" element={<Leaderboard />} />

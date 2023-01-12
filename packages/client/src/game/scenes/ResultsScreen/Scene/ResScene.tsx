@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import SecondsToHMS from '../../../../utils/secondsFormat'
 import ResultsProps from '../Props/ResultsProps'
 import './ResScene.scss'
+import { useSelector, useDispatch } from 'react-redux'
+import { actions } from '../../../../store'
+import { levelStats } from '../../../../store/selectors'
 
 function _RenderStroke(
   ctx: CanvasRenderingContext2D,
@@ -17,15 +20,16 @@ function _RenderStroke(
   ctx.fillText(rStr, centerWidth + margin, curHeight)
 }
 
-function ResScene({
-  levelNum,
-  killCount,
-  coins,
-  time,
-  steps,
-  restartCallback,
-  exitCallback,
-}: ResultsProps) {
+function ResScene() {
+  const lvlStats = useSelector(levelStats) || {
+    levelNum: 1,
+    killCount: 0,
+    coins: 0,
+    time: 0,
+    steps: 0,
+  }
+  const { levelNum, killCount, coins, time, steps } = lvlStats
+  const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = window.innerWidth / 2
   let curHeight = window.innerHeight / 4
@@ -39,6 +43,13 @@ function ResScene({
   })
 
   const formatTime = SecondsToHMS(time)
+  const restartCallback = () => {
+    console.log(actions.showLoader())
+    dispatch(actions.showLoader())
+  }
+  const exitCallback = () => {
+    ;('')
+  }
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -98,7 +109,7 @@ function ResScene({
         curHeight += 24 * 2
       }
     }
-  }, [fontLoaded])
+  }, [fontLoaded, levelStats])
 
   return (
     <div className="res-scene_results">
