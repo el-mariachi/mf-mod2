@@ -25,7 +25,7 @@ function StartScene() {
         heigth: 15,
       })
       if (ctx) {
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = '#25131a'
         ctx.fillRect(0, 0, width, height)
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
@@ -36,7 +36,7 @@ function StartScene() {
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = '700 40px Minecraft'
-        ctx.fillText('Journey', centerWidth, centerHeight + 45)
+        ctx.fillText('Dungeon', centerWidth, centerHeight + 45)
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'

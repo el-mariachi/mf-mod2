@@ -12,7 +12,7 @@ type profileAvataProps = {
 }
 
 export default ({ avatar }: profileAvataProps) => {
-  const initialImage = avatar ? avatar : "'/src/assets/king.png'"
+  const initialImage = avatar ? avatar : "'@images/king.png'"
 
   const [image, setImage] = useState(initialImage)
   const [modalOptions, setModalOptions] = useState({})

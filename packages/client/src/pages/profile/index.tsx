@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'
+import { Row, Col, Form, Button } from 'react-bootstrap'
 import { AppError, formUserErrorHandler } from '../../utils/errors_handling'
 import { updatePassword, updateProfile } from '../../services/userController'
 import ProfileAvatar from '../../components/ProfileAvatar'
 import FormGroupView from '../../components/FormGroupView'
 import ConfirmPassword from '../../components/ConfirmPassword'
 import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
-import './index.css'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import emulateStore from './loadUserEmul'
+import AppDefaultTpl from '../../components/AppDefaultTpl'
+import './index.scss'
 
 enum Mode {
   Edit,
@@ -77,44 +78,36 @@ const Profile = () => {
   ))
 
   return (
-    <div className="user-profile">
-      <Container fluid="sm">
-        <Form
-          className="user-profile__form mt-5"
-          onSubmit={handleSubmit(formSubmit)}>
-          <Row>
-            <Col sm={4} className="px-0">
-              <ProfileAvatar avatar={avatar} />
-            </Col>
-            <Col sm={8} className="py-4 user-profile__form-wrapper">
-              {submitError ? (
-                <p className="text-danger mb-3">{submitError}</p>
-              ) : (
-                ''
-              )}
-              <div
-                className={`user-profile__form ${
-                  mode ? READ_CLASS : EDIT_CLASS
-                }`}>
-                {formControls}
-              </div>
-              {mode ? (
-                <Button variant="dark" type="button" onClick={editMode}>
-                  Изменить данные профиля
-                </Button>
-              ) : (
-                <Button variant="dark" type="submit">
-                  Сохранить
-                </Button>
-              )}
-            </Col>
-          </Row>
-        </Form>
-      </Container>
+    <AppDefaultTpl showNav={true} withPaddings={false} className="user-profile">
+      <Form className="user-profile__form" onSubmit={handleSubmit(formSubmit)}>
+        <Row>
+          <Col sm={4}>
+            <ProfileAvatar avatar={avatar} />
+          </Col>
+          <Col sm={8} className="py-5 ps-4 pe-5 user-profile__form-wrapper">
+            <h1 className="h3 mb-5">Профиль игрока</h1>
+            {submitError ? (
+              <p className="text-danger mb-3">{submitError}</p>
+            ) : (
+              ''
+            )}
+            <div className={`mb-4 ${mode ? READ_CLASS : EDIT_CLASS}`}>
+              {formControls}
+            </div>
+            {mode ? (
+              <Button type="button" onClick={editMode}>
+                Изменить данные профиля
+              </Button>
+            ) : (
+              <Button type="submit">Сохранить</Button>
+            )}
+          </Col>
+        </Row>
+      </Form>
       {Object.keys(modalOptions).length !== 0 ? (
         <ConfirmPassword options={modalOptions} />
       ) : null}
-    </div>
+    </AppDefaultTpl>
   )
 }
 

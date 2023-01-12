@@ -110,7 +110,7 @@ function LeaderboardList() {
 
   return (
     <>
-      <div className="d-flex flex-row">
+      <div className="d-flex flex-row mb-3">
         <p className="flex-2 text-end align-middle p-2 my-auto">
           Сортировать по:
         </p>
@@ -126,12 +126,13 @@ function LeaderboardList() {
           <option value="4">Враги</option>
         </Form.Select>
       </div>
-      <div className="users-list overflow-auto border border-1">
+      <div className="users-list overflow-auto">
         <Stack gap={2}>
           {inputData.map(user => {
             counter++
             return (
               <Lb_User
+                key={user.nickname}
                 place={counter}
                 nickname={user.nickname}
                 score={user.score}

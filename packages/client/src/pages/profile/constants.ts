@@ -90,7 +90,7 @@ const DEFAULT_USER = {
   first_name: 'Ivan',
   display_name: 'IvanIvanov',
   phone: '+79099673030',
-  avatar: '/src/assets/king.png',
+  avatar: '@images/king.png',
 }
 
 const EDIT_CLASS = 'user-profile__form_edit'

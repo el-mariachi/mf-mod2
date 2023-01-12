@@ -1,13 +1,15 @@
 import AddForumTopicForm from '../../components/AddForumTopicForm/AddForumTopicForm'
+import AppDefaultTpl from '../../components/AppDefaultTpl'
 import ForumTopicsList from '../../components/ForumTopicsList/ForumTopicsList'
 import './ForumPage.scss'
 
 function ForumPage() {
   return (
-    <section className="forum-page page d-flex flex-column">
+    <AppDefaultTpl showNav={true} className="forum-page">
+      <h1 className="h3 mb-4">Игровой форум</h1>
       <AddForumTopicForm />
       <ForumTopicsList />
-    </section>
+    </AppDefaultTpl>
   )
 }
 
