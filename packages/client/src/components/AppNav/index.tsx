@@ -1,11 +1,14 @@
+import classNames from 'classnames'
 import { FC } from 'react'
 import { Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../../services/authController'
+import Icon, { IconName } from '../Icon'
 import './AppNav.scss'
 
 type AppNavPath = {
   title: string
+  icon?: IconName
   path?: string
   callback?: () => void
   extLink?: string
@@ -16,17 +19,20 @@ export type AppNavProps = {
 }
 const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
   const navigate = useNavigate()
-  const navItems = paths.map(({ title, path, callback, extLink }) => {
+  const navItems = paths.map(({ title, icon, path, callback, extLink }) => {
     return (
       <li key={title} className="nav-item">
         {path ? (
           <NavLink
             className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
+              classNames('nav-link d-flex align-items-center', {
+                active: isActive,
+              })
             }
             to={path}
             end>
-            {title}
+            {icon ? <Icon iconName={icon} className="me-2" /> : null}
+            <span>{title}</span>
           </NavLink>
         ) : (
           <Nav.Link
@@ -36,7 +42,7 @@ const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
                 callback()
               }
             }}
-            className="nav-link"
+            className="nav-link d-flex align-items-center"
             href={extLink || '#'}>
             {title}
           </Nav.Link>
@@ -54,34 +60,35 @@ const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
         id="offcanvasNavbar"
         aria-labelledby="offcanvasNavbarLabel"
         placement="end">
-        <Offcanvas.Header className="app-nav__header" closeButton>
+        <Offcanvas.Header className="app-nav__header px-4" closeButton>
           {caption ? (
             <Offcanvas.Title
               className="offcanvas-title minecrafted minecrafted_bold"
               id="offcanvasNavbarLabel">
               {caption}
             </Offcanvas.Title>
-          ) : (
-            ''
-          )}
+          ) : null}
         </Offcanvas.Header>
-        <Offcanvas.Body>
+        <Offcanvas.Body className="p-4">
           <Nav className="justify-content-end flex-grow-1 pe-3" as="ul">
             {navItems}
-            <Nav.Link
-              onClick={(e: React.SyntheticEvent) => {
-                e.preventDefault()
-
-                logout().then(() => {
-                  if (!['/sign-in', '/sign-up'].includes(location.pathname)) {
-                    navigate('/sign-in')
-                  }
-                })
-              }}
-              className="nav-link"
-              href="#">
-              Выход
-            </Nav.Link>
+            <li key="exit" className="nav-item">
+              <Nav.Link
+                onClick={(e: React.SyntheticEvent) => {
+                  e.preventDefault()
+                  // TODO it`s temporary, use connected-react-router
+                  logout().then(() => {
+                    if (!['/sign-in', '/sign-up'].includes(location.pathname)) {
+                      navigate('/sign-in')
+                    }
+                  })
+                }}
+                className="nav-link d-flex align-items-center"
+                href="#">
+                <Icon iconName="XSquareFill" className="me-2" />
+                <span>Выход</span>
+              </Nav.Link>
+            </li>
           </Nav>
         </Offcanvas.Body>
       </Navbar.Offcanvas>

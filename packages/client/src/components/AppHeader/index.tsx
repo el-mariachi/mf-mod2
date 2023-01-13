@@ -30,18 +30,22 @@ const AppHeader: FC<AppHeaderProps> = ({
             {
               title: 'Играть!',
               path: '/',
+              icon: 'Dice3Fill',
             },
             {
               title: 'Список лидеров',
               path: '/leaderboard',
+              icon: 'BarChartLineFill',
             },
             {
               title: 'Игровой форум',
               path: '/forum',
+              icon: 'ChatLeftTextFill',
             },
             {
               title: 'Профиль игрока',
               path: '/profile',
+              icon: 'PersonSquare',
             },
           ]}
         />
