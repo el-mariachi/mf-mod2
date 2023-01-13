@@ -55,7 +55,7 @@ const SignUp = () => {
   ))
 
   return (
-    <AppDefaultTpl centered={true} className="sign-up">
+    <AppDefaultTpl showNav={false} centered={true} className="sign-up">
       <Form onSubmit={handleSubmit(formSubmit)}>
         <Row className="mb-4">
           <Col sm={{ span: 9, offset: 3 }}>
@@ -63,7 +63,7 @@ const SignUp = () => {
           </Col>
         </Row>
 
-        {submitError ? <p className="text-danger mb-3">{submitError}</p> : ''}
+        {submitError ? <p className="text-danger mb-3">{submitError}</p> : null}
 
         {formControls}
 

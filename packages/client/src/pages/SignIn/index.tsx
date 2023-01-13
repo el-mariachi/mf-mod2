@@ -115,7 +115,7 @@ export default function SignIn(props: SignInProps) {
     )
   }
   return (
-    <AppDefaultTpl centered={true} className="sign-in">
+    <AppDefaultTpl showNav={false} centered={true} className="sign-in">
       <Form validated={validated} onSubmit={handleSubmit(formSubmit)}>
         {isAuthMode ? (
           <>
@@ -126,9 +126,7 @@ export default function SignIn(props: SignInProps) {
             </Row>
             {submitError ? (
               <p className="text-danger mb-4">{submitError}</p>
-            ) : (
-              ''
-            )}
+            ) : null}
             {formControls}
             <ButtonsBox submitBtnTxt="Войти" toggleBtnTxt="Не помню пароль" />
           </>
@@ -141,9 +139,7 @@ export default function SignIn(props: SignInProps) {
             </Row>
             {submitError ? (
               <p className="text-danger mb-4">{submitError}</p>
-            ) : (
-              ''
-            )}
+            ) : null}
             <p className="text-muted fs-6 mb-4">
               {
                 'На указанный при регистрации e-mail придет письмо с новым паролем для входа.'

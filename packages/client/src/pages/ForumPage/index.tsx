@@ -5,7 +5,7 @@ import './ForumPage.scss'
 
 function ForumPage() {
   return (
-    <AppDefaultTpl showNav={true} className="forum-page">
+    <AppDefaultTpl className="forum-page">
       <h1 className="h3 mb-4">Игровой форум</h1>
       <AddForumTopicForm />
       <ForumTopicsList />

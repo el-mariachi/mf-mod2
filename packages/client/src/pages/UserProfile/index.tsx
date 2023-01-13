@@ -9,6 +9,7 @@ import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import emulateStore from './loadUserEmul'
 import AppDefaultTpl from '../../components/AppDefaultTpl'
+import classNames from 'classnames'
 import './UserProfile.scss'
 
 enum Mode {
@@ -78,7 +79,7 @@ const UserProfile = () => {
   ))
 
   return (
-    <AppDefaultTpl showNav={true} withPaddings={false} className="user-profile">
+    <AppDefaultTpl withPaddings={false} className="user-profile">
       <Form className="user-profile__form" onSubmit={handleSubmit(formSubmit)}>
         <Row>
           <Col sm={4}>
@@ -88,10 +89,8 @@ const UserProfile = () => {
             <h1 className="h3 mb-5">Профиль игрока</h1>
             {submitError ? (
               <p className="text-danger mb-3">{submitError}</p>
-            ) : (
-              ''
-            )}
-            <div className={`mb-4 ${mode ? READ_CLASS : EDIT_CLASS}`}>
+            ) : null}
+            <div className={classNames('mb-4', mode ? READ_CLASS : EDIT_CLASS)}>
               {formControls}
             </div>
             {mode ? (

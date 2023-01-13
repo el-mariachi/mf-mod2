@@ -1,5 +1,6 @@
 import { FC, HTMLAttributes } from 'react'
 import AppNav from '../AppNav'
+import classNames from 'classnames'
 import logoImg from '@images/skeleton.gif'
 import './AppHeader.scss'
 
@@ -7,12 +8,12 @@ export type AppHeaderProps = HTMLAttributes<HTMLElement> & {
   showNav?: boolean
 }
 const AppHeader: FC<AppHeaderProps> = ({
-  showNav,
+  showNav = true,
   className: cls,
   ...attrs
 }) => {
   return (
-    <div className={('app-header ' + cls).trim()} {...attrs}>
+    <header className={classNames('app-header', cls)} {...attrs}>
       <div className="app-header__logo-image-box">
         <img className="app-header__logo-image" src={logoImg} />
       </div>
@@ -44,10 +45,8 @@ const AppHeader: FC<AppHeaderProps> = ({
             },
           ]}
         />
-      ) : (
-        ''
-      )}
-    </div>
+      ) : null}
+    </header>
   )
 }
 export default AppHeader

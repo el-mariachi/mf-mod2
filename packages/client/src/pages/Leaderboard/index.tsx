@@ -5,7 +5,7 @@ import './Leaderboard.scss'
 
 function Leaderboard() {
   return (
-    <AppDefaultTpl showNav={true} className="leaderboard">
+    <AppDefaultTpl className="leaderboard">
       <h1 className="h3 mb-4">Список лидеров</h1>
 
       <LeaderboardList />
