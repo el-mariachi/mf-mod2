@@ -1,5 +1,5 @@
 import { IServicePageProps } from './ServicePageProps'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import './ServicePage.scss'
 
@@ -11,9 +11,19 @@ function ServicePage({ errorCode, errorText }: IServicePageProps) {
       <div className="d-flex flex-column justify-content-center align-items-center">
         <h1 className="display-1 minecrafted">{errorCode}</h1>
         <p>{errorText}</p>
-        <Button variant="primary" onClick={() => goBack()}>
-          Вернуться назад
-        </Button>
+        <div>
+          <Button
+            variant="primary"
+            onClick={() => goBack()}
+            className="mb-1 me-2">
+            Вернуться назад
+          </Button>
+          <Link to="/">
+            <Button as="span" variant="outline-primary" className="mb-1">
+              На главную
+            </Button>
+          </Link>
+        </div>
       </div>
     </main>
   )

@@ -23,8 +23,9 @@ const topics: IForumTopicProps[] = [
 function ForumTopicsList() {
   return (
     <ul className="forum-topic-list d-flex flex-column">
-      {topics.map(topic => (
+      {topics.map((topic, index) => (
         <ForumTopic
+          key={index}
           topicAuthor={topic.topicAuthor}
           topicTitle={topic.topicTitle}
         />

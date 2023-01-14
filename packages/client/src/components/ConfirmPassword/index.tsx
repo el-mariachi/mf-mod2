@@ -47,8 +47,9 @@ export default ({ options: { res, newPassword } }: ConfirmPasswordProps) => {
     res(null)
   }
 
-  const formControls = changePasswordInputData.map(controlProps => (
+  const formControls = changePasswordInputData.map((controlProps, index) => (
     <FormGroupView
+      key={index}
       register={register}
       errors={errors}
       formName="changePasswordForm"
