@@ -1,12 +1,12 @@
-@import '../../../../assets/fonts/minecraft/minecraft.css';
+@import '@fonts/minecraft/minecraft.css';
 
-.res-scene_results {
+.res-scene__results {
   background: black;
   height: 100vh;
   width: 100vw;
 }
 
-.res-scene_buttons {
+.res-scene__buttons {
   display: flex;
   width: 100%;
   flex-direction: column;

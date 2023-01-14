@@ -1,0 +1,16 @@
+@import '@vars';
+@import '@bootstrap';
+@import '@fonts/minecraft/minecraft.css';
+
+canvas {
+  display: block;
+}
+.minecrafted {
+  font-family: 'Minecraft';
+}
+.minecrafted_bold {
+  font-weight: 700;
+}
+.navbar-nav .nav-link.active {
+  color: $primary;
+}

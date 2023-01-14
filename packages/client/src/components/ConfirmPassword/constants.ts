@@ -1,4 +1,4 @@
-import { minMax, aDigit, aCapital } from '../../utils/validations'
+import { minMax, aDigit, aCapital } from '@utils/validations'
 
 export const PASSWORD_FIELDS: ProfileInputProps[] = [
   {

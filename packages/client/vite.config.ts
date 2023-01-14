@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
+import path from 'path'
 dotenv.config()
 
 // https://vitejs.dev/config/
@@ -12,4 +13,23 @@ export default defineConfig({
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve('../../', __dirname, 'src'),
+      '@vars': path.resolve('../../', __dirname, 'src/vars'),
+      '@bootstrap': path.resolve(
+        __dirname + '../../../',
+        'node_modules/bootstrap/scss/bootstrap'
+      ),
+      '@images': path.resolve('../../', __dirname, 'src/assets/images'),
+      '@fonts': path.resolve('../../', __dirname, 'src/assets/fonts'),
+      '@components': path.resolve('../../', __dirname, 'src/components'),
+      '@utils': path.resolve('../../', __dirname, 'src/utils'),
+      '@api': path.resolve('../../', __dirname, 'src/api'),
+      '@pages': path.resolve('../../', __dirname, 'src/pages'),
+      '@services': path.resolve('../../', __dirname, 'src/services'),
+      '@game': path.resolve('../../', __dirname, 'src/game'),
+      '@scenes': path.resolve('../../', __dirname, 'src/game/scenes'),
+    },
+  },
 })

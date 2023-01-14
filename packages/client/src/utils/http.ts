@@ -6,55 +6,67 @@ const METHODS = {
   PUT: 'PUT',
   PATCH: 'PATCH',
   DELETE: 'DELETE',
-} as const;
+} as const
 
-type METHODS = typeof METHODS[keyof typeof METHODS];
+type METHODS = typeof METHODS[keyof typeof METHODS]
 
-type TRequestData = Record<string, string | number>;
+type TRequestData = Record<string, string | number>
 
 type TRequestOptions = {
-  method?: METHODS;
-  headers?: Record<string, string>;
-  withCredentials?: boolean;
-  timeout?: number;
-  data?: unknown;
-};
+  method?: METHODS
+  headers?: Record<string, string>
+  withCredentials?: boolean
+  timeout?: number
+  data?: unknown
+}
 
-type HTTPMethod<HttpResponse> = (url: string, options?: TRequestOptions) => Promise<unknown>;
+type HTTPMethod<HttpResponse> = (
+  url: string,
+  options?: TRequestOptions
+) => Promise<unknown>
 
 interface Connection {
-  request(url: string, options: TRequestOptions): Promise<unknown>;
+  request(url: string, options: TRequestOptions): Promise<unknown>
 }
 
 export function queryStringify(data: TRequestData) {
-  if (!data) return '';
+  if (!data) return ''
   return (
     '?' +
     Object.entries(data)
       .map(([key, value]) => `${key}=${value}`)
       .join('&')
-  );
+  )
 }
 
 class HTTP {
   constructor(private httpConnection: Connection) {
-    this.httpConnection = httpConnection;
+    this.httpConnection = httpConnection
   }
   get: HTTPMethod<HttpResponse> = (url, options) => {
-    return this.httpConnection.request(url, { ...options, method: METHODS.GET });
-  };
+    return this.httpConnection.request(url, { ...options, method: METHODS.GET })
+  }
   post: HTTPMethod<HttpResponse> = (url, options) => {
-    return this.httpConnection.request(url, { ...options, method: METHODS.POST });
-  };
+    return this.httpConnection.request(url, {
+      ...options,
+      method: METHODS.POST,
+    })
+  }
   put: HTTPMethod<HttpResponse> = (url, options) => {
-    return this.httpConnection.request(url, { ...options, method: METHODS.PUT });
-  };
+    return this.httpConnection.request(url, { ...options, method: METHODS.PUT })
+  }
   patch: HTTPMethod<HttpResponse> = (url, options) => {
-    return this.httpConnection.request(url, { ...options, method: METHODS.PATCH });
-  };
+    return this.httpConnection.request(url, {
+      ...options,
+      method: METHODS.PATCH,
+    })
+  }
   delete: HTTPMethod<HttpResponse> = (url, options) => {
-    return this.httpConnection.request(url, { ...options, method: METHODS.DELETE });
-  };
+    return this.httpConnection.request(url, {
+      ...options,
+      method: METHODS.DELETE,
+    })
+  }
 }
 
 class XMLHttpService implements Connection {
@@ -65,48 +77,48 @@ class XMLHttpService implements Connection {
       data,
       timeout = 5000,
       withCredentials = true,
-    } = options as TRequestOptions;
+    } = options as TRequestOptions
 
-    const query = method === METHODS.GET ? queryStringify(data as TRequestData) : "";
+    const query =
+      method === METHODS.GET ? queryStringify(data as TRequestData) : ''
 
     return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(method, url + query);
+      const xhr = new XMLHttpRequest()
+      xhr.open(method, url + query)
 
       Object.entries(headers).forEach(([key, value]) => {
-        xhr.setRequestHeader(key, value);
-      });
+        xhr.setRequestHeader(key, value)
+      })
 
       if (!(data instanceof FormData)) {
-        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('Content-Type', 'application/json')
       }
 
       xhr.onload = () => {
         if (xhr.status >= 300) {
-          reject(xhr);
+          reject(xhr)
         } else {
-          const {response} = xhr;
-          resolve(response as HttpResponse);
+          const { response } = xhr
+          resolve(response as HttpResponse)
         }
-      };
-      
-      xhr.onabort = reject;
-      xhr.onerror = reject;
-      xhr.timeout = timeout;
-      xhr.ontimeout = reject;
-
-      xhr.withCredentials = withCredentials;
-      xhr.responseType = "json";
-
-      if (method === METHODS.GET || !data) {
-        xhr.send();
-      } else if (data instanceof FormData) {
-        xhr.send(data);
-      } else {
-        xhr.send(JSON.stringify(data));
       }
 
-    });
+      xhr.onabort = reject
+      xhr.onerror = reject
+      xhr.timeout = timeout
+      xhr.ontimeout = reject
+
+      xhr.withCredentials = withCredentials
+      xhr.responseType = 'json'
+
+      if (method === METHODS.GET || !data) {
+        xhr.send()
+      } else if (data instanceof FormData) {
+        xhr.send(data)
+      } else {
+        xhr.send(JSON.stringify(data))
+      }
+    })
   }
 }
 
@@ -116,10 +128,10 @@ class FetchService implements Connection {
       fetch(url, options)
         .then(res => res.json)
         .then(data => resolve(data as unknown as Promise<HttpResponse>))
-        .catch(e => reject(e));
-    });
+        .catch(e => reject(e))
+    })
   }
 }
 
-export const httpXML = new HTTP(new XMLHttpService());
-export const httpFetch = new HTTP(new FetchService());
+export const httpXML = new HTTP(new XMLHttpService())
+export const httpFetch = new HTTP(new FetchService())

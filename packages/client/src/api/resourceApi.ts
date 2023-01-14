@@ -1,4 +1,4 @@
-import { restResourceApi } from './restApi'
+import { restResourceApi } from '@api/restApi'
 
 export const getFile = (file: string) => restResourceApi.url + file
 export const uploadFile = (file: FormData) =>
