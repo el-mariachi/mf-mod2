@@ -23,19 +23,19 @@ export default ({ options }: UploadFileProps) => {
   return (
     <div className="confirm-password-modal">
       <Modal show={true} onHide={handleClose}>
-        <Modal.Header closeButton>
+        <Modal.Header className="px-4" closeButton>
           <Modal.Title>Выберите файл</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form.Group controlId="formFile" className="mb-3">
+        <Modal.Body className="p-4">
+          <Form.Group controlId="formFile" className="mb-0">
             <Form.Control type="file" ref={refFile} accept="image/*" />
           </Form.Group>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="dark" onClick={onSubmit}>
+        <Modal.Footer className="px-4">
+          <Button className="mb-1 me-2" onClick={onSubmit}>
             Выбрать
           </Button>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="outline-primary" className="mb-1" onClick={handleClose}>
             Отмена
           </Button>
         </Modal.Footer>

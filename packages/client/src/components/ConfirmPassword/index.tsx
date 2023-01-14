@@ -60,27 +60,24 @@ export default ({ options: { res, newPassword } }: ConfirmPasswordProps) => {
   return (
     <div className="confirm-password-modal">
       <Modal show={true} onHide={handleClose}>
-        <Modal.Header closeButton>
+        <Modal.Header className="px-4" closeButton>
           <Modal.Title>Смена пароля</Modal.Title>
         </Modal.Header>
+        
+        <Form onSubmit={handleSubmit(formSubmit)}>
+          <Modal.Body className="p-4">            
+              {formControls}
+          </Modal.Body>
 
-        <Modal.Body>
-          <Form onSubmit={handleSubmit(formSubmit)}>
-            {formControls}
-            <Row xs={1} sm={2} className="mt-4">
-              <Col sm={{ span: 5, offset: 4 }} className="mb-3">
-                <Button variant="dark" type="submit">
-                  Поменять пароль
-                </Button>
-              </Col>
-              <Col sm={3} className="mb-3">
-                <Button variant="secondary" onClick={handleClose} type="button">
-                  Отмена
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Modal.Body>
+          <Modal.Footer className="px-4 mt-n3">
+            <Button className="mb-1 me-2" type="submit">
+              Поменять пароль
+            </Button>
+            <Button variant="outline-primary" className="mb-1" onClick={handleClose} type="button">
+              Отмена
+            </Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
     </div>
   )
