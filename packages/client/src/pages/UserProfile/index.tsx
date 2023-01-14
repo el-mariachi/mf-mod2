@@ -9,6 +9,7 @@ import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import emulateStore from './loadUserEmul'
 import AppDefaultTpl from '../../components/AppDefaultTpl'
+import SpinnerButton from '../../components/SpinnerButton'
 import classNames from 'classnames'
 import './UserProfile.scss'
 
@@ -19,6 +20,8 @@ enum Mode {
 
 const UserProfile = () => {
   const [mode, setMode] = useState(Mode.View)
+  const [loading, setLoading] = useState(false)
+  const [readOnly, setReadOnly] = useState(false)
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
   // TODO uncomment and edit next line when we have redux store
@@ -63,8 +66,15 @@ const UserProfile = () => {
   }
 
   const formSubmit: SubmitHandler<ProfileFormProps> = async data => {
-    await saveChanges(data)
-    setMode(Mode.View)
+    setLoading(true)
+    setReadOnly(true)
+
+    saveChanges(data)
+      .finally(() => {
+        setLoading(false)
+        setReadOnly(false)
+        setMode(Mode.View)
+      })    
   }
 
   const formControls = profileFormInputs.map((controlProps, index) => (
@@ -74,7 +84,7 @@ const UserProfile = () => {
       errors={errors}
       formName="userProfileForm"
       controlProps={controlProps}
-      readOnly={Boolean(mode)}
+      readOnly={readOnly || Boolean(mode)}
     />
   ))
 
@@ -98,7 +108,9 @@ const UserProfile = () => {
                 Изменить данные профиля
               </Button>
             ) : (
-              <Button type="submit">Сохранить</Button>
+              <SpinnerButton loading={loading}>
+                Сохранить
+              </SpinnerButton>
             )}
           </Col>
         </Row>

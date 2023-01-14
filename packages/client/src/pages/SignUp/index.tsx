@@ -10,9 +10,12 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signUpUser } from '../../services/authController'
 import { AppError, formUserErrorHandler } from '../../utils/errorsHandling'
+import SpinnerButton from '../../components/SpinnerButton'
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [readOnly, setReadOnly] = useState(false)
 
   const {
     register,
@@ -38,10 +41,17 @@ const SignUp = () => {
     }
     clearErrors()
 
+    setLoading(true)
+    setReadOnly(true)
+
     signUpUser(data)
       // TODO it`s temporary, use connected-react-router
       .then(() => navigate('/'))
       .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
+      .finally(() => {
+        setLoading(false)
+        setReadOnly(false)
+      })
   }
 
   const formControls = inputData.map((controlProps, index) => (
@@ -50,6 +60,7 @@ const SignUp = () => {
       formName="signUpForm"
       register={register}
       errors={errors}
+      readOnly={readOnly}
       controlProps={controlProps}
     />
   ))
@@ -69,7 +80,9 @@ const SignUp = () => {
 
         <Form.Group as={Row}>
           <Col sm={{ span: 9, offset: 3 }}>
-            <Button type="submit">Создать аккаунт</Button>
+            <SpinnerButton loading={loading}>
+              Создать аккаунт 
+            </SpinnerButton>
             <Link to="/sign-in">
               <Button as="span" variant="link">
                 Войти
