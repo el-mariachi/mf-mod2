@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import { defineUser } from '../../services/authController'
-import SignIn from '../../pages/SignIn'
-import ForumPage from '../../pages/ForumPage'
-import GamePage from '../../pages/GamePage'
-import Leaderboard from '../../pages/Leaderboard'
-import UserProfile from '../../pages/UserProfile'
-import ServicePage from '../../pages/ServicePage'
-import SignUp from '../../pages/SignUp'
+import { defineUser } from '@services/authController'
+import SignIn from '@pages/SignIn'
+import ForumPage from '@pages/ForumPage'
+import GamePage from '@pages/GamePage'
+import Leaderboard from '@pages/Leaderboard'
+import UserProfile from '@pages/UserProfile'
+import ServicePage from '@pages/ServicePage'
+import SignUp from '@pages/SignUp'
 
 function App() {
   const navigate = useNavigate()

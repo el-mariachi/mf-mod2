@@ -1,6 +1,6 @@
-import AddForumTopicForm from '../../components/AddForumTopicForm'
-import AppDefaultTpl from '../../components/AppDefaultTpl'
-import ForumTopicsList from '../../components/ForumTopicsList'
+import AddForumTopicForm from '@components/AddForumTopicForm'
+import AppDefaultTpl from '@components/AppDefaultTpl'
+import ForumTopicsList from '@components/ForumTopicsList'
 import './ForumPage.scss'
 
 function ForumPage() {

@@ -1,4 +1,4 @@
-import StartScene from '../../game/scenes/StartScene'
+import StartScene from '@scenes/StartScene'
 
 function GamePage() {
   return <StartScene />

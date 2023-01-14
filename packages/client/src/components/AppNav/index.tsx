@@ -2,8 +2,8 @@ import classNames from 'classnames'
 import { FC } from 'react'
 import { Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { logout } from '../../services/authController'
-import Icon, { IconName } from '../Icon'
+import { logout } from '@services/authController'
+import Icon, { IconName } from '@components/Icon'
 import './AppNav.scss'
 
 type AppNavPath = {

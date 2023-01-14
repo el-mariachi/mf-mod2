@@ -1,6 +1,6 @@
 import { FC, HTMLAttributes } from 'react'
 import { Container } from 'react-bootstrap'
-import AppHeader from '../AppHeader'
+import AppHeader from '@components/AppHeader'
 import classNames from 'classnames'
 import './AppDefaultTpl.scss'
 

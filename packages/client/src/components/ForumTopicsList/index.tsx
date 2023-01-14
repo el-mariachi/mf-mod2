@@ -1,5 +1,5 @@
-import ForumTopic from '../ForumTopic'
-import { IForumTopicProps } from '../ForumTopic/ForumTopicProps'
+import ForumTopic from '@components/ForumTopic'
+import { IForumTopicProps } from '@components/ForumTopic/ForumTopicProps'
 import './ForumTopicsList.scss'
 const topics: IForumTopicProps[] = [
   {

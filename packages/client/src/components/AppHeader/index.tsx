@@ -1,5 +1,5 @@
 import { FC, HTMLAttributes } from 'react'
-import AppNav from '../AppNav'
+import AppNav from '@components/AppNav'
 import classNames from 'classnames'
 import logoImg from '@images/skeleton.gif'
 import './AppHeader.scss'

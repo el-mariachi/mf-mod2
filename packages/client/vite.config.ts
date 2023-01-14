@@ -23,6 +23,13 @@ export default defineConfig({
       ),
       '@images': path.resolve('../../', __dirname, 'src/assets/images'),
       '@fonts': path.resolve('../../', __dirname, 'src/assets/fonts'),
+      '@components': path.resolve('../../', __dirname, 'src/components'),
+      '@utils': path.resolve('../../', __dirname, 'src/utils'),
+      '@api': path.resolve('../../', __dirname, 'src/api'),
+      '@pages': path.resolve('../../', __dirname, 'src/pages'),
+      '@services': path.resolve('../../', __dirname, 'src/services'),
+      '@game': path.resolve('../../', __dirname, 'src/game'),
+      '@scenes': path.resolve('../../', __dirname, 'src/game/scenes'),
     },
   },
 })

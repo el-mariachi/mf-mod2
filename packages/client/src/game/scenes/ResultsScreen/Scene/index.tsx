@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import SecondsToHMS from '../../../../utils/secondsFormat'
+import SecondsToHMS from '@utils/secondsFormat'
 import ResultsProps from '../Props'
 import './ResScene.scss'
 

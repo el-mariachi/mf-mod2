@@ -1,6 +1,6 @@
-import userApi from '../api/userApi'
-import { transformUser, transformUserT } from '../utils/transformUser'
-import { apiErrorHandler } from '../utils/errorsHandling'
+import userApi from '@api/userApi'
+import { transformUser, transformUserT } from '@utils/transformUser'
+import { apiErrorHandler } from '@utils/errorsHandling'
 
 type AvatarFields = 'avatar'
 
