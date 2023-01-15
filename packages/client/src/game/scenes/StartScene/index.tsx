@@ -1,24 +1,21 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import { useFonts } from '../../../hooks/useFonts'
 import { useDispatch } from 'react-redux'
 import { actions } from '../../../store'
 import './index.css'
 
 const { startGame } = actions
-function LoadScene({onExit}: {onExit: ()=>void}) {
+function StartScene({ onExit }: SceneProps) {
   const width = window.innerWidth
   const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = width / 2
   const centerHeight = height / 2
-  const [fontLoaded, setFontLoaded] = useState(false)
-  document.fonts.ready.then(res => {
-    if (res.status === 'loaded') {
-      setFontLoaded(true)
-    }
-  })
+  const fontLoaded = useFonts(false)
+
   const dispatch = useDispatch()
-  const onGameStart = ()=> {
-      dispatch(startGame())
+  const onGameStart = () => {
+    dispatch(startGame())
   }
   useEffect(() => {
     if (canvasRef.current) {
@@ -37,7 +34,7 @@ function LoadScene({onExit}: {onExit: ()=>void}) {
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = '700 40px Minecraft'
-        ctx.fillText('Journey', centerWidth, centerHeight + 45)
+        ctx.fillText('Dungeon', centerWidth, centerHeight + 45)
       }
     }
   }, [fontLoaded])
@@ -45,12 +42,16 @@ function LoadScene({onExit}: {onExit: ()=>void}) {
   return (
     <>
       <canvas ref={canvasRef} width={width} height={height}></canvas>
-      <div className="start-scene_buttons">
-        <a className="mx-auto text-white" onClick={onGameStart}>start game</a>
-        <a className="mx-auto text-white" onClick={onExit}>exit</a>
+      <div className="start-scene__buttons">
+        <a className="mx-auto text-white" onClick={onGameStart}>
+          start game
+        </a>
+        <a className="mx-auto text-white" onClick={onExit}>
+          exit
+        </a>
       </div>
     </>
   )
 }
 
-export default LoadScene
+export default StartScene

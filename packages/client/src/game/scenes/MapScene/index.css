@@ -1,6 +1,6 @@
 @import '../../../assets/fonts/minecraft/minecraft.css';
 
-.map-scene_buttons {
+.map-scene__buttons {
   position: absolute;
   top: 50px;
   display: flex;
@@ -8,7 +8,7 @@
   width: 100%;
 }
 
-.map-scene_buttons a {
+.map-scene__buttons a {
   cursor: pointer;
   text-decoration: none;
   font: 400 24px Minecraft;
@@ -17,6 +17,6 @@
   transition: all 0.2s;
 }
 
-.map-scene_buttons a:hover {
+.map-scene__buttons a:hover {
   border-bottom: 2px solid white;
 }

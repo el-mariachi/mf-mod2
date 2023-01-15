@@ -164,6 +164,10 @@ declare global {
   export type PlainObject<T = unknown> = {
     [key in string]: T
   }
+
+  type SceneProps = {
+    onExit?: () => void
+  }
 }
 
 export {}

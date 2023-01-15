@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as SCENES from '../../constants/scenes'
+import SCENES from '../../constants/scenes'
 
 export interface InitialState {
-  currentScene: string
+  currentScene: SCENES
   level: number
   levelStats: ResultsProps
 }
@@ -58,7 +58,7 @@ const gameSlice = createSlice({
     finishLevel(state, action) {
       state.currentScene = SCENES.RESULT_SCENE
       state.levelStats = action.payload.stats
-    }
+    },
   },
 })
 

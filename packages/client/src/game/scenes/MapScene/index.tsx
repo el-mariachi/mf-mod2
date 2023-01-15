@@ -1,21 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import {useFonts} from "../../../hooks/useFonts"
 import { useDispatch } from 'react-redux'
 import { actions } from '../../../store'
 import './index.css'
 
 const { finishLevel } = actions
-function LoadScene({ onExit }: { onExit: () => void }) {
+function LoadScene({ onExit }: SceneProps) {
   const width = window.innerWidth
   const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = width / 2
-  const centerHeight = height / 2
-  const [fontLoaded, setFontLoaded] = useState(false)
-  document.fonts.ready.then(res => {
-    if (res.status === 'loaded') {
-      setFontLoaded(true)
-    }
-  })
+  const fontLoaded = useFonts(false)
 
   const dispatch = useDispatch()
   const onGameFinish = () => {
@@ -42,7 +37,7 @@ function LoadScene({ onExit }: { onExit: () => void }) {
   return (
     <>
       <canvas ref={canvasRef} width={width} height={height}></canvas>
-      <div className="map-scene_buttons">
+      <div className="map-scene__buttons">
         <a className="mx-auto text-white" onClick={onGameFinish}>
           finish game
         </a>

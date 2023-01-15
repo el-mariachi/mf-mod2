@@ -1,25 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { actions } from '../../../store'
+import { useEffect, useRef } from 'react'
 import { ProgressBar } from '../../animations/ProgressBar'
-const { showStartScene } = actions
+import {useFonts} from "../../../hooks/useFonts"
 
-function StartScene() {
+function LoadScene() {
   const width = window.innerWidth
   const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const centerWidth = width / 2
   const centerHeight = height / 2
-  const [fontLoaded, setFontLoaded] = useState(false)
-  document.fonts.ready.then(res => {
-    if (res.status === 'loaded') {
-      setFontLoaded(true)
-    }
-  })
-  const dispatch = useDispatch()
-  setTimeout(() => {
-    dispatch(showStartScene())
-  }, 2500)
+  const fontLoaded = useFonts(false)
+
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -45,7 +35,7 @@ function StartScene() {
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = '700 40px Minecraft'
-        ctx.fillText('Journey', centerWidth, centerHeight + 45)
+        ctx.fillText('Dungeon', centerWidth, centerHeight + 45)
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
@@ -59,4 +49,4 @@ function StartScene() {
   return <canvas ref={canvasRef} width={width} height={height}></canvas>
 }
 
-export default StartScene
+export default LoadScene

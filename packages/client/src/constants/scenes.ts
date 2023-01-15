@@ -1,4 +1,8 @@
-export const LOAD_SCENE = "LoadScene"
-export const START_SCENE = "StartScene"
-export const RESULT_SCENE = "ResultScene"
-export const MAP_SCENE = "MapScene"
+enum SCENES {
+  LOAD_SCENE = 'LoadScene',
+  START_SCENE = 'StartScene',
+  RESULT_SCENE = 'ResultScene',
+  MAP_SCENE = 'MapScene',
+}
+
+export default SCENES

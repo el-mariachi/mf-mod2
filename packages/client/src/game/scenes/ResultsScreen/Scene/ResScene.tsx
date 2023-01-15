@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import SecondsToHMS from '../../../../utils/secondsFormat'
-import ResultsProps from '../Props/ResultsProps'
+import { useFonts } from '../../../../hooks/useFonts'
 import './ResScene.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '../../../../store'
@@ -21,7 +21,7 @@ function _RenderStroke(
   ctx.fillText(rStr, centerWidth + margin, curHeight)
 }
 
-function ResScene({onExit}: {onExit: ()=>void}) {
+function ResScene({ onExit }: SceneProps) {
   const lvlStats = useSelector(levelStats) || {
     levelNum: 1,
     killCount: 0,
@@ -35,13 +35,7 @@ function ResScene({onExit}: {onExit: ()=>void}) {
   const centerWidth = window.innerWidth / 2
   let curHeight = window.innerHeight / 4
   const margin = window.innerWidth * 0.4 > 200 ? 200 : window.innerWidth * 0.4
-  const [fontLoaded, setFontLoaded] = useState(false)
-
-  document.fonts.ready.then(res => {
-    if (res.status === 'loaded') {
-      setFontLoaded(true)
-    }
-  })
+  const fontLoaded = useFonts(false)
 
   const formatTime = SecondsToHMS(time)
 
@@ -110,12 +104,12 @@ function ResScene({onExit}: {onExit: ()=>void}) {
   }, [fontLoaded, levelStats])
 
   return (
-    <div className="res-scene_results">
+    <div className="res-scene__results">
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
         height={curHeight + 265}></canvas>
-      <div className="res-scene_buttons">
+      <div className="res-scene__buttons">
         <a className="mx-auto text-white" onClick={onRestart}>
           restart
         </a>
