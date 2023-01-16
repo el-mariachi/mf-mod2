@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
 import path from 'path'
@@ -12,7 +13,7 @@ export default defineConfig({
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
   resolve: {
     alias: {
       '@': path.resolve('../../', __dirname, 'src'),
@@ -23,13 +24,6 @@ export default defineConfig({
       ),
       '@images': path.resolve('../../', __dirname, 'src/assets/images'),
       '@fonts': path.resolve('../../', __dirname, 'src/assets/fonts'),
-      '@components': path.resolve('../../', __dirname, 'src/components'),
-      '@utils': path.resolve('../../', __dirname, 'src/utils'),
-      '@api': path.resolve('../../', __dirname, 'src/api'),
-      '@pages': path.resolve('../../', __dirname, 'src/pages'),
-      '@services': path.resolve('../../', __dirname, 'src/services'),
-      '@game': path.resolve('../../', __dirname, 'src/game'),
-      '@scenes': path.resolve('../../', __dirname, 'src/game/scenes'),
     },
   },
 })

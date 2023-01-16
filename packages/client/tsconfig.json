@@ -18,14 +18,15 @@
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["components/*"],
+      "@utils-kit": ["utils"],
       "@utils/*": ["utils/*"],
       "@api/*": ["api/*"],
       "@pages/*": ["pages/*"],
       "@services/*": ["services/*"],
       "@game/*": ["game/*"],
-      "@scenes/game/*": ["scenes/*"]
+      "@scenes/*": ["game/scenes/*"]
     }
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }],  
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
