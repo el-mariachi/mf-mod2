@@ -1,5 +1,5 @@
-import { muteRes } from '@utils'
-import { restAuthApi } from '@api/restApi'
+import { muteRes } from '@utils-kit'
+import { restAuthApi } from './restApi'
 
 export const signUp = (data: SignupData) =>
   restAuthApi.post<User>('/signup', data)

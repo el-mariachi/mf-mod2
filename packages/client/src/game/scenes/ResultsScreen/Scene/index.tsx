@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import SecondsToHMS from '@utils/secondsFormat'
-import ResultsProps from '../Props'
+import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
+import { useSelector, useDispatch } from 'react-redux'
+import { actions } from '@store/index'
+import { levelStats } from '@store/selectors'
+import { width, height, center } from '@utils/winsize'
 
+const { restartGame } = actions
 function _RenderStroke(
   ctx: CanvasRenderingContext2D,
   lStr: string,
@@ -17,42 +22,40 @@ function _RenderStroke(
   ctx.fillText(rStr, centerWidth + margin, curHeight)
 }
 
-function ResScene({
-  levelNum,
-  killCount,
-  coins,
-  time,
-  steps,
-  restartCallback,
-  exitCallback,
-}: ResultsProps) {
+function ResScene({ onExit }: SceneProps) {
+  const lvlStats = useSelector(levelStats) || {
+    levelNum: 1,
+    killCount: 0,
+    coins: 0,
+    time: 0,
+    steps: 0,
+  }
+  const { levelNum, killCount, coins, time, steps } = lvlStats
+  const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const centerWidth = window.innerWidth / 2
-  let curHeight = window.innerHeight / 4
-  const margin = window.innerWidth * 0.4 > 200 ? 200 : window.innerWidth * 0.4
-  const [fontLoaded, setFontLoaded] = useState(false)
-
-  document.fonts.ready.then(res => {
-    if (res.status === 'loaded') {
-      setFontLoaded(true)
-    }
-  })
+  let curHeight = height / 4
+  const margin = width * 0.4 > 200 ? 200 : width * 0.4
+  const fontLoaded = useFonts(false)
 
   const formatTime = SecondsToHMS(time)
+
+  const onRestart = () => {
+    dispatch(restartGame())
+  }
 
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+        ctx.clearRect(0, 0, width, height)
         ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, centerWidth, window.innerHeight)
+        ctx.fillRect(0, 0, center.width, height)
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = `600 40px Minecraft`
-        ctx.fillText(`Level ${levelNum}`, centerWidth, curHeight)
+        ctx.fillText(`Level ${levelNum}`, center.width, curHeight)
         curHeight += 25
         curHeight += 48
         ctx.font = ' 400 24px Minecraft'
@@ -61,7 +64,7 @@ function ResScene({
           ctx,
           'killed enemies',
           killCount.toString(),
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -71,7 +74,7 @@ function ResScene({
           ctx,
           'gathered coins',
           coins.toString(),
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -81,7 +84,7 @@ function ResScene({
           ctx,
           'time spent',
           formatTime,
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -91,26 +94,23 @@ function ResScene({
           ctx,
           'steps',
           steps.toString(),
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
         curHeight += 24 * 2
       }
     }
-  }, [fontLoaded])
+  }, [fontLoaded, levelStats])
 
   return (
     <div className="res-scene__results">
-      <canvas
-        ref={canvasRef}
-        width={window.innerWidth}
-        height={curHeight + 265}></canvas>
+      <canvas ref={canvasRef} width={width} height={curHeight + 265}></canvas>
       <div className="res-scene__buttons">
-        <a className="mx-auto text-white" onClick={restartCallback}>
+        <a className="mx-auto text-white" onClick={onRestart}>
           restart
         </a>
-        <a className="mx-auto text-white" onClick={exitCallback}>
+        <a className="mx-auto text-white" onClick={onExit}>
           exit
         </a>
       </div>
