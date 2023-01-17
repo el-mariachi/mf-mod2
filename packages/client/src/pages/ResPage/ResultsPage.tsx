@@ -1,5 +1,5 @@
-import ResScene from '../../game/scenes/ResultsScreen/Scene/ResScene'
-import ResultsProps from '../../game/scenes/ResultsScreen/Props/ResultsProps'
+import ResScene from '@game/scenes/ResultsScreen/Scene/ResScene'
+import ResultsProps from '@game/scenes/ResultsScreen/Props/ResultsProps'
 
 function ResultsPage() {
   function restart() {

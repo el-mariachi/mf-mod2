@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import {useFonts} from "../../../hooks/useFonts"
 import { useDispatch } from 'react-redux'
 import { actions } from '../../../store'
-import './index.css'
+import './MapScene.css'
 
 const { finishLevel } = actions
 function LoadScene({ onExit }: SceneProps) {

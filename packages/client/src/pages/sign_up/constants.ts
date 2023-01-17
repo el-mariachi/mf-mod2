@@ -10,7 +10,7 @@ import {
   onlyDigits,
   aDigit,
   aCapital,
-} from '../../utils/validations'
+} from '@utils/validations'
 
 const inputData = [
   {

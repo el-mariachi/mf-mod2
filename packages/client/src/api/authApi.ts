@@ -1,4 +1,4 @@
-import { muteRes } from '../utils'
+import { muteRes } from '@utils'
 import { restAuthApi } from './restApi'
 
 export const signUp = (data: SignupData) =>

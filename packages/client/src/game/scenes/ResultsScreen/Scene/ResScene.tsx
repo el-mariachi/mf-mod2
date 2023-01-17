@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import SecondsToHMS from '../../../../utils/secondsFormat'
+import SecondsToHMS from '@utils/secondsFormat'
 import { useFonts } from '../../../../hooks/useFonts'
 import './ResScene.scss'
 import { useSelector, useDispatch } from 'react-redux'
