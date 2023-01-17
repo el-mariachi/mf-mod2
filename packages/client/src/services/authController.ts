@@ -1,6 +1,6 @@
 import authApi from '@api/authApi'
 import { transformUser } from '@utils/transformUser'
-import { apiErrorHandler } from '@utils/errors_handling'
+import { apiErrorHandler } from '@utils/errorsHandling'
 
 export function signUpUser(data: SignupData) {
   return (

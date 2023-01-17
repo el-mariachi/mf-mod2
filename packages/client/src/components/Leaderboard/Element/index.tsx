@@ -1,6 +1,7 @@
-import LeaderboardProps from '../Props/Lb-Props'
+import LeaderboardProps from '../Props'
 import Button from 'react-bootstrap/Button'
 import Collapse from 'react-bootstrap/Collapse'
+import dummyAvatarImg from '@images/king.png'
 import { useState } from 'react'
 
 function Lb_User({
@@ -27,15 +28,15 @@ function Lb_User({
         <div>{sortedVal}</div>
       </Button>
       <Collapse in={open}>
-        <div className="flex flex-row justify-content-between border border-1 border-dark rounded fs-5">
-          <ul className="d-inline-block flex-1">
+        <div className="flex flex-row justify-content-between border border-1 fs-6 p-3">
+          <ul className="d-inline-block flex-1 p-0 m-0">
             <li className="list-group-item">Дата: {date} </li>
             <li className="list-group-item">Время: {time} </li>
             <li className="list-group-item">Счет: {score} </li>
             <li className="list-group-item">Убитых врагов: {kills} </li>
           </ul>
           <img
-            src="../"
+            src={dummyAvatarImg}
             className="rounded-circle flex-2 d-inline-block lb-avatar border border-2"></img>
         </div>
       </Collapse>

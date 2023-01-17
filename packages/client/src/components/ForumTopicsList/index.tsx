@@ -1,5 +1,5 @@
-import ForumTopic from '../ForumTopic/ForumTopic'
-import { IForumTopicProps } from '../ForumTopic/ForumTopicProps'
+import ForumTopic from '@components/ForumTopic'
+import { IForumTopicProps } from '@components/ForumTopic/ForumTopicProps'
 import './ForumTopicsList.scss'
 const topics: IForumTopicProps[] = [
   {
@@ -22,9 +22,10 @@ const topics: IForumTopicProps[] = [
 
 function ForumTopicsList() {
   return (
-    <ul className="topic-list d-flex flex-column">
-      {topics.map(topic => (
+    <ul className="forum-topic-list d-flex flex-column">
+      {topics.map((topic, index) => (
         <ForumTopic
+          key={index}
           topicAuthor={topic.topicAuthor}
           topicTitle={topic.topicTitle}
         />

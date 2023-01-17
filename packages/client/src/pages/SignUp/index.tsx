@@ -1,19 +1,21 @@
-import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import FormControl from '@components/FormControl'
+import AppDefaultTpl from '@components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { inputData, defaultValues, SignUpFormStruct } from './constants'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signUpUser } from '@services/authController'
-import { AppError, formUserErrorHandler } from '@utils/errors_handling'
-import './sign_up.scss'
+import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
+import SpinnerButton from '@components/SpinnerButton'
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [readOnly, setReadOnly] = useState(false)
 
   const {
     register,
@@ -39,10 +41,17 @@ const SignUp = () => {
     }
     clearErrors()
 
+    setLoading(true)
+    setReadOnly(true)
+
     signUpUser(data)
       // TODO it`s temporary, use connected-react-router
       .then(() => navigate('/'))
       .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
+      .finally(() => {
+        setLoading(false)
+        setReadOnly(false)
+      })
   }
 
   const formControls = inputData.map((controlProps, index) => (
@@ -51,44 +60,39 @@ const SignUp = () => {
       formName="signUpForm"
       register={register}
       errors={errors}
+      readOnly={readOnly}
       controlProps={controlProps}
     />
   ))
 
   return (
-    <div className="sign_up w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
-      <Container className="sign_up-form mx-auto">
-        <div className="bg-light rounded-4 p-5">
-          <Form onSubmit={handleSubmit(formSubmit)}>
-            <Row className="mb-4">
-              <Col sm={{ span: 9, offset: 3 }}>
-                <h1 className="h3">Регистрация</h1>
-              </Col>
-            </Row>
+    <AppDefaultTpl showNav={false} centered={true} className="sign-up">
+      <Form onSubmit={handleSubmit(formSubmit)}>
+        <Row className="mb-4">
+          <Col sm={{ span: 9, offset: 3 }}>
+            <h1 className="h3">Регистрация</h1>
+          </Col>
+        </Row>
 
-            {submitError ? (
-              <p className="text-danger mb-3">{submitError}</p>
-            ) : (
-              ''
-            )}
+        {submitError ? <p className="text-danger mb-3">{submitError}</p> : null}
 
-            {formControls}
+        {formControls}
 
-            <Form.Group as={Row}>
-              <Col sm={{ span: 9, offset: 3 }}>
-                <Button type="submit">Создать аккаунт</Button>
-                <Link to="/sign-in">
-                  <Button as="span" variant="link">
-                    Войти
-                  </Button>
-                </Link>
-              </Col>
-            </Form.Group>
-          </Form>
-        </div>
-      </Container>
-    </div>
+        <Form.Group as={Row}>
+          <Col sm={{ span: 9, offset: 3 }}>
+            <SpinnerButton loading={loading}>
+              Создать аккаунт 
+            </SpinnerButton>
+            <Link to="/sign-in">
+              <Button as="span" variant="link">
+                Войти
+              </Button>
+            </Link>
+          </Col>
+        </Form.Group>
+      </Form>
+    </AppDefaultTpl>
   )
 }
 
-export { SignUp }
+export default SignUp

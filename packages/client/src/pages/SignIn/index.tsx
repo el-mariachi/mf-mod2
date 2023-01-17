@@ -1,23 +1,23 @@
 import { useState } from 'react'
-import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import SpinnerButton from '@components/SpinnerButton'
 import FormControl from '@components/FormControl'
+import AppDefaultTpl from '@components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { signInInputData, defaultValues, AuthFormStruct } from './constants'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppError, formUserErrorHandler } from '@utils/errors_handling'
+import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import { signInUser } from '@services/authController'
-import './style.css'
+import './SignIn.scss'
 
-export type AuthPageProps = {
+export type SignInProps = {
   signUpPageUrl?: string
 }
 
-export default function AuthPage(props: AuthPageProps) {
+export default function SignIn(props: SignInProps) {
   const [mode, setMode] = useState('auth')
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
@@ -114,57 +114,45 @@ export default function AuthPage(props: AuthPageProps) {
       </>
     )
   }
-
   return (
-    <main className="tsFormBg w-100 h-100 d-flex position-fixed align-items-center justify-content-center">
-      <Container className="tsFormBox mx-auto">
-        <div className="bg-light rounded-4 p-5">
-          <Form validated={validated} onSubmit={handleSubmit(formSubmit)}>
-            {isAuthMode ? (
-              <>
-                <Row className="mb-4">
-                  <Col sm={{ span: 9, offset: 3 }}>
-                    <h1 className="h3">Авторизация</h1>
-                  </Col>
-                </Row>
-                {submitError ? (
-                  <p className="text-danger mb-4">{submitError}</p>
-                ) : (
-                  ''
-                )}
-                {formControls}
-                <ButtonsBox
-                  submitBtnTxt="Войти"
-                  toggleBtnTxt="Не помню пароль"
-                />
-              </>
-            ) : (
-              <>
-                <Row className="mb-2">
-                  <Col>
-                    <h1 className="h3">Восстановление пароля</h1>
-                  </Col>
-                </Row>
-                {submitError ? (
-                  <p className="text-danger mb-4">{submitError}</p>
-                ) : (
-                  ''
-                )}
-                <p className="text-muted fs-6 mb-4">
-                  {
-                    'На указанный при регистрации e-mail придет письмо с новым паролем для входа.'
-                  }
-                </p>
-                {formControls[0]}
-                <ButtonsBox
-                  submitBtnTxt="Восстановить"
-                  toggleBtnTxt="Вспомнил пароль"
-                />
-              </>
-            )}
-          </Form>
-        </div>
-      </Container>
-    </main>
+    <AppDefaultTpl showNav={false} centered={true} className="sign-in">
+      <Form validated={validated} onSubmit={handleSubmit(formSubmit)}>
+        {isAuthMode ? (
+          <>
+            <Row className="mb-4">
+              <Col sm={{ span: 9, offset: 3 }}>
+                <h1 className="h3">Авторизация</h1>
+              </Col>
+            </Row>
+            {submitError ? (
+              <p className="text-danger mb-4">{submitError}</p>
+            ) : null}
+            {formControls}
+            <ButtonsBox submitBtnTxt="Войти" toggleBtnTxt="Не помню пароль" />
+          </>
+        ) : (
+          <>
+            <Row className="mb-2">
+              <Col>
+                <h1 className="h3">Восстановление пароля</h1>
+              </Col>
+            </Row>
+            {submitError ? (
+              <p className="text-danger mb-4">{submitError}</p>
+            ) : null}
+            <p className="text-muted fs-6 mb-4">
+              {
+                'На указанный при регистрации e-mail придет письмо с новым паролем для входа.'
+              }
+            </p>
+            {formControls[0]}
+            <ButtonsBox
+              submitBtnTxt="Восстановить"
+              toggleBtnTxt="Вспомнил пароль"
+            />
+          </>
+        )}
+      </Form>
+    </AppDefaultTpl>
   )
 }

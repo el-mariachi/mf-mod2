@@ -4,7 +4,7 @@ import axios, {
   AxiosError,
   isAxiosError,
 } from 'axios'
-import { AppErrorCode, createAppError } from '@utils/errors_handling'
+import { AppErrorCode, createAppError } from '@utils/errorsHandling'
 
 const API_HOST = 'https://ya-praktikum.tech'
 const API_BASE_URL = `${API_HOST}/api/v2`

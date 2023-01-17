@@ -3,7 +3,7 @@ import { updateAvatar } from '@services/userController'
 import { getFile } from '@api/resourceApi'
 import Avatar from '@components/Avatar'
 import UploadFile from '@components/UploadFile'
-import './index.css'
+import './ProfileAvatar.scss'
 
 type AvatarType = string
 
@@ -12,7 +12,7 @@ type profileAvataProps = {
 }
 
 export default ({ avatar }: profileAvataProps) => {
-  const initialImage = avatar ? avatar : "'/src/assets/king.png'"
+  const initialImage = avatar ? avatar : "'@images/king.png'"
 
   const [image, setImage] = useState(initialImage)
   const [modalOptions, setModalOptions] = useState({})

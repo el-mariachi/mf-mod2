@@ -1,22 +1,27 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'
-import { AppError, formUserErrorHandler } from '@utils/errors_handling'
+import { Row, Col, Form, Button } from 'react-bootstrap'
+import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import { updatePassword, updateProfile } from '@services/userController'
 import ProfileAvatar from '@components/ProfileAvatar'
 import FormGroupView from '@components/FormGroupView'
 import ConfirmPassword from '@components/ConfirmPassword'
 import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
-import './index.css'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import emulateStore from './loadUserEmul'
+import AppDefaultTpl from '@components/AppDefaultTpl'
+import SpinnerButton from '@components/SpinnerButton'
+import classNames from 'classnames'
+import './UserProfile.scss'
 
 enum Mode {
   Edit,
   View,
 }
 
-const Profile = () => {
+const UserProfile = () => {
   const [mode, setMode] = useState(Mode.View)
+  const [loading, setLoading] = useState(false)
+  const [readOnly, setReadOnly] = useState(false)
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
   // TODO uncomment and edit next line when we have redux store
@@ -61,8 +66,15 @@ const Profile = () => {
   }
 
   const formSubmit: SubmitHandler<ProfileFormProps> = async data => {
-    await saveChanges(data)
-    setMode(Mode.View)
+    setLoading(true)
+    setReadOnly(true)
+
+    saveChanges(data)
+      .finally(() => {
+        setLoading(false)
+        setReadOnly(false)
+        setMode(Mode.View)
+      })    
   }
 
   const formControls = profileFormInputs.map((controlProps, index) => (
@@ -72,50 +84,42 @@ const Profile = () => {
       errors={errors}
       formName="userProfileForm"
       controlProps={controlProps}
-      readOnly={Boolean(mode)}
+      readOnly={readOnly || Boolean(mode)}
     />
   ))
 
   return (
-    <div className="user-profile">
-      <Container fluid="sm">
-        <Form
-          className="user-profile__form mt-5"
-          onSubmit={handleSubmit(formSubmit)}>
-          <Row>
-            <Col sm={4} className="px-0">
-              <ProfileAvatar avatar={avatar} />
-            </Col>
-            <Col sm={8} className="py-4 user-profile__form-wrapper">
-              {submitError ? (
-                <p className="text-danger mb-3">{submitError}</p>
-              ) : (
-                ''
-              )}
-              <div
-                className={`user-profile__form ${
-                  mode ? READ_CLASS : EDIT_CLASS
-                }`}>
-                {formControls}
-              </div>
-              {mode ? (
-                <Button variant="dark" type="button" onClick={editMode}>
-                  Изменить данные профиля
-                </Button>
-              ) : (
-                <Button variant="dark" type="submit">
-                  Сохранить
-                </Button>
-              )}
-            </Col>
-          </Row>
-        </Form>
-      </Container>
+    <AppDefaultTpl withPaddings={false} className="user-profile">
+      <Form className="user-profile__form" onSubmit={handleSubmit(formSubmit)}>
+        <Row>
+          <Col sm={4}>
+            <ProfileAvatar avatar={avatar} />
+          </Col>
+          <Col sm={8} className="py-5 ps-4 pe-5 user-profile__form-wrapper">
+            <h1 className="h3 mb-5">Профиль игрока</h1>
+            {submitError ? (
+              <p className="text-danger mb-3">{submitError}</p>
+            ) : null}
+            <div className={classNames('mb-4', mode ? READ_CLASS : EDIT_CLASS)}>
+              {formControls}
+            </div>
+            {mode ? (
+              <Button type="button" onClick={editMode}>
+                Изменить данные профиля
+              </Button>
+            ) : (
+              <SpinnerButton loading={loading}>
+                Сохранить
+              </SpinnerButton>
+            )}
+          </Col>
+        </Row>
+      </Form>
       {Object.keys(modalOptions).length !== 0 ? (
         <ConfirmPassword options={modalOptions} />
       ) : null}
-    </div>
+    </AppDefaultTpl>
   )
 }
 
-export default Profile
+export default UserProfile

@@ -1,14 +1,13 @@
 import { useEffect } from 'react'
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
-import { defineUser } from '@services/authController'
-import AuthPage from '@pages/AuthPage'
-import ForumPage from '@pages/ForumPage/ForumPage'
-import GamePage from '@pages/GamePage/GamePage'
-import Leaderboard from '@pages/Leaderboard/Leaderboard'
-import Profile from '@pages/profile'
-import ServicePage from '@pages/ServicePage/ServicePage'
-import SignUp from '@pages/sign_up'
-import './App.scss'
+import { defineUser } from '../../services/authController'
+import SignIn from '@pages/SignIn'
+import ForumPage from '@pages/ForumPage'
+import GamePage from '@pages/GamePage'
+import Leaderboard from '@pages/Leaderboard'
+import UserProfile from '@pages/UserProfile'
+import ServicePage from '@pages/ServicePage'
+import SignUp from '@pages/SignUp'
 
 function App() {
   const navigate = useNavigate()
@@ -26,12 +25,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/game" replace />} />
         <Route path="game" element={<GamePage />} />
-        <Route path="sign-up" element={<SignUp />} />
-        <Route path="sign-in" element={<AuthPage />} />
-        <Route path="leaderboard" element={<Leaderboard />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/profile" element={<UserProfile />} />
         <Route
-          path="/404"
+          path="*"
           element={
             <ServicePage
               errorCode={404}
