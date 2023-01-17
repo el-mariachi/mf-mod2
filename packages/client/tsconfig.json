@@ -14,8 +14,22 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@utils-kit": ["utils"],
+      "@utils/*": ["utils/*"],
+      "@api/*": ["api/*"],
+      "@pages/*": ["pages/*"],
+      "@services/*": ["services/*"],
+      "@game/*": ["game/*"],
+      "@scenes/*": ["game/scenes/*"],
+      "@hooks/*": ["hooks/*"],
+      "@store/*": ["store/*"],
+      "@constants/*": ["constants/*"],
+    }
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],  
 }

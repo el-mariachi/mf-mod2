@@ -5,7 +5,7 @@ import App from '@components/App/App'
 import ErrorBoundary from '@services/ErrorBoundary/ErrorBoundary'
 import './index.scss'
 import { Provider } from 'react-redux'
-import { store } from '@store'
+import { store } from '@store/index'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

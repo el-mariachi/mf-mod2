@@ -3,7 +3,7 @@ import SecondsToHMS from '@utils/secondsFormat'
 import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
 import { useSelector, useDispatch } from 'react-redux'
-import { actions } from '@store'
+import { actions } from '@store/index'
 import { levelStats } from '@store/selectors'
 import { width, height, center } from '@utils/winsize'
 
