@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`hello jest 1`] = `
-<h1>
-  New component
-</h1>
-`;
