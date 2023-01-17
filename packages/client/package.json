@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest ./"
+    "test": "jest"
   },
   "dependencies": {
     "axios": "1.2.1",
@@ -26,7 +26,9 @@
     "sass": "^1.57.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^28.1.8",
     "@types/react": "^18.0.17",
     "@types/react-bootstrap": "^0.32.32",
