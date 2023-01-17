@@ -2,15 +2,13 @@ import { useEffect, useRef } from 'react'
 import { useFonts } from '@hooks/useFonts'
 import { useDispatch } from 'react-redux'
 import { actions } from '@store'
+import { width, height, center } from '@utils/winsize'
+import { Text } from '@utils/fillCanvas'
 import './StartScene.scss'
 
 const { startGame } = actions
 function StartScene({ onExit }: SceneProps) {
-  const width = window.innerWidth
-  const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const centerWidth = width / 2
-  const centerHeight = height / 2
   const fontLoaded = useFonts(false)
 
   const dispatch = useDispatch()
@@ -23,18 +21,20 @@ function StartScene({ onExit }: SceneProps) {
       const ctx = canvas.getContext('2d')
 
       if (ctx) {
+        const text = new Text({
+          ctx,
+          textBaseline: 'middle',
+          fillStyle: 'white',
+          textAlign: 'center',
+          font: '700 48px Minecraft',
+        })
+
         ctx.fillStyle = 'black'
         ctx.fillRect(0, 0, width, height)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '700 48px Minecraft'
-        ctx.fillText('One Bit', centerWidth, centerHeight)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '700 40px Minecraft'
-        ctx.fillText('Dungeon', centerWidth, centerHeight + 45)
+        text.fill('One Bit', center.width, center.height)
+        text.fill('Dungeon', center.width, center.height + 45, {
+          font: '700 40px Minecraft',
+        })
       }
     }
   }, [fontLoaded])

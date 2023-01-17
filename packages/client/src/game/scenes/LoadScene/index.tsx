@@ -1,13 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { ProgressBar } from '../../animations/ProgressBar'
 import { useFonts } from '@hooks/useFonts'
+import { width, height, center } from '@utils/winsize'
+import { Text } from '@utils/fillCanvas'
 
 function LoadScene() {
-  const width = window.innerWidth
-  const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const centerWidth = width / 2
-  const centerHeight = height / 2
   const fontLoaded = useFonts(false)
 
   useEffect(() => {
@@ -17,29 +15,28 @@ function LoadScene() {
       const progressBar: ProgressBar = new ProgressBar({
         color: 'white',
         ctx,
-        x: centerWidth - 80,
-        y: centerHeight + 140,
+        x: center.width - 80,
+        y: center.height + 140,
         width: 165,
         heigth: 15,
       })
+
       if (ctx) {
+        const text = new Text({
+          ctx,
+          textBaseline: 'middle',
+          fillStyle: 'white',
+          textAlign: 'center',
+          font: '700 48px Minecraft',
+        })
+
         ctx.fillStyle = 'black'
         ctx.fillRect(0, 0, width, height)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '700 48px Minecraft'
-        ctx.fillText('One Bit', centerWidth, centerHeight)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '700 40px Minecraft'
-        ctx.fillText('Dungeon', centerWidth, centerHeight + 45)
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.font = '400 24px Minecraft'
-        ctx.fillText('loading...', centerWidth, centerHeight + 115)
+        text.fill('One Bit', center.width, center.height)
+        text.fill('Dungeon', center.width, center.height + 45)
+        text.fill('loading...', center.width, center.height + 115, {
+          font: '400 24px Minecraft',
+        })
         progressBar.draw()
       }
     }

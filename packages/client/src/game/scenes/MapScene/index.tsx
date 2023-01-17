@@ -2,14 +2,12 @@ import { useEffect, useRef } from 'react'
 import { useFonts } from '@hooks/useFonts'
 import { useDispatch } from 'react-redux'
 import { actions } from '@store'
+import { width, height, center } from '@utils/winsize'
 import './MapScene.css'
 
 const { finishLevel } = actions
 function LoadScene({ onExit }: SceneProps) {
-  const width = window.innerWidth
-  const height = window.innerHeight
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const centerWidth = width / 2
   const fontLoaded = useFonts(false)
 
   const dispatch = useDispatch()
@@ -28,7 +26,7 @@ function LoadScene({ onExit }: SceneProps) {
         const image = new Image()
         image.src = '/src/assets/game_level_1_items.png'
         image.onload = function () {
-          ctx.drawImage(image, centerWidth - 200, 180)
+          ctx.drawImage(image, center.width - 200, 180)
         }
       }
     }

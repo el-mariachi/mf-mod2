@@ -5,6 +5,7 @@ import './ResScene.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@store'
 import { levelStats } from '@store/selectors'
+import { width, height, center } from '@utils/winsize'
 
 const { restartGame } = actions
 function _RenderStroke(
@@ -32,9 +33,8 @@ function ResScene({ onExit }: SceneProps) {
   const { levelNum, killCount, coins, time, steps } = lvlStats
   const dispatch = useDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const centerWidth = window.innerWidth / 2
-  let curHeight = window.innerHeight / 4
-  const margin = window.innerWidth * 0.4 > 200 ? 200 : window.innerWidth * 0.4
+  let curHeight = height / 4
+  const margin = width * 0.4 > 200 ? 200 : width * 0.4
   const fontLoaded = useFonts(false)
 
   const formatTime = SecondsToHMS(time)
@@ -48,14 +48,14 @@ function ResScene({ onExit }: SceneProps) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+        ctx.clearRect(0, 0, width, height)
         ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, centerWidth, window.innerHeight)
+        ctx.fillRect(0, 0, center.width, height)
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'white'
         ctx.textAlign = 'center'
         ctx.font = `600 40px Minecraft`
-        ctx.fillText(`Level ${levelNum}`, centerWidth, curHeight)
+        ctx.fillText(`Level ${levelNum}`, center.width, curHeight)
         curHeight += 25
         curHeight += 48
         ctx.font = ' 400 24px Minecraft'
@@ -64,7 +64,7 @@ function ResScene({ onExit }: SceneProps) {
           ctx,
           'killed enemies',
           killCount.toString(),
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -74,7 +74,7 @@ function ResScene({ onExit }: SceneProps) {
           ctx,
           'gathered coins',
           coins.toString(),
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -84,7 +84,7 @@ function ResScene({ onExit }: SceneProps) {
           ctx,
           'time spent',
           formatTime,
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -94,7 +94,7 @@ function ResScene({ onExit }: SceneProps) {
           ctx,
           'steps',
           steps.toString(),
-          centerWidth,
+          center.width,
           margin,
           curHeight
         )
@@ -105,10 +105,7 @@ function ResScene({ onExit }: SceneProps) {
 
   return (
     <div className="res-scene__results">
-      <canvas
-        ref={canvasRef}
-        width={window.innerWidth}
-        height={curHeight + 265}></canvas>
+      <canvas ref={canvasRef} width={width} height={curHeight + 265}></canvas>
       <div className="res-scene__buttons">
         <a className="mx-auto text-white" onClick={onRestart}>
           restart
