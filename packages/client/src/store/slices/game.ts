@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import SCENES from '../../constants/scenes'
+import SCENES from '@constants/scenes'
 
 export interface InitialState {
   currentScene: SCENES

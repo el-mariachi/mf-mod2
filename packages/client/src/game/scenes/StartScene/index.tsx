@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { useFonts } from '../../../hooks/useFonts'
+import { useFonts } from '@hooks/useFonts'
 import { useDispatch } from 'react-redux'
-import { actions } from '../../../store'
+import { actions } from '@store'
 import './StartScene.scss'
 
 const { startGame } = actions

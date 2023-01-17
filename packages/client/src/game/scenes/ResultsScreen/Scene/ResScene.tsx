@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 import SecondsToHMS from '@utils/secondsFormat'
-import { useFonts } from '../../../../hooks/useFonts'
+import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
 import { useSelector, useDispatch } from 'react-redux'
-import { actions } from '../../../../store'
-import { levelStats } from '../../../../store/selectors'
+import { actions } from '@store'
+import { levelStats } from '@store/selectors'
 
 const { restartGame } = actions
 function _RenderStroke(
