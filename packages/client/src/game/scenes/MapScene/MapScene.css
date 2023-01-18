@@ -1,0 +1,20 @@
+.map-scene__buttons {
+  position: absolute;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.map-scene__buttons a {
+  cursor: pointer;
+  text-decoration: none;
+  font: 400 24px Minecraft;
+  display: block;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.map-scene__buttons a:hover {
+  border-bottom: 2px solid white;
+}

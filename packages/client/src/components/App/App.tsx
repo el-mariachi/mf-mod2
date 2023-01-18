@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import { defineUser } from '@services/authController'
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
+import { defineUser } from '../../services/authController'
 import SignIn from '@pages/SignIn'
 import ForumPage from '@pages/ForumPage'
 import GamePage from '@pages/GamePage'
@@ -26,7 +26,8 @@ function App() {
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<GamePage />} />
+        <Route path="/" element={<Navigate to="/game" replace />} />
+        <Route path="game" element={<GamePage />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
