@@ -1,5 +1,4 @@
 import authApi from '@api/authApi'
-import { transformUser } from '@utils/transformUser'
 import { apiErrorHandler } from '@utils/errorsHandling'
 
 export function signUpUser(data: SignupData) {
@@ -28,7 +27,7 @@ export function defineUser() {
   console.log('define user called')
   return authApi
     .getUser()
-    .then(result => transformUser(result))
+    .then(result => result)
     .catch(error => apiErrorHandler(error))
 }
 export function logout() {

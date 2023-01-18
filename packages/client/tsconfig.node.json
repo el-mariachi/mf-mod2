@@ -3,7 +3,18 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@utils-kit": ["utils"],
+      "@utils/*": ["utils/*"],
+      "@api/*": ["api/*"],
+      "@pages/*": ["pages/*"],
+      "@services/*": ["services/*"],
+      "@game/*": ["game/*"],
+      "@scenes/*": ["game/scenes/*"],
+    }
   },
   "include": ["vite.config.ts"]
 }

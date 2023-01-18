@@ -8,17 +8,20 @@ import Leaderboard from '@pages/Leaderboard'
 import UserProfile from '@pages/UserProfile'
 import ServicePage from '@pages/ServicePage'
 import SignUp from '@pages/SignUp'
+import { useDispatch } from 'react-redux'
+import { setUser } from 'store/slices/user'
 
 function App() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   useEffect(() => {
-    defineUser()
+    defineUser().then(user => {
+      dispatch(setUser(user))
       // TODO it`s temporary, use connected-react-router
-      .then(() => {
-        if (['/sign-in', '/sign-up'].includes(location.pathname)) {
-          navigate('/')
-        }
-      })
+      if (['/sign-in', '/sign-up'].includes(location.pathname)) {
+        navigate('/')
+      }
+    })
   }, [])
   return (
     <div className="app">
