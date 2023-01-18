@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from 'hooks/redux_typed_hooks'
 import { useNavigate } from 'react-router-dom'
 import LoadScene from '@scenes/LoadScene'
 import StartScene from '@scenes/StartScene'
@@ -7,6 +7,9 @@ import ResultScene from '@scenes/ResultsScreen/Scene'
 import MapScene from '@scenes/MapScene'
 import { currentScene as currentSceneSelector } from '@store/selectors'
 import SCENES from '@constants/scenes'
+import ROUTES from '@constants/routes'
+import { LoggedInCheck } from 'hoc/LoggedInCheck'
+import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
 
 type scenesType = Record<SCENES, FC<SceneProps>>
 
@@ -19,7 +22,7 @@ const scenes: scenesType = {
 
 function GamePage() {
   const currentScene =
-    (useSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
+    (useAppSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
   const Scene = scenes[currentScene]
   const navigate = useNavigate()
   const onExit = () => {
@@ -29,4 +32,11 @@ function GamePage() {
   return <Scene onExit={onExit} />
 }
 
-export default GamePage
+const checkOptions: LoggedInCheckOptions = {
+  userRequired: true,
+  escapeRoute: ROUTES.SIGN_IN,
+}
+
+export default LoggedInCheck(checkOptions)(GamePage)
+
+// export default GamePage

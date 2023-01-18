@@ -2,12 +2,11 @@ import { useEffect, useRef } from 'react'
 import SecondsToHMS from '@utils/secondsFormat'
 import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
-import { useSelector, useDispatch } from 'react-redux'
-import { actions } from '@store/index'
+import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
+import { restartGame } from '@store/slices/game'
 import { levelStats } from '@store/selectors'
 import { width, height, center } from '@utils/winsize'
 
-const { restartGame } = actions
 function _RenderStroke(
   ctx: CanvasRenderingContext2D,
   lStr: string,
@@ -23,7 +22,7 @@ function _RenderStroke(
 }
 
 function ResScene({ onExit }: SceneProps) {
-  const lvlStats = useSelector(levelStats) || {
+  const lvlStats = useAppSelector(levelStats) || {
     levelNum: 1,
     killCount: 0,
     coins: 0,
@@ -31,7 +30,7 @@ function ResScene({ onExit }: SceneProps) {
     steps: 0,
   }
   const { levelNum, killCount, coins, time, steps } = lvlStats
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   let curHeight = height / 4
   const margin = width * 0.4 > 200 ? 200 : width * 0.4

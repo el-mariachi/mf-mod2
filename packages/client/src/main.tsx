@@ -6,6 +6,9 @@ import App from '@components/App/App'
 import ErrorBoundary from '@services/ErrorBoundary'
 import { Provider } from 'react-redux'
 import { store } from '@store/index'
+import { loadUser } from '@store/slices/user'
+
+store.dispatch(loadUser())
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

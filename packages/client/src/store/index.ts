@@ -4,7 +4,7 @@ import userSlice from './slices/user'
 
 export const store = configureStore({
   reducer: {
-    game: gameSlice.reducer, // TODO refactor
+    game: gameSlice,
     user: userSlice,
   },
 })
@@ -12,5 +12,3 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 
 export type AppDispatch = typeof store.dispatch
-
-export const actions = gameSlice.actions // TODO refactor (name actions is used for just game slice. not fair)

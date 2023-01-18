@@ -1,10 +1,12 @@
 import classNames from 'classnames'
 import { FC } from 'react'
 import { Nav, Navbar, Offcanvas } from 'react-bootstrap'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { logout } from '@services/authController'
 import Icon, { IconName } from '@components/Icon'
 import './AppNav.scss'
+import { useAppDispatch } from 'hooks/redux_typed_hooks'
+import { clearUser } from '@store/slices/user'
 
 type AppNavPath = {
   title: string
@@ -18,7 +20,7 @@ export type AppNavProps = {
   caption?: string
 }
 const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const navItems = paths.map(({ title, icon, path, callback, extLink }) => {
     return (
       <li key={title} className="nav-item">
@@ -76,11 +78,8 @@ const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
               <Nav.Link
                 onClick={(e: React.SyntheticEvent) => {
                   e.preventDefault()
-                  // TODO it`s temporary, use connected-react-router
                   logout().then(() => {
-                    if (!['/sign-in', '/sign-up'].includes(location.pathname)) {
-                      navigate('/sign-in')
-                    }
+                    dispatch(clearUser())
                   })
                 }}
                 className="nav-link d-flex align-items-center"

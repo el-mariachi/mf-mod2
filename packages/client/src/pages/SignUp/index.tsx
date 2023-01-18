@@ -7,13 +7,18 @@ import AppDefaultTpl from '@components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { inputData, defaultValues, SignUpFormStruct } from './constants'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { signUpUser } from '@services/authController'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import SpinnerButton from '@components/SpinnerButton'
+import { LoggedInCheck } from 'hoc/LoggedInCheck'
+import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
+import ROUTES from '@constants/routes'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { loadUser } from '@store/slices/user'
 
 const SignUp = () => {
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
 
@@ -45,8 +50,9 @@ const SignUp = () => {
     setReadOnly(true)
 
     signUpUser(data)
-      // TODO it`s temporary, use connected-react-router
-      .then(() => navigate('/'))
+      .then(() => {
+        dispatch(loadUser())
+      })
       .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
       .finally(() => {
         setLoading(false)
@@ -80,9 +86,7 @@ const SignUp = () => {
 
         <Form.Group as={Row}>
           <Col sm={{ span: 9, offset: 3 }}>
-            <SpinnerButton loading={loading}>
-              Создать аккаунт 
-            </SpinnerButton>
+            <SpinnerButton loading={loading}>Создать аккаунт</SpinnerButton>
             <Link to="/sign-in">
               <Button as="span" variant="link">
                 Войти
@@ -95,4 +99,9 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+const checkOptions: LoggedInCheckOptions = {
+  userRequired: false,
+  escapeRoute: ROUTES.ROOT,
+}
+
+export default LoggedInCheck(checkOptions)(SignUp)

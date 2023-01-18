@@ -8,23 +8,28 @@ import FormControl from '@components/FormControl'
 import AppDefaultTpl from '@components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { signInInputData, defaultValues, AuthFormStruct } from './constants'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import { signInUser } from '@services/authController'
 import './SignIn.scss'
+import { LoggedInCheck } from 'hoc/LoggedInCheck'
+import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
+import ROUTES from '@constants/routes'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { loadUser } from '@store/slices/user'
 
 export type SignInProps = {
-  signUpPageUrl?: string
+  signUpPageUrl?: ROUTES
 }
 
-export default function SignIn(props: SignInProps) {
+const SignIn = (props: SignInProps) => {
   const [mode, setMode] = useState('auth')
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
   const [validated, setValidated] = useState(false)
   const [submitError, setSubmitError] = useState('')
-  const navigate = useNavigate()
-  const isAuthMode = 'auth' == mode
+  const dispatch = useAppDispatch()
+  const isAuthMode = 'auth' === mode
 
   const {
     register,
@@ -38,7 +43,7 @@ export default function SignIn(props: SignInProps) {
 
   let { signUpPageUrl } = props
   if (!signUpPageUrl) {
-    signUpPageUrl = '/sign-up'
+    signUpPageUrl = ROUTES.SIGN_UP
   }
 
   const toggleMode = () => {
@@ -54,8 +59,9 @@ export default function SignIn(props: SignInProps) {
 
     if (isAuthMode) {
       signInUser(data)
-        // TODO it`s temporary, use connected-react-router
-        .then(() => navigate('/'))
+        .then(() => {
+          dispatch(loadUser())
+        })
         .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
         .finally(() => {
           setLoading(false)
@@ -156,3 +162,9 @@ export default function SignIn(props: SignInProps) {
     </AppDefaultTpl>
   )
 }
+
+const checkOptions: LoggedInCheckOptions = {
+  userRequired: false,
+  escapeRoute: ROUTES.ROOT,
+}
+export default LoggedInCheck(checkOptions)(SignIn)

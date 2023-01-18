@@ -12,6 +12,11 @@ import SpinnerButton from '@components/SpinnerButton'
 import classNames from 'classnames'
 import './UserProfile.scss'
 import useStoreUser from 'hooks/useStoreUser'
+import { LoggedInCheck } from 'hoc/LoggedInCheck'
+import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
+import ROUTES from '@constants/routes'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { setUser } from '@store/slices/user'
 
 enum Mode {
   Edit,
@@ -25,6 +30,7 @@ const UserProfile = () => {
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
   const storeUser = useStoreUser()
+  const dispatch = useAppDispatch()
 
   const {
     register,
@@ -52,9 +58,11 @@ const UserProfile = () => {
         await updatePassword(passwords)
       }
     }
-    await updateProfile(formData).catch((error: AppError) =>
-      formUserErrorHandler(error, setSubmitError)
-    )
+    updateProfile(formData)
+      .then(user => {
+        dispatch(setUser(user))
+      })
+      .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
   }
 
   const editMode = (e: React.SyntheticEvent) => {
@@ -116,4 +124,9 @@ const UserProfile = () => {
   )
 }
 
-export default UserProfile
+const checkOptions: LoggedInCheckOptions = {
+  userRequired: true,
+  escapeRoute: ROUTES.SIGN_IN,
+}
+
+export default LoggedInCheck(checkOptions)(UserProfile)
