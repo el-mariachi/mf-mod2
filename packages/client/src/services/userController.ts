@@ -7,12 +7,11 @@ interface AvatarData extends FormData {
   append(name: AvatarFields, value: Blob, fileName?: string): void
 }
 
-export function updateProfile(data: ProfileData) {
-  return userApi.updProfile(data).catch(error => apiErrorHandler(error))
-}
-export function updateAvatar(data: AvatarData) {
-  return userApi.updAvatar(data).catch(error => apiErrorHandler(error))
-}
-export function updatePassword(data: PasswordData) {
-  return userApi.updPassword(data).catch(error => apiErrorHandler(error))
-}
+const updateProfile = (data: ProfileData) =>
+  userApi.updProfile(data).catch(error => apiErrorHandler(error))
+const updateAvatar = (data: AvatarData) =>
+  userApi.updAvatar(data).catch(error => apiErrorHandler(error))
+const updatePassword = (data: PasswordData) =>
+  userApi.updPassword(data).catch(error => apiErrorHandler(error))
+
+export { updateProfile, updateAvatar, updatePassword }
