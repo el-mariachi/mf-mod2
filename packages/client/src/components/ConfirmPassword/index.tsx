@@ -1,8 +1,6 @@
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import FormGroupView from '@components/FormGroupView'
 import { changePasswordInputData, ChangePasswordFormStruct } from './constants'
 import { useForm } from 'react-hook-form'
@@ -63,17 +61,19 @@ export default ({ options: { res, newPassword } }: ConfirmPasswordProps) => {
         <Modal.Header className="px-4" closeButton>
           <Modal.Title>Смена пароля</Modal.Title>
         </Modal.Header>
-        
+
         <Form onSubmit={handleSubmit(formSubmit)}>
-          <Modal.Body className="p-4">            
-              {formControls}
-          </Modal.Body>
+          <Modal.Body className="p-4">{formControls}</Modal.Body>
 
           <Modal.Footer className="px-4 mt-n3">
             <Button className="mb-1 me-2" type="submit">
               Поменять пароль
             </Button>
-            <Button variant="outline-primary" className="mb-1" onClick={handleClose} type="button">
+            <Button
+              variant="outline-primary"
+              className="mb-1"
+              onClick={handleClose}
+              type="button">
               Отмена
             </Button>
           </Modal.Footer>
