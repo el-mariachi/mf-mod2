@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { defineUser } from '@services/authController'
-import { RESOURCES_URL } from '@constants/api'
+import { getFile } from '@api/resourceApi'
 
 export enum LoadingStatus {
   Idle = 'Idle',
@@ -40,7 +40,7 @@ const prepareUserData = (userData: typeof initialState['data']) => ({
   ...userData,
   avatar:
     userData.avatar !== null
-      ? `${RESOURCES_URL}${userData.avatar}`
+      ? getFile(userData.avatar)
       : initialState.data.avatar,
   display_name: userData.display_name || '',
 })
