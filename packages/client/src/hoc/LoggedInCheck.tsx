@@ -5,6 +5,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import ROUTES from '@constants/routes'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser, LoadingStatus } from '@store/slices/user'
+import Spinner from '@components/Spinner'
 
 export type LoggedInCheckOptions = {
   userRequired: boolean
@@ -20,8 +21,8 @@ const LoggedInCheck =
       const user = useStoreUser()
       const loadingStatus = useStoreUserStatus()
       const loggedIn = user.id !== 0
+      const isLoading = loadingStatus === LoadingStatus.Loading
       const needToRedirect =
-        loadingStatus !== LoadingStatus.Loading && // no redirects while loading in progress
         location.pathname === window.location.pathname &&
         ((loggedIn && !userRequired) || (!loggedIn && userRequired))
 
@@ -29,7 +30,9 @@ const LoggedInCheck =
         dispatch(loadUser())
       }, [])
 
-      return needToRedirect ? (
+      return isLoading ? (
+        <Spinner />
+      ) : needToRedirect ? (
         <Navigate to={escapeRoute} />
       ) : (
         <WrappedComponent {...props} />
