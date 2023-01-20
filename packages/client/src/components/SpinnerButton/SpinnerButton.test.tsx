@@ -1,5 +1,5 @@
 import SpinnerButton from './index'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 describe('#SpinnerButton', () => {
   it('should create', () => {
@@ -7,9 +7,12 @@ describe('#SpinnerButton', () => {
     expect(renderedSpinnerButton).toBeTruthy()
     renderedSpinnerButton.unmount()
   })
-  it('should rendered', async () => {
+  it('should render with correct text', async () => {
     render(<SpinnerButton loading />)
-    await screen.findByRole('button')
-    expect(screen.getByRole('button')).toHaveTextContent('hello there')
+    expect(screen.getByRole('button')).toHaveTextContent('Секундочку')
+  })
+  it('should render with correct text', async () => {
+    render(<SpinnerButton loading />)
+    expect(screen.getByRole('button')).toHaveTextContent('Пердулечку')
   })
 })

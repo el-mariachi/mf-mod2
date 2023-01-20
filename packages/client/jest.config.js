@@ -1,12 +1,12 @@
-// import dotenv from 'dotenv'
-// dotenv.config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default {
   preset: 'ts-jest',
-  testEnvironment: 'react',
+  testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
-  // setupFilesAfterEnv: ['<rootDir>/jest-setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts']
 }
