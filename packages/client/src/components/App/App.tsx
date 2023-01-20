@@ -7,8 +7,15 @@ import UserProfile from '@pages/UserProfile'
 import ServicePage from '@pages/ServicePage'
 import SignUp from '@pages/SignUp'
 import ROUTES from '@constants/routes'
+import { useEffect } from 'react'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { loadUser } from '@store/slices/user'
 
 function App() {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(loadUser())
+  }, [])
   return (
     <div className="app">
       <Routes>

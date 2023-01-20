@@ -1,10 +1,9 @@
-import { FC, useEffect } from 'react'
-import useStoreUser from '@hooks/useStoreUser'
-import useStoreUserStatus from '@hooks/useStoreUserStatus'
-import { Navigate, useLocation } from 'react-router-dom'
+import { FC } from 'react'
+import useUserLoadingStatus from '@hooks/useUserLoadingStatus'
+import useLoginStatus from '@hooks/useLoginStatus'
+import { Navigate } from 'react-router-dom'
 import ROUTES from '@constants/routes'
-import { useAppDispatch } from '@hooks/redux_typed_hooks'
-import { loadUser, LoadingStatus } from '@store/slices/user'
+import { LoadingStatus, Logged } from '@store/slices/user'
 import Spinner from '@components/Spinner'
 
 export type LoggedInCheckOptions = {
@@ -15,21 +14,14 @@ export type LoggedInCheckOptions = {
 const LoggedInCheck =
   (options: LoggedInCheckOptions) => (WrappedComponent: FC) => {
     const ComponentWithLoggedInCheck: FC = props => {
-      const dispatch = useAppDispatch()
-      const location = useLocation()
+      const loggedIn = useLoginStatus() === Logged.In
       const { userRequired, escapeRoute } = options
-      const user = useStoreUser()
-      const loadingStatus = useStoreUserStatus()
-      const loggedIn = user.id !== 0
-      const isLoading = loadingStatus === LoadingStatus.Loading
+      const loadingStatus = useUserLoadingStatus()
+      const isLoading =
+        loadingStatus === LoadingStatus.Loading ||
+        loadingStatus === LoadingStatus.Idle
       const needToRedirect =
-        location.pathname === window.location.pathname &&
-        ((loggedIn && !userRequired) || (!loggedIn && userRequired))
-
-      useEffect(() => {
-        dispatch(loadUser())
-      }, [])
-
+        (loggedIn && !userRequired) || (!loggedIn && userRequired)
       return isLoading ? (
         <Spinner />
       ) : needToRedirect ? (

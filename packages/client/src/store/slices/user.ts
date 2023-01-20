@@ -9,8 +9,20 @@ export enum LoadingStatus {
   Failed = 'Failed',
 }
 
+export enum Logged {
+  In = 'In',
+  Out = 'Out',
+}
+
+export type UserAuth = {
+  id: number
+  login: string
+}
+export const DEFAULT_USER_AUTH = { id: 0, login: '' }
+
 const initialState = {
   loadingStatus: LoadingStatus.Idle,
+  loginStatus: Logged.Out,
   data: {
     id: 0,
     email: '',
@@ -54,22 +66,26 @@ const userSlice = createSlice({
       state.data = prepareUserData(user)
     },
     clearUser() {
-      return initialState
+      return { ...initialState, loadingStatus: LoadingStatus.Failed }
     },
   },
   extraReducers: builder => {
     builder
       .addCase(loadUser.pending, state => {
         state.loadingStatus = LoadingStatus.Loading
+        state.loginStatus = Logged.Out
       })
       .addCase(loadUser.rejected, state => {
         state.loadingStatus = LoadingStatus.Failed
+        state.loginStatus = Logged.Out
+        state.data = initialState.data
       })
       .addCase(loadUser.fulfilled, (state, action) => {
         state.loadingStatus = LoadingStatus.Succeeded
         const user = action.payload
         state.data = prepareUserData(user)
-        state.loadingStatus = LoadingStatus.Idle
+        state.loginStatus = Logged.In
+        // state.loadingStatus = LoadingStatus.Idle
       })
   },
 })

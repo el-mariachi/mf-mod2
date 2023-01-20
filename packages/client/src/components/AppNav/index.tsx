@@ -7,6 +7,8 @@ import Icon, { IconName } from '@components/Icon'
 import './AppNav.scss'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { clearUser } from '@store/slices/user'
+import { useNavigate } from 'react-router-dom'
+import ROUTES from '@constants/routes'
 
 type AppNavPath = {
   title: string
@@ -21,6 +23,7 @@ export type AppNavProps = {
 }
 const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const navItems = paths.map(({ title, icon, path, callback, extLink }) => {
     return (
       <li key={title} className="nav-item">
@@ -80,6 +83,7 @@ const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
                   e.preventDefault()
                   logout().then(() => {
                     dispatch(clearUser())
+                    navigate(ROUTES.SIGN_IN)
                   })
                 }}
                 className="nav-link d-flex align-items-center"

@@ -137,7 +137,6 @@ const init = () => {
 }
 
 const drawSpinner: CanvasDrawingFunction = ctx => {
-  console.log('drawSpinner')
   context = ctx
   resources.load([spinnerImg])
   resources.onReady(init)
