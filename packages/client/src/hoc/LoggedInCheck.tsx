@@ -6,9 +6,19 @@ import ROUTES from '@constants/routes'
 import { LoadingStatus, Logged } from '@store/slices/user'
 import Spinner from '@components/Spinner'
 
-export type LoggedInCheckOptions = {
+type LoggedInCheckOptions = {
   userRequired: boolean
   escapeRoute: ROUTES
+}
+
+const authorizedPageAccessOpts: LoggedInCheckOptions = {
+  userRequired: true,
+  escapeRoute: ROUTES.SIGN_IN,
+}
+
+const nonAuthorizedPageAccessOpts: LoggedInCheckOptions = {
+  userRequired: false,
+  escapeRoute: ROUTES.ROOT,
 }
 
 const LoggedInCheck =
@@ -33,4 +43,4 @@ const LoggedInCheck =
     return ComponentWithLoggedInCheck
   }
 
-export { LoggedInCheck }
+export { LoggedInCheck, authorizedPageAccessOpts, nonAuthorizedPageAccessOpts }

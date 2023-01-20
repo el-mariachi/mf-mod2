@@ -12,9 +12,7 @@ import SpinnerButton from '@components/SpinnerButton'
 import classNames from 'classnames'
 import './UserProfile.scss'
 import useStoreUser from 'hooks/useStoreUser'
-import { LoggedInCheck } from 'hoc/LoggedInCheck'
-import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
-import ROUTES from '@constants/routes'
+import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { setUser } from '@store/slices/user'
 
@@ -124,9 +122,4 @@ const UserProfile = () => {
   )
 }
 
-const checkOptions: LoggedInCheckOptions = {
-  userRequired: true,
-  escapeRoute: ROUTES.SIGN_IN,
-}
-
-export default LoggedInCheck(checkOptions)(UserProfile)
+export default LoggedInCheck(authorizedPageAccessOpts)(UserProfile)

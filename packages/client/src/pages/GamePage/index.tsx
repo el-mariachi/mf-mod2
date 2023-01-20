@@ -7,9 +7,7 @@ import ResultScene from '@scenes/ResultsScreen/Scene'
 import MapScene from '@scenes/MapScene'
 import { currentScene as currentSceneSelector } from '@store/selectors'
 import SCENES from '@constants/scenes'
-import ROUTES from '@constants/routes'
-import { LoggedInCheck } from 'hoc/LoggedInCheck'
-import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
+import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 
 type scenesType = Record<SCENES, FC<SceneProps>>
 
@@ -32,11 +30,4 @@ function GamePage() {
   return <Scene onExit={onExit} />
 }
 
-const checkOptions: LoggedInCheckOptions = {
-  userRequired: true,
-  escapeRoute: ROUTES.SIGN_IN,
-}
-
-export default LoggedInCheck(checkOptions)(GamePage)
-
-// export default GamePage
+export default LoggedInCheck(authorizedPageAccessOpts)(GamePage)

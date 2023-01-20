@@ -11,9 +11,7 @@ import { Link } from 'react-router-dom'
 import { signUpUser } from '@services/authController'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import SpinnerButton from '@components/SpinnerButton'
-import { LoggedInCheck } from 'hoc/LoggedInCheck'
-import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
-import ROUTES from '@constants/routes'
+import { LoggedInCheck, nonAuthorizedPageAccessOpts } from 'hoc/LoggedInCheck'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
 
@@ -99,9 +97,4 @@ const SignUp = () => {
   )
 }
 
-const checkOptions: LoggedInCheckOptions = {
-  userRequired: false,
-  escapeRoute: ROUTES.ROOT,
-}
-
-export default LoggedInCheck(checkOptions)(SignUp)
+export default LoggedInCheck(nonAuthorizedPageAccessOpts)(SignUp)

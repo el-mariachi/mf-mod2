@@ -2,9 +2,7 @@ import AddForumTopicForm from '@components/AddForumTopicForm'
 import AppDefaultTpl from '@components/AppDefaultTpl'
 import ForumTopicsList from '@components/ForumTopicsList'
 import './ForumPage.scss'
-import { LoggedInCheck } from 'hoc/LoggedInCheck'
-import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
-import ROUTES from '@constants/routes'
+import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 
 function ForumPage() {
   return (
@@ -15,9 +13,5 @@ function ForumPage() {
     </AppDefaultTpl>
   )
 }
-const checkOptions: LoggedInCheckOptions = {
-  userRequired: true,
-  escapeRoute: ROUTES.SIGN_IN,
-}
 
-export default LoggedInCheck(checkOptions)(ForumPage)
+export default LoggedInCheck(authorizedPageAccessOpts)(ForumPage)

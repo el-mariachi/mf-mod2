@@ -12,8 +12,7 @@ import { Link } from 'react-router-dom'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import { signInUser } from '@services/authController'
 import './SignIn.scss'
-import { LoggedInCheck } from 'hoc/LoggedInCheck'
-import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
+import { LoggedInCheck, nonAuthorizedPageAccessOpts } from 'hoc/LoggedInCheck'
 import ROUTES from '@constants/routes'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
@@ -163,8 +162,4 @@ const SignIn = (props: SignInProps) => {
   )
 }
 
-const checkOptions: LoggedInCheckOptions = {
-  userRequired: false,
-  escapeRoute: ROUTES.ROOT,
-}
-export default LoggedInCheck(checkOptions)(SignIn)
+export default LoggedInCheck(nonAuthorizedPageAccessOpts)(SignIn)

@@ -2,9 +2,7 @@ import LeaderboardList from '@components/Leaderboard/List'
 import AppDefaultTpl from '@components/AppDefaultTpl'
 import { Button } from 'react-bootstrap'
 import './Leaderboard.scss'
-import { LoggedInCheck } from 'hoc/LoggedInCheck'
-import type { LoggedInCheckOptions } from 'hoc/LoggedInCheck'
-import ROUTES from '@constants/routes'
+import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 
 const Leaderboard = () => {
   return (
@@ -17,9 +15,5 @@ const Leaderboard = () => {
     </AppDefaultTpl>
   )
 }
-const checkOptions: LoggedInCheckOptions = {
-  userRequired: true,
-  escapeRoute: ROUTES.SIGN_IN,
-}
 
-export default LoggedInCheck(checkOptions)(Leaderboard)
+export default LoggedInCheck(authorizedPageAccessOpts)(Leaderboard)
