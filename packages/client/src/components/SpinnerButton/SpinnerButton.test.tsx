@@ -6,11 +6,11 @@ describe('#SpinnerButton', () => {
     const renderedSpinnerButton = render(<SpinnerButton loading />)
     expect(renderedSpinnerButton).toBeTruthy()
   })
-  it('should render with default text if text not provided in props', () => {
+  it('should be rendered with default text if text not provided in props', () => {
     render(<SpinnerButton loading />)
     expect(screen.getByRole('button')).toHaveTextContent('Секундочку')
   })
-  it('should render with text from props', () => {
+  it('should be rendered with text from props', () => {
     render(<SpinnerButton loading spinnerText="Минуточку" />)
     expect(screen.getByRole('button')).toHaveTextContent('Минуточку')
   })
@@ -18,7 +18,7 @@ describe('#SpinnerButton', () => {
     render(<SpinnerButton loading />)
     expect(screen.getByRole('button')).toHaveAttribute('disabled')
   })
-  it('spinner should  be rendered if loading true', () => {
+  it('spinner should be rendered if loading true', () => {
     const { container } = render(<SpinnerButton loading />)
     const span = container.querySelector('span')
     expect(span).toBeTruthy()
