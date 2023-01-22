@@ -24,7 +24,10 @@
       "@pages/*": ["pages/*"],
       "@services/*": ["services/*"],
       "@game/*": ["game/*"],
-      "@scenes/*": ["game/scenes/*"]
+      "@scenes/*": ["game/scenes/*"],
+      "@hooks/*": ["hooks/*"],
+      "@store/*": ["store/*"],
+      "@constants/*": ["constants/*"]
     }
   },
   "include": ["src", "./jest-setup.ts"],
