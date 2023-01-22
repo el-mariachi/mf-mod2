@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import FormControl from './index'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('#FormControl', () => {
   const registerCallbackStub = () => {}
@@ -87,5 +87,39 @@ describe('#FormControl', () => {
     )
     const input = container.querySelector('input')
     expect(input?.type).toBe('checkbox')
+  })
+  it('prop placeholder should be applied to input as placeholder', () => {
+    const { container } = render(
+      <FormControl
+        formName={'formName'}
+        controlProps={{
+          name: 'name',
+          label: 'label',
+          type: 'type',
+          placeholder: 'testPlaceholder',
+        }}
+        register={registerCallbackStub as any}
+        errors={[123] as any}
+      />
+    )
+    const input = container.querySelector('input')
+    expect(input?.placeholder).toBe('testPlaceholder')
+  })
+  it('input should have readonly attibute if readOnly prop true', () => {
+    const { container } = render(
+      <FormControl
+        formName={'formName'}
+        controlProps={{
+          name: 'name',
+          label: 'label',
+          type: 'type',
+        }}
+        register={registerCallbackStub as any}
+        errors={[123] as any}
+        readOnly={true}
+      />
+    )
+    const input = container.querySelector('input')
+    expect(input).toHaveAttribute('readonly')
   })
 })
