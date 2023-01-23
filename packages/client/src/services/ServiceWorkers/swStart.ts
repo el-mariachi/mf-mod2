@@ -1,5 +1,7 @@
-function startServiceWorker() {
-  if ('serviceWorker' in navigator) {
+function startServiceWorker({ always }: { always: boolean }) {
+  const isDev = process.env.NODE_ENV === 'development'
+  const regiserSW = always || !isDev
+  if ('serviceWorker' in navigator && regiserSW) {
     window.addEventListener('load', () => {
       navigator.serviceWorker
         .register('./sw.js')

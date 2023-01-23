@@ -2,12 +2,12 @@ const CACHE_NAME = 'my-site-cache-v1'
 
 const URLS = [
   '/',
-  '/sign-in',
+  '/game',
   '/sign-up',
-  '/profile',
+  '/sign-in',
   '/leaderboard',
-  '/500',
-  '*',
+  '/profile',
+  '/forum',
 ]
 
 this.addEventListener('install', event => {
@@ -75,8 +75,7 @@ const FALLBACK = `
             <span role="button" tabindex="0" class="mb-1 btn btn-outline-primary">На главную</span>
         </a>
     </div>
-</main>
-`
+</main>`
 
 function useFallback() {
   return Promise.resolve(

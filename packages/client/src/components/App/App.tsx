@@ -8,11 +8,9 @@ import Leaderboard from '@pages/Leaderboard'
 import UserProfile from '@pages/UserProfile'
 import ServicePage from '@pages/ServicePage'
 import SignUp from '@pages/SignUp'
-import startServiceWorker from '@services/ServiceWorkers/swStart'
 
 function App() {
   const navigate = useNavigate()
-  startServiceWorker()
   useEffect(() => {
     defineUser()
       // TODO it`s temporary, use connected-react-router
