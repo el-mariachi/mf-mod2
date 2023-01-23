@@ -1,16 +1,15 @@
 import { useEffect, useRef } from 'react'
 import { useFonts } from '@hooks/useFonts'
-import { useDispatch } from 'react-redux'
-import { actions } from '@store/index'
+import { useAppDispatch } from 'hooks/redux_typed_hooks'
+import { finishLevel } from '@store/slices/game'
 import { width, height, center } from '@utils/winsize'
 import './MapScene.css'
 
-const { finishLevel } = actions
 function LoadScene({ onExit }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts(false)
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const onGameFinish = () => {
     dispatch(finishLevel({ time: 0 }))
   }

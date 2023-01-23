@@ -5,10 +5,7 @@ import axios, {
   isAxiosError,
 } from 'axios'
 import { AppErrorCode, createAppError } from '@utils/errorsHandling'
-
-const API_HOST = 'https://ya-praktikum.tech'
-const API_BASE_URL = `${API_HOST}/api/v2`
-const API_TIMEOUT = 5000
+import { API_BASE_URL, API_TIMEOUT } from '@constants/api'
 
 enum RestApiMethods {
   get = 'get',

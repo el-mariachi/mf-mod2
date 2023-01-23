@@ -7,11 +7,14 @@ import FormGroupView from '@components/FormGroupView'
 import ConfirmPassword from '@components/ConfirmPassword'
 import { profileFormInputs, READ_CLASS, EDIT_CLASS } from './constants'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import emulateStore from './loadUserEmul'
 import AppDefaultTpl from '@components/AppDefaultTpl'
 import SpinnerButton from '@components/SpinnerButton'
 import classNames from 'classnames'
 import './UserProfile.scss'
+import useStoreUser from 'hooks/useStoreUser'
+import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { setUser } from '@store/slices/user'
 
 enum Mode {
   Edit,
@@ -24,10 +27,8 @@ const UserProfile = () => {
   const [readOnly, setReadOnly] = useState(false)
   const [modalOptions, setModalOptions] = useState({})
   const [submitError, setSubmitError] = useState('')
-  // TODO uncomment and edit next line when we have redux store
-  // const avatar = useSelector(state => state.user.avatar)
-  // TODO remove next line when we have redux store
-  const avatar = 'https://cdn-icons-png.flaticon.com/512/5953/5953714.png'
+  const storeUser = useStoreUser()
+  const dispatch = useAppDispatch()
 
   const {
     register,
@@ -36,7 +37,7 @@ const UserProfile = () => {
   } = useForm<ProfileFormProps>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
-    defaultValues: async () => emulateStore(), // TODO replace emulateStore() call with useSelector() from redux
+    values: storeUser,
   })
 
   const saveChanges = async (formData: ProfileFormProps) => {
@@ -55,9 +56,11 @@ const UserProfile = () => {
         await updatePassword(passwords)
       }
     }
-    await updateProfile(formData).catch((error: AppError) =>
-      formUserErrorHandler(error, setSubmitError)
-    )
+    updateProfile(formData)
+      .then(user => {
+        dispatch(setUser(user))
+      })
+      .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
   }
 
   const editMode = (e: React.SyntheticEvent) => {
@@ -69,12 +72,11 @@ const UserProfile = () => {
     setLoading(true)
     setReadOnly(true)
 
-    saveChanges(data)
-      .finally(() => {
-        setLoading(false)
-        setReadOnly(false)
-        setMode(Mode.View)
-      })    
+    saveChanges(data).finally(() => {
+      setLoading(false)
+      setReadOnly(false)
+      setMode(Mode.View)
+    })
   }
 
   const formControls = profileFormInputs.map((controlProps, index) => (
@@ -93,7 +95,7 @@ const UserProfile = () => {
       <Form className="user-profile__form" onSubmit={handleSubmit(formSubmit)}>
         <Row>
           <Col sm={4}>
-            <ProfileAvatar avatar={avatar} />
+            <ProfileAvatar avatar={storeUser.avatar} />
           </Col>
           <Col sm={8} className="py-5 ps-4 pe-5 user-profile__form-wrapper">
             <h1 className="h3 mb-5">Профиль игрока</h1>
@@ -108,9 +110,7 @@ const UserProfile = () => {
                 Изменить данные профиля
               </Button>
             ) : (
-              <SpinnerButton loading={loading}>
-                Сохранить
-              </SpinnerButton>
+              <SpinnerButton loading={loading}>Сохранить</SpinnerButton>
             )}
           </Col>
         </Row>
@@ -122,4 +122,4 @@ const UserProfile = () => {
   )
 }
 
-export default UserProfile
+export default LoggedInCheck(authorizedPageAccessOpts)(UserProfile)
