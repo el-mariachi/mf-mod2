@@ -150,9 +150,10 @@ declare global {
     [key in string]: T
   }
 
-  type SceneProps = {
+  export type SceneProps = {
     onExit?: () => void
   }
+
 }
 
 export {}

@@ -1,50 +1,74 @@
-import { useEffect, useRef } from 'react'
-import { useFonts } from '@hooks/useFonts'
-import { useDispatch } from 'react-redux'
-import { actions } from '@store/index'
-import { width, height, center } from '@utils/winsize'
+import { useEffect, useState, useRef } from 'react'
+import { width, height } from '@utils/winsize'
 import './MapScene.css'
+import {
+  useGameController,
+  GameActionType,
+  GameEvent,
+} from '@hooks/useGameController'
+import MapController from '@game/Controllers/MapController'
+import Layer from '@game/Controllers/Layerontroller'
 
-const { finishLevel } = actions
-function LoadScene({ onExit }: SceneProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const fontLoaded = useFonts(false)
+function createLayers(layerNames: string[]): Layer[] {
+  return layerNames.map((name, i) => {
+    return new Layer({ name, zindex: i.toString(), width, height })
+  })
+}
 
-  const dispatch = useDispatch()
-  const onGameFinish = () => {
-    dispatch(finishLevel({ time: 0 }))
-  }
+function MapScene({ onExit }: SceneProps) {
+  const gameAction: GameActionType = useGameController()
+  const [layers, setLayers]: [
+    Layer[],
+    React.Dispatch<React.SetStateAction<Layer[]>>
+  ] = useState([] as Layer[])
+  const turnRef = useRef()
+
+  const layersRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef({} as MapController)
 
   useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, width, height)
+    setLayers(createLayers(['static', 'active', 'effetcs']))
 
-        const image = new Image()
-        image.src = '/src/assets/game_level_1_items.png'
-        image.onload = function () {
-          ctx.drawImage(image, center.width - 200, 180)
-        }
-      }
+    //const statistic = new StatisticController()
+    //turnRef.current = new TurnController(map, statistic)
+  }, [])
+
+  useEffect(() => {
+    if (layersRef.current) {
+      layers.forEach(el => {
+        layersRef.current!.append(el.canvas)
+      })
+
+      mapRef.current = new MapController({ layers, level: 1, width, height })
     }
-  }, [fontLoaded])
+  }, [layers])
+
+  useEffect(() => {
+    const [gameEvent] = gameAction
+
+    switch (gameEvent) {
+      case GameEvent.Left:
+      case GameEvent.Right:
+      case GameEvent.Up:
+      case GameEvent.Down:
+        //turnRef.current.step(gameEvent)
+        console.log(gameEvent)
+        break
+      case 'PAUSE':
+    }
+  }, [gameAction])
+
+  useEffect(() => {
+    //mapRef.current.resize(width, height)
+  }, [width, height])
+
+  console.log('layers', layers)
 
   return (
     <>
-      <canvas ref={canvasRef} width={width} height={height}></canvas>
-      <div className="map-scene__buttons">
-        <a className="mx-auto text-white" onClick={onGameFinish}>
-          finish game
-        </a>
-        <a className="mx-auto text-white" onClick={onExit}>
-          exit
-        </a>
-      </div>
+      <div ref={layersRef} className="layers"></div>
     </>
   )
 }
 
-export default LoadScene
+export default MapScene
