@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#AddForumTopicForm AddForumTopicForm should to match snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="overflow-hidden p-1 pe-0"
+    >
+      <form
+        class="add-topic-form form d-flex gap-2 float-end"
+      >
+        <div>
+          <input
+            class="form-control"
+            id="formNewTopic"
+            placeholder="Название новой темы"
+            type="text"
+          />
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Создать тему
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+`;

@@ -1,13 +1,11 @@
 import SpinnerButton from './index'
 import { render, screen } from '@testing-library/react'
-import * as renderer from 'react-test-renderer'
 
 describe('#SpinnerButton', () => {
   it('SpinnerButton should to match snapshot', () => {
-    const snapshot = renderer.create(<SpinnerButton loading />).toJSON()
-    expect(snapshot).toMatchSnapshot()
+    const { baseElement } = render(<SpinnerButton loading />)
+    expect(baseElement).toMatchSnapshot()
   })
-
   it('should create', () => {
     const renderedSpinnerButton = render(<SpinnerButton loading />)
     expect(renderedSpinnerButton).toBeTruthy()

@@ -1,8 +1,12 @@
-import { IForumTopicProps } from './ForumTopicProps'
-import Button from 'react-bootstrap/Button'
 import './ForumTopic.scss'
+import { Button } from 'react-bootstrap'
 
-function ForumTopic({ topicAuthor, topicTitle }: IForumTopicProps) {
+export type ForumTopicProps = {
+  topicAuthor: string
+  topicTitle: string
+}
+
+function ForumTopic({ topicAuthor, topicTitle }: ForumTopicProps) {
   return (
     <li className="forum-topic__container border d-flex align-items-center justify-content-between">
       <div className="forum-topic__left-block d-flex align-items-center">

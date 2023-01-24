@@ -1,28 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`#FormControl FormControl should to match snapshot 1`] = `
-<div
-  className="mb-3 row"
->
-  <label
-    className="form-label col-form-label col-sm-3"
-    htmlFor="formName-name"
-  >
-    label
-  </label>
-  <div
-    className="col-sm-9"
-  >
-    <input
-      className="form-control"
-      id="formName-name"
-      type="type"
-    />
+<body>
+  <div>
     <div
-      className="invalid-feedback"
+      class="mb-3 row"
     >
-      undefined
+      <label
+        class="form-label col-form-label col-sm-3"
+        for="formName-name"
+      >
+        label
+      </label>
+      <div
+        class="col-sm-9"
+      >
+        <input
+          class="form-control"
+          id="formName-name"
+          type="type"
+        />
+        <div
+          class="invalid-feedback"
+        >
+          undefined
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</body>
 `;

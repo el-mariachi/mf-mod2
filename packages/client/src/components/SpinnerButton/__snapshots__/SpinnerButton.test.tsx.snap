@@ -1,16 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`#SpinnerButton SpinnerButton should to match snapshot 1`] = `
-<button
-  className="btn btn-primary"
-  disabled={true}
-  type="submit"
->
-  <span
-    aria-hidden="true"
-    className="spinner-border spinner-border-sm"
-    role="status"
-  />
-   Секундочку...
-</button>
+<body>
+  <div>
+    <button
+      class="btn btn-primary"
+      disabled=""
+      type="submit"
+    >
+      <span
+        aria-hidden="true"
+        class="spinner-border spinner-border-sm"
+        role="status"
+      />
+       Секундочку...
+    </button>
+  </div>
+</body>
 `;

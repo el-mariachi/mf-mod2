@@ -2,26 +2,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import FormControl from './index'
 import { render } from '@testing-library/react'
-import * as renderer from 'react-test-renderer'
 
 describe('#FormControl', () => {
   const registerCallbackStub = () => {}
   it('FormControl should to match snapshot', () => {
-    const snapshot = renderer
-      .create(
-        <FormControl
-          formName={'formName'}
-          controlProps={{
-            name: 'name',
-            label: 'label',
-            type: 'type',
-          }}
-          register={registerCallbackStub as any}
-          errors={[123] as any}
-        />
-      )
-      .toJSON()
-    expect(snapshot).toMatchSnapshot()
+    const { baseElement } = render(
+      <FormControl
+        formName={'formName'}
+        controlProps={{
+          name: 'name',
+          label: 'label',
+          type: 'type',
+        }}
+        register={registerCallbackStub as any}
+        errors={[123] as any}
+      />
+    )
+    expect(baseElement).toMatchSnapshot()
   })
 
   it('should create', () => {
