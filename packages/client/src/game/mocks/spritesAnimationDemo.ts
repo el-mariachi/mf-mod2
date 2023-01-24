@@ -1,12 +1,14 @@
 import * as Types from '@game/core/types'
-import { MAP_CELL } from '@game/core/constants';
-import CellSprite from '@game/core/spriteApi/CellSprite'
+import { MAP_CELL, SPRITE_SIZE } from '@game/core/constants';
+import Sprite from '@game/core/spriteApi/Sprite'
 import { heroMotions } from '@game/animations/hero';
 import { skeletonMotions } from '@game/animations/skeleton';
+import { cellCoords2PixelCoords, mapCoords, relCoords } from '@game/utils';
 import skeletonSpriteImg from '@sprites/skeleton.png'
 import heroSpriteImg from '@sprites/hero.png'
 
-const STEP_DELAY = 750;
+const STEP_DELAY = 850;
+
 function makeStep (animation : Types.SpriteAnimationProcess)
 {
   return new Promise<Types.SpriteAnimationParams | null>(resolve =>
@@ -19,9 +21,13 @@ export function spritesAnimationDemo (ctx : CanvasRenderingContext2D)
   const heroSprite = new Image(MAP_CELL, MAP_CELL);
   heroSprite.src = heroSpriteImg;
 
-  const heroView = new CellSprite(ctx, heroSprite, {
-    position: [5, 10],
-    originPosition: [0, 1],
+  const heroView = new Sprite(ctx, heroSprite, {
+    position: relCoords(mapCoords(), cellCoords2PixelCoords([5, 10])),
+    size: SPRITE_SIZE,
+    origin: {
+      position: cellCoords2PixelCoords([0, 1]),
+      size: SPRITE_SIZE,
+    }
   }, heroMotions, {
     playMotion: { 
       motion: Types.IdleMotionType.idle,
@@ -32,9 +38,13 @@ export function spritesAnimationDemo (ctx : CanvasRenderingContext2D)
   const skeletonSprite = new Image(MAP_CELL, MAP_CELL);
   skeletonSprite.src = skeletonSpriteImg;
 
-  const skeletonView = new CellSprite(ctx, skeletonSprite, {
-    position: [9, 10],
-    originPosition: [0, 0],
+  const skeletonView = new Sprite(ctx, skeletonSprite, {
+    position: relCoords(mapCoords(), cellCoords2PixelCoords([9, 10])),
+    size: SPRITE_SIZE,
+    origin: {
+      position: [0, 0],
+      size: SPRITE_SIZE,
+    }
   }, skeletonMotions, {
     playMotion: {
       motion: Types.IdleMotionType.idle,
@@ -48,7 +58,7 @@ export function spritesAnimationDemo (ctx : CanvasRenderingContext2D)
         motion: Types.MoveMotionType.move,
         once: false
       },
-      to: [6, 10],
+      to: relCoords(mapCoords(), cellCoords2PixelCoords([6, 10])),
       duration: 500
     })
   )
@@ -59,7 +69,7 @@ export function spritesAnimationDemo (ctx : CanvasRenderingContext2D)
           motion: Types.MoveMotionType.move,
           once: false
         },
-        to: [7, 10],
+        to: relCoords(mapCoords(), cellCoords2PixelCoords([7, 10])),
         duration: 500
       }))
     })
@@ -70,7 +80,7 @@ export function spritesAnimationDemo (ctx : CanvasRenderingContext2D)
           motion: Types.MoveMotionType.move,
           once: false
         },
-        to: [8, 10],
+        to: relCoords(mapCoords(), cellCoords2PixelCoords([8, 10])),
         duration: 500
       }))
     })
