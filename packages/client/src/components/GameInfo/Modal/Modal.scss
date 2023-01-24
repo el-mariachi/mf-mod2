@@ -1,0 +1,91 @@
+.modal {
+  height: 80vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modalContent {
+  position: relative;
+  background-color: rgb(104, 61, 97);
+  padding: 10px;
+  width: 576px;
+
+  .header {
+    display: flex;
+    font-family: 'Minecraft';
+    font-size: 1.5rem;
+
+    .closeButton {
+      display: block;
+      margin-left: auto;
+      margin-bottom: 0.5rem;
+      border: 1px solid #000;
+      color: #000;
+      text-decoration: none;
+      font-size: 1rem;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      background: transparent;
+    }
+  }
+
+  .childrenContent {
+    width: 100%;
+    height: fit-content;
+    background: rgb(37, 19, 32);
+    padding: 20px;
+
+    .modalStats {
+      font-family: 'Minecraft';
+      color: rgb(146, 104, 125);
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        li {
+          display: flex;
+
+          span {
+            display: block;
+            font-weight: bold;
+            margin-left: auto;
+          }
+        }
+      }
+    }
+  }
+}
+
+.modalButton {
+  cursor: pointer;
+  font-family: 'Minecraft';
+  font-size: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(104, 63, 75);
+  color: rgb(37, 19, 32);
+  text-align: center;
+}
+
+.modalButton:hover {
+  background-color: rgb(104, 61, 97);
+}
