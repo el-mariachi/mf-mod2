@@ -1,9 +1,9 @@
-export type Coords = [number, number];
-export type CoordsSpeed = [number, number];
-export type Size = [number, number];
+export type Coords = [number, number]
+export type CoordsSpeed = [number, number]
+export type Size = [number, number]
 export type Geometry = {
-  position : Coords,
-  size : Size,
+  position: Coords
+  size: Size
 }
 export enum Axis {
   vertical = 'vertical',
@@ -16,66 +16,78 @@ export enum AxisDirection {
   left = 'left',
 }
 export type AxisVector = {
-  direction : AxisDirection | Axis,
-  length : number,
+  direction: AxisDirection | Axis
+  length: number
 }
 
 export type SpriteGeometry = Geometry & {
-  origin : Geometry | null,
+  origin: Geometry | null
 }
-export type SpriteAtlas = HTMLImageElement;
+export type SpriteAtlas = HTMLImageElement
 
-export interface AnimatableOnCanvas
-{
-  canvas : CanvasRenderingContext2D,
-  update (dt : number) : void;
-  render () : void;
+export interface AnimatableOnCanvas {
+  canvas: CanvasRenderingContext2D
+  update(dt: number): void
+  render(): void
 }
 export type AnimationMotionParams = {
-  origin : Geometry,
-  frames: number[],
+  origin: Geometry
+  frames: number[]
   axis?: Axis
 }
 export type SpriteAnimationParams = {
-  to?: AxisVector | Coords,
-  easing?: 'linear',
-  duration?: number,
+  to?: AxisVector | Coords
+  easing?: 'linear'
+  duration?: number
   playMotion?: {
-    motion: MotionType | AnimationMotionParams,
-    speed?: number, // frames per second
+    motion: MotionType | AnimationMotionParams
+    speed?: number // frames per second
     once?: boolean
   }
 }
-export type SpriteAnimationProcessResult = {params: SpriteAnimationParams | null, reason: 'end' | 'cancel'}
-export type SpriteAnimationProcess = Promise<SpriteAnimationProcessResult>;
+export type SpriteAnimationProcessResult = {
+  params: SpriteAnimationParams | null
+  reason: 'end' | 'cancel'
+}
+export type SpriteAnimationProcess = Promise<SpriteAnimationProcessResult>
 
 export type CellGeometry = {
-  position: Coords,
+  position: Coords
 }
 export type CellAnimationMotionParams = {
-  originPosition : Coords,
-  frames: number[],
+  originPosition: Coords
+  frames: number[]
 }
 export type CellSpriteGeometry = {
-  position: Coords,
-  originPosition: Coords | null,
+  position: Coords
+  originPosition: Coords | null
 }
 export type CellSpriteAnimationParams = SpriteAnimationParams & {
   playMotion?: SpriteAnimationParams['playMotion'] & {
-    motion: MotionType | CellAnimationMotionParams,
+    motion: MotionType | CellAnimationMotionParams
   }
 }
-export type CellSpriteAnimationProcessResult = {params: CellSpriteAnimationParams | null, reason: 'end' | 'cancel'}
-export type CellSpriteAnimationProcess = Promise<CellSpriteAnimationProcessResult>;
+export type CellSpriteAnimationProcessResult = {
+  params: CellSpriteAnimationParams | null
+  reason: 'end' | 'cancel'
+}
+export type CellSpriteAnimationProcess =
+  Promise<CellSpriteAnimationProcessResult>
 
-export type MotionTypes = (typeof IdleMotionType) & (typeof MoveMotionType) & (typeof AttackMotionType) & (typeof DeathMotionType) & (typeof DamageMotionType) & (typeof TurnMotionType) & (typeof UnspecifiedMotionType)
+export type MotionTypes = typeof IdleMotionType &
+  typeof MoveMotionType &
+  typeof AttackMotionType &
+  typeof DeathMotionType &
+  typeof DamageMotionType &
+  typeof TurnMotionType &
+  typeof UnspecifiedMotionType
 export type MotionType = keyof MotionTypes
 export enum IdleMotionType {
-   idle = 'idle',
-   look2Top = 'look2Top',
-   look2Right = 'look2Right',
-   look2Bottom = 'look2Bottom',
-   look2Left = 'look2Left',
+  idle = 'idle',
+  look2Top = 'look2Top',
+  look2Right = 'look2Right',
+  look2Bottom = 'look2Bottom',
+  look2Left = 'look2Left',
 }
 export enum MoveMotionType {
   move = 'move',

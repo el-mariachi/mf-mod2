@@ -69,12 +69,11 @@ const UserProfile = () => {
     setLoading(true)
     setReadOnly(true)
 
-    saveChanges(data)
-      .finally(() => {
-        setLoading(false)
-        setReadOnly(false)
-        setMode(Mode.View)
-      })    
+    saveChanges(data).finally(() => {
+      setLoading(false)
+      setReadOnly(false)
+      setMode(Mode.View)
+    })
   }
 
   const formControls = profileFormInputs.map((controlProps, index) => (
@@ -108,9 +107,7 @@ const UserProfile = () => {
                 Изменить данные профиля
               </Button>
             ) : (
-              <SpinnerButton loading={loading}>
-                Сохранить
-              </SpinnerButton>
+              <SpinnerButton loading={loading}>Сохранить</SpinnerButton>
             )}
           </Col>
         </Row>

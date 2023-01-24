@@ -18,8 +18,8 @@ const scenes: scenesType = {
 }
 
 function GamePage() {
-  const currentScene = SCENES.MAP_SCENE;
-    // (useSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
+  const currentScene = SCENES.MAP_SCENE
+  // (useSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
   const Scene = scenes[currentScene]
   const navigate = useNavigate()
   const onExit = () => {

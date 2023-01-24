@@ -7,7 +7,7 @@ import { width, height } from '@utils/winsize'
 import './MapSceneNext.scss'
 
 const { finishLevel } = actions
-function MapSceneNext ({ onExit }: SceneProps) {
+function MapSceneNext({ onExit }: SceneProps) {
   const dispatch = useDispatch()
   const onGameFinish = () => {
     dispatch(finishLevel({ time: 0 }))
@@ -15,7 +15,7 @@ function MapSceneNext ({ onExit }: SceneProps) {
 
   return (
     <div className="map-scene">
-      <div className="map-scene__layer game-ui-wrapper">        
+      <div className="map-scene__layer game-ui-wrapper">
         <GameUI className="map-scene__buttons">
           {/* TODO buttons below is mock, it`s need to work out in GameUI */}
           <a className="mx-auto minecrafted" onClick={onGameFinish}>
