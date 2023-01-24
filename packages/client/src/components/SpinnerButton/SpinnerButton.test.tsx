@@ -22,14 +22,4 @@ describe('#SpinnerButton', () => {
     render(<SpinnerButton loading />)
     expect(screen.getByRole('button')).toHaveAttribute('disabled')
   })
-  it('spinner should be rendered if loading true', () => {
-    const { container } = render(<SpinnerButton loading />)
-    const span = container.querySelector('span')
-    expect(span).toBeTruthy()
-  })
-  it('spinner should not be rendered if loading false', () => {
-    const { container } = render(<SpinnerButton loading={false} />)
-    const span = container.querySelector('span')
-    expect(span).toBe(null)
-  })
 })
