@@ -1,0 +1,25 @@
+@import '@vars';
+
+.map-scene {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  &__layer {
+    position: absolute;
+    inset: 0 0 0 0;
+  }
+
+  .game-ui-wrapper {
+    z-index: 300;    
+  }
+
+  .live-game-canvas-wrapper {
+    z-index: 200;
+  }
+
+  .static-game-canvas-wrapper {
+    z-index: 100;
+    background: $bg-color;
+  }
+}
