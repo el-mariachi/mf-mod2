@@ -27,9 +27,9 @@
       "@scenes/*": ["game/scenes/*"],
       "@hooks/*": ["hooks/*"],
       "@store/*": ["store/*"],
-      "@constants/*": ["constants/*"],
+      "@constants/*": ["constants/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "./jest-setup.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

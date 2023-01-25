@@ -1,6 +1,6 @@
 import { FC, ButtonHTMLAttributes } from 'react'
-import Button from 'react-bootstrap/Button'
-import Spinner from 'react-bootstrap/Spinner'
+import { Button } from 'react-bootstrap'
+import { Spinner } from 'react-bootstrap'
 
 export type SpinnerButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading: boolean
