@@ -5,9 +5,10 @@ import { store } from '@store/index'
 import HealthBar from './HealthBar/HealtBar'
 import Modal from './Modal/Modal'
 import ModalButton from './Modal/ModalButton'
+import { StatType } from './GameStat/GameStatProps'
 
 function GameInfo() {
-  const children1 = (
+  const childGameMenu = (
     <div>
       <ModalButton
         className=" w-50 mb-3"
@@ -26,11 +27,11 @@ function GameInfo() {
     </div>
   )
 
-  const children2 = (
+  const childCharInfo = (
     // TODO replace static values with data from store
     <div className="d-flex">
       <img src="src/assets/images/hero.png" />
-      <div className="modalStats">
+      <div className="modal__stats">
         <h3>Nickname</h3>
         <ul>
           <li>
@@ -59,115 +60,112 @@ function GameInfo() {
     </div>
   )
 
-  const children3 = (
+  const childInv = (
     // TODO make page for inventory
     <div></div>
   )
 
-  const title1 = 'Game menu'
-  const title2 = 'Character info'
-  const title3 = 'Inventory'
-
-  const childrenArr = [children1, children2, children3]
-  const titleArr = [title1, title2, title3]
+  const titleGameMenu = 'Game menu'
+  const titleCharInfo = 'Character info'
+  const titleInv = 'Inventory'
 
   const [modalActive, setModalActive] = useState(false)
 
-  const [modalChildren, setModalChildren] = useState(childrenArr[0])
-  const [modalTitle, setModalTitle] = useState(titleArr[0])
+  const [modalChildren, setModalChildren] = useState(childGameMenu)
+  const [modalTitle, setModalTitle] = useState(titleGameMenu)
 
-  const [isActive1, setActive1] = useState(false)
-  const [isActive2, setActive2] = useState(false)
-  const [isActive3, setActive3] = useState(false)
+  const [isActiveGameMenu, setActiveGameMenu] = useState(false)
+  const [isActiveCharInfo, setActiveCharInfo] = useState(false)
+  const [isActiveInv, setActiveInv] = useState(false)
 
   function closeModal() {
     setModalActive(false)
-    setActive1(false)
-    setActive2(false)
-    setActive3(false)
+    setActiveGameMenu(false)
+    setActiveCharInfo(false)
+    setActiveInv(false)
   }
 
   return (
     <>
-      <div className="gameStats">
+      <div className="cont__game-stats">
         <ul>
           <GameStatItem
-            type="coins"
+            type={StatType.COINS}
             quantity={store.getState().game.levelStats.coins}></GameStatItem>
           <GameStatItem
-            type="steps"
+            type={StatType.STEPS}
             quantity={store.getState().game.levelStats.steps}></GameStatItem>
         </ul>
         <div>{store.getState().game.levelStats.levelNum}</div>
         <ul>
           <GameStatItem
-            type="kills"
+            type={StatType.KILLS}
             quantity={
               store.getState().game.levelStats.killCount
             }></GameStatItem>
           <GameStatItem
-            type="time"
+            type={StatType.TIME}
             quantity={store.getState().game.levelStats.time}></GameStatItem>
         </ul>
       </div>
 
-      <div className="gameMenu">
-        <div className="charInfo">
+      <div className="cont__game-menu">
+        <div className="cont__char-info">
           <img src="src/assets/images/hero-head.png" />
-          <div className="level">1</div>
+          <div className="cont__char-level">1</div>
         </div>
         <HealthBar health={67} />
-        <div className="buttons">
+        <div className="cont__buttons">
           <div
-            className={isActive1 ? 'active' : ''}
+            className={isActiveGameMenu ? 'button_active' : ''}
             onClick={() => {
-              setActive2(false)
-              setActive3(false)
-              if (isActive1) {
-                setActive1(false)
+              setActiveCharInfo(false)
+              setActiveInv(false)
+              if (isActiveGameMenu) {
+                setActiveGameMenu(false)
                 setModalActive(false)
               } else {
-                setActive1(true)
+                setActiveGameMenu(true)
                 setModalActive(true)
               }
-              setModalChildren(childrenArr[0])
-              setModalTitle(titleArr[0])
+              setModalChildren(childGameMenu)
+              setModalTitle(titleGameMenu)
             }}>
             <img src="src/assets/images/joystick_icn.png" />
           </div>
 
           <div
-            className={isActive2 ? 'active' : ''}
+            className={isActiveCharInfo ? 'button_active' : ''}
             onClick={() => {
-              setActive1(false)
-              setActive3(false)
-              if (isActive2) {
-                setActive2(false)
+              setActiveGameMenu(false)
+              setActiveInv(false)
+              if (isActiveCharInfo) {
+                setActiveCharInfo(false)
                 setModalActive(false)
               } else {
-                setActive2(true)
+                setActiveCharInfo(true)
                 setModalActive(true)
               }
-              setModalChildren(childrenArr[1])
-              setModalTitle(titleArr[1])
+              setModalChildren(childCharInfo)
+              setModalTitle(titleCharInfo)
             }}>
             <img src="src/assets/images/scroll_icn.png" />
           </div>
 
           <div
-            className={isActive3 ? 'active' : ''}
+            className={isActiveInv ? 'button_active' : ''}
             onClick={() => {
-              setActive1(false)
-              setActive2(false)
-              if (isActive3) {
-                setActive3(false)
+              setActiveGameMenu(false)
+              setActiveCharInfo(false)
+              if (isActiveInv) {
+                setActiveInv(false)
                 setModalActive(false)
               } else {
-                setActive3(true)
+                setActiveInv(true)
                 setModalActive(true)
               }
-              setModalChildren(childrenArr[2])
-              setModalTitle(titleArr[2])
+              setModalChildren(childInv)
+              setModalTitle(titleInv)
             }}>
             <img src="src/assets/images/chest_icn.png" />
           </div>

@@ -1,35 +1,25 @@
-import React, { ReactNode } from 'react'
 import './Modal.scss'
+import ModalProps from './ModalProps'
 
-const Modal = ({
-  active,
-  children,
-  close,
-  title,
-}: {
-  active: boolean
-  children: ReactNode
-  close: () => void
-  title: string
-}) => {
+const Modal = ({ active, children, close, title }: ModalProps) => {
   return (
     <div
-      className={active ? 'modal active' : 'modal'}
+      className={active ? 'modal modal_active' : 'modal'}
       onClick={() => {
         close()
       }}>
-      <div className="modalContent" onClick={e => e.stopPropagation()}>
-        <div className="header">
+      <div className="modal__content" onClick={e => e.stopPropagation()}>
+        <div className="modal__header">
           {title}
           <button
-            className="closeButton"
+            className="modal__close-btn"
             onClick={() => {
               close()
             }}>
             X
           </button>
         </div>
-        <div className="childrenContent">{children}</div>
+        <div className="modal__child-content">{children}</div>
       </div>
     </div>
   )

@@ -1,4 +1,3 @@
-import classNames from 'classnames'
 import './Modal.scss'
 
 const ModalButton = ({
@@ -12,7 +11,7 @@ const ModalButton = ({
 }) => {
   return (
     <div
-      className={'modalButton ' + className}
+      className={'modal__button ' + className}
       onClick={() => {
         onCloseFn()
       }}>

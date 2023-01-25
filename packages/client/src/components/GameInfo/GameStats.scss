@@ -1,4 +1,4 @@
-.gameStats {
+.cont__game-stats {
   background-color: transparent;
   position: fixed;
   top: 0;
@@ -34,7 +34,7 @@
   }
 }
 
-.gameMenu {
+.cont__game-menu {
   position: fixed;
   bottom: 0;
   left: 50%;
@@ -59,17 +59,17 @@
     margin: 0;
   }
 
-  .charInfo {
+  .cont__char-info {
     position: relative;
   }
 
-  .charInfo > .level {
+  .cont__char-info > .cont__char-level {
     position: absolute;
     bottom: 0px;
     left: 12px;
   }
 
-  .healthBar {
+  .bar__health {
     width: 100%;
     height: fit-content;
     padding: 0;
@@ -82,7 +82,7 @@
     }
   }
 
-  .buttons {
+  .cont__buttons {
     display: flex;
     height: 100%;
     div {
@@ -98,7 +98,7 @@
       margin: 0 0.5rem;
     }
 
-    .active {
+    .button_active {
       background-color: rgb(103, 62, 105);
     }
   }

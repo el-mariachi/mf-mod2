@@ -4,9 +4,9 @@ interface Health {
 
 function HealthBar({ health }: Health) {
   return (
-    <div className="healtInfo">
+    <div>
       <p>heath: {health}/100</p>
-      <div className="healthBar">
+      <div className="bar__health">
         <div style={{ width: health + '%' }}></div>
       </div>
     </div>

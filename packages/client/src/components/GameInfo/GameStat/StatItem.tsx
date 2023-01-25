@@ -1,30 +1,26 @@
-import { useState } from 'react'
+import { useState, FC } from 'react'
 import GameStatProps from './GameStatProps'
 import SecondsToHMS from '@utils/secondsFormat'
+import { StatType } from './GameStatProps'
+import coinsIcon from '@images/coin_icn.png'
+import stepsIcon from '@images/steps_icn.png'
+import deathIcon from '@images/death_icn.png'
+import clockIcon from '@images/clock_icn.png'
 
-function GameStatItem({ type, quantity }: GameStatProps) {
-  let srcOfIcon
-  let value: string | number = quantity
+const GameStatItem: FC<GameStatProps> = ({ type, quantity }: GameStatProps) => {
+  const value: string | number =
+    type == StatType.TIME ? SecondsToHMS(quantity) : quantity
 
-  switch (type) {
-    case 'coins':
-      srcOfIcon = 'src/assets/images/coin_icn.png'
-      break
-    case 'steps':
-      srcOfIcon = 'src/assets/images/steps_icn.png'
-      break
-    case 'kills':
-      srcOfIcon = 'src/assets/images/death_icn.png'
-      break
-    case 'time':
-      srcOfIcon = 'src/assets/images/clock_icn.png'
-      value = SecondsToHMS(quantity)
-      break
+  const iconMap = {
+    [StatType.COINS]: coinsIcon,
+    [StatType.STEPS]: stepsIcon,
+    [StatType.KILLS]: deathIcon,
+    [StatType.TIME]: clockIcon,
   }
 
   return (
     <li>
-      <img src={srcOfIcon} />
+      <img src={iconMap[type]} />
       {value}
     </li>
   )

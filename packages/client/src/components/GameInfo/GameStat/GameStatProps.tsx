@@ -1,4 +1,11 @@
+export enum StatType {
+  COINS = 'coins',
+  STEPS = 'steps',
+  KILLS = 'kills',
+  TIME = 'time',
+}
+
 export default interface GameStatProps {
-  type: string
+  type: StatType
   quantity: number
 }
