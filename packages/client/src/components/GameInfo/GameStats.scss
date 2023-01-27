@@ -1,3 +1,5 @@
+@import url(../../vars.scss);
+
 .cont__game-stats {
   background-color: transparent;
   position: fixed;
@@ -9,7 +11,7 @@
   padding: 1rem;
 
   * {
-    color: rgb(158, 98, 116);
+    color: $ui_font_light-purple;
     list-style-type: none;
     padding: 0;
     font-size: 1.5rem;
@@ -42,11 +44,11 @@
   min-height: 4rem;
   max-width: 720px;
   width: auto;
-  background-color: rgb(37, 19, 32);
+  background-color: $ui_bg_dark-purple;
   display: flex;
   padding: 1rem;
-  border: 5px solid rgb(104, 61, 97);
-  color: rgb(158, 98, 116);
+  border: 5px solid $ui_purple;
+  color: $ui_font_light-purple;
   font-family: 'Minecraft';
 
   div {
@@ -73,12 +75,12 @@
     width: 100%;
     height: fit-content;
     padding: 0;
-    border-bottom: 3px solid rgb(74, 34, 70);
+    border-bottom: 3px solid $ui_bg_purple;
 
     div {
       height: 3px;
       padding: 0;
-      background: rgb(146, 104, 125);
+      background: $ui_bg_light-purple;
     }
   }
 
@@ -90,7 +92,7 @@
       height: 60px;
       width: 90px;
       margin: 0;
-      background-color: rgb(104, 63, 75);
+      background-color: $ui_purple;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -99,7 +101,7 @@
     }
 
     .button_active {
-      background-color: rgb(103, 62, 105);
+      background-color: $ui_purple;
     }
   }
 }
