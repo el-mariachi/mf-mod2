@@ -14,12 +14,6 @@ export enum Logged {
   Out = 'Out',
 }
 
-export type UserAuth = {
-  id: number
-  login: string
-}
-export const DEFAULT_USER_AUTH = { id: 0, login: '' }
-
 const initialState = {
   loadingStatus: LoadingStatus.Idle,
   loginStatus: Logged.Out,
