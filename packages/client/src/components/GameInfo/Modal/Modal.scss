@@ -1,4 +1,5 @@
-@import url(../../vars.scss);
+@import '@vars';
+@import '@bootstrap';
 
 .modal {
   height: 80vh;
@@ -24,6 +25,29 @@
   background-color: $ui_purple;
   padding: 10px;
   width: 576px;
+  box-shadow:
+	/* Inner Background Color */ 0 calc($pixel * -3) 0
+      calc($pixel * -1) $ui_purple,
+    0 calc($pixel * 3) 0 calc($pixel * -1) $ui_purple,
+    0 calc($pixel * -6) 0 calc($pixel * -2) $ui_purple,
+    0 calc($pixel * 6) 0 calc($pixel * -2) $ui_purple,
+    0 calc($pixel * -9) 0 calc($pixel * -4) $ui_purple,
+    0 calc($pixel * 9) 0 calc($pixel * -4) $ui_purple,
+    0 calc($pixel * -12) 0 calc($pixel * -6) $ui_purple,
+    0 calc($pixel * 12) 0 calc($pixel * -6) $ui_purple,
+    /* Border */ calc($pixel * -3) 0 0 0 $pixel-border,
+    calc($pixel * 3) 0 0 0 $pixel-border, 0 0 0 calc($pixel * 2) $pixel-border,
+    0 calc($pixel * -3) 0 $pixel $pixel-border,
+    0 calc($pixel * 3) 0 $pixel $pixel-border,
+    0 calc($pixel * -5) 0 0 $pixel-border, 0 calc($pixel * 5) 0 0 $pixel-border,
+    0 calc($pixel * -7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * 7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * -9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * 9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * -12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * 12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * -15) 0 calc($pixel * -6) $pixel-border,
+    0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
 
   .modal__header {
     display: flex;
@@ -79,15 +103,65 @@
   cursor: pointer;
   font-family: 'Minecraft';
   font-size: 1.5rem;
-  padding: 0.5rem 1.5rem;
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  background-color: $ui_purple;
+  background-color: $ui_button;
   color: $ui_bg_dark-purple;
   text-align: center;
+  padding: 0 1rem;
+  box-shadow:
+	/* Inner Background Color */ 0 calc($pixel * -3) 0
+      calc($pixel * -1) $ui_button,
+    0 calc($pixel * 3) 0 calc($pixel * -1) $ui_button,
+    0 calc($pixel * -6) 0 calc($pixel * -2) $ui_button,
+    0 calc($pixel * 6) 0 calc($pixel * -2) $ui_button,
+    0 calc($pixel * -9) 0 calc($pixel * -4) $ui_button,
+    0 calc($pixel * 9) 0 calc($pixel * -4) $ui_button,
+    0 calc($pixel * -12) 0 calc($pixel * -6) $ui_button,
+    0 calc($pixel * 12) 0 calc($pixel * -6) $ui_button,
+    /* Border */ calc($pixel * -3) 0 0 0 $pixel-border,
+    calc($pixel * 3) 0 0 0 $pixel-border, 0 0 0 calc($pixel * 2) $pixel-border,
+    0 calc($pixel * -3) 0 $pixel $pixel-border,
+    0 calc($pixel * 3) 0 $pixel $pixel-border,
+    0 calc($pixel * -5) 0 0 $pixel-border, 0 calc($pixel * 5) 0 0 $pixel-border,
+    0 calc($pixel * -7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * 7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * -9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * 9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * -12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * 12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * -15) 0 calc($pixel * -6) $pixel-border,
+    0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
 }
 
 .modal__button:hover {
   background-color: $ui_purple;
+  box-shadow:
+	/* Inner Background Color */ 0 calc($pixel * -3) 0
+      calc($pixel * -1) $ui_purple,
+    0 calc($pixel * 3) 0 calc($pixel * -1) $ui_purple,
+    0 calc($pixel * -6) 0 calc($pixel * -2) $ui_purple,
+    0 calc($pixel * 6) 0 calc($pixel * -2) $ui_purple,
+    0 calc($pixel * -9) 0 calc($pixel * -4) $ui_purple,
+    0 calc($pixel * 9) 0 calc($pixel * -4) $ui_purple,
+    0 calc($pixel * -12) 0 calc($pixel * -6) $ui_purple,
+    0 calc($pixel * 12) 0 calc($pixel * -6) $ui_purple,
+    /* Border */ calc($pixel * -3) 0 0 0 $pixel-border,
+    calc($pixel * 3) 0 0 0 $pixel-border, 0 0 0 calc($pixel * 2) $pixel-border,
+    0 calc($pixel * -3) 0 $pixel $pixel-border,
+    0 calc($pixel * 3) 0 $pixel $pixel-border,
+    0 calc($pixel * -5) 0 0 $pixel-border, 0 calc($pixel * 5) 0 0 $pixel-border,
+    0 calc($pixel * -7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * 7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * -9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * 9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * -12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * 12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * -15) 0 calc($pixel * -6) $pixel-border,
+    0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
+}
+
+.modal__button + .modal__button {
+  margin-top: 2rem;
 }
