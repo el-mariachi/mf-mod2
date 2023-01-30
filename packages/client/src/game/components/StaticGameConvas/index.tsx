@@ -1,19 +1,23 @@
 import { FC } from 'react'
 import Canvas from '@components/Canvas'
 import { center } from '@utils/winsize'
-import dummyLevelImg from '@images/game-lvl-dummy.png'
+import { GameItemName } from '@game/core/types'
+import createItemView from '@game/core/views/createItemView'
+import dummyLevelSrc from '@images/game-lvl-dummy.png'
 
 const dummyDrawer = (ctx: CanvasRenderingContext2D) => {
-  const image = new Image()
+  const dummyLevel = new Image()
+  dummyLevel.src = dummyLevelSrc
 
-  image.src = dummyLevelImg
-  image.onload = function () {
-    // ctx.drawImage(image, center.width - 200, 180)
+  dummyLevel.onload = function () {
     ctx.drawImage(
-      image,
-      center.width - image.width / 2,
-      center.height - image.height / 2
+      dummyLevel,
+      center.width - dummyLevel.width / 2,
+      center.height - dummyLevel.height / 2
     )
+
+    const coinView = createItemView(ctx, GameItemName.coin, [5, 13])
+    coinView.render()
   }
 }
 

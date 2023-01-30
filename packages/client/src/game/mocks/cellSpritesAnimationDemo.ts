@@ -5,6 +5,7 @@ import { heroMotions } from '@game/animations/hero'
 import { skeletonMotions } from '@game/animations/skeleton'
 import skeletonSpriteImg from '@sprites/skeleton.png'
 import heroSpriteImg from '@sprites/hero.png'
+import { cells2pixels } from '@game/utils'
 
 const STEP_DELAY = 750
 function makeStep(animation: Types.SpriteAnimationProcess) {
@@ -15,7 +16,7 @@ function makeStep(animation: Types.SpriteAnimationProcess) {
     )
   })
 }
-export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
+export default function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
   const heroSprite = new Image(MAP_CELL, MAP_CELL)
   heroSprite.src = heroSpriteImg
 
@@ -61,6 +62,7 @@ export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
         motion: Types.MoveMotionType.move,
         once: false,
       },
+      // to: {length: 1, direction: Types.AxisDirection.right},
       to: [6, 10],
       duration: 500,
     })
@@ -74,6 +76,7 @@ export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
               motion: Types.MoveMotionType.move,
               once: false,
             },
+            // to: {length: 1, direction: Types.AxisDirection.right},
             to: [7, 10],
             duration: 500,
           })
@@ -89,7 +92,11 @@ export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
               motion: Types.MoveMotionType.move,
               once: false,
             },
-            to: [8, 10],
+            to: {
+              length: cells2pixels(1),
+              direction: Types.AxisDirection.right,
+            },
+            // to: [8, 10],
             duration: 500,
           })
         )

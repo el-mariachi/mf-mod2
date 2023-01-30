@@ -11,6 +11,6 @@ const coin = {
     },
     frames: [0, 1, 2, 3],
   },
-} as Types.SpriteMotions & Types.CellSpriteMotions // Types.SpriteMotions for legacy 
+} as Types.SpriteMotions & Types.CellSpriteMotions // Types.SpriteMotions for legacy
 
-export default {coin}
+export default { coin }

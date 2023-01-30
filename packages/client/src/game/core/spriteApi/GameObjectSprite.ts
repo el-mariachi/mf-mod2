@@ -2,10 +2,10 @@ import * as Types from '@game/core/types'
 import CellSprite from '@game/core/spriteApi/CellSprite'
 
 export default class GameObjectSprite extends CellSprite {
-  constructor (
+  constructor(
     ctx: CanvasRenderingContext2D,
     atlas: Types.SpriteAtlas,
-    motions?: Types.CellSpriteMotions,
+    motions?: Types.CellSpriteMotions
   ) {
     const initAnimation = {
       playMotion: {
@@ -14,13 +14,18 @@ export default class GameObjectSprite extends CellSprite {
       },
     }
     let originPosition: Types.Coords = [0, 0]
-    if (motions && Types.IdleMotionType.idle in motions)
-    {
+    if (motions && Types.IdleMotionType.idle in motions) {
       originPosition = motions[Types.IdleMotionType.idle].originPosition
     }
-    super(ctx, atlas, {
-      position: [0, 0], // position would be given by view
-      originPosition
-    }, motions, initAnimation)
+    super(
+      ctx,
+      atlas,
+      {
+        position: [0, 0], // position would be given by view
+        originPosition,
+      },
+      motions,
+      initAnimation
+    )
   }
 }

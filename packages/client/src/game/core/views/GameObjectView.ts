@@ -1,40 +1,34 @@
 import * as Types from '@game/core/types'
-import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite';
+import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
 
-export default class GameObjectView implements Types.DrawableOnCanvas
-{
-  constructor (protected _sprite: GameObjectSprite, position?: Types.Coords)
-  {
-    if (position)
-    {
+export default class GameObjectView implements Types.DrawableOnCanvas {
+  constructor(protected _sprite: GameObjectSprite, position?: Types.Coords) {
+    if (position) {
       this.position = position
-      console.log('!!!', position);
-      this.render();
+      console.log('!!!', position)
+      this.render()
     }
   }
-  get sprite ()
-  {
+  get sprite() {
     return this._sprite
   }
-  get canvas ()
-  {
-    return this.sprite.canvas;
+  get canvas() {
+    return this.sprite.canvas
   }
   get position() {
     return this.sprite.position
   }
   set position(position: Types.Coords) {
-    this.sprite.cellGeometry = {position}
+    this.sprite.cellGeometry = { position }
     this.render()
   }
   get size() {
     return this.sprite.size
   }
   render(): void {
-    this.sprite.render();
+    this.sprite.render()
   }
-  toggle(flag?: boolean)
-  {
-    this.sprite.toggle(flag);
+  toggle(flag?: boolean) {
+    this.sprite.toggle(flag)
   }
 }

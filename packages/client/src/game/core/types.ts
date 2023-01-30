@@ -1,4 +1,4 @@
-import GameObjectView from "./views/GameObjectView"
+import GameObjectView from './views/GameObjectView'
 
 export type Coords = [number, number]
 export type CoordsSpeed = [number, number]
@@ -47,7 +47,7 @@ export interface DrawableOnCanvas {
   canvas: CanvasRenderingContext2D
   position: Coords
   size: Size
-  toggle(flag?: boolean) : void
+  toggle(flag?: boolean): void
   render(): void
 }
 export interface AnimatableOnCanvas extends DrawableOnCanvas {
@@ -97,7 +97,6 @@ export type CellSpriteAnimationProcessResult = {
 }
 export type CellSpriteAnimationProcess =
   Promise<CellSpriteAnimationProcessResult>
-
 
 export enum IdleMotionType {
   idle = 'idle',
@@ -170,21 +169,33 @@ export type SpriteMotions = Record<MotionType, AnimationMotionParams>
 export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
 export type UnitBehaviorDef = {
-  type: IdleMotionType.idle | MoveMotionType.move | AttackMotionType.attack | DamageMotionType.damage | DeathMotionType.death | TurnMotionType.turn | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>,
-  dir?: AxisDirection | Rotation,
-} 
+  type:
+    | IdleMotionType.idle
+    | MoveMotionType.move
+    | AttackMotionType.attack
+    | DamageMotionType.damage
+    | DeathMotionType.death
+    | TurnMotionType.turn
+    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+  dir?: AxisDirection | Rotation
+}
 
-export enum GameUnitName
-{
+export enum GameUnitName {
   hero = 'hero',
   skeleton = 'skeleton',
 }
-export enum GameItemName
-{
+export enum GameItemName {
   coin = 'coin',
   key = 'key',
   chest = 'chest',
   bottle = 'bottle',
 }
 
-export type GameObjectViewFactory<ViewType extends GameObjectView = GameObjectView> = (ctx: CanvasRenderingContext2D, objectName: GameUnitName | GameItemName, position: Coords, initBehavior?: UnitBehaviorDef) => ViewType
+export type GameObjectViewFactory<
+  ViewType extends GameObjectView = GameObjectView
+> = (
+  ctx: CanvasRenderingContext2D,
+  objectName: GameUnitName | GameItemName,
+  position: Coords,
+  initBehavior?: UnitBehaviorDef
+) => ViewType

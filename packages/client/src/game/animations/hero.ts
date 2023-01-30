@@ -67,4 +67,4 @@ export const heroMotions = {
     },
     frames: [0, 1, 2, 3],
   },
-} as Types.SpriteMotions & Types.CellSpriteMotions // Types.SpriteMotions for legacy 
+} as Types.SpriteMotions & Types.CellSpriteMotions // Types.SpriteMotions for legacy

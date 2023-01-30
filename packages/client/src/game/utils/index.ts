@@ -13,7 +13,7 @@ export const nextCoordsByVector = (
   rel: Types.Coords,
   vector: Types.AxisVector
 ) => {
-  const nextCoords = [...rel];
+  const nextCoords = [...rel]
   const { direction } = vector
   let { length } = vector
 

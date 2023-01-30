@@ -88,7 +88,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     return !!this._activeAnimation
   }
   animate(params: Types.SpriteAnimationParams | null) {
-    this.cancelAnimation();
+    this.cancelAnimation()
 
     const result = {
       params,
@@ -236,7 +236,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   }
   protected _stopAnimation(method: 'end' | 'cancel' = 'end') {
     if (this._activeAnimation) {
-
       //console.log('stopped', method);
 
       this._activeAnimation[method]()
@@ -267,8 +266,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           calcMoveCoords(this._geometry.position, movementSpeed, dt)
         )
 
-        // @ts-ignore 
-        window.nextPosition = nextPosition;
+        // @ts-ignore
+        window.nextPosition = nextPosition
 
         isMovementCompleted = isCoordsEqual(to as Types.Coords, nextPosition)
         if (!isMovementCompleted) {
@@ -277,7 +276,13 @@ export default class Sprite implements Types.AnimatableOnCanvas {
       }
 
       // @ts-ignore
-      window.flags = {hasMotion, isMotionFinite, isMotionCompleted, hasMovement, isMovementCompleted};
+      window.flags = {
+        hasMotion,
+        isMotionFinite,
+        isMotionCompleted,
+        hasMovement,
+        isMovementCompleted,
+      }
 
       if (
         (hasMovement &&
@@ -291,7 +296,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   }
   render() {
     // @ts-ignore
-    window.activeAnimation = this._activeAnimation;
+    window.activeAnimation = this._activeAnimation
 
     if (!this.isVisible) return
 
@@ -318,11 +323,10 @@ export default class Sprite implements Types.AnimatableOnCanvas {
             }
           } else motionFrame = frames[frameInd % framesCnt]
         } else motionFrame = 0
-        
-        if (!('motionPlay' in window))
-        {
+
+        if (!('motionPlay' in window)) {
           // @ts-ignore
-          window.motionPlay = {};
+          window.motionPlay = {}
         }
         // @ts-ignore
         window.motionPlay[this._atlas.src] = {
@@ -332,7 +336,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           frames,
           speed,
           once,
-        };
+        }
 
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
 
@@ -342,8 +346,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     }
 
     // @ts-ignore
-    window.geometry = this._geometry;
-    
+    window.geometry = this._geometry
+
     const { origin } = this._geometry
     if (origin) {
       this._ctx.drawImage(

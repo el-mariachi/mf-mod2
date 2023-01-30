@@ -1,4 +1,4 @@
-import { MAP_CELL } from "@game/core/constants"
+import { MAP_CELL } from '@game/core/constants'
 import skeletonSrc from '@sprites/skeleton.png'
 import heroSrc from '@sprites/hero.png'
 import itemsSrc from '@sprites/items.png'
@@ -12,4 +12,4 @@ skeleton.src = skeletonSrc
 const items = new Image(MAP_CELL, MAP_CELL)
 items.src = itemsSrc
 
-export default {hero, skeleton, items}
+export default { hero, skeleton, items }

@@ -14,8 +14,16 @@
     z-index: 300;
   }
 
+  .front-effects-game-canvas-wrapper {
+    z-index: 250;
+  }
+
   .live-game-canvas-wrapper {
     z-index: 200;
+  }
+
+  .back-effects-canvas-wrapper {
+    z-index: 150;
   }
 
   .static-game-canvas-wrapper {

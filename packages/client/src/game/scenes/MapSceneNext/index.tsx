@@ -26,9 +26,15 @@ function MapSceneNext({ onExit }: SceneProps) {
           </a>
         </GameUI>
       </div>
+      {/* <div className="map-scene__layer front-effects-canvas-wrapper">
+        <LiveGameCanvas width={width} height={height} />
+      </div> */}
       <div className="map-scene__layer live-game-canvas-wrapper">
         <LiveGameCanvas width={width} height={height} />
       </div>
+      {/* <div className="map-scene__layer back-effects-canvas-wrapper">
+        <LiveGameCanvas width={width} height={height} />
+      </div> */}
       <div className="map-scene__layer static-game-canvas-wrapper">
         <StaticGameCanvas width={width} height={height} />
       </div>

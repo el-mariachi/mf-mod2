@@ -1,23 +1,26 @@
 import * as Types from '@game/core/types'
 import UnitView from '@game/core/views/UnitView'
 import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
-import { heroMotions } from '@game/animations/hero';
-import { skeletonMotions } from '@game/animations/skeleton';
-import imgResources from "@game/mocks/imgResources";
+import { heroMotions } from '@game/animations/hero'
+import { skeletonMotions } from '@game/animations/skeleton'
+import imgResources from '@game/mocks/imgResources'
 
-const createUnitView : Types.GameObjectViewFactory<UnitView> = (ctx, objectName, position, initBehavior) => 
-{
+const createUnitView: Types.GameObjectViewFactory<UnitView> = (
+  ctx,
+  objectName,
+  position,
+  initBehavior
+) => {
   let sprite
-  switch (objectName)
-  {
+  switch (objectName) {
     case Types.GameUnitName.hero:
       sprite = new GameObjectSprite(ctx, imgResources.hero, heroMotions)
-    break;
+      break
 
     case Types.GameUnitName.skeleton:
-    default:  
+    default:
       sprite = new GameObjectSprite(ctx, imgResources.skeleton, skeletonMotions)
-    break;
+      break
   }
   return new UnitView(sprite as GameObjectSprite, position, initBehavior)
 }

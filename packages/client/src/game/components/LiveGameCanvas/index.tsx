@@ -1,19 +1,21 @@
 import { FC } from 'react'
-import { spritesAnimationDemo } from '@game/mocks/cellSpritesAnimationDemo'
+// import animationDemo from '@game/mocks/cellSpritesAnimationDemo'
+// import animationDemo from '@game/mocks/spritesAnimationDemo'
+import animationDemo from '@game/mocks/animationDemo'
 import AnimationCanvas, {
   AnimatedCanvasProps,
 } from '@game/components/AnimationCanvas'
 
 export type LiveGameCanvasProps = Omit<
   AnimatedCanvasProps,
-  'animatedViewsFabric'
+  'animatedViewsGetter'
 > & {
   //
 }
 const LiveGameCanvas: FC<LiveGameCanvasProps> = props => {
   return (
     <AnimationCanvas
-      animatedViewsFabric={spritesAnimationDemo}
+      animatedViewsGetter={animationDemo}
       {...props}></AnimationCanvas>
   )
 }

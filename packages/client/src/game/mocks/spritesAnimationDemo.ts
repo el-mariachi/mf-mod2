@@ -17,7 +17,7 @@ function makeStep(animation: Types.SpriteAnimationProcess) {
     )
   })
 }
-export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
+export default function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
   const heroSprite = new Image(MAP_CELL, MAP_CELL)
   heroSprite.src = heroSpriteImg
 
@@ -71,7 +71,8 @@ export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
         motion: Types.MoveMotionType.move,
         once: false,
       },
-      to: relCoords(mapCoords(), cellCoords2PixelCoords([6, 10])),
+      to: { length: 1, direction: Types.AxisDirection.right },
+      // to: relCoords(mapCoords(), cellCoords2PixelCoords([6, 10])),
       duration: 500,
     })
   )
@@ -84,6 +85,7 @@ export function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
               motion: Types.MoveMotionType.move,
               once: false,
             },
+            // to: relCoords(mapCoords(), cellCoords2PixelCoords([7, 10])),
             to: relCoords(mapCoords(), cellCoords2PixelCoords([7, 10])),
             duration: 500,
           })

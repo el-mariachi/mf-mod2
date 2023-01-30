@@ -30,11 +30,11 @@ const getAnimationDrawer =
   }
 
 export type AnimatedCanvasProps = Omit<CanvasProps, 'draw'> & {
-  animatedViewsFabric: animatableOnCanvasFabric
+  animatedViewsGetter: animatableOnCanvasFabric
 }
 const AnimationCanvas: FC<AnimatedCanvasProps> = props => {
-  const { animatedViewsFabric, ...rest } = props
+  const { animatedViewsGetter, ...rest } = props
 
-  return <Canvas draw={getAnimationDrawer(animatedViewsFabric)} {...rest} />
+  return <Canvas draw={getAnimationDrawer(animatedViewsGetter)} {...rest} />
 }
 export default AnimationCanvas
