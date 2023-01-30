@@ -1,3 +1,5 @@
+import GameObjectView from "./views/GameObjectView"
+
 export type Coords = [number, number]
 export type CoordsSpeed = [number, number]
 export type Size = [number, number]
@@ -19,17 +21,39 @@ export type AxisVector = {
   direction: AxisDirection | Axis
   length: number
 }
+export enum Rotation {
+  topRight = 'topRight',
+  rightBottom = 'rightBottom',
+  bottomLeft = 'bottomLeft',
+  leftTop = 'leftTop',
+  topLeft = 'topLeft',
+  leftBottom = 'leftBottom',
+  bottomRight = 'bottomRight',
+  rightTop = 'rightTop',
+  leftRight = 'leftRight',
+  topBottom = 'topBottom',
+  rightLeft = 'rightLeft',
+  bottomTop = 'bottomTop',
+  aroundClockwise = 'aroundClockwise',
+  aroundCounterClockwise = 'aroundCounterClockwise',
+}
 
 export type SpriteGeometry = Geometry & {
   origin: Geometry | null
 }
 export type SpriteAtlas = HTMLImageElement
 
-export interface AnimatableOnCanvas {
+export interface DrawableOnCanvas {
   canvas: CanvasRenderingContext2D
-  update(dt: number): void
+  position: Coords
+  size: Size
+  toggle(flag?: boolean) : void
   render(): void
 }
+export interface AnimatableOnCanvas extends DrawableOnCanvas {
+  update(dt: number): void
+}
+
 export type AnimationMotionParams = {
   origin: Geometry
   frames: number[]
@@ -74,34 +98,27 @@ export type CellSpriteAnimationProcessResult = {
 export type CellSpriteAnimationProcess =
   Promise<CellSpriteAnimationProcessResult>
 
-export type MotionTypes = typeof IdleMotionType &
-  typeof MoveMotionType &
-  typeof AttackMotionType &
-  typeof DeathMotionType &
-  typeof DamageMotionType &
-  typeof TurnMotionType &
-  typeof UnspecifiedMotionType
-export type MotionType = keyof MotionTypes
+
 export enum IdleMotionType {
   idle = 'idle',
-  look2Top = 'look2Top',
-  look2Right = 'look2Right',
-  look2Bottom = 'look2Bottom',
-  look2Left = 'look2Left',
+  look2top = 'look2top',
+  look2right = 'look2right',
+  look2bottom = 'look2bottom',
+  look2left = 'look2left',
 }
 export enum MoveMotionType {
   move = 'move',
-  move2Top = 'move2Top',
-  move2Right = 'move2Right',
-  move2Bottom = 'move2Bottom',
-  move2Left = 'move2Left',
+  move2top = 'move2top',
+  move2right = 'move2right',
+  move2bottom = 'move2bottom',
+  move2left = 'move2left',
 }
 export enum AttackMotionType {
   attack = 'attack',
-  attack2Top = 'attack2Top',
-  attack2Right = 'attack2Right',
-  attack2Bottom = 'attack2Bottom',
-  attack2Left = 'attack2Left',
+  attack2top = 'attack2top',
+  attack2right = 'attack2right',
+  attack2bottom = 'attack2bottom',
+  attack2left = 'attack2left',
 }
 export enum DeathMotionType {
   death = 'death',
@@ -140,5 +157,34 @@ export enum UnspecifiedMotionType {
   blow = 'blow',
   open = 'open',
 }
+export type MotionTypes = typeof IdleMotionType &
+  typeof MoveMotionType &
+  typeof AttackMotionType &
+  typeof DeathMotionType &
+  typeof DamageMotionType &
+  typeof TurnMotionType &
+  typeof UnspecifiedMotionType
+export type MotionType = keyof MotionTypes
+
 export type SpriteMotions = Record<MotionType, AnimationMotionParams>
 export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
+
+export type UnitBehaviorDef = {
+  type: IdleMotionType.idle | MoveMotionType.move | AttackMotionType.attack | DamageMotionType.damage | DeathMotionType.death | TurnMotionType.turn | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>,
+  dir?: AxisDirection | Rotation,
+} 
+
+export enum GameUnitName
+{
+  hero = 'hero',
+  skeleton = 'skeleton',
+}
+export enum GameItemName
+{
+  coin = 'coin',
+  key = 'key',
+  chest = 'chest',
+  bottle = 'bottle',
+}
+
+export type GameObjectViewFactory<ViewType extends GameObjectView = GameObjectView> = (ctx: CanvasRenderingContext2D, objectName: GameUnitName | GameItemName, position: Coords, initBehavior?: UnitBehaviorDef) => ViewType

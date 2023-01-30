@@ -13,7 +13,7 @@ export const skeletonMotions = {
   },
   [Types.DeathMotionType.death]: {
     originPosition: [0, 1],
-    origin: {
+    origin: { 
       position: cellCoords2PixelCoords([0, 1]),
       size: SPRITE_SIZE,
     },
@@ -27,4 +27,12 @@ export const skeletonMotions = {
     },
     frames: [0, 1, 2, 3, 4, 5, 6, 5, 3, 2, 1, 0],
   },
-} as Types.SpriteMotions & Types.CellSpriteMotions
+  [Types.MoveMotionType.move]: {
+    originPosition: [0, 3],
+    origin: {
+      position: cellCoords2PixelCoords([0, 3]),
+      size: SPRITE_SIZE,
+    },
+    frames: [0, 1, 2, 3, 4, 5, 6],
+  },
+} as Types.SpriteMotions & Types.CellSpriteMotions // Types.SpriteMotions for legacy 
