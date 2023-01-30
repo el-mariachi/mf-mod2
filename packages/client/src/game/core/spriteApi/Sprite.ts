@@ -20,6 +20,7 @@ type SpriteActiveAnimation = {
   cancel: () => void
 }
 
+// TODO sprites with frame states (manually change origin?)
 export default class Sprite implements Types.AnimatableOnCanvas {
   isVisible = true
   protected _geometry: Types.SpriteGeometry = {
@@ -57,10 +58,10 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     return this._ctx
   }
   get position() {
-    return [...this._geometry.position]
+    return [...this._geometry.position] as Types.Coords
   }
   get size() {
-    return [...this._geometry.size]
+    return [...this._geometry.size] as Types.Size
   }
   get defaultOrigin() {
     return this._defaultOrigin
@@ -87,8 +88,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     return !!this._activeAnimation
   }
   animate(params: Types.SpriteAnimationParams | null) {
-    // this._stopAnimation();
-    // this.cancelAnimation();
+    this.cancelAnimation();
 
     const result = {
       params,
@@ -109,6 +109,15 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           // ... but we dnt have this motion in set
           if (!(motion in this._motions)) {
             // ... so we`ll use default motion for each motion type (if we have it in set)
+
+            /* 
+            TODO 
+            idle = look2bottom
+            attack2bottom = attack2left
+            attack2top = attack2right
+            (the same with everything else)
+            */
+
             if (
               motion in Types.IdleMotionType &&
               Types.IdleMotionType.idle in this._motions
@@ -184,6 +193,10 @@ export default class Sprite implements Types.AnimatableOnCanvas {
               ? nextCoordsByVector(this._geometry.position, params.to)
               : params.to
           ) as Types.Coords
+
+          // console.log({...this._geometry});
+          // console.log(params.to);
+
           movementSpeed = calcSpeed(
             this._geometry.position,
             params.to,
@@ -211,6 +224,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
         this._activeAnimation = animation
 
+        // console.log('this._activeAnimation', this._activeAnimation);
+
         return animation.process
       }
     }
@@ -221,6 +236,9 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   }
   protected _stopAnimation(method: 'end' | 'cancel' = 'end') {
     if (this._activeAnimation) {
+
+      //console.log('stopped', method);
+
       this._activeAnimation[method]()
       this._activeAnimation = null
     }
@@ -249,11 +267,17 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           calcMoveCoords(this._geometry.position, movementSpeed, dt)
         )
 
+        // @ts-ignore 
+        window.nextPosition = nextPosition;
+
         isMovementCompleted = isCoordsEqual(to as Types.Coords, nextPosition)
         if (!isMovementCompleted) {
           this._geometry.position = nextPosition
         }
       }
+
+      // @ts-ignore
+      window.flags = {hasMotion, isMotionFinite, isMotionCompleted, hasMovement, isMovementCompleted};
 
       if (
         (hasMovement &&
@@ -266,6 +290,9 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     }
   }
   render() {
+    // @ts-ignore
+    window.activeAnimation = this._activeAnimation;
+
     if (!this.isVisible) return
 
     if (this._activeAnimation) {
@@ -291,6 +318,21 @@ export default class Sprite implements Types.AnimatableOnCanvas {
             }
           } else motionFrame = frames[frameInd % framesCnt]
         } else motionFrame = 0
+        
+        if (!('motionPlay' in window))
+        {
+          // @ts-ignore
+          window.motionPlay = {};
+        }
+        // @ts-ignore
+        window.motionPlay[this._atlas.src] = {
+          motion,
+          motionOrigin,
+          motionFrame,
+          frames,
+          speed,
+          once,
+        };
 
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
 
@@ -299,6 +341,9 @@ export default class Sprite implements Types.AnimatableOnCanvas {
       }
     }
 
+    // @ts-ignore
+    window.geometry = this._geometry;
+    
     const { origin } = this._geometry
     if (origin) {
       this._ctx.drawImage(

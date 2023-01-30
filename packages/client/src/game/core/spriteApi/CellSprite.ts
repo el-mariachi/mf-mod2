@@ -47,10 +47,10 @@ export default class CellSprite extends Sprite {
     }
     super(ctx, atlas, cellInitGeometry, resMotions, initAnimation)
   }
-  set cellDefaultOrigin(nextDefOrigin: Types.CellGeometry | null) {
-    this._defaultOrigin = nextDefOrigin
+  set cellDefaultOrigin(nextDefOriginPos: Types.Coords | null) {
+    this._defaultOrigin = nextDefOriginPos
       ? {
-          position: cellCoords2PixelCoords(nextDefOrigin.position),
+          position: cellCoords2PixelCoords(nextDefOriginPos),
           size: SPRITE_SIZE,
         }
       : null
