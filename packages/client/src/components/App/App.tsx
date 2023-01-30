@@ -8,6 +8,7 @@ import Leaderboard from '@pages/Leaderboard'
 import UserProfile from '@pages/UserProfile'
 import ServicePage from '@pages/ServicePage'
 import SignUp from '@pages/SignUp'
+import Main from '@pages/Main'
 
 function App() {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ function App() {
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<Navigate to="/game" replace />} />
+        <Route path="/" element={<Main />} />
         <Route path="game" element={<GamePage />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
