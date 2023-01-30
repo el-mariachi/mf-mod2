@@ -72,3 +72,5 @@ function MapScene({ onExit }: SceneProps) {
 }
 
 export default MapScene
+
+
