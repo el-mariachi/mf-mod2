@@ -9,3 +9,6 @@ export function redirect2(path = '/', except: string[] = []) {
 export const muteRes = () => {
   return
 }
+export function roundArrValues<T extends unknown[]>(arr: number[]) {
+  return arr.map(val => Math.round(val)) as T
+}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import LoadScene from '@scenes/LoadScene'
 import StartScene from '@scenes/StartScene'
 import ResultScene from '@scenes/ResultsScreen/Scene'
-import MapScene from '@scenes/MapScene'
+import MapScene from '@scenes/MapSceneNext'
 import { currentScene as currentSceneSelector } from '@store/selectors'
 import SCENES from '@constants/scenes'
 
@@ -18,8 +18,8 @@ const scenes: scenesType = {
 }
 
 function GamePage() {
-  const currentScene =
-    (useSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
+  const currentScene = SCENES.MAP_SCENE
+  // (useSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
   const Scene = scenes[currentScene]
   const navigate = useNavigate()
   const onExit = () => {

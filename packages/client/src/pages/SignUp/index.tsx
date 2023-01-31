@@ -80,9 +80,7 @@ const SignUp = () => {
 
         <Form.Group as={Row}>
           <Col sm={{ span: 9, offset: 3 }}>
-            <SpinnerButton loading={loading}>
-              Создать аккаунт 
-            </SpinnerButton>
+            <SpinnerButton loading={loading}>Создать аккаунт</SpinnerButton>
             <Link to="/sign-in">
               <Button as="span" variant="link">
                 Войти

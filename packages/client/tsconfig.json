@@ -27,7 +27,7 @@
       "@scenes/*": ["game/scenes/*"],
       "@hooks/*": ["hooks/*"],
       "@store/*": ["store/*"],
-      "@constants/*": ["constants/*"],
+      "@constants/*": ["constants/*"]
     }
   },
   "include": ["src"],
