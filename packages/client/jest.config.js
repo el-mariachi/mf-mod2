@@ -9,8 +9,8 @@ export default {
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
   moduleNameMapper: {
+    '\\.s?css$': '<rootDir>/src/test/cssStub',
     '@components/(.*)': '<rootDir>/src/components/$1',
-    '@utils-kit/(.*)': '<rootDir>/src/utils/$1',
     '@utils/(.*)': '<rootDir>/src/utils/$1',
     '@api/(.*)': '<rootDir>/src/api/$1',
     '@pages/(.*)': '<rootDir>/src/pages/$1',
