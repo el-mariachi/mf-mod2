@@ -7,6 +7,8 @@ import { cellCoords2PixelCoords, mapCoords, relCoords } from '@game/utils'
 import skeletonSpriteImg from '@sprites/skeleton.png'
 import heroSpriteImg from '@sprites/hero.png'
 
+// DEPRICATED: with cur units motions it wouldnt work!
+
 const STEP_DELAY = 850
 
 function makeStep(animation: Types.SpriteAnimationProcess) {
@@ -32,6 +34,7 @@ export default function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
         size: SPRITE_SIZE,
       },
     },
+    // @ts-ignore
     heroMotions,
     {
       playMotion: {

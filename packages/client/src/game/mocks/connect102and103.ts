@@ -6,12 +6,12 @@
 // // в начале каждого хода
 // let newGameObjectsIniter! : ((ctx: CanvasRenderingContext2D, params: GameObjectsParams) => void) = null
 
-// // ... 
+// // ...
 
 // // если на карте появился новый объект(-ы) (старт игры, передвижение области видимости, ... )
 // // создадим функцию для инициации новых объектов и их вьювок в контексте канваса
 
-// newGameObjectsIniter = (ctx: CanvasRenderingContext2D, params: GameObjectsParams) => 
+// newGameObjectsIniter = (ctx: CanvasRenderingContext2D, params: GameObjectsParams) =>
 // {
 // 	return params.map(gameObjectParams =>
 // 	{
@@ -24,24 +24,24 @@
 // 	}
 // }
 
-// // isSetOfObjectsInVisibleAreaChanged = newGameObjectsIniter || ... какой-то анимируемый GameObject удалили 
+// // isSetOfObjectsInVisibleAreaChanged = newGameObjectsIniter || ... какой-то анимируемый GameObject удалили
 
 // if (isSetOfObjectsInVisibleAreaChanged)
 // {
 // 	// обновим фабрику анимируемых вьювок игровых объектов
-// 	refrechAnimatedViewsGetter((ctx: CanvasRenderingContext2D) =>  
+// 	refrechAnimatedViewsGetter((ctx: CanvasRenderingContext2D) =>
 // 	{
 // 		map.gameObjects = [...map.gameObjects, ...newGameObjectsIniter(ctx)];
 
 // 		return map.gameObjects
-// 			.filter(gameObject => gameObject.view instanceof AnimatableView) // ... или gameObject.animated ? 
+// 			.filter(gameObject => gameObject.view instanceof AnimatableView) // ... или gameObject.animated ?
 // 			.map(gameObject => gameObject.view))
-// 	})	
+// 	})
 // }
 
-// // ... 
+// // ...
 
-// // в методе render среди слоев: 
+// // в методе render среди слоев:
 // <AnimationCanvas animatedViewsGetter={animatedViewsGetter} width={width} height={height}></AnimationCanvas>
 
 // // сигнатура запуска анимаций (скоро появится) ~ gameObject.view.do(MoveMotionType.move, AxisDirection.top)

@@ -35,7 +35,7 @@ export default class UnitView extends AnimatableView {
               : Behaviors.idle
         } else idleBehavior = Behaviors.idle
 
-        return this._sprite.animate(getAnimatedBehavior(idleBehavior))
+        this._sprite.animate(getAnimatedBehavior(idleBehavior))
       }
       return res
     })

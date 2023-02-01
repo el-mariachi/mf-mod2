@@ -55,8 +55,21 @@ export const attack2left = {
   type: Types.AttackMotionType.attack,
   dir: Types.AxisDirection.left,
 } as Types.UnitBehaviorDef
-export const death = {
+export const deathFromTop = {
   type: Types.DeathMotionType.death,
+  dir: Types.AxisDirection.top,
+} as Types.UnitBehaviorDef
+export const deathFromRight = {
+  type: Types.DeathMotionType.death,
+  dir: Types.AxisDirection.right,
+} as Types.UnitBehaviorDef
+export const deathFromBottom = {
+  type: Types.DeathMotionType.death,
+  dir: Types.AxisDirection.bottom,
+} as Types.UnitBehaviorDef
+export const deathFromLeft = {
+  type: Types.DeathMotionType.death,
+  dir: Types.AxisDirection.left,
 } as Types.UnitBehaviorDef
 
 export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
@@ -67,7 +80,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
     const isRotation = dirOrRot in Types.Rotation
     if (!isRotation) {
       const direction = dirOrRot as Types.AxisDirection
-      const dirCap = direction[0] + direction.slice(1)
+      const dirCap = direction[0].toUpperCase() + direction.slice(1)
 
       if (Types.IdleMotionType.idle == type) {
         animatedBehavior = {
@@ -85,6 +98,13 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
           },
           to: { length: 1, direction: Types.AxisDirection[direction] },
           duration: DEF_MOVE_DURATION,
+        }
+      } else if (Types.AttackMotionType.attack == type) {
+        animatedBehavior = {
+          playMotion: {
+            motion: Types.AttackMotionType[`attack2${direction}`],
+            once: true,
+          },
         }
       } else if (Types.DamageMotionType.damage == type) {
         animatedBehavior = {
