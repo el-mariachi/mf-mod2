@@ -18,7 +18,6 @@
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["components/*"],
-      "@utils-kit": ["utils"],
       "@utils/*": ["utils/*"],
       "@api/*": ["api/*"],
       "@pages/*": ["pages/*"],
@@ -30,6 +29,6 @@
       "@constants/*": ["constants/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/test/jest-setup.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

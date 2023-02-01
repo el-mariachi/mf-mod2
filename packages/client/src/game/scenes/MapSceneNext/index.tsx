@@ -1,12 +1,11 @@
 import { useDispatch } from 'react-redux'
-import { actions } from '@store/index'
+import { finishLevel } from '@store/slices/game'
 import GameUI from '@game/components/GameUI'
 import LiveGameCanvas from '@game/components/LiveGameCanvas'
 import StaticGameCanvas from '@game/components/StaticGameConvas'
 import { width, height } from '@utils/winsize'
 import './MapSceneNext.scss'
 
-const { finishLevel } = actions
 function MapSceneNext({ onExit }: SceneProps) {
   const dispatch = useDispatch()
   const onGameFinish = () => {

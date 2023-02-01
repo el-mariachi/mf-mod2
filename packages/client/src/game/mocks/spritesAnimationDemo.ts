@@ -58,6 +58,7 @@ export default function spritesAnimationDemo(ctx: CanvasRenderingContext2D) {
         size: SPRITE_SIZE,
       },
     },
+    // @ts-ignore
     skeletonMotions,
     {
       playMotion: {

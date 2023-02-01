@@ -7,7 +7,7 @@ import {
   nextCoordsByVector,
   roundCoords,
 } from '@game/utils'
-import { muteRes } from '@utils-kit'
+import { muteRes } from '@utils/index'
 
 type SpriteActiveAnimation = {
   params: Types.SpriteAnimationParams

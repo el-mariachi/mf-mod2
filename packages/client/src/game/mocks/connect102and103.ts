@@ -45,3 +45,5 @@
 // <AnimationCanvas animatedViewsGetter={animatedViewsGetter} width={width} height={height}></AnimationCanvas>
 
 // // сигнатура запуска анимаций (скоро появится) ~ gameObject.view.do(MoveMotionType.move, AxisDirection.top)
+
+export {}
