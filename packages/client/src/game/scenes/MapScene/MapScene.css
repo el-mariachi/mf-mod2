@@ -18,3 +18,9 @@
 .map-scene__buttons a:hover {
   border-bottom: 2px solid white;
 }
+
+.map-scene__layers canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

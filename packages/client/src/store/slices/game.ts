@@ -8,7 +8,7 @@ export interface InitialState {
 }
 
 export const initialState: InitialState = {
-  currentScene: SCENES.MAP_SCENE,
+  currentScene: SCENES.LOAD_SCENE,
   level: 1,
   levelStats: {
     levelNum: 1,

@@ -1,19 +1,15 @@
-import GameObject, { GameObjectType } from './GameObject'
-import { Sprite } from './GameObject'
+import GameObject from './GameObject'
+import tileset from '@sprites/dungeonTileset.png'
+import * as Types from '@game/core/types'
 
 export default class Wall extends GameObject {
-  sprite: Sprite
   constructor() {
     super()
-    this.type = GameObjectType.item
+    this.name = Types.GameEntourageName.wall
+    this.sprite = { source: tileset, position: [1, 0] }
     this.crossable = false
     this.static = true
     this.animated = false
     this.destroyable = false
-    this.sprite = {
-      position: { x: 32, y: 0 },
-      size: { width: 16, height: 16 },
-      url: '/src/assets/images/Dungeon_Tileset.png',
-    }
   }
 }

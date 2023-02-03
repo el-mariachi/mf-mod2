@@ -1,80 +1,96 @@
-import GameObject, { CoordinateType } from '@game/Objects/GameObject'
-import gameObjectsEntries from '@game/Objects'
+import GameObject from '@game/Objects/GameObject'
+import GameObjects from '@game/Objects'
 import level1 from '../Data/Levels/1.json'
-import type Layer from './Layerontroller'
-/*const levels: Record<string, unknown> = import.meta.glob(
-  '/home/anri/Документы/mf-mod2/packages/client/src/game/Data/Levels/*.json'
-)*/
+import { LayerRecord } from './LayerController'
+import * as Types from '@game/core/types'
 
+/** ячейка игровой матрицы */
 class Cell {
-  static width = 16
-  static height = 16
-  position: CoordinateType = {} as CoordinateType
-  objects: Array<GameObject> = []
-  constructor(gameObjects: Array<GameObject>, row: number, col: number) {
-    this.objects = gameObjects
-    this.position = { x: Cell.width * col, y: Cell.height * row }
+  /** position = [row, col] */
+  position: Types.Coords = [0, 0]
+  gameObjects: GameObject[] = []
+  constructor(gameObjects: GameObject[], position: Types.Coords) {
+    this.gameObjects = gameObjects
+    this.position = position
   }
 }
-type LevelType = Array<Array<Array<number>>>
+
+/** массив ячеек игровой матрицы, с методами группировки игровых объектов */
+const Cells = class extends Array {
+  _notAnimatedObjects = []
+  filterObjects(condition: (object: GameObject) => boolean) {
+    return this.reduce((prev, cell) => {
+      cell.gameObjects.forEach((gameObject: GameObject) =>
+        /** строки и колонки матрицы "map" обратно связны с координатами x,y [row:y, col:x] 
+         * поэтому gameObject position = [cell.position[1], cell.position[0]]
+        */
+        condition(gameObject)
+          ? prev.push([gameObject, [cell.position[1], cell.position[0]]])
+          : null
+      )
+      return prev
+    }, [])
+  }
+  get notAnimatedObjectsTuple() {
+    /** кеширование не анимированных сущностей */
+    return this._notAnimatedObjects.length
+      ? this._notAnimatedObjects
+      : this.filterObjects(
+          (gameObject: GameObject) => gameObject.animated === false
+        )
+  }
+  get animatedObjectsTuple() {
+    /** анимированные сущности могут исчезнуть с игрового поля, поэтому не кешируются */
+    return this.filterObjects(
+      (gameObject: GameObject) => gameObject.animated === true
+    )
+  }
+}
+
+type LevelInstance = Array<Array<Array<number>>>
 
 type MapControllerPropsType = {
-  layers: Layer[]
+  layers: LayerRecord
   level: number
-  width: number
-  height: number
+  size: Types.Size
 }
 
 class MapController {
-  map: Array<Array<Cell>> = []
-  objects: Map<number, typeof GameObject>
-  level: LevelType
-  layers: Layer[]
-  constructor({ layers, level, width, height }: MapControllerPropsType) {
-    //this.level = Object.values(levels)[level - 1] as LevelType
+  map: Cell[][] = []
+  cells = new Cells()
+  level: LevelInstance
+  layers: LayerRecord
+  constructor({ layers, level }: MapControllerPropsType) {
     this.layers = layers
-    this.level = level1 as LevelType
-    this.objects = new Map(gameObjectsEntries)
+    this.level = level1 as LevelInstance
     this.init()
   }
   init() {
+    /** создаем матрицу игрового поля, с ячейками Cell, содержащими игровые объекты */
     for (let row = 0; row < this.level.length; row++) {
       this.map[row] = []
       for (let col = 0; col < this.level[row].length; col++) {
         const item = this.level[row][col]
+        /** в одной ячейке может находится несколько объектов, поэтому ячейка - это массив */
         const items = Array.isArray(item) ? item : [item]
         const objects = items.reduce<GameObject[]>((prev, id) => {
-          const GameObjetClass = this.objects.get(id)
-          if (GameObjetClass) {
-            prev.push(new GameObjetClass())
-          }
+          const Entity = GameObjects[id]
+          prev.push(new Entity())
           return prev
         }, [])
 
-        this.map[row][col] = new Cell(objects, row, col)
+        const cell = new Cell(objects, [row, col])
+        /** матрица в виде таблицы */
+        this.map[row][col] = cell
+        /** матрица в виде списка */
+        this.cells.push(cell)
       }
     }
-    this.render()
-  }
-  /* resize(width, height)  {
-    this.render()
-  }*/
-  render() {
-    const staticLayer = this.layers[0]
-    const activeLayer = this.layers[1]
-
-    this.map.forEach(row => {
-      row.forEach(cell => {
-        cell.objects.forEach(gameObject => {
-          if (gameObject.static && !gameObject.animated) {
-            if (staticLayer) staticLayer.render(gameObject, cell.position)
-          } else {
-            if (activeLayer) activeLayer.render(gameObject, cell.position)
-            // this.loop.layers.active.drawImage(gameObject.spriteImg, ...cell.rect);
-          }
-        })
-      })
-    })
+    console.log(this.map)
+    /** draw([tuple : [gameObject, cellPosition]])
+     * создаем View для каждого объекта и размещаем в слое в соответствии с его типом*/
+    this.layers.static.draw(this.cells.notAnimatedObjectsTuple)
+    this.layers.active.draw(this.cells.animatedObjectsTuple)
   }
 }
 

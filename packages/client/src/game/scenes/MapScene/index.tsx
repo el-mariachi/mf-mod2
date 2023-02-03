@@ -1,76 +1,48 @@
 import { useEffect, useState, useRef } from 'react'
 import { width, height } from '@utils/winsize'
 import './MapScene.css'
-import {
-  useGameController,
-  GameActionType,
-  GameEvent,
-} from '@hooks/useGameController'
 import MapController from '@game/Controllers/MapController'
-import Layer from '@game/Controllers/Layerontroller'
+import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
 
-function createLayers(layerNames: string[]): Layer[] {
-  return layerNames.map((name, i) => {
-    return new Layer({ name, zindex: i.toString(), width, height })
-  })
-}
-
-function MapScene({ onExit }: SceneProps) {
-  const gameAction: GameActionType = useGameController()
+function MapScene() {
   const [layers, setLayers]: [
-    Layer[],
-    React.Dispatch<React.SetStateAction<Layer[]>>
-  ] = useState([] as Layer[])
-  const turnRef = useRef()
-
+    LayerRecord,
+    React.Dispatch<React.SetStateAction<LayerRecord>>
+  ] = useState({})
   const layersRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef({} as MapController)
 
+  /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
-    setLayers(createLayers(['static', 'active', 'effetcs']))
-
-    //const statistic = new StatisticController()
-    //turnRef.current = new TurnController(map, statistic)
+    const layers: LayerRecord = createLayers(
+      ['static', 'active', 'effetcs'],
+      [width, height]
+    )
+    setLayers(layers)
   }, [])
 
   useEffect(() => {
     if (layersRef.current) {
-      layers.forEach(el => {
-        layersRef.current!.append(el.canvas)
+      Object.entries(layers).forEach(([_, layer]) => {
+        layersRef.current!.append(layer.canvas)
       })
-
-      mapRef.current = new MapController({ layers, level: 1, width, height })
+    }
+    if (Object.keys(layers).length !== 0) {
+      mapRef.current = new MapController({
+        layers,
+        level: 1,
+        size: [width, height],
+      })
     }
   }, [layers])
-
-  useEffect(() => {
-    const [gameEvent] = gameAction
-
-    switch (gameEvent) {
-      case GameEvent.Left:
-      case GameEvent.Right:
-      case GameEvent.Up:
-      case GameEvent.Down:
-        //turnRef.current.step(gameEvent)
-        console.log(gameEvent)
-        break
-      case 'PAUSE':
-    }
-  }, [gameAction])
 
   useEffect(() => {
     //mapRef.current.resize(width, height)
   }, [width, height])
 
-  console.log('layers', layers)
-
-  return (
-    <>
-      <div ref={layersRef} className="layers"></div>
-    </>
-  )
+  /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
+      обращаться к каждому слою через ref */
+  return <div ref={layersRef} className="map-scene__layers"></div>
 }
 
 export default MapScene
-
-

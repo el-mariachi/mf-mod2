@@ -3,11 +3,19 @@ import { ProgressBar } from '../../animations/ProgressBar'
 import { useFonts } from '@hooks/useFonts'
 import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
+import { useDispatch } from 'react-redux'
+import { actions } from '@store/index'
+import hero from '@sprites/hero.png'
+import dungeonTileset from '@sprites/dungeonTileset.png'
+import skeleton from '@sprites/skeleton.png'
+
+const { startGame } = actions
 
 function LoadScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts(false)
-
+  const dispatch = useDispatch()
+  const images = [hero, dungeonTileset, skeleton]
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current
@@ -41,6 +49,22 @@ function LoadScene() {
       }
     }
   }, [fontLoaded])
+
+  useEffect(() => {
+    const promises = images.map(src => {
+      return new Promise(res => {
+        const img = new Image()
+        img.src = src
+        img.onload = () => {
+          res(null)
+        }
+      })
+    })
+
+    Promise.all(promises).then(() => {
+      dispatch(startGame())
+    })
+  }, [])
 
   return <canvas ref={canvasRef} width={width} height={height}></canvas>
 }

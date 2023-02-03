@@ -1,40 +1,13 @@
-export enum GameObjectType {
-  hero = 'HERO',
-  monster = 'MONSTER',
-  item = 'ITEM',
-}
-
-export type CoordinateType = {
-  x: number,
-  y: number
-}
-
-export type SizeType = {
-  width : number,
-  height: number
-}
-
-export type SpriteDirectin = 'verical' | 'horizontal'
-
-
-export type Sprite = {
-  position : CoordinateType;
-  size : SizeType;
-  speed? : number;
-  frames? : number[];
-  _index? : number;
-  url : string;
-  dir? : SpriteDirectin;
-  once? : boolean;
-}
-
+import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
+import * as Types from '@game/core/types'
 
 export default class GameObject {
-  name = ''
-  type = GameObjectType.item
+  name!: Types.GameObjectName
+  spriteSource?: string
+  sprite?: { source: string; position?: Types.Coords }
+  motions?: Types.SpriteMotions & Types.CellSpriteMotions
   crossable = false
   static = true
   animated = false
   destroyable = false
-  sprite! : Sprite
 }
