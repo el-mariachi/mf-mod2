@@ -1,0 +1,10 @@
+import * as Types from '@game/core/types'
+
+const coin = {
+  [Types.IdleMotionType.idle]: {
+    originPosition: [0, 0],
+    frames: [0, 1, 2, 3],
+  },
+} as Types.CellSpriteMotions
+
+export default { coin }

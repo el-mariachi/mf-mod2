@@ -13,7 +13,7 @@ const signInInputData = [
   },
 ] as const
 
-export type AuthFormFields = typeof signInInputData[number]['name']
+export type AuthFormFields = (typeof signInInputData)[number]['name']
 export type AuthFormStruct = Record<AuthFormFields, string>
 
 const defaultValues: AuthFormStruct = {
