@@ -168,6 +168,8 @@ export const {
 
 export const { showLoader, showStartScene, showResultScene } = gameSlice.actions
 
+export const { updateStats } = gameSlice.actions
+
 export const startGame =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
     dispatch(resetHero())
