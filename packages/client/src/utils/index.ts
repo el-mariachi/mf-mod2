@@ -9,3 +9,12 @@ export function redirect2(path = '/', except: string[] = []) {
 export const muteRes = () => {
   return
 }
+/**
+ *
+ * @param min number Required min value
+ * @param max number Optional max value, Infinity if omitted
+ * @returns Function that returns number in range
+ */
+export const createRangeKeeper =
+  (min: number, max?: number) => (value: number) =>
+    Math.max(min, Math.min(max || Infinity, value))

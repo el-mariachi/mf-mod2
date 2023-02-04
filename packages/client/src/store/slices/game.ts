@@ -1,22 +1,65 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  createSlice,
+  PayloadAction,
+  ThunkAction,
+  AnyAction,
+} from '@reduxjs/toolkit'
 import SCENES from '@constants/scenes'
+import { RootState } from '@store/index'
+import { resetHero } from '@store/slices/hero'
+import { computeScore } from '@utils/computeScore'
 
-export enum NextMove {
-  PLAYER,
-  WORLD,
-}
-
-export enum GameState {
+export enum TurnControllerState {
   RUNNING,
   PAUSED,
 }
 
-export const initialState = {
-  gameState: GameState.PAUSED,
-  currentScene: SCENES.LOAD_SCENE,
-  currentLevel: 1,
+export enum GameIntaractions {
+  NONE = 'none',
+  ATTACK = 'attack',
+  DAMAGE = 'damage',
+  COLLECT = 'collect',
+  OPEN = 'open',
+  // ...
+}
+
+export type GameIntaractionDef = {
+  type: GameIntaractions
+  progress: number
+  position: [number, number]
+  // ...
+}
+
+export type GameStats = {
+  killCount: number
+  coins: number
+  time: number
+  steps: number
+}
+
+export type GameSlice = {
+  turnControllerState: TurnControllerState
+  currentScene: SCENES
+  interaction: GameIntaractionDef // | null // как вариант
+  currentLevel: number
+  totalLevels: number
+  levelStats: GameStats
+  gameTotals: GameStats
+  score: number
+}
+
+const noInteraction: GameIntaractionDef = {
+  type: GameIntaractions.NONE,
+  progress: 0,
+  position: [0, 0],
+}
+
+export const initialState: GameSlice = {
+  turnControllerState: TurnControllerState.PAUSED,
+  currentScene: SCENES.START_SCENE,
+  interaction: noInteraction,
+  currentLevel: 0,
   totalLevels: 1,
-  nextMove: NextMove.PLAYER,
   levelStats: {
     killCount: 0,
     coins: 0,
@@ -29,6 +72,7 @@ export const initialState = {
     time: 0,
     steps: 0,
   },
+  score: 0,
 }
 
 const resetLevelStats = (state: typeof initialState) => {
@@ -40,111 +84,114 @@ const updateTotals = (state: typeof initialState) => {
   state.gameTotals.killCount += state.levelStats.killCount
   state.gameTotals.steps += state.levelStats.steps
   state.gameTotals.time += state.levelStats.time
+  state.score += computeScore(state.levelStats, state.currentLevel)
   resetLevelStats(state)
-}
-
-const endGame = (state: typeof initialState) => {
-  state.gameState = GameState.PAUSED
-  updateTotals(state)
-  state.currentScene = SCENES.RESULT_SCENE
 }
 
 const gameSlice = createSlice({
   name: 'game',
   initialState: initialState,
   reducers: {
-    // start/stop/pause/resume
-    startGame(state) {
+    // levels
+    startLevel(state, action: PayloadAction<number>) {
+      const nextLevel = action.payload
+      if (nextLevel > state.totalLevels) {
+        // просто защита. Решение начинать/не начинать уровень по идее принимает контроллер
+        return
+      }
       return {
         ...state,
-        gameState: GameState.RUNNING,
+        currentLevel: nextLevel,
+        levelStats: initialState.levelStats,
         currentScene: SCENES.MAP_SCENE,
+        turnControllerState: TurnControllerState.RUNNING,
       }
     },
-    finishGame(state) {
-      endGame(state)
+    incLevel(state) {
+      state.currentLevel += 1
     },
-    pauseGame(state) {
-      state.gameState = GameState.PAUSED
-      // TODO какую сцену показывать в паузе? Пока ставим RESULT_SCENE
+    endLevel(state) {
+      state.turnControllerState = TurnControllerState.PAUSED
+      updateTotals(state)
       state.currentScene = SCENES.RESULT_SCENE
+    },
+    // game
+    pauseGame(state) {
+      state.turnControllerState = TurnControllerState.PAUSED
     },
     resumeGame(state) {
       state.currentScene = SCENES.MAP_SCENE
-      state.gameState = GameState.RUNNING
+      state.turnControllerState = TurnControllerState.RUNNING
     },
-    // levels
-    finishLevel(state) {
-      const nextLevelNumber = state.currentLevel + 1
-      if (nextLevelNumber > state.totalLevels) {
-        endGame(state)
-        return
-      }
-      updateTotals(state)
-      state.gameState = GameState.PAUSED
-      // TODO какую сцену показывать в паузе? Пока ставим RESULT_SCENE
-      state.currentScene = SCENES.RESULT_SCENE
+    exitGame(state) {
+      state.levelStats = initialState.levelStats
     },
-    resetLevel(state) {
-      resetLevelStats(state)
-      state.gameState = GameState.RUNNING
-    },
-    nextLevel(state) {
-      state.currentLevel += 1
-      resetLevelStats(state)
-      state.currentScene = SCENES.MAP_SCENE
-    },
-    // scene selectors
+    // scenes
     showLoader(state) {
       // TODO скорее всего, не нужно здесь
       state.currentScene = SCENES.LOAD_SCENE
     },
     showStartScene(state) {
-      // TODO скорее всего, не нужно, как отдельый редюсер
+      // Используется в хуке useNavToGame. Возможно будет удаляться
       state.currentScene = SCENES.START_SCENE
     },
-    // layer stats
-    kill(state) {
-      state.levelStats.killCount += 1
+    showResultScene(state) {
+      state.currentScene = SCENES.RESULT_SCENE
     },
-    collectCoin(state) {
-      state.levelStats.coins += 1
-    },
-    collectCoins(state, action: PayloadAction<number>) {
-      state.levelStats.coins += action.payload
-    },
-    step(state) {
-      state.levelStats.steps += 1
-    },
-    addTime(state, action: PayloadAction<number>) {
-      state.levelStats.time += action.payload
-    },
-    // turns
-    giveMoveToPlayer(state) {
-      state.nextMove = NextMove.PLAYER
-    },
-    giveMoveToWorld(state) {
-      state.nextMove = NextMove.WORLD
+    // stats
+    updateStats(
+      state,
+      action: PayloadAction<Partial<typeof initialState['levelStats']>>
+    ) {
+      const statDeltas = action.payload
+      state.levelStats = {
+        ...state.levelStats,
+        ...Object.keys(statDeltas).reduce((result, current) => {
+          const key = current as keyof typeof statDeltas
+          return Object.assign(result, {
+            [current]: state.levelStats[key] + (statDeltas[key] || 0),
+          })
+        }, {}),
+      }
     },
   },
 })
 
 export const {
-  startGame,
-  finishGame,
+  startLevel,
+  incLevel,
+  endLevel,
   pauseGame,
   resumeGame,
-  finishLevel,
-  resetLevel,
-  nextLevel,
+  exitGame,
 } = gameSlice.actions
 
-export const { giveMoveToPlayer, giveMoveToWorld } = gameSlice.actions
+export const { showLoader, showStartScene, showResultScene } = gameSlice.actions
 
-// TODO скорее всего, не нужно
-export const { showLoader, showStartScene } = gameSlice.actions
-
-export const { kill, collectCoin, collectCoins, step, addTime } =
-  gameSlice.actions
+export const startGame =
+  (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
+    dispatch(resetHero())
+    dispatch(startLevel(1))
+  }
+export const restartLevel =
+  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    const { currentLevel } = getState().game
+    dispatch(resetHero())
+    dispatch(startLevel(currentLevel))
+  }
+export const finishLevel =
+  (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
+    dispatch(endLevel())
+    // TODO save stats to server
+    dispatch(showResultScene())
+  }
+export const nextLevel =
+  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    const { currentLevel } = getState().game
+    dispatch(resetHero())
+    dispatch(startLevel(currentLevel + 1))
+  }
 
 export default gameSlice.reducer
