@@ -1,5 +1,6 @@
 import type { RootState } from '../index'
 import { computeScore } from '@utils/computeScore'
+import { TurnControllerState } from '@store/slices/game'
 
 // game slice selectors
 export const game = (state: RootState) => state.game
@@ -12,7 +13,7 @@ export const levelStats = (state: RootState) => ({
 export const currentScene = (state: RootState) => game(state).currentScene
 
 export const selectPaused = (state: RootState) =>
-  game(state).turnControllerState
+  game(state).turnControllerState === TurnControllerState.PAUSED
 
 // add currentLevel stats to gameTotals
 export const selectGameTotals = (state: RootState) => {

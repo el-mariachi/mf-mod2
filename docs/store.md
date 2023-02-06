@@ -23,7 +23,7 @@
 
 - Селекторы `levelStats` и `selectGameTotals()` кроме статистики отдают еще и номер уровня. Сделано для совместимости с имевшимся уже компонентом `ResScene` (`game/scenes/ResultScreen/Scene/index.ts`). Возможно, lvl# стоит вынести из статов.
 
-- `selectPaused` - вернет `1`, если TurnController остановлен, и `0`, если запущен
+- `selectPaused` - вернет `true`, если TurnController остановлен, и `false`, если запущен
 
 - `selectGameScore` - считает общий скор; скор уровня убрал, кажется, он нигде не нужен, если надо, добавим
 
