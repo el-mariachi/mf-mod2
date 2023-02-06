@@ -1,15 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createRangeKeeper } from '@utils/index'
-import { HeroClass, heroPresets, defaultMaxValues } from '@constants/hero'
+import {
+  HeroClass,
+  heroPresets,
+  defaultMaxValues,
+  defaultMaxHealth,
+} from '@constants/hero'
 
 const initialState = {
   heroClass: HeroClass.L3X3III,
-  health: 100,
+  health: defaultMaxHealth,
+  maxHealth: 100,
   resources: heroPresets[HeroClass.L3X3III],
   resourceMaxValues: defaultMaxValues,
 }
-
-const keepHealthInRange = createRangeKeeper(0, 100)
 
 const heroSlice = createSlice({
   name: 'hero',
@@ -20,16 +24,21 @@ const heroSlice = createSlice({
       action: PayloadAction<typeof initialState['heroClass']>
     ) {
       state.heroClass = action.payload
-      state.health = 100
+      state.health = defaultMaxHealth
       state.resources = heroPresets[state.heroClass]
       state.resourceMaxValues = defaultMaxValues
     },
-    resetHero(state) {
+    resetHeroResources(state) {
       state.resources = heroPresets[state.heroClass]
-      state.health = 100
+      state.health = defaultMaxHealth
     },
     updateHealthByAmount(state, action: PayloadAction<number>): void {
-      state.health = keepHealthInRange(state.health + action.payload)
+      const newValue = state.health + action.payload
+      const keepHealthInRange = createRangeKeeper(0, state.maxHealth)
+      state.health = keepHealthInRange(newValue)
+    },
+    setHealthMaxValue(state, action: PayloadAction<number>) {
+      state.maxHealth = action.payload
     },
     setResource(
       // just setst the resource(s) to specified value
@@ -79,11 +88,12 @@ const heroSlice = createSlice({
 })
 
 export const {
-  resetHero,
+  resetHeroResources,
   setHeroClass,
   setResource,
   setResourceMaxValue,
   updateHealthByAmount,
+  setHealthMaxValue,
   updateResourceByAmount,
 } = heroSlice.actions
 

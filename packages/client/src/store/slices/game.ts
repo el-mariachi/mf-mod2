@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit'
 import SCENES from '@constants/scenes'
 import { RootState } from '@store/index'
-import { resetHero } from '@store/slices/hero'
+import { resetHeroResources } from '@store/slices/hero'
 import { computeScore } from '@utils/computeScore'
 
 export enum TurnControllerState {
@@ -107,9 +107,6 @@ const gameSlice = createSlice({
         turnControllerState: TurnControllerState.RUNNING,
       }
     },
-    incLevel(state) {
-      state.currentLevel += 1
-    },
     endLevel(state) {
       state.turnControllerState = TurnControllerState.PAUSED
       updateTotals(state)
@@ -127,7 +124,7 @@ const gameSlice = createSlice({
       state.levelStats = initialState.levelStats
     },
     // scenes
-    showLoader(state) {
+    showLoadScene(state) {
       // TODO скорее всего, не нужно здесь
       state.currentScene = SCENES.LOAD_SCENE
     },
@@ -157,29 +154,24 @@ const gameSlice = createSlice({
   },
 })
 
-export const {
-  startLevel,
-  incLevel,
-  endLevel,
-  pauseGame,
-  resumeGame,
-  exitGame,
-} = gameSlice.actions
+export const { startLevel, endLevel, pauseGame, resumeGame, exitGame } =
+  gameSlice.actions
 
-export const { showLoader, showStartScene, showResultScene } = gameSlice.actions
+export const { showLoadScene, showStartScene, showResultScene } =
+  gameSlice.actions
 
 export const { updateStats } = gameSlice.actions
 
 export const startGame =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
-    dispatch(resetHero())
+    dispatch(resetHeroResources())
     dispatch(startLevel(1))
   }
 export const restartLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
   (dispatch, getState) => {
     const { currentLevel } = getState().game
-    dispatch(resetHero())
+    dispatch(resetHeroResources())
     dispatch(startLevel(currentLevel))
   }
 export const finishLevel =
@@ -192,7 +184,7 @@ export const nextLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
   (dispatch, getState) => {
     const { currentLevel } = getState().game
-    dispatch(resetHero())
+    dispatch(resetHeroResources())
     dispatch(startLevel(currentLevel + 1))
   }
 

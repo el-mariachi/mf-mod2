@@ -34,3 +34,5 @@ export const heroPresets: ResourcePresets = {
 export const defaultMaxValues: HeroResources = {
   hits: 256,
 }
+
+export const defaultMaxHealth = 100

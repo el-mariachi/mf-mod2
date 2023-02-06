@@ -17,18 +17,22 @@ export const selectPaused = (state: RootState) =>
 // add currentLevel stats to gameTotals
 export const selectGameTotals = (state: RootState) => {
   const { gameTotals, levelStats } = game(state)
-  Object.keys(gameTotals).forEach(key => {
-    const kkey = key as keyof typeof gameTotals
-    gameTotals[kkey] += levelStats[kkey]
+  Object.keys(gameTotals).forEach(stat => {
+    const key = stat as keyof typeof gameTotals
+    gameTotals[key] += levelStats[key]
   })
   return { gameTotals, levelNum: game(state).currentLevel }
 }
 
-export const selectLevelScore = (state: RootState) => {
-  return computeScore(game(state).levelStats, game(state).currentLevel)
+export const selectGameScore = (state: RootState) => {
+  return (
+    computeScore(game(state).levelStats, game(state).currentLevel) +
+    game(state).score
+  )
 }
 
-export const selectGameScore = (state: RootState) => game(state).score
+// interactions
+export const selectInteraction = (state: RootState) => game(state).interaction
 
 // user slice selectors
 export const selectUserData = (state: RootState) => state.user.data
@@ -40,3 +44,5 @@ export const selectLoginStatus = (state: RootState) => state.user.loginStatus
 export const selectHero = (state: RootState) => state.hero
 export const selectHealth = (state: RootState) => state.hero.health
 export const selectHeroResources = (state: RootState) => state.hero.resources
+// death
+export const selectHeroIsDead = (state: RootState) => state.hero.health === 0
