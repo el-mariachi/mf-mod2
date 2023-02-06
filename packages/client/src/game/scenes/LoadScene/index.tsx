@@ -6,7 +6,7 @@ import { Text } from '@utils/fillCanvas'
 import { useDispatch } from 'react-redux'
 import { actions } from '@store/index'
 import hero from '@sprites/hero.png'
-import dungeonTileset from '@sprites/dungeonTileset.png'
+import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
 
 const { startGame } = actions
