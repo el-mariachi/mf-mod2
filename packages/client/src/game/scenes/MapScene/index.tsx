@@ -11,7 +11,7 @@ function LoadScene({ onExit }: SceneProps) {
 
   const dispatch = useAppDispatch()
   const onGameFinish = () => {
-    dispatch(finishLevel({ time: 0 }))
+    dispatch(finishLevel())
   }
 
   useEffect(() => {
