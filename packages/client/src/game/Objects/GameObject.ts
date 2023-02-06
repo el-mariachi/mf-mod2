@@ -1,15 +1,13 @@
-import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
+import tileset from '@sprites/tileset.png'
 import * as Types from '@game/core/types'
+import { View } from '@game/hoc/ViewFactory'
 
-export type SpriteDescription = {
-  source: string
-  position: Types.Coords
-}
 
 export default class GameObject {
   name!: Types.GameObjectName
-  spriteSource?: string
-  sprite?: SpriteDescription
+  view?: View
+  spriteSrc: string = tileset
+  spritePos?: Types.Coords 
   motions?: Types.SpriteMotions & Types.CellSpriteMotions
   crossable = false
   static = true

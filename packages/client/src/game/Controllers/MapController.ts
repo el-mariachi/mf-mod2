@@ -86,7 +86,8 @@ class MapController {
         this.cells.push(cell)
       }
     }
-    console.log(this.map)
+    const mapSize: [number, number] = [this.map.length, this.map[0].length];
+    this.layers.static.drawBackground(...mapSize)
     /** draw([tuple : [gameObject, cellPosition]])
      * создаем View для каждого объекта и размещаем в слое в соответствии с его типом*/
     this.layers.static.draw(this.cells.notAnimatedObjectsTuple)
