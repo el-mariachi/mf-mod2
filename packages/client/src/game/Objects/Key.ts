@@ -4,14 +4,11 @@ import * as Types from '@game/core/types'
 import itemsMotions from '@game/animations/items'
 
 export default class Key extends GameObject {
-  constructor() {
-    super()
-    this.name = Types.GameItemName.key
-    this.sprite = { source: itemsSrc }
-    this.motions = itemsMotions.key
-    this.crossable = true
-    this.static = true
-    this.animated = true
-    this.destroyable = true
-  }
+  name = Types.GameItemName.key
+  spriteSrc: string = itemsSrc
+  motions = itemsMotions.key
+  crossable = true
+  static = true
+  animated = true
+  destroyable = true
 }

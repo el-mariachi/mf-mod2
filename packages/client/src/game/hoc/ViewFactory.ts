@@ -14,9 +14,9 @@ export default class ViewFactory {
     this.ctx = ctx
   }
   createView(gameObject: GameObject, position: Types.Coords): View {
-    const { sprite: origin } = gameObject
+    const { spriteSrc, spritePos } = gameObject
     const spriteImage = new Image()
-    spriteImage.src = origin!.source
+    spriteImage.src = spriteSrc
 
     /** создаем View персонажей*/
     let view!:GameObjectView
@@ -24,7 +24,7 @@ export default class ViewFactory {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
-        gameObject.motions
+        gameObject.motions as Types.CellSpriteMotions
       )
       view = new UnitView(sprite, position)
 
@@ -33,15 +33,14 @@ export default class ViewFactory {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
-        gameObject.motions
+        gameObject.motions as Types.SpriteMotions & Types.CellSpriteMotions
       )
       view = new AnimatableView(sprite, position)
-
       /** создаем View неповижных предметов*/
     } else {
       const sprite = new CellSprite(this.ctx, spriteImage, {
         position: position,
-        originPosition: origin?.position as Types.Coords,
+        originPosition: spritePos as Types.Coords,
       })
       view = new GameObjectView(sprite, position)      
     }

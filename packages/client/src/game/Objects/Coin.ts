@@ -4,14 +4,11 @@ import * as Types from '@game/core/types'
 import itemsMotions from '@game/animations/items'
 
 export default class Coin extends GameObject {
-  constructor() {
-    super()
-    this.name = Types.GameItemName.coin
-    this.sprite = { source: itemsSrc }
-    this.motions = itemsMotions.coin
-    this.crossable = true
-    this.static = true
-    this.animated = true
-    this.destroyable = true
-  }
+  name = Types.GameItemName.coin
+  spriteSrc: string = itemsSrc
+  motions = itemsMotions.coin
+  crossable = true
+  static = true
+  animated = true
+  destroyable = true
 }

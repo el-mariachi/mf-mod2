@@ -12,3 +12,12 @@ export const muteRes = () => {
 export function roundArrValues<T extends unknown[]>(arr: number[]) {
   return arr.map(val => Math.round(val)) as T
 }
+/**
+ *
+ * @param min number Required min value
+ * @param max number Optional max value, Infinity if omitted
+ * @returns Function that returns number in range
+ */
+export const createRangeKeeper =
+  (min: number, max?: number) => (value: number) =>
+    Math.max(min, Math.min(max || Infinity, value))

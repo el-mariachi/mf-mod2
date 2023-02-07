@@ -5,15 +5,12 @@ import { skeletonMotions } from '@game/animations/skeleton'
 import UnitView from '@game/core/views/UnitView'
 
 export default class Skeleton extends GameObject {
-  declare view:UnitView
-  constructor() {
-    super()
-    this.name = Types.GameUnitName.skeleton
-    this.sprite = {source:skeletonSrc}
-    this.motions = skeletonMotions
-    this.crossable = false
-    this.static = false
-    this.animated = true
-    this.destroyable = true
-  }
+  name = Types.GameUnitName.skeleton
+  spriteSrc: string = skeletonSrc
+  motions = skeletonMotions
+  crossable = false
+  static = false
+  animated = true
+  destroyable = true
 }
+// declare view:UnitView

@@ -1,0 +1,121 @@
+@import '@vars';
+@import '@bootstrap';
+
+.gameModalUI {
+  height: 80vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+.gameModalUI_active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.gameModalUI__content {
+  position: relative;
+  background-color: $ui_purple;
+  padding: 10px;
+  width: 576px;
+
+  .gameModalUI__header {
+    display: flex;
+    font-family: 'Minecraft';
+    font-size: 1.5rem;
+
+    .gameModalUI__close-btn {
+      display: block;
+      margin-left: auto;
+      margin-bottom: 0.5rem;
+      border: 1px solid $ui_bg_dark-purple;
+      color: $ui_bg_dark-purple;
+      text-decoration: none;
+      font-size: 1rem;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      background: transparent;
+    }
+  }
+
+  .gameModalUI__child-content {
+    width: 100%;
+    height: fit-content;
+    background: $ui_bg_dark-purple;
+    padding: 20px;
+
+    .gameModalUI__stats {
+      font-family: 'Minecraft';
+      color: rgb(146, 104, 125);
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        li {
+          display: flex;
+
+          span {
+            display: block;
+            font-weight: bold;
+            margin-left: auto;
+          }
+        }
+      }
+    }
+  }
+}
+
+.gameModalUI__button {
+  cursor: pointer;
+  font-family: 'Minecraft';
+  font-size: 1.5rem;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: $ui_button;
+  color: $ui_bg_dark-purple;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.gameModalUI__button:hover {
+  background-color: $ui_purple;
+  box-shadow:
+	/* Inner Background Color */ 0 calc($pixel * -3) 0
+      calc($pixel * -1) $ui_purple,
+    0 calc($pixel * 3) 0 calc($pixel * -1) $ui_purple,
+    0 calc($pixel * -6) 0 calc($pixel * -2) $ui_purple,
+    0 calc($pixel * 6) 0 calc($pixel * -2) $ui_purple,
+    0 calc($pixel * -9) 0 calc($pixel * -4) $ui_purple,
+    0 calc($pixel * 9) 0 calc($pixel * -4) $ui_purple,
+    0 calc($pixel * -12) 0 calc($pixel * -6) $ui_purple,
+    0 calc($pixel * 12) 0 calc($pixel * -6) $ui_purple,
+    /* Border */ calc($pixel * -3) 0 0 0 $pixel-border,
+    calc($pixel * 3) 0 0 0 $pixel-border, 0 0 0 calc($pixel * 2) $pixel-border,
+    0 calc($pixel * -3) 0 $pixel $pixel-border,
+    0 calc($pixel * 3) 0 $pixel $pixel-border,
+    0 calc($pixel * -5) 0 0 $pixel-border, 0 calc($pixel * 5) 0 0 $pixel-border,
+    0 calc($pixel * -7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * 7) 0 calc($pixel * -1) $pixel-border,
+    0 calc($pixel * -9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * 9) 0 calc($pixel * -2) $pixel-border,
+    0 calc($pixel * -12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * 12) 0 calc($pixel * -4) $pixel-border,
+    0 calc($pixel * -15) 0 calc($pixel * -6) $pixel-border,
+    0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
+}
+
+.gameModalUI__button + .gameModalUI__button {
+  margin-top: 2rem;
+}

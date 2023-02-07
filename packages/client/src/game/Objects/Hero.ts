@@ -5,15 +5,12 @@ import { heroMotions } from '@game/animations/hero'
 import UnitView from '@game/core/views/UnitView'
 
 export default class Hero extends GameObject {
-  declare view:UnitView
-  constructor() {
-    super()
-    this.name = Types.GameUnitName.hero
-    this.sprite = { source: heroSrc }
-    this.motions = heroMotions
-    this.crossable = false
-    this.static = false
-    this.animated = true
-    this.destroyable = true
-  }
+  name = Types.GameUnitName.hero
+  spriteSrc: string = heroSrc
+  motions = heroMotions
+  crossable = false
+  static = false
+  animated = true
+  destroyable = true
 }
+// declare view:UnitView
