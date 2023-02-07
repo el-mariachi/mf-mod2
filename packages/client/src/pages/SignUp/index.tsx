@@ -7,13 +7,16 @@ import AppDefaultTpl from '@components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { inputData, defaultValues, SignUpFormStruct } from './constants'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { signUpUser } from '@services/authController'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import SpinnerButton from '@components/SpinnerButton'
+import { LoggedInCheck, nonAuthorizedPageAccessOpts } from 'hoc/LoggedInCheck'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { loadUser } from '@store/slices/user'
 
 const SignUp = () => {
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
 
@@ -45,8 +48,9 @@ const SignUp = () => {
     setReadOnly(true)
 
     signUpUser(data)
-      // TODO it`s temporary, use connected-react-router
-      .then(() => navigate('/'))
+      .then(() => {
+        dispatch(loadUser())
+      })
       .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
       .finally(() => {
         setLoading(false)
@@ -93,4 +97,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default LoggedInCheck(nonAuthorizedPageAccessOpts)(SignUp)

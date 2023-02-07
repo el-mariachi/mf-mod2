@@ -5,7 +5,6 @@ export default class GameObjectView implements Types.DrawableOnCanvas {
   constructor(protected _sprite: GameObjectSprite, position?: Types.Coords) {
     if (position) {
       this.position = position
-      console.log('!!!', position)
       this.render()
     }
   }

@@ -63,11 +63,13 @@ const inputData = [
   },
 ]
 
+type SortedVal = keyof typeof inputData[number]
+
 function LeaderboardList() {
   const [sortMode, setSortMode] = useState(1)
 
   let counter = 0
-  let sortedVal = 'score'
+  let sortedVal: SortedVal = 'score'
 
   switch (sortMode) {
     case 1:
@@ -139,7 +141,7 @@ function LeaderboardList() {
                 date={user.date}
                 time={user.time}
                 kills={user.kills}
-                sortedVal={user[sortedVal]}
+                sortedVal={String(user[sortedVal])}
               />
             )
           })}

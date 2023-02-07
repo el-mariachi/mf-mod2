@@ -16,4 +16,5 @@ const useCanvas = (draw: (context: CanvasRenderingContext2D) => void) => {
 
   return canvasRef
 }
+
 export default useCanvas

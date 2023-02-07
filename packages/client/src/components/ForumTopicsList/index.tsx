@@ -1,7 +1,6 @@
-import ForumTopic from '@components/ForumTopic'
-import { IForumTopicProps } from '@components/ForumTopic/ForumTopicProps'
+import ForumTopic, { ForumTopicProps } from '@components/ForumTopic'
 import './ForumTopicsList.scss'
-const topics: IForumTopicProps[] = [
+const topics: ForumTopicProps[] = [
   {
     topicAuthor: 'Петр',
     topicTitle: 'Тема от Петра',

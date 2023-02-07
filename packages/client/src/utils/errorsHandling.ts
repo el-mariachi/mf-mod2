@@ -1,4 +1,5 @@
-import { redirect2 } from '.'
+import { store } from '@store/index'
+import { clearUser } from '@store/slices/user'
 
 export const enum AppErrorCode {
   unknown = 0,
@@ -44,9 +45,7 @@ export function apiErrorHandler(error: Error): never {
     // wrong data input from user, defined by server
     throw createAppError(msg, AppErrorCode.userInput)
   } else if (AppErrorCode.restApiAuth == code) {
-    // TODO it`s temporary, use connected-react-router; also reset redux store? (cause no authorized anymore)
-    redirect2('/sign-in', ['/sign-up', '/404', '/500'])
-
+    store.dispatch(clearUser())
     throw createAppError(msg, AppErrorCode.userInput, 'auth form', additional)
   }
   // dev (api) error

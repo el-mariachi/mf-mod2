@@ -1,6 +1,6 @@
 import { MAP_CELL } from '@game/core/constants'
 import * as Types from '@game/core/types'
-import { roundArrValues } from '@utils-kit'
+import { roundArrValues } from '@utils/index'
 import { center } from '@utils/winsize'
 
 export const cellCoords2PixelCoords = (coords: Types.Coords) =>

@@ -1,4 +1,4 @@
-import Form from 'react-bootstrap/Form'
+import { Form } from 'react-bootstrap'
 import { UseFormRegister, FieldErrorsImpl } from 'react-hook-form'
 
 type FormGroupViewProps = {

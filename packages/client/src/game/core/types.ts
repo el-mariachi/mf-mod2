@@ -99,6 +99,7 @@ export type CellSpriteAnimationProcessResult = {
 export type CellSpriteAnimationProcess =
   Promise<CellSpriteAnimationProcessResult>
 
+// TODO need refactoring for motions/behaviors types
 export enum IdleMotionType {
   idle = 'idle',
   look2top = 'look2top',
