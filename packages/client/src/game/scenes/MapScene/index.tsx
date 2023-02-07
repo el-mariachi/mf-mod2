@@ -5,7 +5,12 @@ import { width, height } from '@utils/winsize'
 import './MapScene.css'
 import MapController from '@game/Controllers/MapController'
 import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
+import hero from '@sprites/hero.png'
+import dungeonTileset from '@sprites/tileset.png'
+import skeleton from '@sprites/skeleton.png'
 
+
+const images = [hero, dungeonTileset, skeleton]
 function MapScene({ onExit }: SceneProps) {
   const [layers, setLayers]: [
     LayerRecord,
@@ -20,13 +25,29 @@ function MapScene({ onExit }: SceneProps) {
   }
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
-    const layers: LayerRecord = createLayers(
-      ['static', 'active', 'effetcs'],
-      [width, height]
-    )
-    setLayers(layers)
+
+    // TODO перенести в LoadScene после того как определится порядок загрузки сцен
+    const promises = images.map(src => {
+      return new Promise(res => {
+        const img = new Image()
+        img.src = src
+        img.onload = () => {
+          res(null)
+        }
+      })
+    })
+
+    Promise.all(promises).then(() => {
+      const layers: LayerRecord = createLayers(
+        ['static', 'active', 'effetcs'],
+        [width, height]
+      )
+      setLayers(layers)
+    })  
+
   }, [])
 
+  
   useEffect(() => {
     if (layersRef.current) {
       Object.entries(layers).forEach(([_, layer]) => {
