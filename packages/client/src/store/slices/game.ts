@@ -62,4 +62,13 @@ const gameSlice = createSlice({
   },
 })
 
-export default gameSlice
+export const {
+  restartGame,
+  startGame,
+  nextLevel,
+  showLoader,
+  showStartScene,
+  finishLevel,
+} = gameSlice.actions
+
+export default gameSlice.reducer

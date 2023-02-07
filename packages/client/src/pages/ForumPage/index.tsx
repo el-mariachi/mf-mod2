@@ -2,6 +2,7 @@ import AddForumTopicForm from '@components/AddForumTopicForm'
 import AppDefaultTpl from '@components/AppDefaultTpl'
 import ForumTopicsList from '@components/ForumTopicsList'
 import './ForumPage.scss'
+import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 
 function ForumPage() {
   return (
@@ -13,4 +14,4 @@ function ForumPage() {
   )
 }
 
-export default ForumPage
+export default LoggedInCheck(authorizedPageAccessOpts)(ForumPage)

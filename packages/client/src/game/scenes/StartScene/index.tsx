@@ -1,17 +1,16 @@
 import { useEffect, useRef } from 'react'
 import { useFonts } from '@hooks/useFonts'
-import { useDispatch } from 'react-redux'
-import { actions } from '@store/index'
+import { useAppDispatch } from 'hooks/redux_typed_hooks'
+import { startGame } from '@store/slices/game'
 import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
 import './StartScene.scss'
 
-const { startGame } = actions
 function StartScene({ onExit }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts(false)
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const onGameStart = () => {
     dispatch(startGame())
   }
