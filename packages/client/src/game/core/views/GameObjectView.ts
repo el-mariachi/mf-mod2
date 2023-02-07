@@ -5,7 +5,6 @@ export default class GameObjectView implements Types.DrawableOnCanvas {
   constructor(protected _sprite: GameObjectSprite, position?: Types.Coords) {
     if (position) {
       this.position = position
-      console.log('!!!', position)
       this.render()
     }
   }
@@ -16,7 +15,7 @@ export default class GameObjectView implements Types.DrawableOnCanvas {
     return this.sprite.canvas
   }
   get position() {
-    return this.sprite.position
+    return this.sprite.cellPostion
   }
   set position(position: Types.Coords) {
     this.sprite.cellGeometry = { position }

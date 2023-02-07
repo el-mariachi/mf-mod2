@@ -50,8 +50,12 @@ export const nextCoordsByVector = (
   }
   return nextCoords
 }
-export const relCoords = (rel: Types.Coords, coords: Types.Coords) =>
-  [rel[0] + coords[0], rel[1] + coords[1]] as Types.Coords
+export const addCoords = (coords: Types.Coords, add: Types.Coords) =>
+  [coords[0] + add[0], coords[1] + add[1]] as Types.Coords
+export const subtractCoords = (coords: Types.Coords, subtract: Types.Coords) =>
+  [coords[0] - subtract[0], coords[1] - subtract[1]] as Types.Coords
+// DEPRICETED 
+export const relCoords = (rel: Types.Coords, coords: Types.Coords) => addCoords(rel, coords)
 export const isCoordsEqual = (coordsA: Types.Coords, coordsB: Types.Coords) =>
   coordsA[0] == coordsB[0] && coordsA[1] == coordsB[1]
 export const calcSpeed = (
@@ -85,4 +89,6 @@ export const calcLineMoveCoord = (
 export const roundCoords = (coords: Types.Coords) =>
   roundArrValues<Types.Coords>(coords)
 export const mapCoords = () =>
-  roundCoords([center.width - 384 / 2, center.height - 672 / 2])
+  roundCoords([center.width - 672 / 2, center.height - 672 / 2]) // 384 
+export const onCanvasCoords = (onMapCoords:Types.Coords) => addCoords(onMapCoords, mapCoords())
+export const onMapCoords = (onCanvasCoords:Types.Coords) => subtractCoords(onCanvasCoords, mapCoords())

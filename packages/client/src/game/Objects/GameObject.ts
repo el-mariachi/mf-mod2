@@ -1,5 +1,6 @@
 import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
 import * as Types from '@game/core/types'
+import GameObjectView from '@game/core/views/GameObjectView'
 
 export default class GameObject {
   name!: Types.GameObjectName
@@ -10,4 +11,5 @@ export default class GameObject {
   static = true
   animated = false
   destroyable = false
+  view!:GameObjectView
 }
