@@ -1,4 +1,6 @@
+import { SPRITE_SIZE } from '@game/core/constants'
 import * as Types from '@game/core/types'
+import { cellCoords2PixelCoords } from '@game/utils'
 
 const coin = {
   [Types.IdleMotionType.idle]: {

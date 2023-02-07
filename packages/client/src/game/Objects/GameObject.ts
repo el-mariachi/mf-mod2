@@ -8,7 +8,7 @@ export default class GameObject {
   view?: View
   spriteSrc: string = tileset
   spritePos?: Types.Coords 
-  motions?: Types.SpriteMotions & Types.CellSpriteMotions
+  motions?:  Types.CellSpriteMotions |  Types.SpriteMotions & Types.CellSpriteMotions
   crossable = false
   static = true
   animated = false

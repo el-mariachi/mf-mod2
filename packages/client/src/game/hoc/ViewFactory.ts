@@ -23,7 +23,7 @@ export default class ViewFactory {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
-        gameObject.motions
+        gameObject.motions as Types.CellSpriteMotions
       )
       return new UnitView(sprite, position)
 
@@ -32,7 +32,7 @@ export default class ViewFactory {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
-        gameObject.motions
+        gameObject.motions as Types.SpriteMotions & Types.CellSpriteMotions
       )
       return new AnimatableView(sprite, position)
     }

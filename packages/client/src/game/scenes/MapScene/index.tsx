@@ -16,7 +16,7 @@ function MapScene({ onExit }: SceneProps) {
 
   const dispatch = useAppDispatch()
   const onGameFinish = () => {
-    dispatch(finishLevel({ time: 0 }))
+    dispatch(finishLevel())
   }
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
@@ -48,9 +48,10 @@ function MapScene({ onExit }: SceneProps) {
 
   /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
       обращаться к каждому слою через ref */
-  return <>
-    <div ref={layersRef} className="map-scene__layers"></div>
-    <div className="map-scene__buttons">
+  return (
+    <>
+      <div ref={layersRef} className="map-scene__layers"></div>
+      <div className="map-scene__buttons">
         <a className="mx-auto text-white" onClick={onGameFinish}>
           finish game
         </a>
@@ -59,6 +60,7 @@ function MapScene({ onExit }: SceneProps) {
         </a>
       </div>
     </>
+  )
 }
 
 export default MapScene
