@@ -7,7 +7,7 @@ import {
   nextCoordsByVector,
   roundCoords,
 } from '@game/utils'
-import { muteRes } from '@utils-kit'
+import { muteRes } from '@utils/index'
 
 type SpriteActiveAnimation = {
   params: Types.SpriteAnimationParams
@@ -20,7 +20,6 @@ type SpriteActiveAnimation = {
   cancel: () => void
 }
 
-// TODO sprites with frame states (manually change origin?)
 export default class Sprite implements Types.AnimatableOnCanvas {
   isVisible = true
   protected _geometry: Types.SpriteGeometry = {
@@ -29,13 +28,14 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     origin: null,
   }
   protected _defaultOrigin: Types.Geometry | null = null // part of sprite atlas to show by default
+  protected _motions: Types.SpriteMotions | null = null
   protected _activeAnimation: SpriteActiveAnimation | null = null
 
   constructor(
     protected readonly _ctx: CanvasRenderingContext2D,
     protected readonly _atlas: Types.SpriteAtlas,
     initGeometry: Types.SpriteGeometry,
-    protected _motions?: Types.SpriteMotions,
+    _motions?: Types.SpriteMotions,
     initAnimation?: Types.SpriteAnimationParams
   ) {
     if (!initGeometry.position) {
@@ -50,6 +50,9 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     this.geometry = initGeometry
     this._defaultOrigin = initGeometry.origin
 
+    if (_motions) {
+      this._motions = this._processMotions(_motions)
+    }
     if (initAnimation) {
       this.animate(initAnimation)
     }
@@ -84,6 +87,54 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     }
   }
 
+  protected _processMotions(motions: Types.SpriteMotions) {
+    // let`s define substituitions for motions if we dnt have a full animation set
+    ;['move', 'attack', 'damage', 'death'].forEach(type => {
+      ;['right', 'left', 'top', 'bottom'].forEach(dir => {
+        const dirCap = dir[0].toUpperCase() + dir.slice(1)
+        const isStandingMotion = ['damage', 'death'].includes(type)
+        const isVerticalDir = ['top', 'bottom'].includes(dir)
+        const needMotion = (
+          isStandingMotion ? `${type}From${dirCap}` : `${type}2${dir}`
+        ) as Types.MotionType
+
+        let substituteMotion!: Types.MotionType
+        if (!(needMotion in motions)) {
+          if (isVerticalDir) {
+            if (isStandingMotion) {
+              substituteMotion = (
+                'top' == dir ? `${type}FromRight` : `${type}FromLeft`
+              ) as Types.MotionType
+            } else {
+              substituteMotion = (
+                'top' == dir ? `${type}2right` : `${type}2left`
+              ) as Types.MotionType
+            }
+          }
+
+          if (!substituteMotion || !(substituteMotion in motions)) {
+            substituteMotion = `look2${dir}` as Types.MotionType
+          }
+
+          if (substituteMotion in motions) {
+            motions[needMotion] = motions[
+              substituteMotion
+            ] as Types.AnimationMotionParams
+          }
+        }
+      })
+    })
+    // by default units look to bottom (where map`s begun) when idle
+    // TODO motion func need to be defined in views as behavior?
+    if (
+      !(Types.IdleMotionType.idle in motions) &&
+      Types.IdleMotionType.look2bottom in motions
+    ) {
+      motions[Types.IdleMotionType.idle] =
+        motions[Types.IdleMotionType.look2bottom]
+    }
+    return motions
+  }
   get isAnimated() {
     return !!this._activeAnimation
   }
@@ -110,14 +161,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           if (!(motion in this._motions)) {
             // ... so we`ll use default motion for each motion type (if we have it in set)
 
-            /* 
-            TODO 
-            idle = look2bottom
-            attack2bottom = attack2left
-            attack2top = attack2right
-            (the same with everything else)
-            */
-
+            // TODO need refactoring
             if (
               motion in Types.IdleMotionType &&
               Types.IdleMotionType.idle in this._motions
@@ -153,7 +197,9 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
           // ... and finally get AnimationMotionParams object from set, instead of MotionType string
           if (Types.UnspecifiedMotionType.none != motion) {
-            params.playMotion.motion = this._motions[motion]
+            params.playMotion.motion = this._motions[
+              motion
+            ] as Types.AnimationMotionParams
             motionType = motion
           }
         }
@@ -174,10 +220,15 @@ export default class Sprite implements Types.AnimatableOnCanvas {
             params.playMotion.speed = DEF_FRAME_PER_SECOND_SPEED
           }
 
-          const { origin: motionOrigin } = params.playMotion
-            .motion as Types.AnimationMotionParams
+          const motion = params.playMotion.motion as Types.AnimationMotionParams
+          if (!motion.frames || !motion.frames.length) {
+            motion.frames = [0]
+          }
 
+          const { origin: motionOrigin } = motion
           this._geometry.origin = motionOrigin // setup first frame for motion
+
+          params.playMotion.motion = motion
         }
 
         let movementSpeed: Types.CoordsSpeed = [0, 0]
@@ -193,9 +244,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
               ? nextCoordsByVector(this._geometry.position, params.to)
               : params.to
           ) as Types.Coords
-
-          // console.log({...this._geometry});
-          // console.log(params.to);
 
           movementSpeed = calcSpeed(
             this._geometry.position,
@@ -224,8 +272,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
         this._activeAnimation = animation
 
-        // console.log('this._activeAnimation', this._activeAnimation);
-
         return animation.process
       }
     }
@@ -236,8 +282,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   }
   protected _stopAnimation(method: 'end' | 'cancel' = 'end') {
     if (this._activeAnimation) {
-      //console.log('stopped', method);
-
       this._activeAnimation[method]()
       this._activeAnimation = null
     }
@@ -266,22 +310,10 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           calcMoveCoords(this._geometry.position, movementSpeed, dt)
         )
 
-        // @ts-ignore
-        window.nextPosition = nextPosition
-
         isMovementCompleted = isCoordsEqual(to as Types.Coords, nextPosition)
         if (!isMovementCompleted) {
           this._geometry.position = nextPosition
         }
-      }
-
-      // @ts-ignore
-      window.flags = {
-        hasMotion,
-        isMotionFinite,
-        isMotionCompleted,
-        hasMovement,
-        isMovementCompleted,
       }
 
       if (
@@ -295,9 +327,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     }
   }
   render() {
-    // @ts-ignore
-    window.activeAnimation = this._activeAnimation
-
     if (!this.isVisible) return
 
     if (this._activeAnimation) {
@@ -324,29 +353,12 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           } else motionFrame = frames[frameInd % framesCnt]
         } else motionFrame = 0
 
-        if (!('motionPlay' in window)) {
-          // @ts-ignore
-          window.motionPlay = {}
-        }
-        // @ts-ignore
-        window.motionPlay[this._atlas.src] = {
-          motion,
-          motionOrigin,
-          motionFrame,
-          frames,
-          speed,
-          once,
-        }
-
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
 
         ;(this._geometry.origin as Types.Geometry).position[framesAxisInd] =
           motionFrame * motionOrigin.size[framesAxisInd]
       }
     }
-
-    // @ts-ignore
-    window.geometry = this._geometry
 
     const { origin } = this._geometry
     if (origin) {

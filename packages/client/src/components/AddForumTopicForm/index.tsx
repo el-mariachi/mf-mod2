@@ -1,5 +1,5 @@
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
+import { Button } from 'react-bootstrap/'
+import { Form } from 'react-bootstrap'
 function AddForumTopicForm() {
   return (
     <div className="overflow-hidden p-1 pe-0">

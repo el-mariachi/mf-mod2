@@ -82,17 +82,6 @@ const passwordDefaultValues = {
   confirmPassword: '',
 }
 
-const DEFAULT_USER = {
-  id: 0,
-  email: 'mail@pochta.ru',
-  login: 'IvanIvanov',
-  second_name: 'Ivanov',
-  first_name: 'Ivan',
-  display_name: 'IvanIvanov',
-  phone: '+79099673030',
-  avatar: '@images/king.png',
-}
-
 const EDIT_CLASS = 'user-profile__form_edit'
 const READ_CLASS = 'user-profile__form_read'
 
@@ -100,7 +89,6 @@ export {
   profileFormInputs,
   profileDefaultValues,
   passwordDefaultValues,
-  DEFAULT_USER,
   EDIT_CLASS,
   READ_CLASS,
 }

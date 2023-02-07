@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest ./ --passWithNoTests"
+    "test": "jest"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
@@ -25,11 +25,12 @@
     "react-hook-form": "^7.41.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.0",
-    "redux": "^4.2.0",
     "sass": "^1.57.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^28.1.8",
     "@types/react": "^18.0.17",
     "@types/react-bootstrap": "^0.32.32",
@@ -47,6 +48,7 @@
     "jest-environment-jsdom": "^29.0.1",
     "lefthook": "^1.1.1",
     "prettier": "^2.7.1",
+    "react-test-renderer": "^18.2.0",
     "sass": "^1.57.1",
     "ts-jest": "^28.0.8",
     "tsconfig-paths": "^4.1.2",

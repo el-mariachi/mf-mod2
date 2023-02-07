@@ -8,6 +8,7 @@ export const STEP_TIME = 800
 export const DEF_FRAME_PER_SECOND_SPEED = 7
 export const DEF_MOVE_DURATION = 500
 
+// TODO need refactoring for motions/behaviors types
 export const motionTypes: Types.MotionTypes = {
   ...Types.IdleMotionType,
   ...Types.MoveMotionType,

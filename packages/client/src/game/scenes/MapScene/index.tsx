@@ -13,6 +13,7 @@ function MapScene() {
   const layersRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef({} as MapController)
 
+
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
     const layers: LayerRecord = createLayers(

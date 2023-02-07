@@ -6,6 +6,9 @@ import {
   cells2pixels,
   mapCoords,
   nextCoordsByVector,
+  pixelCoords2CellCoords,
+  onCanvasCoords,
+  onMapCoords,
   relCoords,
 } from '@game/utils'
 
@@ -27,7 +30,7 @@ export default class CellSprite extends Sprite {
       : null
 
     const cellInitGeometry = {
-      position: relCoords(mapCoords(), cellCoords2PixelCoords(position)),
+      position: onCanvasCoords(cellCoords2PixelCoords(position)),
       size: SPRITE_SIZE,
       origin,
     }
@@ -46,6 +49,10 @@ export default class CellSprite extends Sprite {
       })
     }
     super(ctx, atlas, cellInitGeometry, resMotions, initAnimation)
+  }
+  get cellPostion ()
+  {
+    return pixelCoords2CellCoords(onMapCoords(this.position))
   }
   set cellDefaultOrigin(nextDefOriginPos: Types.Coords | null) {
     this._defaultOrigin = nextDefOriginPos
