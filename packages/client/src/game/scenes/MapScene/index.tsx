@@ -3,6 +3,7 @@ import { width, height } from '@utils/winsize'
 import './MapScene.css'
 import MapController from '@game/Controllers/MapController'
 import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
+import { aiDemo } from '@game/mocks/aiDemo'
 
 function MapScene() {
   const [layers, setLayers]: [
@@ -33,6 +34,7 @@ function MapScene() {
         level: 1,
         size: [width, height],
       })
+      aiDemo(mapRef.current.map);
     }
   }, [layers])
 
