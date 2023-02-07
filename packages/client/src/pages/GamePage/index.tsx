@@ -5,10 +5,13 @@ import LoadScene from '@scenes/LoadScene'
 import StartScene from '@scenes/StartScene'
 import ResultScene from '@scenes/ResultsScreen/Scene'
 import MapScene from '@scenes/MapScene'
-import { currentScene as currentSceneSelector } from '@store/selectors'
+import MapSceneNext from '@game/scenes/MapSceneNext'
+import { currentScene as selectCurrentScene } from '@store/selectors'
+import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import SCENES from '@constants/scenes'
 import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
-
+import { exitGame } from '@store/slices/game'
+import GameInfo from '@components/GameInfo'
 type scenesType = Record<SCENES, FC<SceneProps>>
 
 const scenes: scenesType = {
@@ -19,16 +22,22 @@ const scenes: scenesType = {
 }
 
 function GamePage() {
-  //  const currentScene = SCENES.LOAD_SCENE
   const currentScene =
-    (useAppSelector(currentSceneSelector) as SCENES) || SCENES.LOAD_SCENE
+    (useAppSelector(selectCurrentScene) as SCENES) || SCENES.LOAD_SCENE
   const Scene = scenes[currentScene]
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const onExit = () => {
+    dispatch(exitGame())
     navigate('/leaderboard')
   }
 
-  return <Scene onExit={onExit} />
+  return (
+    <>
+      <Scene onExit={onExit} />
+      {currentScene === SCENES.RESULT_SCENE ? null : <GameInfo />}
+    </>
+  )
 }
 
 export default LoggedInCheck(authorizedPageAccessOpts)(GamePage)

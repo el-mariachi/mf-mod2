@@ -1,48 +1,60 @@
 import { useState } from 'react'
 import './GameStats.scss'
 import GameStatItem from './GameStat/StatItem'
-import { store } from '@store/index'
 import HealthBar from './HealthBar/HealtBar'
 import Modal from './Modal/Modal'
 import ModalButton from './Modal/ModalButton'
 import { StatType } from './GameStat/GameStatProps'
+import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
+import { selectGameTotals, selectHero, selectUserData } from '@store/selectors'
+import { pauseGame, resumeGame } from '@store/slices/game'
+import { RestartButton } from './Modal/RestartButton'
+import { ResumeButton } from './Modal/ResumeButton'
+import { QuitButton } from './Modal/QuitButton'
+import { currentScene as selectCurrntScene } from '@store/selectors'
+import SCENES from '@constants/scenes'
 
 function GameInfo() {
+  const dispatch = useAppDispatch()
+  const { display_name } = useAppSelector(selectUserData)
+  const { levelNum, gameTotals } = useAppSelector(selectGameTotals)
+  const { killCount, coins, steps, time } = gameTotals
+  const { heroClass, resources } = useAppSelector(selectHero)
+  const currentScene = useAppSelector(selectCurrntScene)
+  const pauseOnMap = () => {
+    if (currentScene === SCENES.MAP_SCENE) {
+      dispatch(pauseGame())
+    }
+  }
   const childGameMenu = (
-    <div>
-      <ModalButton
-        className=" w-50 mb-3"
-        onCloseFn={() => {
-          closeModal()
-        }}
-        children="Restart(r)"
-      />
-      <ModalButton
-        className=" w-50"
-        onCloseFn={() => {
-          closeModal()
-        }}
-        children="Quit(q)"
-      />
-    </div>
+    <>
+      {currentScene === SCENES.MAP_SCENE ? (
+        <>
+          <ResumeButton onCloseFn={closeModal} />
+          <RestartButton onCloseFn={closeModal} />
+        </>
+      ) : null}
+      <QuitButton onCloseFn={closeModal} />
+    </>
   )
 
   const childCharInfo = (
-    // TODO replace static values with data from store
     <div className="d-flex">
       <img src="src/assets/images/hero.png" />
       <div className="modal__stats">
-        <h3>Nickname</h3>
+        <h3>{display_name}</h3>
         <ul>
           <li>
-            Unit class: <span>knight</span>
+            Unit class: <span>{heroClass}</span>
           </li>
+          {/* TODO replace mock props with real ones when appropriate */}
           <li>
             Skills level: <span>1</span>
           </li>
           <li>
-            Attack damage: <span>9</span>
+            Attack damage: <span>{resources.hits}</span>
           </li>
+          {/* TODO replace mock props with real ones when appropriate */}
           <li>
             Defence level: <span>16</span>
           </li>
@@ -52,7 +64,7 @@ function GameInfo() {
             onCloseFn={() => {
               closeModal()
             }}
-            children="Close(x)"
+            children="Close (x)"
             className=""
           />
         </div>
@@ -83,29 +95,22 @@ function GameInfo() {
     setActiveGameMenu(false)
     setActiveCharInfo(false)
     setActiveInv(false)
+    if (currentScene === SCENES.MAP_SCENE) {
+      dispatch(resumeGame())
+    }
   }
 
   return (
     <>
       <div className="cont__game-stats">
         <ul>
-          <GameStatItem
-            type={StatType.COINS}
-            quantity={store.getState().game.levelStats.coins}></GameStatItem>
-          <GameStatItem
-            type={StatType.STEPS}
-            quantity={store.getState().game.levelStats.steps}></GameStatItem>
+          <GameStatItem type={StatType.COINS} quantity={coins} />
+          <GameStatItem type={StatType.STEPS} quantity={steps} />
         </ul>
-        <div>{store.getState().game.levelStats.levelNum}</div>
+        <div>{levelNum}</div>
         <ul>
-          <GameStatItem
-            type={StatType.KILLS}
-            quantity={
-              store.getState().game.levelStats.killCount
-            }></GameStatItem>
-          <GameStatItem
-            type={StatType.TIME}
-            quantity={store.getState().game.levelStats.time}></GameStatItem>
+          <GameStatItem type={StatType.KILLS} quantity={killCount} />
+          <GameStatItem type={StatType.TIME} quantity={time} />
         </ul>
       </div>
 
@@ -114,11 +119,12 @@ function GameInfo() {
           <img src="src/assets/images/hero-head.png" />
           <div className="cont__char-level">1</div>
         </div>
-        <HealthBar health={67} />
+        <HealthBar />
         <div className="cont__buttons">
           <div
             className={isActiveGameMenu ? 'button_active' : ''}
             onClick={() => {
+              pauseOnMap()
               setActiveCharInfo(false)
               setActiveInv(false)
               if (isActiveGameMenu) {
@@ -137,6 +143,7 @@ function GameInfo() {
           <div
             className={isActiveCharInfo ? 'button_active' : ''}
             onClick={() => {
+              pauseOnMap()
               setActiveGameMenu(false)
               setActiveInv(false)
               if (isActiveCharInfo) {
@@ -155,6 +162,7 @@ function GameInfo() {
           <div
             className={isActiveInv ? 'button_active' : ''}
             onClick={() => {
+              pauseOnMap()
               setActiveGameMenu(false)
               setActiveCharInfo(false)
               if (isActiveInv) {

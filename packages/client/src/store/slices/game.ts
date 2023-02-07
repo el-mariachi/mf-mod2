@@ -43,6 +43,7 @@ export type GameSlice = {
   interaction: GameIntaractionDef // | null // как вариант
   currentLevel: number
   totalLevels: number
+  levelComplete: boolean
   levelStats: GameStats
   gameTotals: GameStats
   score: number
@@ -56,10 +57,11 @@ const noInteraction: GameIntaractionDef = {
 
 export const initialState: GameSlice = {
   turnControllerState: TurnControllerState.PAUSED,
-  currentScene: SCENES.START_SCENE,
+  currentScene: SCENES.LOAD_SCENE,
   interaction: noInteraction,
   currentLevel: 0,
   totalLevels: 1,
+  levelComplete: false,
   levelStats: {
     killCount: 0,
     coins: 0,
@@ -103,11 +105,13 @@ const gameSlice = createSlice({
         ...state,
         currentLevel: nextLevel,
         levelStats: initialState.levelStats,
+        levelComplete: false,
         currentScene: SCENES.MAP_SCENE,
         turnControllerState: TurnControllerState.RUNNING,
       }
     },
     endLevel(state) {
+      state.levelComplete = true
       state.turnControllerState = TurnControllerState.PAUSED
       updateTotals(state)
       state.currentScene = SCENES.RESULT_SCENE
@@ -121,7 +125,13 @@ const gameSlice = createSlice({
       state.turnControllerState = TurnControllerState.RUNNING
     },
     exitGame(state) {
+      state.currentScene = SCENES.START_SCENE
+      state.turnControllerState = TurnControllerState.PAUSED
       state.levelStats = initialState.levelStats
+    },
+    die(state) {
+      state.turnControllerState = TurnControllerState.PAUSED
+      state.currentScene = SCENES.RESULT_SCENE
     },
     // scenes
     showLoadScene(state) {
@@ -154,7 +164,7 @@ const gameSlice = createSlice({
   },
 })
 
-export const { startLevel, endLevel, pauseGame, resumeGame, exitGame } =
+export const { startLevel, endLevel, pauseGame, resumeGame, exitGame, die } =
   gameSlice.actions
 
 export const { showLoadScene, showStartScene, showResultScene } =
@@ -178,7 +188,6 @@ export const finishLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
     dispatch(endLevel())
     // TODO save stats to server
-    dispatch(showResultScene())
   }
 export const nextLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>

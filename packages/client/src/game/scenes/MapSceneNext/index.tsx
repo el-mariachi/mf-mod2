@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { finishLevel } from '@store/slices/game'
 import GameUI from '@game/components/GameUI'
 import LiveGameCanvas from '@game/components/LiveGameCanvas'
@@ -7,9 +7,10 @@ import { width, height } from '@utils/winsize'
 import './MapSceneNext.scss'
 
 function MapSceneNext({ onExit }: SceneProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const onGameFinish = () => {
-    dispatch(finishLevel({ time: 0 }))
+    // TODO to be removed with the buttons
+    dispatch(finishLevel())
   }
 
   return (

@@ -1,13 +1,15 @@
-interface Health {
-  health: number
-}
+import { useAppSelector } from '@hooks/redux_typed_hooks'
+import { selectHealth } from '@store/selectors'
 
-function HealthBar({ health }: Health) {
+function HealthBar() {
+  const { health, maxHealth } = useAppSelector(selectHealth)
   return (
     <div>
-      <p>heath: {health}/100</p>
+      <p>
+        heath: {health}/{maxHealth}
+      </p>
       <div className="bar__health">
-        <div style={{ width: health + '%' }}></div>
+        <div style={{ width: (health / maxHealth) * 100 + '%' }}></div>
       </div>
     </div>
   )

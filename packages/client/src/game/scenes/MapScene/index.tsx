@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { finishLevel } from '@store/slices/game'
+import { updateHealthByAmount } from '@store/slices/hero'
 import { width, height } from '@utils/winsize'
 import './MapScene.css'
 import MapController from '@game/Controllers/MapController'
@@ -9,9 +10,8 @@ import hero from '@sprites/hero.png'
 import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
 
-
 const images = [hero, dungeonTileset, skeleton]
-function MapScene({ onExit }: SceneProps) {
+function MapScene() {
   const [layers, setLayers]: [
     LayerRecord,
     React.Dispatch<React.SetStateAction<LayerRecord>>
@@ -20,12 +20,15 @@ function MapScene({ onExit }: SceneProps) {
   const mapRef = useRef({} as MapController)
 
   const dispatch = useAppDispatch()
-  const onGameFinish = () => {
+  const simFinishLevel = () => {
+    // TODO to be removed with the buttons
     dispatch(finishLevel())
+  }
+  const simDeath = () => {
+    dispatch(updateHealthByAmount(-200))
   }
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
-
     // TODO перенести в LoadScene после того как определится порядок загрузки сцен
     const promises = images.map(src => {
       return new Promise(res => {
@@ -43,11 +46,9 @@ function MapScene({ onExit }: SceneProps) {
         [width, height]
       )
       setLayers(layers)
-    })  
-
+    })
   }, [])
 
-  
   useEffect(() => {
     if (layersRef.current) {
       Object.entries(layers).forEach(([_, layer]) => {
@@ -70,14 +71,15 @@ function MapScene({ onExit }: SceneProps) {
   /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
       обращаться к каждому слою через ref */
   return (
+    // TODO если я правильно понимаю, то кнопок здесь не будет. Вместо них будет GameUI. Поэтому ничего не меняю.
     <>
       <div ref={layersRef} className="map-scene__layers"></div>
       <div className="map-scene__buttons">
-        <a className="mx-auto text-white" onClick={onGameFinish}>
-          finish game
+        <a className="mx-auto text-white" onClick={simFinishLevel}>
+          test finish level
         </a>
-        <a className="mx-auto text-white" onClick={onExit}>
-          exit
+        <a className="mx-auto text-white" onClick={simDeath}>
+          test death
         </a>
       </div>
     </>
