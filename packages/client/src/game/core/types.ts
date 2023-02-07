@@ -44,6 +44,7 @@ export type SpriteGeometry = Geometry & {
 export type SpriteAtlas = HTMLImageElement
 
 export interface DrawableOnCanvas {
+  [x: string]: any
   canvas: CanvasRenderingContext2D
   position: Coords
   size: Size
@@ -191,6 +192,14 @@ export enum GameItemName {
   chest = 'chest',
   bottle = 'bottle',
 }
+
+export enum GameEntourageName {
+  wall = 'wall',
+  leftGateLeaf = 'left gate leaf',
+  rightGateLeaf = 'right gate leaf',
+}
+
+export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
 
 export type GameObjectViewFactory<
   ViewType extends GameObjectView = GameObjectView

@@ -1,39 +1,77 @@
-import { useEffect, useRef } from 'react'
-import { useFonts } from '@hooks/useFonts'
+import { useEffect, useState, useRef } from 'react'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { finishLevel } from '@store/slices/game'
-import { width, height, center } from '@utils/winsize'
+import { width, height } from '@utils/winsize'
 import './MapScene.css'
+import MapController from '@game/Controllers/MapController'
+import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
+import hero from '@sprites/hero.png'
+import dungeonTileset from '@sprites/tileset.png'
+import skeleton from '@sprites/skeleton.png'
 
-function LoadScene({ onExit }: SceneProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const fontLoaded = useFonts(false)
+
+const images = [hero, dungeonTileset, skeleton]
+function MapScene({ onExit }: SceneProps) {
+  const [layers, setLayers]: [
+    LayerRecord,
+    React.Dispatch<React.SetStateAction<LayerRecord>>
+  ] = useState({})
+  const layersRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef({} as MapController)
 
   const dispatch = useAppDispatch()
   const onGameFinish = () => {
     dispatch(finishLevel())
   }
+  /** создаем три слоя canvas для разных типов игровых объектов*/
+  useEffect(() => {
+
+    // TODO перенести в LoadScene после того как определится порядок загрузки сцен
+    const promises = images.map(src => {
+      return new Promise(res => {
+        const img = new Image()
+        img.src = src
+        img.onload = () => {
+          res(null)
+        }
+      })
+    })
+
+    Promise.all(promises).then(() => {
+      const layers: LayerRecord = createLayers(
+        ['static', 'active', 'effetcs'],
+        [width, height]
+      )
+      setLayers(layers)
+    })  
+
+  }, [])
+
+  
+  useEffect(() => {
+    if (layersRef.current) {
+      Object.entries(layers).forEach(([_, layer]) => {
+        layersRef.current!.append(layer.canvas)
+      })
+    }
+    if (Object.keys(layers).length !== 0) {
+      mapRef.current = new MapController({
+        layers,
+        level: 1,
+        size: [width, height],
+      })
+    }
+  }, [layers])
 
   useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, width, height)
+    //mapRef.current.resize(width, height)
+  }, [width, height])
 
-        const image = new Image()
-        image.src = '/src/assets/game_level_1_items.png'
-        image.onload = function () {
-          ctx.drawImage(image, center.width - 200, 180)
-        }
-      }
-    }
-  }, [fontLoaded])
-
+  /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
+      обращаться к каждому слою через ref */
   return (
     <>
-      <canvas ref={canvasRef} width={width} height={height}></canvas>
+      <div ref={layersRef} className="map-scene__layers"></div>
       <div className="map-scene__buttons">
         <a className="mx-auto text-white" onClick={onGameFinish}>
           finish game
@@ -46,4 +84,4 @@ function LoadScene({ onExit }: SceneProps) {
   )
 }
 
-export default LoadScene
+export default MapScene
