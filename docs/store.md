@@ -10,7 +10,7 @@
 - `nextLevel()` - для кнопки 'Continue' после успешного завершения уровня; сам увеличивает currentLevel на 1.
 
 - `pauseGame()`/`resumeGame()` - для меню игры и для контроллера; останов/запуск TurnController
-- `exitGame()` - для кнопки; сбрасывает статистику уровня и устанавливает currentScene = START_SCENE, чтобы в след. раз показать сразу ее
+- `exitGame()` - для кнопки; сбрасывает статистику уровня и устанавливает currentScene = LOAD_SCENE, чтобы в след. раз показать сразу ее
 
 - `showLoadScene()`/`showResultScene()` - устанавливают нужную сцену
 

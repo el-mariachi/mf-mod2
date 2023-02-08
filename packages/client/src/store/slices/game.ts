@@ -125,7 +125,7 @@ const gameSlice = createSlice({
       state.turnControllerState = TurnControllerState.RUNNING
     },
     exitGame(state) {
-      state.currentScene = SCENES.START_SCENE
+      state.currentScene = SCENES.LOAD_SCENE
       state.turnControllerState = TurnControllerState.PAUSED
       state.levelStats = initialState.levelStats
     },

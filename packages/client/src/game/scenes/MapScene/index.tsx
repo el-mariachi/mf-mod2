@@ -71,7 +71,7 @@ function MapScene() {
   /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
       обращаться к каждому слою через ref */
   return (
-    // TODO если я правильно понимаю, то кнопок здесь не будет. Вместо них будет GameUI. Поэтому ничего не меняю.
+    // TODO remove test buttons
     <>
       <div ref={layersRef} className="map-scene__layers"></div>
       <div className="map-scene__buttons">
