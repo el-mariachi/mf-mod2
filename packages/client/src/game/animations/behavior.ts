@@ -135,7 +135,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
         }
     } else {
       const direction = dirOrRot as Types.Rotation
-      const dirCap = direction[0] + direction.slice(1)
+      const dirCap = direction[0].toUpperCase() + direction.slice(1)
 
       if (Types.TurnMotionType.turn == type) {
         animatedBehavior = {

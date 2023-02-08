@@ -35,7 +35,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     protected readonly _ctx: CanvasRenderingContext2D,
     protected readonly _atlas: Types.SpriteAtlas,
     initGeometry: Types.SpriteGeometry,
-    _motions?: Types.SpriteMotions,
+    motions?: Types.SpriteMotions,
     initAnimation?: Types.SpriteAnimationParams
   ) {
     if (!initGeometry.position) {
@@ -50,8 +50,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     this.geometry = initGeometry
     this._defaultOrigin = initGeometry.origin
 
-    if (_motions) {
-      this._motions = this._processMotions(_motions)
+    if (motions) {
+      this._motions = this._processMotions(motions)
     }
     if (initAnimation) {
       this.animate(initAnimation)
@@ -262,14 +262,12 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           cancel: muteRes,
           process: Promise.resolve(result),
         }
-
         animation.process = new Promise<Types.SpriteAnimationProcessResult>(
           resolve => {
             animation.end = () => resolve(result)
             animation.cancel = () => resolve({ params, reason: 'cancel' })
           }
         )
-
         this._activeAnimation = animation
 
         return animation.process
@@ -292,7 +290,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
   update(dt: number) {
     if (this._activeAnimation) {
-      const { playMotion, to } = this._activeAnimation.params
+      const { playMotion } = this._activeAnimation.params
+      const to = this._activeAnimation.params.to as Types.Coords
       const hasMotion = !!playMotion
       const isMotionCompleted =
         !hasMotion || this._activeAnimation.isMotionCompleted
@@ -310,10 +309,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           calcMoveCoords(this._geometry.position, movementSpeed, dt)
         )
 
-        isMovementCompleted = isCoordsEqual(to as Types.Coords, nextPosition)
-        if (!isMovementCompleted) {
-          this._geometry.position = nextPosition
-        }
+        isMovementCompleted = isCoordsEqual(to, nextPosition)
+        this._geometry.position = !isMovementCompleted ? nextPosition : to
       }
 
       if (
