@@ -21,6 +21,7 @@ export type AxisVector = {
   direction: AxisDirection | Axis
   length: number
 }
+
 export enum Rotation {
   topRight = 'topRight',
   rightBottom = 'rightBottom',
@@ -209,29 +210,26 @@ export type GameObjectViewFactory<
   position: Coords,
   initBehavior?: UnitBehaviorDef
 ) => ViewType
-
-// ------------
-
-// temporary 
-export interface GameObject_ {
+export type Path = Coords[]
+export enum PathDirection {
+  forward = 'forward',
+  back = 'back',
+  clockwise = 'clockwise',
+  counterClockwise = 'counterClockwise',
+}
+// TODO r next types temporary ?
+export interface GameObjectDef {
   name: GameObjectName
-  spriteSource?: string
-  sprite?: { source: string; position?: Coords }
-  motions?: SpriteMotions & CellSpriteMotions
   crossable: boolean
-  static: boolean
-  animated: boolean
   destroyable: boolean
 }
 export type LevelMapCell = {
-  position: Coords,
-  gameObjects: GameObject_[],
+  position: Coords
+  gameObjects: GameObjectDef[]
 }
 export type LevelMap = LevelMapCell[][]
-export type Path = Coords[]
-
 export type GameInteractionDef = {
-  behavior: UnitBehaviorDef,
-  subject: GameObject_,
-  animation?: CellSpriteAnimationProcess,
+  behavior: UnitBehaviorDef
+  subject: GameObjectDef
+  animation?: CellSpriteAnimationProcess
 }

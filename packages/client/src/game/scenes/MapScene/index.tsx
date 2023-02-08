@@ -8,9 +8,8 @@ import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
 import hero from '@sprites/hero.png'
 import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
-import { aiDemo } from '@game/mocks/aiDemo'
+import { AIDemo } from '@game/mocks/AIDemo'
 import { LevelMap } from '@game/core/types'
-
 
 const images = [hero, dungeonTileset, skeleton]
 function MapScene({ onExit }: SceneProps) {
@@ -27,7 +26,6 @@ function MapScene({ onExit }: SceneProps) {
   }
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
-
     // TODO перенести в LoadScene после того как определится порядок загрузки сцен
     const promises = images.map(src => {
       return new Promise(res => {
@@ -45,11 +43,9 @@ function MapScene({ onExit }: SceneProps) {
         [width, height]
       )
       setLayers(layers)
-    })  
-
+    })
   }, [])
 
-  
   useEffect(() => {
     if (layersRef.current) {
       Object.entries(layers).forEach(([_, layer]) => {
@@ -62,7 +58,7 @@ function MapScene({ onExit }: SceneProps) {
         level: 1,
         size: [width, height],
       })
-      aiDemo(mapRef.current.map as LevelMap);
+      AIDemo(mapRef.current.map as LevelMap)
     }
   }, [layers])
 
