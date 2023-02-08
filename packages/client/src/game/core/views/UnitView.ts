@@ -26,14 +26,10 @@ export default class UnitView extends AnimatableView {
     }
     return this._sprite.animate(animation).then(res => {
       if (thenIdle) {
-        let idleBehavior: Types.UnitBehaviorDef
-
-        if (dir && dir in Types.AxisDirection) {
-          idleBehavior =
-            dir && dir in Types.AxisDirection
-              ? Behaviors[`look2${dir}` as Types.IdleMotionType]
-              : Behaviors.idle
-        } else idleBehavior = Behaviors.idle
+        const idleBehavior =
+          dir && dir in Types.AxisDirection
+            ? Behaviors[`look2${dir}` as Types.IdleMotionType]
+            : Behaviors.idle
 
         this._sprite.animate(getAnimatedBehavior(idleBehavior))
       }
