@@ -113,10 +113,7 @@ function GameInfo() {
           <GameStatItem type={StatType.COINS} quantity={coins} />
           <GameStatItem type={StatType.STEPS} quantity={steps} />
         </ul>
-        <div>
-          <div>{levelNum}</div>
-          <div>{score}</div>
-        </div>
+        <div>{score}</div>
         <ul>
           <GameStatItem type={StatType.KILLS} quantity={killCount} />
           <GameStatItem type={StatType.TIME} quantity={time} />
@@ -126,7 +123,7 @@ function GameInfo() {
       <div className="cont__game-menu">
         <div className="cont__char-info">
           <img src="src/assets/images/hero-head.png" />
-          <div className="cont__char-level">1</div>
+          <div className="cont__char-level">{levelNum}</div>
         </div>
         <HealthBar />
         <div className="cont__buttons">
