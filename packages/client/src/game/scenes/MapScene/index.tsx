@@ -5,10 +5,12 @@ import { width, height } from '@utils/winsize'
 import './MapScene.css'
 import MapController from '@game/Controllers/MapController'
 import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
+import { useGameController, GameActionType } from '@hooks/useGameController'
+import LifeController from '@game/Controllers/LifeController'
+import * as Types from '@game/core/types'
 import hero from '@sprites/hero.png'
 import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
-
 
 const images = [hero, dungeonTileset, skeleton]
 function MapScene({ onExit }: SceneProps) {
@@ -23,9 +25,11 @@ function MapScene({ onExit }: SceneProps) {
   const onGameFinish = () => {
     dispatch(finishLevel())
   }
+  const lifeRef = useRef({} as LifeController)
+  const gameAction: GameActionType = useGameController()
+
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
-
     // TODO перенести в LoadScene после того как определится порядок загрузки сцен
     const promises = images.map(src => {
       return new Promise(res => {
@@ -43,11 +47,9 @@ function MapScene({ onExit }: SceneProps) {
         [width, height]
       )
       setLayers(layers)
-    })  
-
+    })
   }, [])
 
-  
   useEffect(() => {
     if (layersRef.current) {
       Object.entries(layers).forEach(([_, layer]) => {
@@ -60,8 +62,21 @@ function MapScene({ onExit }: SceneProps) {
         level: 1,
         size: [width, height],
       })
+      lifeRef.current = new LifeController(mapRef.current)
     }
   }, [layers])
+
+  useEffect(() => {
+    const [gameEvent, , removeKeyboardListener] = gameAction
+
+    if (Types.MoveGameEvents.includes(gameEvent)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      lifeRef.current.turn(Types.MapGameEvents2Direction[gameEvent])
+    }
+
+    return removeKeyboardListener
+  }, [gameAction])
 
   useEffect(() => {
     //mapRef.current.resize(width, height)

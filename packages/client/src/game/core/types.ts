@@ -1,3 +1,4 @@
+import _default from 'react-bootstrap/esm/Alert'
 import GameObjectView from './views/GameObjectView'
 
 export type Coords = [number, number]
@@ -209,3 +210,29 @@ export type GameObjectViewFactory<
   position: Coords,
   initBehavior?: UnitBehaviorDef
 ) => ViewType
+
+export enum GameEvent {
+  Left = 'MOVE_LEFT',
+  Right = 'MOVE_RIGHT',
+  Up = 'MOVE_UP',
+  Down = 'MOVE_DOWN',
+  Fullscreen = 'FULLSCREEN',
+  Pause = 'PAUSE',
+  Escape = 'ESCAPE',
+  Mute = 'MUTE',
+  Resume = 'RESUME',
+}
+
+export const MapGameEvents2Direction = {
+  [GameEvent.Left]: AxisDirection.left,
+  [GameEvent.Right]: AxisDirection.right,
+  [GameEvent.Up]: AxisDirection.top,
+  [GameEvent.Down]: AxisDirection.bottom,
+}
+
+export const MoveGameEvents = [
+  GameEvent.Left,
+  GameEvent.Right,
+  GameEvent.Up,
+  GameEvent.Down,
+]

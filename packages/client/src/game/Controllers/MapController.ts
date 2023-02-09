@@ -5,13 +5,20 @@ import { LayerRecord } from './LayerController'
 import * as Types from '@game/core/types'
 
 /** ячейка игровой матрицы */
-class Cell {
+export class Cell {
   /** position = [row, col] */
   position: Types.Coords = [0, 0]
   gameObjects: GameObject[] = []
   constructor(gameObjects: GameObject[], position: Types.Coords) {
     this.gameObjects = gameObjects
     this.position = position
+  }
+  push(gameObject: GameObject) {
+    this.gameObjects.push(gameObject)
+  }
+  remove(gameObject: GameObject) {
+    const index = this.gameObjects.indexOf(gameObject) 
+    this.gameObjects.splice(index, 1)
   }
 }
 
@@ -21,15 +28,42 @@ const Cells = class extends Array {
   filterObjects(condition: (object: GameObject) => boolean) {
     return this.reduce((prev, cell) => {
       cell.gameObjects.forEach((gameObject: GameObject) =>
-        /** строки и колонки матрицы "map" обратно связны с координатами x,y [row:y, col:x] 
+        /** строки и колонки матрицы "map" обратно связны с координатами x,y [row:y, col:x]
          * поэтому gameObject position = [cell.position[1], cell.position[0]]
-        */
+         */
         condition(gameObject)
           ? prev.push([gameObject, [cell.position[1], cell.position[0]]])
           : null
       )
       return prev
     }, [])
+  }
+  filterCellsByObjectName(name: Types.GameObjectName) {
+    return this.filter(cell =>
+      cell.gameObjects.some(
+        (gameObject: GameObject) => gameObject.name === name
+      )
+    )
+  }
+  get hero() {
+    return this.heroCell.gameObjects.find(
+      (gameObject: GameObject) => gameObject.name === Types.GameUnitName.hero
+    )
+  }
+  get heroCell() {
+    return this.filterCellsByObjectName(Types.GameUnitName.hero)[0]
+  }
+  get NPCCells() {
+    return this.filterObjects(
+      (gameObject: GameObject) =>
+        gameObject.name in Types.GameUnitName &&
+        gameObject.name !== Types.GameUnitName.hero
+    )
+  }
+  get NPC() {
+    return this.heroCell.objects.find(
+      (gameObject: GameObject) => gameObject.name in Types.GameUnitName
+    )
   }
   get notAnimatedObjectsTuple() {
     /** кеширование не анимированных сущностей */
@@ -47,6 +81,39 @@ const Cells = class extends Array {
   }
 }
 
+const Matrix = class extends Array {
+  nearbyCells(
+    cell: Cell,
+    radius: number = 1,
+    direction: null | Types.AxisDirection = null
+  ) {
+    const [row, col] = cell.position
+    let cells = []
+    if (direction) {
+      do {
+        let targetRow = row
+        let targetCol = col
+        switch (direction) {
+          case Types.AxisDirection.left:
+            targetCol -= 1
+            break
+          case Types.AxisDirection.right:
+            targetCol += 1
+            break
+          case Types.AxisDirection.top:
+            targetRow -= 1
+            break
+          case Types.AxisDirection.bottom:
+            targetRow += 1
+            break
+        }
+        cells.push(this[targetRow][targetCol])
+      } while ((radius -= 1))
+      return cells
+    }
+  }
+}
+
 type LevelInstance = Array<Array<Array<number>>>
 
 type MapControllerPropsType = {
@@ -56,7 +123,7 @@ type MapControllerPropsType = {
 }
 
 class MapController {
-  map: Cell[][] = []
+  map = new Matrix()
   cells = new Cells()
   level: LevelInstance
   layers: LayerRecord
@@ -86,7 +153,7 @@ class MapController {
         this.cells.push(cell)
       }
     }
-    const mapSize: [number, number] = [this.map.length, this.map[0].length];
+    const mapSize: [number, number] = [this.map.length, this.map[0].length]
     this.layers.static.drawBackground(...mapSize)
     /** draw([tuple : [gameObject, cellPosition]])
      * создаем View для каждого объекта и размещаем в слое в соответствии с его типом*/

@@ -1,20 +1,9 @@
 import { useState } from 'react'
+import { GameEvent } from '@game/core/types'
 
 const PRESS_DELAY = 500
 
-export enum GameEvent {
-  Left = 'MOVE_LEFT',
-  Right = 'MOVE_RIGHT',
-  Up = 'MOVE_UP',
-  Down = 'MOVE_DOWN',
-  Fullscreen = 'FULLSCREEN',
-  Pause = 'PAUSE',
-  Escape = 'ESCAPE',
-  Mute = 'MUTE',
-  Resume = 'RESUME',
-}
-
-export type GameActionType = [GameEvent, number, ()=>void]
+export type GameActionType = [GameEvent, number, () => void]
 
 const KeysToGameEvents: { [key: string]: GameEvent } = {
   ArrowLeft: GameEvent.Left,
@@ -56,7 +45,11 @@ export const useGameController = () => {
   function removeKeyboardListener() {
     document.removeEventListener('keydown', keydownHandler)
   }
-  const gameAction: GameActionType = [gameEvent, Date.now(), removeKeyboardListener]
+  const gameAction: GameActionType = [
+    gameEvent,
+    Date.now(),
+    removeKeyboardListener,
+  ]
 
   return gameAction
 }
