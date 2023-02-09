@@ -1,6 +1,6 @@
 import { MAP_CELL } from '@game/core/constants'
 import * as Types from '@game/core/types'
-import { roundArrValues } from '@utils/index'
+import { roundArrValues, createRangeKeeper } from '@utils/index'
 import { center } from '@utils/winsize'
 
 export const cellCoords2PixelCoords = (coords: Types.Coords) =>
@@ -50,8 +50,13 @@ export const nextCoordsByVector = (
   }
   return nextCoords
 }
+export const addCoords = (coords: Types.Coords, add: Types.Coords) =>
+  [coords[0] + add[0], coords[1] + add[1]] as Types.Coords
+export const subtractCoords = (coords: Types.Coords, subtract: Types.Coords) =>
+  [coords[0] - subtract[0], coords[1] - subtract[1]] as Types.Coords
+// DEPRICETED relCoords
 export const relCoords = (rel: Types.Coords, coords: Types.Coords) =>
-  [rel[0] + coords[0], rel[1] + coords[1]] as Types.Coords
+  addCoords(rel, coords)
 export const isCoordsEqual = (coordsA: Types.Coords, coordsB: Types.Coords) =>
   coordsA[0] == coordsB[0] && coordsA[1] == coordsB[1]
 export const calcSpeed = (
@@ -84,5 +89,47 @@ export const calcLineMoveCoord = (
 ) => rel + speed * duration
 export const roundCoords = (coords: Types.Coords) =>
   roundArrValues<Types.Coords>(coords)
+// TODO temporary hack for mapSize definition
+export const mapSize = () => [384, 672] as Types.Size
+export const mapCellSize = () => pixelCoords2CellCoords(mapSize()) as Types.Size
 export const mapCoords = () =>
-  roundCoords([center.width - 384 / 2, center.height - 672 / 2])
+  roundCoords([
+    center.width - mapSize()[0] / 2,
+    center.height - mapSize()[1] / 2,
+  ])
+export const onCanvasCoords = (onMapCoords: Types.Coords) =>
+  addCoords(onMapCoords, mapCoords())
+export const onMapCoords = (onCanvasCoords: Types.Coords) =>
+  subtractCoords(onCanvasCoords, mapCoords())
+export const coords2rowcol = ([x, y]: Types.Coords) => [y, x] as Types.Coords
+export const rowcol2coords = ([row, col]: Types.Coords) =>
+  [col, row] as Types.Coords // the same operation as above, just for semantic
+export const defineDir = (curPos: Types.Coords, nextPos: Types.Coords) => {
+  if (isCoordsEqual(curPos, nextPos)) return null
+
+  const [curX, curY] = curPos
+  const [nextX, nextY] = nextPos
+
+  let dir: Types.AxisDirection | null = null
+  if (curX == nextX) {
+    dir = curY > nextY ? Types.AxisDirection.top : Types.AxisDirection.bottom
+  } else if (curY == nextY) {
+    dir = curX > nextX ? Types.AxisDirection.left : Types.AxisDirection.right
+  }
+  return dir
+}
+export const nearestCoords = (
+  rel: Types.Coords,
+  direction: Types.AxisDirection
+) => nextCoordsByVector(rel, { direction, length: 1 }) as Types.Coords
+export const actualizeCoords = (coords: Types.Coords, size = mapSize()) => {
+  const horMapKeeper = createRangeKeeper(0, size[0])
+  const vertMapKeeper = createRangeKeeper(0, size[1])
+  return [horMapKeeper(coords[0]), vertMapKeeper(coords[1])] as Types.Coords
+}
+export const actualizeCellCoords = (
+  coords: Types.Coords,
+  size = mapCellSize()
+) => {
+  return actualizeCoords(coords, size)
+}

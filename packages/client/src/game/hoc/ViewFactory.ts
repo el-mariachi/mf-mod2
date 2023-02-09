@@ -19,30 +19,32 @@ export default class ViewFactory {
     spriteImage.src = spriteSrc
 
     /** создаем View персонажей*/
+    let view!: GameObjectView
     if (gameObject.name in Types.GameUnitName) {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
         gameObject.motions as Types.CellSpriteMotions
       )
-      return new UnitView(sprite, position)
+      view = new UnitView(sprite, position)
 
       /** создаем View анимировыннх предметов */
     } else if (gameObject.animated) {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
-        gameObject.motions as Types.SpriteMotions & Types.CellSpriteMotions
+        gameObject.motions as Types.CellSpriteMotions 
       )
-      return new AnimatableView(sprite, position)
+      view = new AnimatableView(sprite, position)
+      /** создаем View неповижных предметов*/
+    } else {
+      const sprite = new CellSprite(this.ctx, spriteImage, {
+        position: position,
+        originPosition: spritePos as Types.Coords,
+      })
+      view = new GameObjectView(sprite, position)
     }
-
-    /** создаем View неповижных предметов*/
-    const sprite = new CellSprite(this.ctx, spriteImage, {
-      position: position,
-      originPosition: spritePos as Types.Coords,
-    })
-    const view = new GameObjectView(sprite, position)
+    gameObject.view = view
     return view
   }
 }

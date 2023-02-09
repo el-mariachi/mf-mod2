@@ -22,6 +22,7 @@ export type AxisVector = {
   direction: AxisDirection | Axis
   length: number
 }
+
 export enum Rotation {
   topRight = 'topRight',
   rightBottom = 'rightBottom',
@@ -210,6 +211,29 @@ export type GameObjectViewFactory<
   position: Coords,
   initBehavior?: UnitBehaviorDef
 ) => ViewType
+export type Path = Coords[]
+export enum PathDirection {
+  forward = 'forward',
+  back = 'back',
+  clockwise = 'clockwise',
+  counterClockwise = 'counterClockwise',
+}
+// TODO r next types temporary ?
+export interface GameObjectDef {
+  name: GameObjectName
+  crossable: boolean
+  destroyable: boolean
+}
+export type LevelMapCell = {
+  position: Coords
+  gameObjects: GameObjectDef[]
+}
+export type LevelMap = LevelMapCell[][]
+export type GameInteractionDef = {
+  behavior: UnitBehaviorDef
+  subject: GameObjectDef
+  animation?: CellSpriteAnimationProcess
+}
 
 export enum GameEvent {
   Left = 'MOVE_LEFT',
