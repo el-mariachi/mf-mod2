@@ -11,7 +11,7 @@ import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import SCENES from '@constants/scenes'
 import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 import { exitGame } from '@store/slices/game'
-import GameInfo from '@components/GameInfo'
+import GameInfo from '@game/components/GameInfo'
 type scenesType = Record<SCENES, FC<SceneProps>>
 
 const scenes: scenesType = {
