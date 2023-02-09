@@ -6,7 +6,12 @@ import Modal from './Modal/Modal'
 import ModalButton from './Modal/ModalButton'
 import { StatType } from './GameStat/GameStatProps'
 import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
-import { selectGameTotals, selectHero, selectUserData } from '@store/selectors'
+import {
+  selectGameScore,
+  selectGameTotals,
+  selectHero,
+  selectUserData,
+} from '@store/selectors'
 import { pauseGame, resumeGame } from '@store/slices/game'
 import { RestartButton } from './Modal/RestartButton'
 import { ResumeButton } from './Modal/ResumeButton'
@@ -18,6 +23,7 @@ function GameInfo() {
   const dispatch = useAppDispatch()
   const { display_name } = useAppSelector(selectUserData)
   const { levelNum, gameTotals } = useAppSelector(selectGameTotals)
+  const score = useAppSelector(selectGameScore)
   const { killCount, coins, steps, time } = gameTotals
   const { heroClass, resources } = useAppSelector(selectHero)
   const currentScene = useAppSelector(selectCurrntScene)
@@ -107,7 +113,10 @@ function GameInfo() {
           <GameStatItem type={StatType.COINS} quantity={coins} />
           <GameStatItem type={StatType.STEPS} quantity={steps} />
         </ul>
-        <div>{levelNum}</div>
+        <div>
+          <div>{levelNum}</div>
+          <div>{score}</div>
+        </div>
         <ul>
           <GameStatItem type={StatType.KILLS} quantity={killCount} />
           <GameStatItem type={StatType.TIME} quantity={time} />

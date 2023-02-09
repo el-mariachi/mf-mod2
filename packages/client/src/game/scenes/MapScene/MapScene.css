@@ -11,7 +11,7 @@
   cursor: pointer;
   text-decoration: none;
   font: 400 24px Minecraft;
-  display: block;
+  display: none;
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
 }
