@@ -14,8 +14,9 @@ type SpriteActiveAnimation = {
   process: Types.SpriteAnimationProcess
   motionType: Types.MotionType
   motionFrame: number
-  movementSpeed: Types.CoordsSpeed
   isMotionCompleted: boolean
+  movementSpeed: Types.CoordsSpeed
+  elapsed: number
   end: () => void
   cancel: () => void
 }
@@ -89,7 +90,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
   protected _processMotions(motions: Types.SpriteMotions) {
     // let`s define substituitions for motions if we dnt have a full animation set
-    ;['move', 'attack', 'damage', 'death'].forEach(type => {
+    ;['look', 'move', 'attack', 'damage', 'death'].forEach(type => {
       ;['right', 'left', 'top', 'bottom'].forEach(dir => {
         const dirCap = dir[0].toUpperCase() + dir.slice(1)
         const isStandingMotion = ['damage', 'death'].includes(type)
@@ -256,8 +257,9 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           params,
           motionType,
           motionFrame: 0,
-          movementSpeed,
           isMotionCompleted: !params.playMotion,
+          movementSpeed,
+          elapsed: 0,
           end: muteRes,
           cancel: muteRes,
           process: Promise.resolve(result),
@@ -290,19 +292,24 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
   update(dt: number) {
     if (this._activeAnimation) {
-      const { playMotion } = this._activeAnimation.params
       const to = this._activeAnimation.params.to as Types.Coords
+      const { playMotion, duration } = this._activeAnimation.params
       const hasMotion = !!playMotion
-      const isMotionCompleted =
-        !hasMotion || this._activeAnimation.isMotionCompleted
       const isMotionFinite = !!playMotion?.once
       const hasMovement = !!to
-      let isMovementCompleted = !hasMovement
 
+      this._activeAnimation.elapsed += dt * 1000
+      if (!hasMovement && !isMotionFinite && duration && this._activeAnimation.elapsed >= duration) {
+        this._activeAnimation.isMotionCompleted = true
+      }
+
+      const isMotionCompleted =
+        !hasMotion || this._activeAnimation.isMotionCompleted
       if (hasMotion && !isMotionCompleted) {
         this._activeAnimation.motionFrame += (playMotion.speed as number) * dt
       }
 
+      let isMovementCompleted = !hasMovement
       if (hasMovement) {
         const { movementSpeed } = this._activeAnimation
         const nextPosition = roundCoords(
@@ -317,7 +324,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
         (hasMovement &&
           isMovementCompleted &&
           (!hasMotion || !isMotionFinite || isMotionCompleted)) ||
-        (hasMotion && isMotionFinite && isMotionCompleted)
+        (hasMotion && isMotionCompleted)
       ) {
         this._stopAnimation()
       }
@@ -352,8 +359,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
 
-        ;(this._geometry.origin as Types.Geometry).position[framesAxisInd] =
-          motionFrame * motionOrigin.size[framesAxisInd]
+          ; (this._geometry.origin as Types.Geometry).position[framesAxisInd] =
+            motionFrame * motionOrigin.size[framesAxisInd]
       }
     }
 
