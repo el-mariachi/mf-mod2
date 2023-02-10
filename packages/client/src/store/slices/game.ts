@@ -8,80 +8,18 @@ import SCENES from '@constants/scenes'
 import { RootState } from '@store/index'
 import { resetHeroResources } from '@store/slices/hero'
 import { computeScore } from '@utils/computeScore'
+import {
+  gameInitialState,
+  TurnControllerState,
+  GameIntaractions,
+} from '@constants/game'
+import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 
-export enum TurnControllerState {
-  RUNNING,
-  PAUSED,
+const resetLevelStats = (state: GameSlice) => {
+  state.levelStats = gameInitialState.levelStats
 }
 
-export enum GameIntaractions {
-  NONE = 'none',
-  ATTACK = 'attack',
-  DAMAGE = 'damage',
-  COLLECT = 'collect',
-  OPEN = 'open',
-  // ...
-}
-
-export type GameIntaractionDef = {
-  type: GameIntaractions
-  progress: number
-  position: [number, number]
-  // ...
-}
-
-export type GameStats = {
-  killCount: number
-  coins: number
-  time: number
-  steps: number
-}
-
-export type GameSlice = {
-  turnControllerState: TurnControllerState
-  currentScene: SCENES
-  interaction: GameIntaractionDef // | null // как вариант
-  currentLevel: number
-  totalLevels: number
-  levelComplete: boolean
-  levelStats: GameStats
-  gameTotals: GameStats
-  score: number
-}
-
-const noInteraction: GameIntaractionDef = {
-  type: GameIntaractions.NONE,
-  progress: 0,
-  position: [0, 0],
-}
-
-export const initialState: GameSlice = {
-  turnControllerState: TurnControllerState.PAUSED,
-  currentScene: SCENES.LOAD_SCENE,
-  interaction: noInteraction,
-  currentLevel: 0,
-  totalLevels: 1,
-  levelComplete: false,
-  levelStats: {
-    killCount: 0,
-    coins: 0,
-    time: 0,
-    steps: 0,
-  },
-  gameTotals: {
-    killCount: 0,
-    coins: 0,
-    time: 0,
-    steps: 0,
-  },
-  score: 0,
-}
-
-const resetLevelStats = (state: typeof initialState) => {
-  state.levelStats = initialState.levelStats
-}
-
-const updateTotals = (state: typeof initialState) => {
+const updateTotals = (state: GameSlice) => {
   state.gameTotals.coins += state.levelStats.coins
   state.gameTotals.killCount += state.levelStats.killCount
   state.gameTotals.steps += state.levelStats.steps
@@ -92,7 +30,7 @@ const updateTotals = (state: typeof initialState) => {
 
 const gameSlice = createSlice({
   name: 'game',
-  initialState: initialState,
+  initialState: gameInitialState,
   reducers: {
     // levels
     startLevel(state, action: PayloadAction<number>) {
@@ -104,7 +42,7 @@ const gameSlice = createSlice({
       return {
         ...state,
         currentLevel: nextLevel,
-        levelStats: initialState.levelStats,
+        levelStats: gameInitialState.levelStats,
         levelComplete: false,
         currentScene: SCENES.MAP_SCENE,
         turnControllerState: TurnControllerState.RUNNING,
@@ -127,7 +65,7 @@ const gameSlice = createSlice({
     exitGame(state) {
       state.currentScene = SCENES.LOAD_SCENE
       state.turnControllerState = TurnControllerState.PAUSED
-      state.levelStats = initialState.levelStats
+      state.levelStats = gameInitialState.levelStats
     },
     die(state) {
       state.turnControllerState = TurnControllerState.PAUSED
@@ -148,7 +86,7 @@ const gameSlice = createSlice({
     // stats
     updateStats(
       state,
-      action: PayloadAction<Partial<typeof initialState['levelStats']>>
+      action: PayloadAction<Partial<GameSlice['levelStats']>>
     ) {
       const statDeltas = action.payload
       state.levelStats = {
@@ -198,3 +136,6 @@ export const nextLevel =
   }
 
 export default gameSlice.reducer
+
+export { TurnControllerState, GameIntaractions }
+export type { GameStats, GameIntaractionDef }

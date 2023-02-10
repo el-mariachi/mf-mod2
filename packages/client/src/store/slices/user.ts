@@ -1,33 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { defineUser } from '@services/authController'
 import { getFile } from '@api/resourceApi'
-
-export enum LoadingStatus {
-  Idle = 'Idle',
-  Loading = 'Loading',
-  Succeeded = 'Succeeded',
-  Failed = 'Failed',
-}
-
-export enum Logged {
-  In = 'In',
-  Out = 'Out',
-}
-
-const initialState = {
-  loadingStatus: LoadingStatus.Idle,
-  loginStatus: Logged.Out,
-  data: {
-    id: 0,
-    email: '',
-    login: '',
-    second_name: '',
-    first_name: '',
-    display_name: '',
-    phone: '',
-    avatar: 'https://cdn-icons-png.flaticon.com/512/5953/5953714.png',
-  },
-}
+import { LoadingStatus, Logged, userInitialState } from '@constants/user'
+import type { UserSlice } from '@constants/user'
 
 /**
  * This will generate three action creators and action types:
@@ -42,25 +17,25 @@ export const loadUser = createAsyncThunk('user/loadUser', async () => {
   return userByCookie
 })
 
-const prepareUserData = (userData: typeof initialState['data']) => ({
+const prepareUserData = (userData: UserSlice['data']) => ({
   ...userData,
   avatar:
     userData.avatar !== null
       ? getFile(userData.avatar)
-      : initialState.data.avatar,
+      : userInitialState.data.avatar,
   display_name: userData.display_name || '',
 })
 
 const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: userInitialState,
   reducers: {
-    setUser(state, action: PayloadAction<typeof initialState.data>) {
+    setUser(state, action: PayloadAction<UserSlice['data']>) {
       const user = action.payload
       state.data = prepareUserData(user)
     },
     clearUser() {
-      return { ...initialState, loadingStatus: LoadingStatus.Failed }
+      return { ...userInitialState, loadingStatus: LoadingStatus.Failed }
     },
   },
   extraReducers: builder => {
@@ -72,7 +47,7 @@ const userSlice = createSlice({
       .addCase(loadUser.rejected, state => {
         state.loadingStatus = LoadingStatus.Failed
         state.loginStatus = Logged.Out
-        state.data = initialState.data
+        state.data = userInitialState.data
       })
       .addCase(loadUser.fulfilled, (state, action) => {
         state.loadingStatus = LoadingStatus.Succeeded
@@ -87,3 +62,5 @@ const userSlice = createSlice({
 export const { clearUser, setUser } = userSlice.actions
 
 export default userSlice.reducer
+
+export { LoadingStatus, Logged }

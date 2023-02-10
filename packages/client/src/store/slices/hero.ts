@@ -7,37 +7,24 @@ import {
 import type { RootState } from '@store/index'
 import { die } from '@store/slices/game'
 import { createRangeKeeper } from '@utils/index'
-import {
-  HeroClass,
-  heroPresets,
-  defaultMaxValues,
-  defaultMaxHealth,
-} from '@constants/hero'
-
-const initialState = {
-  heroClass: HeroClass.L3X3III,
-  health: defaultMaxHealth,
-  maxHealth: 100,
-  resources: heroPresets[HeroClass.L3X3III],
-  resourceMaxValues: defaultMaxValues,
-}
+import { heroPresets, heroInitialState } from '@constants/hero'
 
 const heroSlice = createSlice({
   name: 'hero',
-  initialState,
+  initialState: heroInitialState,
   reducers: {
     setHeroClass(
       state,
-      action: PayloadAction<typeof initialState['heroClass']>
+      action: PayloadAction<typeof heroInitialState['heroClass']>
     ) {
       state.heroClass = action.payload
-      state.health = defaultMaxHealth
+      state.health = heroInitialState.maxHealth
       state.resources = heroPresets[state.heroClass]
-      state.resourceMaxValues = defaultMaxValues
+      state.resourceMaxValues = heroInitialState.resourceMaxValues
     },
     resetHeroResources(state) {
       state.resources = heroPresets[state.heroClass]
-      state.health = defaultMaxHealth
+      state.health = heroInitialState.maxHealth
     },
     updateHealth(state, action: PayloadAction<number>): void {
       const newValue = state.health + action.payload
@@ -52,7 +39,7 @@ const heroSlice = createSlice({
       // allows any subset of resources
       // no limit checks
       state,
-      action: PayloadAction<Partial<typeof initialState['resources']>>
+      action: PayloadAction<Partial<typeof heroInitialState['resources']>>
     ) {
       state.resources = {
         ...state.resources,
@@ -63,7 +50,7 @@ const heroSlice = createSlice({
       // will update the provided resource(s) with delta(s)
       // limits resulting value to range
       state,
-      action: PayloadAction<Partial<typeof initialState['resources']>>
+      action: PayloadAction<Partial<typeof heroInitialState['resources']>>
     ) {
       const resourceDeltas = action.payload
       state.resources = {
@@ -84,7 +71,9 @@ const heroSlice = createSlice({
     },
     setResourceMaxValue(
       state,
-      action: PayloadAction<Partial<typeof initialState['resourceMaxValues']>>
+      action: PayloadAction<
+        Partial<typeof heroInitialState['resourceMaxValues']>
+      >
     ) {
       state.resourceMaxValues = {
         ...state.resourceMaxValues,
