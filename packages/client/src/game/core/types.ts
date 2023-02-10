@@ -173,13 +173,13 @@ export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
 export type UnitBehaviorDef = {
   type:
-    | IdleMotionType.idle
-    | MoveMotionType.move
-    | AttackMotionType.attack
-    | DamageMotionType.damage
-    | DeathMotionType.death
-    | TurnMotionType.turn
-    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+  | IdleMotionType.idle
+  | MoveMotionType.move
+  | AttackMotionType.attack
+  | DamageMotionType.damage
+  | DeathMotionType.death
+  | TurnMotionType.turn
+  | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
   dir?: AxisDirection | Rotation
 }
 
@@ -217,6 +217,7 @@ export enum PathDirection {
   clockwise = 'clockwise',
   counterClockwise = 'counterClockwise',
 }
+export type Area = [Coords, Coords] // square selection from point to point
 // TODO r next types temporary ?
 export interface GameObjectDef {
   name: GameObjectName

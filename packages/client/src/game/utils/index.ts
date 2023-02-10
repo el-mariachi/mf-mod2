@@ -54,7 +54,7 @@ export const addCoords = (coords: Types.Coords, add: Types.Coords) =>
   [coords[0] + add[0], coords[1] + add[1]] as Types.Coords
 export const subtractCoords = (coords: Types.Coords, subtract: Types.Coords) =>
   [coords[0] - subtract[0], coords[1] - subtract[1]] as Types.Coords
-// DEPRICETED relCoords
+// DEPRECATED relCoords
 export const relCoords = (rel: Types.Coords, coords: Types.Coords) =>
   addCoords(rel, coords)
 export const isCoordsEqual = (coordsA: Types.Coords, coordsB: Types.Coords) =>
@@ -131,5 +131,51 @@ export const actualizeCellCoords = (
   coords: Types.Coords,
   size = mapCellSize()
 ) => {
-  return actualizeCoords(coords, size)
+  return actualizeCoords(coords, subtractCoords(size, [1, 1]))
+}
+export const isCoordsActual = (coords: Types.Coords) =>
+  isCoordsEqual(coords, actualizeCellCoords(coords))
+export const getArea = (rel: Types.Coords, size: number) => {
+  size = Math.round(size)
+  if (size <= 0) {
+    size = 0
+  }
+  const areaSize = [size, size] as Types.Coords
+  return [subtractCoords(rel, areaSize), addCoords(rel, areaSize)] as Types.Area
+}
+export const getMapArea = (levelMap: Types.LevelMap, area: Types.Area) => {
+  let [areaFrom, areaTo] = area
+  areaFrom = actualizeCellCoords(areaFrom)
+  areaTo = actualizeCellCoords(areaTo)
+
+  const [fromCol, frowRow] = areaFrom
+  const [toCol, toRow] = areaTo
+  const mapArea: Types.LevelMap = []
+  for (let row = frowRow; row <= toRow; row++) {
+    if (!mapArea[row]) {
+      mapArea[row] = []
+    }
+    for (let col = fromCol; col <= toCol; col++) {
+      mapArea[row][col] = levelMap[row][col]
+    }
+  }
+  return mapArea
+}
+// export const getMapAreaAround = (levelMap:Types.LevelMap, rel:Types.Coords, size:number) =>
+// {
+//   const area = getArea(rel, size)
+//   const mapArea = area ? getMapArea(levelMap, area).
+// }
+export const getMapCellsAround = (
+  levelMap: Types.LevelMap,
+  rel: Types.Coords,
+  size: number
+) => {
+  if (!isCoordsActual(rel)) {
+    return []
+  }
+  const area = getArea(rel, size)
+  return getMapArea(levelMap, area)
+    .flat(1)
+    .filter(cell => !isCoordsEqual(rowcol2coords(cell.position), rel))
 }
