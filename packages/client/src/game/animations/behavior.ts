@@ -1,4 +1,4 @@
-import { DEF_MOVE_DURATION } from '@game/core/constants'
+import { DEF_MOVE_DURATION, STEP_TIME } from '@game/core/constants'
 import * as Types from '@game/core/types'
 
 export const doNothing = {
@@ -89,6 +89,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
               Types.IdleMotionType[`look2${direction}` as Types.IdleMotionType],
             once: false,
           },
+          duration: STEP_TIME,
         }
       } else if (Types.MoveMotionType.move == type) {
         animatedBehavior = {
@@ -111,7 +112,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
           playMotion: {
             motion:
               Types.DamageMotionType[
-                `${type}From${dirCap}` as Types.DamageMotionType
+              `${type}From${dirCap}` as Types.DamageMotionType
               ],
             once: true,
           },
@@ -121,7 +122,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
           playMotion: {
             motion:
               Types.DeathMotionType[
-                `${type}From${dirCap}` as Types.DeathMotionType
+              `${type}From${dirCap}` as Types.DeathMotionType
               ],
             once: true,
           },
@@ -132,10 +133,11 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
             motion: Types.IdleMotionType.idle,
             once: false,
           },
+          duration: STEP_TIME,
         }
     } else {
       const direction = dirOrRot as Types.Rotation
-      const dirCap = direction[0] + direction.slice(1)
+      const dirCap = direction[0].toUpperCase() + direction.slice(1)
 
       if (Types.TurnMotionType.turn == type) {
         animatedBehavior = {

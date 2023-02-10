@@ -9,6 +9,8 @@ import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
 import hero from '@sprites/hero.png'
 import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
+import { AIDemo } from '@game/mocks/aiDemo'
+import { LevelMap } from '@game/core/types'
 
 const images = [hero, dungeonTileset, skeleton]
 function MapScene() {
@@ -61,6 +63,7 @@ function MapScene() {
         level: 1,
         size: [width, height],
       })
+      AIDemo(mapRef.current.map as LevelMap)
     }
   }, [layers])
 

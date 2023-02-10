@@ -21,6 +21,7 @@ export type AxisVector = {
   direction: AxisDirection | Axis
   length: number
 }
+
 export enum Rotation {
   topRight = 'topRight',
   rightBottom = 'rightBottom',
@@ -172,13 +173,13 @@ export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
 export type UnitBehaviorDef = {
   type:
-    | IdleMotionType.idle
-    | MoveMotionType.move
-    | AttackMotionType.attack
-    | DamageMotionType.damage
-    | DeathMotionType.death
-    | TurnMotionType.turn
-    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+  | IdleMotionType.idle
+  | MoveMotionType.move
+  | AttackMotionType.attack
+  | DamageMotionType.damage
+  | DeathMotionType.death
+  | TurnMotionType.turn
+  | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
   dir?: AxisDirection | Rotation
 }
 
@@ -209,3 +210,27 @@ export type GameObjectViewFactory<
   position: Coords,
   initBehavior?: UnitBehaviorDef
 ) => ViewType
+export type Path = Coords[]
+export enum PathDirection {
+  forward = 'forward',
+  back = 'back',
+  clockwise = 'clockwise',
+  counterClockwise = 'counterClockwise',
+}
+export type Area = [Coords, Coords] // square selection from point to point
+// TODO r next types temporary ?
+export interface GameObjectDef {
+  name: GameObjectName
+  crossable: boolean
+  destroyable: boolean
+}
+export type LevelMapCell = {
+  position: Coords
+  gameObjects: GameObjectDef[]
+}
+export type LevelMap = LevelMapCell[][]
+export type GameInteractionDef = {
+  behavior: UnitBehaviorDef
+  subject: GameObjectDef
+  animation?: CellSpriteAnimationProcess
+}

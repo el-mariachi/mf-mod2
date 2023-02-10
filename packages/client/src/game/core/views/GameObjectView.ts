@@ -15,7 +15,7 @@ export default class GameObjectView implements Types.DrawableOnCanvas {
     return this.sprite.canvas
   }
   get position() {
-    return this.sprite.position
+    return this.sprite.cellPostion
   }
   set position(position: Types.Coords) {
     this.sprite.cellGeometry = { position }

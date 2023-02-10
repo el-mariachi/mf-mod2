@@ -2,6 +2,7 @@ import * as Types from '@game/core/types'
 import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
 import AnimatableView from '@game/core/views/AnimatableView'
 import getAnimatedBehavior, * as Behaviors from '@game/animations/behavior'
+import { DEF_FRAME_PER_SECOND_SPEED } from '../constants'
 
 export default class UnitView extends AnimatableView {
   constructor(
@@ -12,30 +13,35 @@ export default class UnitView extends AnimatableView {
     super(sprite, position)
     this.do(initBehavior, false)
   }
-  do(behavior: Types.UnitBehaviorDef, thenIdle = true, quantity?: number) {
+  do(behavior: Types.UnitBehaviorDef, thenIdle = true, speed = DEF_FRAME_PER_SECOND_SPEED, quantity?: number) {
     const { type, dir } = behavior
     quantity = quantity ? Math.abs(Math.round(quantity)) : 0
 
     const animation = getAnimatedBehavior(behavior)
-    if (
-      Types.MoveMotionType.move == type &&
-      quantity &&
-      animation?.to?.length
-    ) {
-      animation.to.length *= quantity
+    if (quantity) {
+      if (
+        animation?.to?.length
+      ) {
+        animation.to.length *= quantity
+      }
+      else if (animation?.duration) {
+        animation.duration *= quantity
+      }
+    }
+    // TODO temporary hack, we need define animation params such as speed in getAnimatedBehavior. SEE mocks/SmartSkeleton
+    if (animation.playMotion && speed > 0) {
+      animation.playMotion.speed = speed
     }
     return this._sprite.animate(animation).then(res => {
       if (thenIdle) {
-        let idleBehavior: Types.UnitBehaviorDef
+        const idleBehavior =
+          dir && dir in Types.AxisDirection
+            ? Behaviors[`look2${dir}` as Types.IdleMotionType]
+            : Behaviors.idle
 
-        if (dir && dir in Types.AxisDirection) {
-          idleBehavior =
-            dir && dir in Types.AxisDirection
-              ? Behaviors[`look2${dir}` as Types.IdleMotionType]
-              : Behaviors.idle
-        } else idleBehavior = Behaviors.idle
-
-        this._sprite.animate(getAnimatedBehavior(idleBehavior))
+        const idleAnimation = getAnimatedBehavior(idleBehavior)
+        delete idleAnimation.duration // make idle infinite, until next step
+        this._sprite.animate(idleAnimation)
       }
       return res
     })
