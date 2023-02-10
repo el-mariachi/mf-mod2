@@ -26,41 +26,46 @@ const prepareUserData = (userData: UserSlice['data']) => ({
   display_name: userData.display_name || '',
 })
 
-const userSlice = createSlice({
-  name: 'user',
-  initialState: userInitialState,
-  reducers: {
-    setUser(state, action: PayloadAction<UserSlice['data']>) {
-      const user = action.payload
-      state.data = prepareUserData(user)
-    },
-    clearUser() {
-      return { ...userInitialState, loadingStatus: LoadingStatus.Failed }
-    },
-  },
-  extraReducers: builder => {
-    builder
-      .addCase(loadUser.pending, state => {
-        state.loadingStatus = LoadingStatus.Loading
-        state.loginStatus = Logged.Out
-      })
-      .addCase(loadUser.rejected, state => {
-        state.loadingStatus = LoadingStatus.Failed
-        state.loginStatus = Logged.Out
-        state.data = userInitialState.data
-      })
-      .addCase(loadUser.fulfilled, (state, action) => {
-        state.loadingStatus = LoadingStatus.Succeeded
+const slicer = (initState: UserSlice) =>
+  createSlice({
+    name: 'user',
+    initialState: initState,
+    reducers: {
+      setUser(state, action: PayloadAction<UserSlice['data']>) {
         const user = action.payload
         state.data = prepareUserData(user)
-        state.loginStatus = Logged.In
-        // state.loadingStatus = LoadingStatus.Idle
-      })
-  },
-})
+      },
+      clearUser() {
+        return { ...initState, loadingStatus: LoadingStatus.Failed }
+      },
+    },
+    extraReducers: builder => {
+      builder
+        .addCase(loadUser.pending, state => {
+          state.loadingStatus = LoadingStatus.Loading
+          state.loginStatus = Logged.Out
+        })
+        .addCase(loadUser.rejected, state => {
+          state.loadingStatus = LoadingStatus.Failed
+          state.loginStatus = Logged.Out
+          state.data = initState.data
+        })
+        .addCase(loadUser.fulfilled, (state, action) => {
+          state.loadingStatus = LoadingStatus.Succeeded
+          const user = action.payload
+          state.data = prepareUserData(user)
+          state.loginStatus = Logged.In
+          // state.loadingStatus = LoadingStatus.Idle
+        })
+    },
+  })
+
+const generateSlice = (initState: UserSlice) => slicer(initState).reducer
+
+const userSlice = slicer(userInitialState)
 
 export const { clearUser, setUser } = userSlice.actions
 
-export default userSlice.reducer
+export default generateSlice
 
 export { LoadingStatus, Logged }
