@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { finishLevel } from '@store/slices/game'
+import { updateHealthByAmount } from '@store/slices/hero'
 import { width, height } from '@utils/winsize'
 import './MapScene.css'
 import MapController from '@game/Controllers/MapController'
@@ -8,11 +9,11 @@ import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
 import hero from '@sprites/hero.png'
 import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
-import { AIDemo } from '@game/mocks/AIDemo'
+import { AIDemo } from '@game/mocks/aiDemo'
 import { LevelMap } from '@game/core/types'
 
 const images = [hero, dungeonTileset, skeleton]
-function MapScene({ onExit }: SceneProps) {
+function MapScene() {
   const [layers, setLayers]: [
     LayerRecord,
     React.Dispatch<React.SetStateAction<LayerRecord>>
@@ -21,8 +22,12 @@ function MapScene({ onExit }: SceneProps) {
   const mapRef = useRef({} as MapController)
 
   const dispatch = useAppDispatch()
-  const onGameFinish = () => {
+  const simFinishLevel = () => {
+    // TODO to be removed with the buttons
     dispatch(finishLevel())
+  }
+  const simDeath = () => {
+    dispatch(updateHealthByAmount(-200))
   }
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
@@ -69,14 +74,15 @@ function MapScene({ onExit }: SceneProps) {
   /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
       обращаться к каждому слою через ref */
   return (
+    // TODO remove test buttons
     <>
       <div ref={layersRef} className="map-scene__layers"></div>
       <div className="map-scene__buttons">
-        <a className="mx-auto text-white" onClick={onGameFinish}>
-          finish game
+        <a className="mx-auto text-white" onClick={simFinishLevel}>
+          test finish level
         </a>
-        <a className="mx-auto text-white" onClick={onExit}>
-          exit
+        <a className="mx-auto text-white" onClick={simDeath}>
+          test death
         </a>
       </div>
     </>
