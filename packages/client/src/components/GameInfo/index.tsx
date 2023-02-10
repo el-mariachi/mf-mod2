@@ -96,7 +96,7 @@ function GameInfo() {
             type={StatType.STEPS}
             quantity={store.getState().game.levelStats.steps}></GameStatItem>
         </ul>
-        <div>{store.getState().game.levelStats.levelNum}</div>
+        <div>1</div>
         <ul>
           <GameStatItem
             type={StatType.KILLS}
