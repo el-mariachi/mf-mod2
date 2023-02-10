@@ -1,9 +1,10 @@
 import Canvas from '@components/Canvas'
-import { width as initialWidth, height as initialHeight } from '@utils/winsize'
 import { useEffect, useState } from 'react'
 import { drawSpinner } from './drawSpinner'
 
 const Spinner = () => {
+  const initialWidth = 384
+  const initialHeight = 672
   const [width, setWidth] = useState(initialWidth)
   const [height, setHeight] = useState(initialHeight)
 
@@ -13,6 +14,8 @@ const Spinner = () => {
     setHeight(targetWindow.innerHeight)
   }
   useEffect(() => {
+    setWidth(window.innerWidth)
+    setHeight(window.innerHeight)
     window.addEventListener('resize', windowResizeHandler)
     return () => {
       window.removeEventListener('resize', windowResizeHandler)
