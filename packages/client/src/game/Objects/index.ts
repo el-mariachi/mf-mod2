@@ -28,8 +28,18 @@ const objects: Record<number, typeof GameObject> = {
   17: class CornerTopRight extends Wall { spritePos = [5, 5] as Types.Coords},
   18: class CornerBottomRight extends Wall { spritePos = [5, 4] as Types.Coords},
   19: class CornerBottomLeft extends Wall { spritePos = [0, 4] as Types.Coords},
-  20: class GateLeft extends Gate { spritePos = [6, 6] as Types.Coords},
-  21: class GateRight extends Gate { spritePos = [7, 6] as Types.Coords},
+  20: class GateLeft extends Gate {   motions = {
+    [Types.IdleMotionType.idle]: {
+      originPosition: [0, 6],
+      frames: [6],
+    },
+  } as Types.CellSpriteMotions},
+  21: class GateRight extends Gate {   motions = {
+    [Types.IdleMotionType.idle]: {
+      originPosition: [0, 6],
+      frames: [7],
+    },
+  } as Types.CellSpriteMotions},
   22: TrapDoor,
   40: Skeleton,
   30: Coin,

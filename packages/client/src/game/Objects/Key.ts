@@ -7,7 +7,7 @@ export default class Key extends GameObject {
   name = Types.GameItemName.key
   spriteSrc: string = itemsSrc
   motions = itemsMotions.key
-  crossable = true
+  crossable = false
   static = true
   animated = true
   destroyable = true

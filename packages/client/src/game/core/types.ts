@@ -197,8 +197,7 @@ export enum GameItemName {
 
 export enum GameEntourageName {
   wall = 'wall',
-  leftGateLeaf = 'left gate leaf',
-  rightGateLeaf = 'right gate leaf',
+  gate = 'gate',
 }
 
 export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
@@ -234,6 +233,8 @@ export type GameInteractionDef = {
   subject: GameObjectDef
   animation?: CellSpriteAnimationProcess
 }
+
+export type GameAction = [GameEvent, number]
 
 export enum GameEvent {
   Left = 'MOVE_LEFT',

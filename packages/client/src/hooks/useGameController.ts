@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { GameEvent } from '@game/core/types'
-
-const PRESS_DELAY = 500
+import * as Types from '@game/core/types'
 
 export type GameActionType = [GameEvent, number, () => void]
 
@@ -16,27 +15,14 @@ const KeysToGameEvents: { [key: string]: GameEvent } = {
   KeyS: GameEvent.Down,
 }
 
-export const useGameController = () => {
-  const [gameEvent, setGameEvent]: [
-    GameEvent,
-    React.Dispatch<React.SetStateAction<GameEvent>>
-  ] = useState('' as GameEvent)
-  let startTime = Date.now()
-  let timerId: ReturnType<typeof setTimeout>
-
+export const useGameController = (
+  setGameAction: React.Dispatch<React.SetStateAction<Types.GameAction>>
+) => {
   function keydownHandler(e: KeyboardEvent) {
     const pressTime = Date.now()
-    /**  Откладываем событие если между ними прошло времени меньше чем PRESS_DELAY (в случае key.repeat)*/
-    if (pressTime - startTime < PRESS_DELAY) {
-      if (timerId) {
-        timerId = setTimeout(() => {
-          keydownHandler(e)
-          clearTimeout(timerId)
-        }, pressTime - startTime)
-      }
-    } else {
-      setGameEvent(KeysToGameEvents[e.key])
-      startTime = pressTime
+    const gameEvent = KeysToGameEvents[e.key] as GameEvent
+    if (gameEvent) {
+      setGameAction([gameEvent, pressTime])
     }
   }
 
@@ -45,11 +31,6 @@ export const useGameController = () => {
   function removeKeyboardListener() {
     document.removeEventListener('keydown', keydownHandler)
   }
-  const gameAction: GameActionType = [
-    gameEvent,
-    Date.now(),
-    removeKeyboardListener,
-  ]
 
-  return gameAction
+  return removeKeyboardListener
 }

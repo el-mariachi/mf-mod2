@@ -13,7 +13,11 @@ import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
 
 const images = [hero, dungeonTileset, skeleton]
+
 function MapScene({ onExit }: SceneProps) {
+  const [gameAction, setGameAction] = useState(
+    [] as unknown as Types.GameAction
+  )
   const [layers, setLayers]: [
     LayerRecord,
     React.Dispatch<React.SetStateAction<LayerRecord>>
@@ -26,10 +30,12 @@ function MapScene({ onExit }: SceneProps) {
     dispatch(finishLevel())
   }
   const lifeRef = useRef({} as LifeController)
-  const gameAction: GameActionType = useGameController()
 
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
+    const removeKeyboardListener = useGameController(setGameAction)
+    //const [onGameEvent , ] = useGameController()
+    //onGameEvent((gameAction: GameActionType)=> {setGameAction(gameAction)})
     // TODO перенести в LoadScene после того как определится порядок загрузки сцен
     const promises = images.map(src => {
       return new Promise(res => {
@@ -48,6 +54,8 @@ function MapScene({ onExit }: SceneProps) {
       )
       setLayers(layers)
     })
+
+    return removeKeyboardListener
   }, [])
 
   useEffect(() => {
@@ -67,15 +75,14 @@ function MapScene({ onExit }: SceneProps) {
   }, [layers])
 
   useEffect(() => {
-    const [gameEvent, , removeKeyboardListener] = gameAction
-
-    if (Types.MoveGameEvents.includes(gameEvent)) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      lifeRef.current.turn(Types.MapGameEvents2Direction[gameEvent])
+    if (gameAction) {
+      const [gameEvent, _]: Types.GameAction = gameAction
+      if (Types.MoveGameEvents.includes(gameEvent)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        lifeRef.current.turn(Types.MapGameEvents2Direction[gameEvent])
+      }
     }
-
-    return removeKeyboardListener
   }, [gameAction])
 
   useEffect(() => {

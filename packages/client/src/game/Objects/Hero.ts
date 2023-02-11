@@ -6,6 +6,7 @@ import UnitView from '@game/core/views/UnitView'
 
 export default class Hero extends GameObject {
   declare view: UnitView
+  bag: GameObject[] = []
   name = Types.GameUnitName.hero
   spriteSrc: string = heroSrc
   motions = heroMotions

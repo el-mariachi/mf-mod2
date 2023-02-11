@@ -12,13 +12,18 @@ export class Cell {
   constructor(gameObjects: GameObject[], position: Types.Coords) {
     this.gameObjects = gameObjects
     this.position = position
+    this.gameObjects.forEach(object => (object.cell = this))
   }
-  push(gameObject: GameObject) {
+  addObject(gameObject: GameObject) {
     this.gameObjects.push(gameObject)
+    gameObject.cell = this;
+    return gameObject
   }
-  remove(gameObject: GameObject) {
-    const index = this.gameObjects.indexOf(gameObject) 
-    this.gameObjects.splice(index, 1)
+  extract(gameObject: GameObject): GameObject {
+    const index = this.gameObjects.indexOf(gameObject)
+    const element = this.gameObjects.splice(index, 1)[0]
+    element.cell = undefined 
+    return element;
   }
 }
 
@@ -38,32 +43,27 @@ const Cells = class extends Array {
       return prev
     }, [])
   }
-  filterCellsByObjectName(name: Types.GameObjectName) {
+  filterCellsByObject(condition: (object: GameObject) => boolean) {
     return this.filter(cell =>
-      cell.gameObjects.some(
-        (gameObject: GameObject) => gameObject.name === name
-      )
+      cell.gameObjects.some((object: GameObject) => condition(object))
     )
   }
   get hero() {
+    console.log(this.heroCell)
     return this.heroCell.gameObjects.find(
       (gameObject: GameObject) => gameObject.name === Types.GameUnitName.hero
     )
   }
   get heroCell() {
-    return this.filterCellsByObjectName(Types.GameUnitName.hero)[0]
+    return this.filterCellsByObject(
+      (object: GameObject) => object.name === Types.GameUnitName.hero
+    )[0]
   }
   get NPCCells() {
-    return this.filterObjects(
-      (gameObject: GameObject) =>
-        gameObject.name in Types.GameUnitName &&
-        gameObject.name !== Types.GameUnitName.hero
-    )
+    return this.filterCellsByObject((object: GameObject) => object.isNPC)
   }
   get NPC() {
-    return this.heroCell.objects.find(
-      (gameObject: GameObject) => gameObject.name in Types.GameUnitName
-    )
+    return this.filterObjects((object: GameObject) => object.isNPC)
   }
   get notAnimatedObjectsTuple() {
     /** кеширование не анимированных сущностей */
@@ -88,7 +88,8 @@ const Matrix = class extends Array {
     direction: null | Types.AxisDirection = null
   ) {
     const [row, col] = cell.position
-    let cells = []
+    let cells: Cell[] = []
+    /** клетики по направлению  */
     if (direction) {
       do {
         let targetRow = row
@@ -111,6 +112,22 @@ const Matrix = class extends Array {
       } while ((radius -= 1))
       return cells
     }
+    /** клетки в радиусе */
+    const startRowPos = row - radius < 0 ? 0 : row - radius
+    const endRowPos = row + radius > this.length ? this.length : row + radius
+    const startColPos = col - radius < 0 ? 0 : col - radius
+    const endColPos =
+      col + radius > this[0].length ? this[0].length : col + radius
+    console.log(startRowPos, endRowPos, startColPos, endColPos)
+
+    for (let i = startRowPos; i <= endRowPos; i += 1) {
+      console.log('i', i)
+      for (let j = startColPos; j <= endColPos; j += 1) {
+        console.log('j', j)
+        cells.push(this[i][j])
+      }
+    }
+    return cells
   }
 }
 
@@ -126,10 +143,12 @@ class MapController {
   map = new Matrix()
   cells = new Cells()
   level: LevelInstance
+  levelN: number
   layers: LayerRecord
-  constructor({ layers, level }: MapControllerPropsType) {
+  constructor({ layers, level: levelN }: MapControllerPropsType) {
     this.layers = layers
     this.level = level1 as LevelInstance
+    this.levelN = levelN
     this.init()
   }
   init() {
