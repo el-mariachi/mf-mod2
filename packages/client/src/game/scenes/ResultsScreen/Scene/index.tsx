@@ -1,10 +1,15 @@
 import { useEffect, useRef } from 'react'
-import SecondsToHMS from '@utils/secondsFormat'
+import SecondsToHMS from '@game/utils/secondsFormat'
 import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
-import { resumeGame } from '@store/slices/game'
-import { levelStats } from '@store/selectors'
+import { restartLevel, nextLevel, startGame } from '@store/slices/game'
+import {
+  selectGameTotals,
+  selectHeroIsDead,
+  selectPlayAgain,
+  selectContinue,
+} from '@store/selectors'
 import { width, height, center } from '@utils/winsize'
 
 function _RenderStroke(
@@ -22,8 +27,11 @@ function _RenderStroke(
 }
 
 function ResScene({ onExit }: SceneProps) {
-  const lvlStats = useAppSelector(levelStats)
-  const { levelNum, killCount, coins, time, steps } = lvlStats
+  const { levelNum, gameTotals } = useAppSelector(selectGameTotals)
+  const heroIsDead = useAppSelector(selectHeroIsDead)
+  const showPlayAgainButton = useAppSelector(selectPlayAgain)
+  const showContinueButton = useAppSelector(selectContinue)
+  const { killCount, coins, time, steps } = gameTotals
   const dispatch = useAppDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   let curHeight = height / 4
@@ -32,8 +40,21 @@ function ResScene({ onExit }: SceneProps) {
 
   const formatTime = SecondsToHMS(time)
 
-  const onRestart = () => {
-    dispatch(resumeGame())
+  const restartCurrentLevel = () => {
+    // TODO reset game controllers to level start
+    dispatch(restartLevel())
+  }
+
+  const startNextLevel = () => {
+    dispatch(nextLevel)
+  }
+
+  const playAgain = () => {
+    dispatch(startGame)
+  }
+
+  const resumeFromSaved = () => {
+    // TODO
   }
 
   useEffect(() => {
@@ -56,7 +77,7 @@ function ResScene({ onExit }: SceneProps) {
         _RenderStroke(
           ctx,
           'killed enemies',
-          killCount.toString(),
+          String(killCount),
           center.width,
           margin,
           curHeight
@@ -66,7 +87,7 @@ function ResScene({ onExit }: SceneProps) {
         _RenderStroke(
           ctx,
           'gathered coins',
-          coins.toString(),
+          String(coins),
           center.width,
           margin,
           curHeight
@@ -86,7 +107,7 @@ function ResScene({ onExit }: SceneProps) {
         _RenderStroke(
           ctx,
           'steps',
-          steps.toString(),
+          String(steps),
           center.width,
           margin,
           curHeight
@@ -94,15 +115,31 @@ function ResScene({ onExit }: SceneProps) {
         curHeight += 24 * 2
       }
     }
-  }, [fontLoaded, levelStats])
+  }, [fontLoaded, selectGameTotals])
 
   return (
     <div className="res-scene__results">
       <canvas ref={canvasRef} width={width} height={curHeight + 265}></canvas>
       <div className="res-scene__buttons">
-        <a className="mx-auto text-white" onClick={onRestart}>
-          restart
+        {showContinueButton ? (
+          <a className="mx-auto text-white" onClick={playAgain}>
+            continue
+          </a>
+        ) : null}
+        {showPlayAgainButton ? (
+          <a className="mx-auto text-white" onClick={startNextLevel}>
+            play again
+          </a>
+        ) : null}
+        <a className="mx-auto text-white" onClick={restartCurrentLevel}>
+          restart level
         </a>
+        {/* TODO uncomment when savepoints are available */}
+        {/* {heroIsDead ? (
+          <a className="mx-auto text-white" onClick={resumeFromSaved}>
+            resume from saved
+          </a>
+        ) : null} */}
         <a className="mx-auto text-white" onClick={onExit}>
           exit
         </a>

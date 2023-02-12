@@ -8,6 +8,7 @@ import Hero from '@game/Objects/Hero'
 export default class PatrolMonsterAI extends UnitAI {
   protected _patrolPath!: Types.Path
   protected _goal!: Types.Coords
+  protected static readonly _IDLE_CHANCE = 0.2
   constructor(
     levelMap: Types.LevelMap,
     // TODO need to refactor game objects hierarchy and use Monster or Unit type here
@@ -33,8 +34,20 @@ export default class PatrolMonsterAI extends UnitAI {
     this._goal = this.patrolPath[0]
   }
   makeDecision() {
-    let behavior = Behaviors.doNothing
     const curPos = this._position
+
+    const heroCell = Utils.getMapCellsAround(this._levelMap, curPos, 1).find(
+      cell => cell.gameObjects.some(item => item instanceof Hero)
+    )
+    if (heroCell) {
+      const dir = Utils.defineDir(
+        curPos,
+        Utils.rowcol2coords(heroCell.position)
+      )
+      if (dir) {
+        return Behaviors[`attack2${dir}`]
+      }
+    }
     if (Utils.isCoordsEqual(curPos, this._goal)) {
       this._defineNextGoal()
     }
@@ -46,15 +59,14 @@ export default class PatrolMonsterAI extends UnitAI {
       if (!Utils.isCoordsEqual(curPos, nextPos)) {
         const [col, row] = nextPos
         const cellObjects = this._levelMap[row][col].gameObjects
-        const action = cellObjects.some(item => item instanceof Hero)
-          ? 'attack'
-          : !cellObjects.length || cellObjects.every(item => item.crossable)
-          ? 'move'
-          : 'look'
-        behavior = Behaviors[`${action}2${dir}`]
+        const action =
+          (!cellObjects.length || cellObjects.every(item => item.crossable)) && Math.random() >= PatrolMonsterAI._IDLE_CHANCE
+            ? 'move'
+            : 'look'
+        return Behaviors[`${action}2${dir}`]
       }
     }
-    return behavior
+    return Behaviors.doNothing
   }
   protected _defineNextGoal() {
     const pathLength = this.patrolPath.length
