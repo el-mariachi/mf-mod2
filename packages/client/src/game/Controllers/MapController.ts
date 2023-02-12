@@ -49,7 +49,6 @@ const Cells = class extends Array {
     )
   }
   get hero() {
-    console.log(this.heroCell)
     return this.heroCell.gameObjects.find(
       (gameObject: GameObject) => gameObject.name === Types.GameUnitName.hero
     )
@@ -118,12 +117,9 @@ const Matrix = class extends Array {
     const startColPos = col - radius < 0 ? 0 : col - radius
     const endColPos =
       col + radius > this[0].length ? this[0].length : col + radius
-    console.log(startRowPos, endRowPos, startColPos, endColPos)
 
     for (let i = startRowPos; i <= endRowPos; i += 1) {
-      console.log('i', i)
       for (let j = startColPos; j <= endColPos; j += 1) {
-        console.log('j', j)
         cells.push(this[i][j])
       }
     }

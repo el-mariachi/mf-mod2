@@ -7,6 +7,7 @@ export const FONT_COLOR = '#9d5e6e'
 export const STEP_TIME = 800
 export const DEF_FRAME_PER_SECOND_SPEED = 7
 export const DEF_MOVE_DURATION = 500
+export const HERO_MOVE_DELAY = 10
 
 // TODO need refactoring for motions/behaviors types
 export const motionTypes: Types.MotionTypes = {

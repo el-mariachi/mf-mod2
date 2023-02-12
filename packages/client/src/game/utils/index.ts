@@ -133,3 +133,21 @@ export const actualizeCellCoords = (
 ) => {
   return actualizeCoords(coords, size)
 }
+
+export const defineDirection = (
+  curPos: Types.Coords,
+  nextPos: Types.Coords
+) => {
+  const [curRow, curCol] = curPos
+  const [nextRow, nextCol] = nextPos
+
+  let direction: Types.AxisDirection | null = null
+  if (curCol == nextCol) {
+    direction =
+      curRow > nextRow ? Types.AxisDirection.top : Types.AxisDirection.bottom
+  } else if (curRow == nextRow) {
+    direction =
+      curCol > nextCol ? Types.AxisDirection.left : Types.AxisDirection.right
+  }
+  return direction as Types.AxisDirection
+}

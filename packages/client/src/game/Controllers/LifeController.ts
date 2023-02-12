@@ -6,6 +6,9 @@ import PatrolMonsterAI from '@game/core/AI/PatrolMonsterAI'
 import Skeleton from '@game/Objects/Skeleton'
 import PathController from './PathController'
 import Hero from '@game/Objects/Hero'
+import { defineDir } from '@game/utils'
+import * as Behaviors from '@game/animations/behavior'
+import { DEF_MOVE_DURATION, HERO_MOVE_DELAY } from '@game/core/constants'
 
 enum Status {
   free,
@@ -41,8 +44,11 @@ export default class LifeController {
 
     /** если контроллер свободен, начинаем обработку и меняем статус на занят */
     this.status = Status.busy
-    await this.heroMove(direction)
+    console.log(this.map)
+    this.heroMove(direction)
+    await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
     await this.NPCMove()
+    console.log('monsters turns end', performance.now())
     this.status = Status.free
     /** проверяем не появился ли ход в очереди, если появился забираем ход */
     if (this.nextTurn) {
@@ -50,31 +56,24 @@ export default class LifeController {
     }
   }
   async heroMove(direction: Types.AxisDirection) {
-    const radius = 1
-    const currentCell = this.cells.heroCell
-    /** находим первую клетку по пути движения */
-    const targetCells = this.map.nearbyCells(
-      currentCell,
-      radius,
-      direction
-    ) as Cell[]
-
-    /** Выражаем намерение двинуться в клетку targetCell.
-     *  Резултат движения передается в motionType и анимируется  */
-    const motionType = this.tendToCell(
-      this.cells.hero,
-      currentCell,
-      targetCells[0]
-    )
-    if (motionType) {
-      const behavior = { type: motionType, dir: direction }
-      this.cells.hero.view.do(behavior)
-    }
+    return this.tend(this.cells.hero, direction)
+    //return new Promise(resolve => setTimeout(resolve, 100))
   }
   async NPCMove() {
     const promises: Promise<Types.CellSpriteAnimationProcessResult>[] = []
     this.cells.NPCCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
+        if (
+          object.cell.position.toString() !==
+          object.view?.position.reverse().toString()
+        ) {
+          console.log('!!!!!!!!!!!!!!!', object)
+          console.log(
+            object.cell.position.toString(),
+            object.view?.position.reverse().toString()
+          )
+        }
+
         if (object.brain) {
           /** Ai принимает решение куда направиться и что делать */
           const tendBehavior = object.brain.makeDecision()
@@ -83,17 +82,8 @@ export default class LifeController {
            * (данная реализация игнорирует решение AI что делать)
            * решение принимается в tendToCell
            */
-          const targetCells = this.map.nearbyCells(
-            cell,
-            1,
-            dir as Types.AxisDirection
-          ) as Cell[]
-          /** Выражаем намерение двинуться в клетку targetCell.
-           *  Резултат движения передается в motionType и анимируется  */
-          const motionType = this.tendToCell(object, cell, targetCells[0])
-          const behavior = { type: motionType, dir } as Types.UnitBehaviorDef
-          const animation = (object.view as UnitView).do(behavior)
-          promises.push(animation)
+          const result = this.tend(object, dir as Types.AxisDirection)
+          promises.push(result)
         }
       })
     })
@@ -112,34 +102,63 @@ export default class LifeController {
       })
     })
   }
-  /** намериваемся передвинуть объект из ячейки currentCell в targetCell */
-  tendToCell(gameObject: GameObject, currentCell: Cell, targetCell: Cell) {
-    const [row, col] = targetCell.position
-    /** если по направлению движения нет объектов или через них можно пройти */
-    if (
-      targetCell.gameObjects.length === 0 ||
-      targetCell.gameObjects.every(object => object.crossable)
-    ) {
-      return this.moveToCell(gameObject, currentCell, targetCell)
-    } else {
-      const results = targetCell.gameObjects.map(item =>
-        this.interaction(gameObject, item)
-      )
-      const canMove = results.every(
-        (motion: unknown) => motion === Types.MoveMotionType.move
-      )
-      if (canMove) {
-        return this.moveToCell(gameObject, currentCell, targetCell)
-      }
-    }
+  /** намериваемся двинуться в направлении */
+  async tend(
+    object: GameObject,
+    direction: Types.AxisDirection
+  ): Promise<Types.CellSpriteAnimationProcessResult> {
+    const radius = 1
+    /** находим первую клетку по пути движения */
+    const targetCells = this.map.nearbyCells(
+      object.cell,
+      radius,
+      direction
+    ) as Cell[]
+
+    /** Выражаем намерение двинуться в клетку targetCell. */
+    const result = this.tendToCell(object, targetCells[0])
+    return result
   }
-  moveToCell(gameObject: GameObject, currentCell: Cell, targetCell: Cell) {
-    const [row, col] = targetCell.position
-    const _gameObject = currentCell.extract(gameObject)
-    this.map[row][col].addObject(_gameObject)
-    return Types.MoveMotionType.move
+  /** намериваемся передвинуть объект из ячейки currentCell в targetCell */
+  tendToCell(
+    gameObject: GameObject,
+    targetCell: Cell
+  ): Promise<Types.CellSpriteAnimationProcessResult> {
+    /** результат =
+     * move - если клетка пустая
+     * atack & stay - если в в клетке npc
+     * take & move - если в клетке предмет
+     */
+
+    const results = targetCell.gameObjects.map(item =>
+      this.interaction(gameObject, item)
+    )
+    const canMove =
+      !results.length ||
+      results.every((motion: unknown) => motion === Types.MoveMotionType.move)
+
+    /** если можно пройти */
+    if (canMove) {
+      return gameObject.move(targetCell)
+      //задержка мужду двумя движениями
+      // задержка если следующее движение защита
+      //return new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
+    }
+    //console.log('нельзя', gameObject, targetCell)
+    /** если нельзя пройти */
+    return results.find(
+      el => el instanceof Promise
+    ) as Promise<Types.CellSpriteAnimationProcessResult>
   }
   interaction(gameObjectActive: GameObject, gameObjectPasive: GameObject) {
+    /** hero - crossable item */
+    if (
+      gameObjectActive.name === Types.GameUnitName.hero &&
+      gameObjectPasive.crossable
+    ) {
+      return Types.MoveMotionType.move
+    }
+
     /** hero - key */
     if (
       gameObjectActive.name === Types.GameUnitName.hero &&
@@ -150,8 +169,10 @@ export default class LifeController {
       const hero = gameObjectActive as Hero
       hero.bag.push(key)
       return Types.MoveMotionType.move
-      /** hero - gate */
-    } else if (
+    }
+
+    /** hero - gate */
+    if (
       gameObjectActive.name === Types.GameUnitName.hero &&
       gameObjectPasive.name === Types.GameEntourageName.gate
     ) {
@@ -161,16 +182,13 @@ export default class LifeController {
       if (key) {
         /** убираем ключ из сумки */
         hero.bag.splice(hero.bag.indexOf(key), 1)
-        const gateNearbyCells = this.map.nearbyCells(
-          gate.cell as Cell,
-          1
-        ) as Cell[]
+        const gateNearbyCells = this.map.nearbyCells(gate.cell, 1) as Cell[]
         /** убираем ворота */
         gateNearbyCells.forEach(cell => {
           cell.gameObjects.forEach(object => {
             if (object.name === Types.GameEntourageName.gate) {
               object.view!.toggle(false)
-              object.cell?.extract(object)
+              object.cell.extract(object)
             }
           })
         })
@@ -179,14 +197,40 @@ export default class LifeController {
       }
       return Types.IdleMotionType.idle
     }
+
     const combination = [gameObjectActive, gameObjectPasive]
     /** hero - npc */
     if (
       combination.some(object => object.name === Types.GameUnitName.hero) &&
       combination.some(object => object.isNPC)
     ) {
-      //gameObjectActive.view.do('atack')
-      //gameObjectPasive.view.do('death')
+      /** если атакует герой ничего не ждем, так как все  анимации нпс завершились
+       */
+
+      /** если атакует нпс
+       * прежде чем начать анимацию убеждаемся что предыдущие анимации закончились
+       */
+
+      return new Promise(resolve =>
+        this.waitEndOfMove(gameObjectPasive).then(() => {
+          Promise.all([
+            gameObjectActive.attack(gameObjectPasive),
+            gameObjectPasive.defend(gameObjectActive),
+          ]).then(resolve)
+        })
+      )
+    }
+  }
+  /** ждем пока закончится анимация движения героя перед атакой npc
+   * ? npc не ждут героя (у this.heroMove нет await)
+   * сделано чтобы у героя не было задержек между движениями
+   *    * */
+  waitEndOfMove(gameObject: GameObject) {
+    if (!gameObject.isNPC) {
+      /** DEF_MOVE_DURATION  */
+      return new Promise(resolve => setTimeout(resolve, DEF_MOVE_DURATION * 5))
+    } else {
+      return new Promise(resolve => resolve(1))
     }
   }
 }
