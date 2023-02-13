@@ -44,11 +44,9 @@ export default class LifeController {
 
     /** если контроллер свободен, начинаем обработку и меняем статус на занят */
     this.status = Status.busy
-    console.log(this.map)
     this.heroMove(direction)
     await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
     await this.NPCMove()
-    console.log('monsters turns end', performance.now())
     this.status = Status.free
     /** проверяем не появился ли ход в очереди, если появился забираем ход */
     if (this.nextTurn) {
@@ -63,17 +61,6 @@ export default class LifeController {
     const promises: Promise<Types.CellSpriteAnimationProcessResult>[] = []
     this.cells.NPCCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
-        if (
-          object.cell.position.toString() !==
-          object.view?.position.reverse().toString()
-        ) {
-          console.log('!!!!!!!!!!!!!!!', object)
-          console.log(
-            object.cell.position.toString(),
-            object.view?.position.reverse().toString()
-          )
-        }
-
         if (object.brain) {
           /** Ai принимает решение куда направиться и что делать */
           const tendBehavior = object.brain.makeDecision()
@@ -124,12 +111,6 @@ export default class LifeController {
     gameObject: GameObject,
     targetCell: Cell
   ): Promise<Types.CellSpriteAnimationProcessResult> {
-    /** результат =
-     * move - если клетка пустая
-     * atack & stay - если в в клетке npc
-     * take & move - если в клетке предмет
-     */
-
     const results = targetCell.gameObjects.map(item =>
       this.interaction(gameObject, item)
     )
@@ -140,11 +121,7 @@ export default class LifeController {
     /** если можно пройти */
     if (canMove) {
       return gameObject.move(targetCell)
-      //задержка мужду двумя движениями
-      // задержка если следующее движение защита
-      //return new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
     }
-    //console.log('нельзя', gameObject, targetCell)
     /** если нельзя пройти */
     return results.find(
       el => el instanceof Promise
@@ -164,13 +141,19 @@ export default class LifeController {
       gameObjectActive.name === Types.GameUnitName.hero &&
       gameObjectPasive.name === Types.GameItemName.key
     ) {
-      gameObjectPasive.view!.toggle(false)
-      const key: GameObject = gameObjectPasive.cell!.extract(gameObjectPasive)
+      const key: GameObject = gameObjectPasive.remove()
       const hero = gameObjectActive as Hero
       hero.bag.push(key)
       return Types.MoveMotionType.move
     }
-
+    /** hero - coin */
+    if (
+      gameObjectActive.name === Types.GameUnitName.hero &&
+      gameObjectPasive.name === Types.GameItemName.coin
+    ) {
+      gameObjectPasive.remove()
+      return Types.MoveMotionType.move
+    }
     /** hero - gate */
     if (
       gameObjectActive.name === Types.GameUnitName.hero &&
@@ -187,8 +170,7 @@ export default class LifeController {
         gateNearbyCells.forEach(cell => {
           cell.gameObjects.forEach(object => {
             if (object.name === Types.GameEntourageName.gate) {
-              object.view!.toggle(false)
-              object.cell.extract(object)
+              object.remove()
             }
           })
         })
@@ -227,7 +209,6 @@ export default class LifeController {
    *    * */
   waitEndOfMove(gameObject: GameObject) {
     if (!gameObject.isNPC) {
-      /** DEF_MOVE_DURATION  */
       return new Promise(resolve => setTimeout(resolve, DEF_MOVE_DURATION * 5))
     } else {
       return new Promise(resolve => resolve(1))

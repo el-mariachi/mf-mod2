@@ -39,6 +39,10 @@ export default class GameObject {
     const view = gameObject.view as UnitView
     return view.do(behavior)
   }
+  remove() {
+    this.view!.toggle(false)
+    return this.cell!.extract(this)
+  }
   attack(target: GameObject) {
     const dir: Types.AxisDirection = defineDirection(
       this.cell.position,

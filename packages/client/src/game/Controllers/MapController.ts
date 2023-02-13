@@ -22,6 +22,7 @@ export class Cell {
   extract(gameObject: GameObject): GameObject {
     const index = this.gameObjects.indexOf(gameObject)
     const element = this.gameObjects.splice(index, 1)[0]
+    //@ts-ignore
     element.cell = undefined 
     return element;
   }
