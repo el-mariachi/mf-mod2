@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import SignIn from '@pages/SignIn'
 import ForumPage from '@pages/ForumPage'
 import GamePage from '@pages/GamePage'
@@ -19,10 +19,7 @@ function App() {
   return (
     <div className="app">
       <Routes>
-        <Route
-          path={ROUTES.ROOT}
-          element={<Navigate to={ROUTES.GAME} replace />}
-        />
+        <Route path={ROUTES.ROOT} element={<GamePage />} />
         <Route path={ROUTES.GAME} element={<GamePage />} />
         <Route path={ROUTES.SIGN_UP} element={<SignUp />} />
         <Route path={ROUTES.SIGN_IN} element={<SignIn />} />

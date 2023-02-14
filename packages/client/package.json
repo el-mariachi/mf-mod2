@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:tst": "vite build --config vite.config.tst.ts",
+    "build:ssr": "vite build --config vite.config.ssr.ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",

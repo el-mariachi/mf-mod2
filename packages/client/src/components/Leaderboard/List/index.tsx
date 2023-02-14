@@ -1,8 +1,7 @@
-import LeaderboardProps from '../Props'
 import Lb_User from '../Element'
 import { Stack } from 'react-bootstrap'
 import { useState } from 'react'
-import Form from 'react-bootstrap/Form'
+import { Form } from 'react-bootstrap'
 
 const inputData = [
   {
@@ -63,7 +62,7 @@ const inputData = [
   },
 ]
 
-type SortedVal = keyof typeof inputData[number]
+type SortedVal = keyof (typeof inputData)[number]
 
 function LeaderboardList() {
   const [sortMode, setSortMode] = useState(1)
