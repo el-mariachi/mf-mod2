@@ -2,12 +2,15 @@ import * as Types from '@game/core/types'
 import Skeleton from '@game/Objects/Skeleton'
 import SmartSkeleton from '@game/mocks/SmartSkeleton'
 import PatrolMonsterAI from '@game/core/AI/PatrolMonsterAI'
-import { isCoordsEqual, rowcol2coords } from '@game/utils'
+import {
+  isCoordsEqual,
+  rowcol2coords,
+} from '@game/utils'
+import { STEP_TIME } from '@game/core/constants'
 
 type SkeletonPaths = [Types.LevelMapCell, Types.Path][] // is ['skeleton init pos', 'path coords'][]
 type StepResult = Promise<[SmartSkeleton, Types.Coords]>[]
 
-const STEP_DELAY = 750
 function giveStep(skeletons: SmartSkeleton[]) {
   return skeletons.map(skeleton => {
     const stepInteraction = skeleton.doStep()
@@ -37,7 +40,7 @@ function refreshSkeletonOnMap(
 function makeLife(map: Types.LevelMap, step: () => StepResult) {
   const lifeCircle = () => {
     const worldStepDelay = new Promise<void>(resolve =>
-      setTimeout(() => resolve(), STEP_DELAY)
+      setTimeout(() => resolve(), STEP_TIME)
     )
     const stepProcess = Promise.all(step()).then(stepsResult => {
       stepsResult.forEach(stepResult => {

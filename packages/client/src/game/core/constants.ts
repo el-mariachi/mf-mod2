@@ -4,7 +4,7 @@ export const MAP_CELL = 32
 export const SPRITE_SIZE: Types.Size = [MAP_CELL, MAP_CELL]
 export const BG_COLOR = '#260a13'
 export const FONT_COLOR = '#9d5e6e'
-export const STEP_TIME = 800
+export const STEP_TIME = 1000
 export const DEF_FRAME_PER_SECOND_SPEED = 7
 export const DEF_MOVE_DURATION = 500
 

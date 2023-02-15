@@ -8,80 +8,18 @@ import SCENES from '@constants/scenes'
 import { RootState } from '@store/index'
 import { resetHeroResources } from '@store/slices/hero'
 import { computeScore } from '@utils/computeScore'
+import {
+  gameInitialState,
+  TurnControllerState,
+  GameIntaractions,
+} from '@constants/game'
+import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 
-export enum TurnControllerState {
-  RUNNING,
-  PAUSED,
+const resetLevelStats = (state: GameSlice) => {
+  state.levelStats = gameInitialState.levelStats
 }
 
-export enum GameIntaractions {
-  NONE = 'none',
-  ATTACK = 'attack',
-  DAMAGE = 'damage',
-  COLLECT = 'collect',
-  OPEN = 'open',
-  // ...
-}
-
-export type GameIntaractionDef = {
-  type: GameIntaractions
-  progress: number
-  position: [number, number]
-  // ...
-}
-
-export type GameStats = {
-  killCount: number
-  coins: number
-  time: number
-  steps: number
-}
-
-export type GameSlice = {
-  turnControllerState: TurnControllerState
-  currentScene: SCENES
-  interaction: GameIntaractionDef // | null // как вариант
-  currentLevel: number
-  totalLevels: number
-  levelComplete: boolean
-  levelStats: GameStats
-  gameTotals: GameStats
-  score: number
-}
-
-const noInteraction: GameIntaractionDef = {
-  type: GameIntaractions.NONE,
-  progress: 0,
-  position: [0, 0],
-}
-
-export const initialState: GameSlice = {
-  turnControllerState: TurnControllerState.PAUSED,
-  currentScene: SCENES.LOAD_SCENE,
-  interaction: noInteraction,
-  currentLevel: 0,
-  totalLevels: 1,
-  levelComplete: false,
-  levelStats: {
-    killCount: 0,
-    coins: 0,
-    time: 0,
-    steps: 0,
-  },
-  gameTotals: {
-    killCount: 0,
-    coins: 0,
-    time: 0,
-    steps: 0,
-  },
-  score: 0,
-}
-
-const resetLevelStats = (state: typeof initialState) => {
-  state.levelStats = initialState.levelStats
-}
-
-const updateTotals = (state: typeof initialState) => {
+const updateTotals = (state: GameSlice) => {
   state.gameTotals.coins += state.levelStats.coins
   state.gameTotals.killCount += state.levelStats.killCount
   state.gameTotals.steps += state.levelStats.steps
@@ -90,79 +28,84 @@ const updateTotals = (state: typeof initialState) => {
   resetLevelStats(state)
 }
 
-const gameSlice = createSlice({
-  name: 'game',
-  initialState: initialState,
-  reducers: {
-    // levels
-    startLevel(state, action: PayloadAction<number>) {
-      const nextLevel = action.payload
-      if (nextLevel > state.totalLevels) {
-        // просто защита. Решение начинать/не начинать уровень по идее принимает контроллер
-        return
-      }
-      return {
-        ...state,
-        currentLevel: nextLevel,
-        levelStats: initialState.levelStats,
-        levelComplete: false,
-        currentScene: SCENES.MAP_SCENE,
-        turnControllerState: TurnControllerState.RUNNING,
-      }
+const slicer = (initState: GameSlice) =>
+  createSlice({
+    name: 'game',
+    initialState: initState,
+    reducers: {
+      // levels
+      startLevel(state, action: PayloadAction<number>) {
+        const nextLevel = action.payload
+        if (nextLevel > state.totalLevels) {
+          // просто защита. Решение начинать/не начинать уровень по идее принимает контроллер
+          return
+        }
+        return {
+          ...state,
+          currentLevel: nextLevel,
+          levelStats: initState.levelStats,
+          levelComplete: false,
+          currentScene: SCENES.MAP_SCENE,
+          turnControllerState: TurnControllerState.RUNNING,
+        }
+      },
+      endLevel(state) {
+        state.levelComplete = true
+        state.turnControllerState = TurnControllerState.PAUSED
+        updateTotals(state)
+        state.currentScene = SCENES.RESULT_SCENE
+      },
+      // game
+      pauseGame(state) {
+        state.turnControllerState = TurnControllerState.PAUSED
+      },
+      resumeGame(state) {
+        state.currentScene = SCENES.MAP_SCENE
+        state.turnControllerState = TurnControllerState.RUNNING
+      },
+      exitGame(state) {
+        state.currentScene = SCENES.LOAD_SCENE
+        state.turnControllerState = TurnControllerState.PAUSED
+        state.levelStats = initState.levelStats
+      },
+      die(state) {
+        state.turnControllerState = TurnControllerState.PAUSED
+        state.currentScene = SCENES.RESULT_SCENE
+      },
+      // scenes
+      showLoadScene(state) {
+        // TODO скорее всего, не нужно здесь
+        state.currentScene = SCENES.LOAD_SCENE
+      },
+      showStartScene(state) {
+        // Используется в хуке useNavToGame. Возможно будет удаляться
+        state.currentScene = SCENES.START_SCENE
+      },
+      showResultScene(state) {
+        state.currentScene = SCENES.RESULT_SCENE
+      },
+      // stats
+      updateStats(
+        state,
+        action: PayloadAction<Partial<GameSlice['levelStats']>>
+      ) {
+        const statDeltas = action.payload
+        state.levelStats = {
+          ...state.levelStats,
+          ...Object.keys(statDeltas).reduce((result, current) => {
+            const key = current as keyof typeof statDeltas
+            return Object.assign(result, {
+              [current]: state.levelStats[key] + (statDeltas[key] || 0),
+            })
+          }, {}),
+        }
+      },
     },
-    endLevel(state) {
-      state.levelComplete = true
-      state.turnControllerState = TurnControllerState.PAUSED
-      updateTotals(state)
-      state.currentScene = SCENES.RESULT_SCENE
-    },
-    // game
-    pauseGame(state) {
-      state.turnControllerState = TurnControllerState.PAUSED
-    },
-    resumeGame(state) {
-      state.currentScene = SCENES.MAP_SCENE
-      state.turnControllerState = TurnControllerState.RUNNING
-    },
-    exitGame(state) {
-      state.currentScene = SCENES.LOAD_SCENE
-      state.turnControllerState = TurnControllerState.PAUSED
-      state.levelStats = initialState.levelStats
-    },
-    die(state) {
-      state.turnControllerState = TurnControllerState.PAUSED
-      state.currentScene = SCENES.RESULT_SCENE
-    },
-    // scenes
-    showLoadScene(state) {
-      // TODO скорее всего, не нужно здесь
-      state.currentScene = SCENES.LOAD_SCENE
-    },
-    showStartScene(state) {
-      // Используется в хуке useNavToGame. Возможно будет удаляться
-      state.currentScene = SCENES.START_SCENE
-    },
-    showResultScene(state) {
-      state.currentScene = SCENES.RESULT_SCENE
-    },
-    // stats
-    updateStats(
-      state,
-      action: PayloadAction<Partial<typeof initialState['levelStats']>>
-    ) {
-      const statDeltas = action.payload
-      state.levelStats = {
-        ...state.levelStats,
-        ...Object.keys(statDeltas).reduce((result, current) => {
-          const key = current as keyof typeof statDeltas
-          return Object.assign(result, {
-            [current]: state.levelStats[key] + (statDeltas[key] || 0),
-          })
-        }, {}),
-      }
-    },
-  },
-})
+  })
+
+const generateSlice = (initState: GameSlice) => slicer(initState).reducer
+
+const gameSlice = slicer(gameInitialState)
 
 export const { startLevel, endLevel, pauseGame, resumeGame, exitGame, die } =
   gameSlice.actions
@@ -197,4 +140,7 @@ export const nextLevel =
     dispatch(startLevel(currentLevel + 1))
   }
 
-export default gameSlice.reducer
+export default generateSlice
+
+export { TurnControllerState, GameIntaractions }
+export type { GameStats, GameIntaractionDef }
