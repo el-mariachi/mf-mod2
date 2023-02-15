@@ -1,4 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  createSlice,
+  PayloadAction,
+  ThunkAction,
+  AnyAction,
+} from '@reduxjs/toolkit'
+import type { RootState } from '@store/index'
+import { die } from '@store/slices/game'
 import { createRangeKeeper } from '@utils/index'
 import {
   HeroClass,
@@ -32,7 +39,7 @@ const heroSlice = createSlice({
       state.resources = heroPresets[state.heroClass]
       state.health = defaultMaxHealth
     },
-    updateHealthByAmount(state, action: PayloadAction<number>): void {
+    updateHealth(state, action: PayloadAction<number>): void {
       const newValue = state.health + action.payload
       const keepHealthInRange = createRangeKeeper(0, state.maxHealth)
       state.health = keepHealthInRange(newValue)
@@ -92,9 +99,19 @@ export const {
   setHeroClass,
   setResource,
   setResourceMaxValue,
-  updateHealthByAmount,
+  updateHealth,
   setHealthMaxValue,
   updateResourceByAmount,
 } = heroSlice.actions
+
+export const updateHealthByAmount =
+  (amount: number): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    dispatch(updateHealth(amount))
+    const { hero } = getState()
+    if (hero.health <= 0) {
+      dispatch(die())
+    }
+  }
 
 export default heroSlice.reducer

@@ -1,4 +1,8 @@
-import reducer, { updateHealthByAmount, updateResourceByAmount } from './hero'
+import reducer, {
+  updateHealth,
+  updateHealthByAmount,
+  updateResourceByAmount,
+} from './hero'
 import {
   HeroClass,
   defaultMaxValues,
@@ -36,13 +40,13 @@ describe('Testing player slice', () => {
     )
   })
   it('should update health with provided payload', () => {
-    expect(reducer(defaultHero, updateHealthByAmount(-42))).toEqual({
+    expect(reducer(defaultHero, updateHealth(-42))).toEqual({
       ...defaultHero,
       health: 58,
     })
   })
   it('should not set health above max value', () => {
-    expect(reducer(defaultHero, updateHealthByAmount(120))).toEqual({
+    expect(reducer(defaultHero, updateHealth(120))).toEqual({
       ...defaultHero,
       health: 100,
     })

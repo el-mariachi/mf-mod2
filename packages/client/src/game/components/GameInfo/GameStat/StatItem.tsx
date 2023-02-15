@@ -1,6 +1,6 @@
 import { useState, FC } from 'react'
 import GameStatProps from './GameStatProps'
-import SecondsToHMS from '@utils/secondsFormat'
+import SecondsToHMS from '@game/utils/secondsFormat'
 import { StatType } from './GameStatProps'
 import coinsIcon from '@images/coin_icn.png'
 import stepsIcon from '@images/steps_icn.png'
