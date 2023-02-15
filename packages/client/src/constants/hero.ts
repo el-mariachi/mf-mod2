@@ -36,3 +36,19 @@ export const defaultMaxValues: HeroResources = {
 }
 
 export const defaultMaxHealth = 100
+
+export type HeroSlice = {
+  heroClass: HeroClass
+  health: number
+  maxHealth: number
+  resources: HeroResources
+  resourceMaxValues: HeroResources
+}
+
+export const heroInitialState: HeroSlice = {
+  heroClass: HeroClass.L3X3III,
+  health: defaultMaxHealth,
+  maxHealth: defaultMaxHealth,
+  resources: heroPresets[HeroClass.L3X3III],
+  resourceMaxValues: defaultMaxValues,
+}
