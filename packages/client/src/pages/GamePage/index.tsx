@@ -20,11 +20,8 @@ const scenes: scenesType = {
 }
 
 function GamePage() {
-  // const currentScene = SCENES.LOAD_SCENE
-  // const currentScene = SCENES.RESULT_SCENE
-  const currentScene = SCENES.MAP_SCENE
-  // const currentScene =
-  //   (useAppSelector(selectCurrentScene) as SCENES) || SCENES.LOAD_SCENE
+  const currentScene =
+    (useAppSelector(selectCurrentScene) as SCENES) || SCENES.LOAD_SCENE
   const Scene = scenes[currentScene]
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
