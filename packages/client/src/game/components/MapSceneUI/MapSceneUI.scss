@@ -1,0 +1,154 @@
+@import '@vars';
+
+.map-scene-ui__game-stats {
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  font-family: 'Minecraft';
+  margin-top: 1.3rem;
+  z-index: 10;
+  box-sizing: border-box;
+  color: $ui_font_light-purple;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.5rem;
+    position: absolute;
+  }
+
+  div {
+    padding-top: 0.7rem;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  ul:first-child {
+    top: 0;
+    left: 2rem;
+  }
+
+  ul:last-child {
+    top: 0;
+    right: 0.8rem;
+  }
+
+  ul > li {
+    display: flex;
+  }
+
+  ul > li > img {
+    display: block;
+    margin-bottom: auto;
+    margin-top: auto;
+    width: 1.25rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.map-scene-ui__game-panel {
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  min-height: 4rem;
+  max-width: 720px;
+  width: auto;
+  color: $ui_font_light-purple;
+  font-family: 'Minecraft';
+
+  &-wrapper {
+    display: flex;
+  }
+
+  div > p {
+    display: block;
+    margin: 0 0 5px;
+  }
+
+  .map-scene-ui__char-info {
+    margin-top: auto;
+    position: relative;
+  }
+
+  .map-scene-ui__char-info > .map-scene-ui__char-level {
+    position: absolute;
+    bottom: 0px;
+    left: 12px;
+  }
+
+  .map-scene-ui__buttons {
+    display: flex;
+    margin-bottom: -4px;
+
+    .game-ui-button {
+      margin-left: 1rem;
+
+      &__content {
+        height: 46px;
+        width: 81px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.map-scene-ui__char-info {
+  display: flex;
+  gap: 45px;
+  align-items: start;
+}
+
+.map-scene-ui__char-info-props {
+  font-family: 'Minecraft';
+  width: 220px;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      display: flex;
+
+      span {
+        display: block;
+        font-weight: bold;
+        margin-left: auto;
+      }
+    }
+  }
+
+  .map-scene-ui__char-info-nick {
+    font-weight: 700;
+  }
+
+  .game-ui-button {
+    margin-left: -5px;
+
+    &__content {
+      padding: 8px 15px;
+    }
+  }
+}
+
+.map-scene-ui__game-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+
+  .game-ui-button {
+    margin: 0;
+
+    &__content {
+      width: 200px;
+      padding: 5px 10px;
+    }
+  }
+}

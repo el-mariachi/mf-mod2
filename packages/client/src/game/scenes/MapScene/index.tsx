@@ -11,6 +11,7 @@ import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
 import { AIDemo } from '@game/mocks/aiDemo'
 import { LevelMap } from '@game/core/types'
+import MapSceneUI from '@game/components/MapSceneUI'
 
 const images = [hero, dungeonTileset, skeleton]
 function MapScene() {
@@ -76,15 +77,16 @@ function MapScene() {
   return (
     // TODO remove test buttons
     <>
+      <MapSceneUI />
       <div ref={layersRef} className="map-scene__layers"></div>
-      <div className="map-scene__buttons">
+      {/* <div className="map-scene__buttons">
         <a className="mx-auto text-white" onClick={simFinishLevel}>
           test finish level
         </a>
         <a className="mx-auto text-white" onClick={simDeath}>
           test death
         </a>
-      </div>
+      </div> */}
     </>
   )
 }

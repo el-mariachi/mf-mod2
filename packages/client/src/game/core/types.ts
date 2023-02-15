@@ -173,13 +173,13 @@ export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
 export type UnitBehaviorDef = {
   type:
-  | IdleMotionType.idle
-  | MoveMotionType.move
-  | AttackMotionType.attack
-  | DamageMotionType.damage
-  | DeathMotionType.death
-  | TurnMotionType.turn
-  | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+    | IdleMotionType.idle
+    | MoveMotionType.move
+    | AttackMotionType.attack
+    | DamageMotionType.damage
+    | DeathMotionType.death
+    | TurnMotionType.turn
+    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
   dir?: AxisDirection | Rotation
 }
 
@@ -234,3 +234,6 @@ export type GameInteractionDef = {
   subject: GameObjectDef
   animation?: CellSpriteAnimationProcess
 }
+
+// TODO in client common types ?
+export type RequiredField<T, K extends keyof T> = T & Required<Pick<T, K>>

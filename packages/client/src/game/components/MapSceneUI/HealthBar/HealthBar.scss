@@ -1,0 +1,19 @@
+@import '@vars';
+
+.health-bar {
+  margin-top: auto;
+  padding-left: 1rem;
+
+  &__bar {
+    width: 100%;
+    height: fit-content;
+    padding: 0;
+    border-bottom: 3px solid $ui_bg_purple;
+
+    div {
+      height: 3px;
+      padding: 0;
+      background: $ui_bg_light-purple;
+    }
+  }
+}
