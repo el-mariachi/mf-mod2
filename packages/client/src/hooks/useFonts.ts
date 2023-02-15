@@ -1,13 +1,17 @@
 import { useState } from 'react'
 
-export const useFonts = (_isLoaded: boolean) => {
-  const [isLoaded, setIsLoaded] = useState(_isLoaded)
-
-  document.fonts.ready.then(res => {
-    if (res.status === 'loaded') {
+export const useFonts = (fonts?: FontFace[]) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+  if (fonts) {
+    Promise.all(
+      fonts.map(font => {
+        document.fonts.add(font)
+        font.load()
+        return font.loaded
+      })
+    ).finally(() => setIsLoaded(true))
+  } else
+    document.fonts.onloadingerror = document.fonts.onloadingdone = () =>
       setIsLoaded(true)
-    }
-  })
-
   return isLoaded
 }

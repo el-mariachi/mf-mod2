@@ -1,70 +1,51 @@
-import { useEffect, useRef } from 'react'
-import { ProgressBar } from '../../animations/ProgressBar'
-import { useFonts } from '@hooks/useFonts'
+import { useEffect } from 'react'
+import { ProgressBar } from '@game/animations/ProgressBar'
 import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { startGame } from '@store/slices/game'
-import hero from '@sprites/hero.png'
-import dungeonTileset from '@sprites/tileset.png'
-import skeleton from '@sprites/skeleton.png'
+import * as GAME from '@game/core/constants'
+import SceneCanvas from '@game/components/SceneCanvas'
 
 function LoadScene() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const fontLoaded = useFonts(false)
   const dispatch = useAppDispatch()
-  const images = [hero, dungeonTileset, skeleton]
-  useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
-      const progressBar: ProgressBar = new ProgressBar({
-        color: 'white',
-        ctx,
-        x: center.width - 80,
-        y: center.height + 140,
-        width: 165,
-        heigth: 15,
-      })
 
-      if (ctx) {
-        const text = new Text({
-          ctx,
-          textBaseline: 'middle',
-          fillStyle: 'white',
-          textAlign: 'center',
-          font: '700 48px Minecraft',
-        })
-
-        ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, width, height)
-        text.fill('One Bit', center.width, center.height)
-        text.fill('Dungeon', center.width, center.height + 45)
-        text.fill('loading...', center.width, center.height + 115, {
-          font: '400 24px Minecraft',
-        })
-        progressBar.draw()
-      }
-    }
-  }, [fontLoaded])
+  const sceneDrawer: CanvasDrawingFunction = ctx => {
+    const progressBar: ProgressBar = new ProgressBar({
+      color: GAME.COLOR_WHITE,
+      ctx,
+      x: center.width - 82,
+      y: center.height + 72,
+      width: 165,
+      heigth: 15,
+    })
+    progressBar.draw()
+    const text = new Text({
+      ctx,
+      textBaseline: 'top',
+      fillStyle: GAME.TXT_FONT_LIGHT_COLOR,
+      textAlign: 'center',
+      font: '400 24px Minecraft',
+    })
+    text.fill('One Bit', center.width, center.height - 90, {
+      font: '700 59px Minecraft',
+      fillStyle: GAME.CAPTION_FONT_COLOR,
+    })
+    text.fill('Dungeon', center.width, center.height - 38, {
+      font: '700 48px Minecraft',
+      fillStyle: GAME.CAPTION_FONT_COLOR,
+    })
+    text.fill('loading...', center.width, center.height + 68, {
+      textBaseline: 'bottom',
+    })
+  }
 
   useEffect(() => {
-    const promises = images.map(src => {
-      return new Promise(res => {
-        const img = new Image()
-        img.src = src
-        img.onload = () => {
-          res(null)
-        }
-      })
-    })
-
-    Promise.all(promises).then(() => {
-      dispatch(startGame())
-    })
+    // TODO it`mock, need resources manager
+    setTimeout(() => dispatch(startGame()), 5000)
   }, [])
 
-  return <canvas ref={canvasRef} width={width} height={height}></canvas>
+  return <SceneCanvas draw={sceneDrawer} width={width} height={height} />
 }
 
 export default LoadScene
