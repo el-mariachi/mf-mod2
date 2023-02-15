@@ -1,4 +1,4 @@
-import * as GAME from '@game/core/constants'
+import * as UI from '@constants/ui'
 import { Coords } from '@game/core/types'
 import SecondsToHMS from '@game/utils/secondsFormat'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
@@ -24,7 +24,7 @@ function _RenderStroke(
   coords: Coords,
   bold = false
 ) {
-  ctx.fillStyle = GAME.TXT_FONT_LIGHT_COLOR
+  ctx.fillStyle = UI.COLOR_ALMOST_WHITE
   ctx.font = `${bold ? '700' : '400'} 24px Minecraft`
   ctx.textAlign = 'left'
   ctx.fillText(lStr, coords[0] - margin, coords[1])
@@ -59,28 +59,26 @@ function ResultScene({ onExit }: SceneProps) {
     // TODO
   }
 
-  // TODO selectGameTotals useEffect
-
   const isLevelCompleted = !heroIsDead
   const isGameCompleted = !showContinueButton
   const resultMessage = !isLevelCompleted
     ? 'Oops, you`re failed'
     : !isGameCompleted
-    ? 'Level completed'
-    : 'Game completed!'
+      ? 'Level completed'
+      : 'Game completed!'
   const sceneDrawer: CanvasDrawingFunction = ctx => {
     let curHeight = height / 2
 
     ctx.textAlign = 'center'
-    ctx.fillStyle = GAME.TXT_FONT_LIGHT_COLOR
+    ctx.fillStyle = UI.COLOR_ALMOST_WHITE
     ctx.font = '700 28px Minecraft'
 
     curHeight -= 207
     ctx.fillText(`Level ${levelNum}:`, center.width, curHeight)
 
     ctx.fillStyle = isLevelCompleted
-      ? GAME.COLOR_YELLOW
-      : GAME.COLOR_PURPLE_LIGHT
+      ? UI.COLOR_YELLOW
+      : UI.COLOR_DIRTY_PINK
     ctx.font = `700 ${isLevelCompleted ? '43px' : '36px'} Minecraft`
 
     curHeight += 40

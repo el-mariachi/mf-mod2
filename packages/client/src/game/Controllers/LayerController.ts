@@ -4,7 +4,8 @@ import GameObjectView from '@game/core/views/GameObjectView'
 import * as Types from '@game/core/types'
 import tileset from '@sprites/tileset.png'
 import { relCoords, mapCoords, cellCoords2PixelCoords } from '@game/utils'
-import { BG_COLOR, MAP_CELL } from '@game/core/constants'
+import { MAP_CELL } from '@game/core/constants'
+import { BG_COLOR } from '@constants/ui'
 
 type LayerProps = { name: string; zindex: string; size: Types.Size }
 
@@ -100,20 +101,20 @@ export class Layer {
     let lastAnimationTime = performance.now()
     const { ctx, canvas, views } = this
 
-    ;(function animationLoop() {
-      const now = performance.now()
-      const dt = (now - lastAnimationTime) / 1000
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ; (function animationLoop() {
+        const now = performance.now()
+        const dt = (now - lastAnimationTime) / 1000
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      views.forEach(view => {
-        if ('update' in view) {
-          view.update(dt)
-          view.render()
-        }
-      })
-      lastAnimationTime = now
-      requestAnimationFrame(animationLoop)
-    })()
+        views.forEach(view => {
+          if ('update' in view) {
+            view.update(dt)
+            view.render()
+          }
+        })
+        lastAnimationTime = now
+        requestAnimationFrame(animationLoop)
+      })()
   }
 }
 

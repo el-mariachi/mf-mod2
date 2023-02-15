@@ -27,7 +27,7 @@ $buttonBorderActLeft: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAI
   border: none;
   display: inline-block;
   position: relative;
-  color: $ui_bg_dark-purple;
+  color: $dark-purple-color;
   text-align: center;
   padding: 0 10px;
   background: url($buttonBorderTop) top repeat-x,
@@ -67,7 +67,7 @@ $buttonBorderActLeft: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAI
     font-size: 18px;
     color: black;
     text-shadow: rgba(188, 153, 167, 0.35) -1px -1px 0px;
-    background-color: $ui_button;
+    background-color: $dark-dirty-pink-color;
     margin: 0 10px;
     padding: 0 10px;
 
@@ -106,7 +106,7 @@ $buttonBorderActLeft: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAI
   }
 
   .game-ui-button__content {
-    background-color: $ui_purple;
+    background-color: $purple-color;
 
     &::before {
       background-position: -52px -49px;
@@ -118,6 +118,6 @@ $buttonBorderActLeft: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAI
   }
 }
 
-.game-ui-button + .game-ui-button {
+.game-ui-button+.game-ui-button {
   margin-left: 0.5rem;
 }

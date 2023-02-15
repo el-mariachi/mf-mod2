@@ -16,36 +16,8 @@
     margin: 0;
 
     &__content {
-      width: 200px;
+      width: 170px;
       padding: 5px 10px;
     }
   }
 }
-
-/* .res-scene__buttons {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-
-  a {
-    cursor: pointer;
-    text-decoration: none;
-    font: 400 24px Minecraft;
-    display: block;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    color: $game-ui-font-light-color;
-
-    &:hover {
-      color: $game-ui-font-light-color;
-    }
-  }
-
-  a+a {
-    margin: 1rem;
-  }
-
-  a:hover {
-    border-bottom: 2px solid white;
-  }
-} */

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { BG_COLOR } from '@constants/ui'
 import { useFonts } from '@hooks/useFonts'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { startGame } from '@store/slices/game'
@@ -8,7 +9,7 @@ import './StartScene.scss'
 
 function StartScene({ onExit }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const fontLoaded = useFonts(false)
+  const fontLoaded = useFonts()
 
   const dispatch = useAppDispatch()
   const onGameStart = () => {
@@ -28,7 +29,7 @@ function StartScene({ onExit }: SceneProps) {
           font: '700 48px Minecraft',
         })
 
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = BG_COLOR
         ctx.fillRect(0, 0, width, height)
         text.fill('One Bit', center.width, center.height)
         text.fill('Dungeon', center.width, center.height + 45, {

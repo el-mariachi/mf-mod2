@@ -1,4 +1,5 @@
-@import '@vars';
+$bar-maxval-color: rgb(74, 34, 70);
+$bar-curval-color: rgb(146, 104, 125);
 
 .health-bar {
   margin-top: auto;
@@ -8,12 +9,12 @@
     width: 100%;
     height: fit-content;
     padding: 0;
-    border-bottom: 3px solid $ui_bg_purple;
+    border-bottom: 3px solid $bar-maxval-color;
 
     div {
       height: 3px;
       padding: 0;
-      background: $ui_bg_light-purple;
+      background: $bar-curval-color;
     }
   }
 }

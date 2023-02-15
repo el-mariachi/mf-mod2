@@ -1,26 +1,12 @@
-$bg-color: #260b14;
-/* 210910 в моей демо, 2E040F в демо дмитрия 240b13 в макете ... 220D14 */
+$yellow-color: #e69e61;
+$almost-white: #e7d8c3;
+$purple-color: #653e69;
+$dark-purple-color: #251320;
+$dirty-pink-color: #9e6274;
+$dark-dirty-pink-color: #683e48;
+$bg-color: #25141a;
 
-$ui_font_light-purple: rgb(158, 98, 116);
-$ui_bg_dark-purple: rgb(37, 19, 32);
-$ui_bg_purple: rgb(74, 34, 70);
-$ui_bg_light-purple: rgb(146, 104, 125);
-$ui_purple: #653e69;
-/*  rgb(104, 61, 97); */
-$ui_button: rgb(104, 62, 72);
-
-$pixel-border: rgb(37, 19, 32);
-$pixel: 0.125rem;
-
-$game-ui-bg-color: #261320;
-$game-ui-brdr-color: #6b3b61;
-$game-ui-btn-color: #693e49;
-$game-ui-btn-act-color: #653e69;
-$game-ui-font-color: #9d5e6e;
-$game-ui-font-light-color: #e7d8c3;
-$game-ui-font-dark-color: black;
-
-/* bootstrap customization */
+/* PLS, BELOW ONLY bootstrap customization */
 $primary: #8a0036;
 $border-radius: 0;
 $border-radius-sm: 0;

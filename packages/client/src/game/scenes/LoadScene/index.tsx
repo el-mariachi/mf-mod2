@@ -4,7 +4,7 @@ import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { startGame } from '@store/slices/game'
-import * as GAME from '@game/core/constants'
+import * as UI from '@constants/ui'
 import SceneCanvas from '@game/components/SceneCanvas'
 
 function LoadScene() {
@@ -12,7 +12,7 @@ function LoadScene() {
 
   const sceneDrawer: CanvasDrawingFunction = ctx => {
     const progressBar: ProgressBar = new ProgressBar({
-      color: GAME.COLOR_WHITE,
+      color: UI.COLOR_ALMOST_WHITE,
       ctx,
       x: center.width - 82,
       y: center.height + 72,
@@ -23,17 +23,17 @@ function LoadScene() {
     const text = new Text({
       ctx,
       textBaseline: 'top',
-      fillStyle: GAME.TXT_FONT_LIGHT_COLOR,
+      fillStyle: UI.COLOR_ALMOST_WHITE,
       textAlign: 'center',
       font: '400 24px Minecraft',
     })
     text.fill('One Bit', center.width, center.height - 90, {
       font: '700 59px Minecraft',
-      fillStyle: GAME.CAPTION_FONT_COLOR,
+      fillStyle: UI.COLOR_YELLOW,
     })
     text.fill('Dungeon', center.width, center.height - 38, {
       font: '700 48px Minecraft',
-      fillStyle: GAME.CAPTION_FONT_COLOR,
+      fillStyle: UI.COLOR_YELLOW,
     })
     text.fill('loading...', center.width, center.height + 68, {
       textBaseline: 'bottom',

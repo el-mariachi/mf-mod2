@@ -2,19 +2,20 @@ import { FC } from 'react'
 import GameUIButton, { GameUIButtonProps } from '@game/components/GameUIButton'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { restartLevel } from '@store/slices/game'
-import { RequiredField } from '@game/core/types'
 
-type RestartButtonProps = RequiredField<GameUIButtonProps, 'onClick'>
+export type RestartButtonProps = GameUIButtonProps & {
+  onClick: () => void
+}
 export const RestartButton: FC<RestartButtonProps> = ({
-  onClick: onRestart,
+  onClick: restart,
   ...props
 }) => {
   const dispatch = useAppDispatch()
   return (
     <GameUIButton
-      onClick={e => {
+      onClick={() => {
         dispatch(restartLevel())
-        onRestart(e)
+        restart()
       }}
       {...props}>
       Restart level (l)

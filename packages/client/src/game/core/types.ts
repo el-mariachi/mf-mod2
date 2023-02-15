@@ -262,6 +262,3 @@ export const MoveGameEvents = [
   GameEvent.Up,
   GameEvent.Down,
 ]
-
-// TODO in client common types ?
-export type RequiredField<T, K extends keyof T> = T & Required<Pick<T, K>>

@@ -1,12 +1,9 @@
 import {
   FC,
   HTMLAttributes,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
+  useCallback
 } from 'react'
-import * as GAME from '@game/core/constants'
+import * as UI from '@constants/ui'
 import Canvas from '@components/Canvas'
 import { height, width } from '@utils/winsize'
 import { useFonts } from '@hooks/useFonts'
@@ -14,7 +11,7 @@ import { useFonts } from '@hooks/useFonts'
 export const prepareSceneCanvas: CanvasDrawingFunction = ctx => {
   if (ctx) {
     ctx.clearRect(0, 0, width, height)
-    ctx.fillStyle = GAME.BG_COLOR
+    ctx.fillStyle = UI.BG_COLOR
     ctx.fillRect(0, 0, width, height)
   }
 }
@@ -24,15 +21,15 @@ const SceneCanvas: FC<SceneCanvasProps> = ({
   children: ui,
   ...attrs
 }) => {
-  const fontLoaded = useFonts(GAME.MINECRAFT_FONTS)
+  const fontLoaded = useFonts(UI.MINECRAFT_FONTS)
   const getSceneDrawer = useCallback(() => {
     return fontLoaded
       ? (ctx: CanvasRenderingContext2D) => {
-          if (ctx) {
-            prepareSceneCanvas(ctx)
-            sceneDrawer(ctx)
-          }
+        if (ctx) {
+          prepareSceneCanvas(ctx)
+          sceneDrawer(ctx)
         }
+      }
       : (ctx: CanvasRenderingContext2D) => prepareSceneCanvas(ctx)
   }, [fontLoaded])
 
