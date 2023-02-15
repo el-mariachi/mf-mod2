@@ -14,7 +14,9 @@ const ModalButton: FC<ModalButtonProps> = ({
   className,
 }) => {
   return (
-    <div className={classNames('modal__button', className)} onClick={onCloseFn}>
+    <div
+      className={classNames('gameModalUI__button', className)}
+      onClick={onCloseFn}>
       {children}
     </div>
   )

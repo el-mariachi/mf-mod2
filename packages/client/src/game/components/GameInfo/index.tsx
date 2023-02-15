@@ -47,7 +47,7 @@ function GameInfo() {
   const childCharInfo = (
     <div className="d-flex">
       <img src="src/assets/images/hero.png" />
-      <div className="modal__stats">
+      <div className="gameModalUI__stats">
         <h3>{display_name}</h3>
         <ul>
           <li>

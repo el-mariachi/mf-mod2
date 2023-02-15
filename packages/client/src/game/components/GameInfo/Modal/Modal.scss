@@ -1,10 +1,11 @@
 @import '@vars';
 @import '@bootstrap';
 
-.modal {
+.gameModalUI {
   height: 80vh;
   width: 100vw;
   position: fixed;
+  z-index: 20;
   top: 0;
   left: 0;
   display: flex;
@@ -15,12 +16,12 @@
   transition: opacity 0.1s;
 }
 
-.modal_active {
+.gameModalUI_active {
   opacity: 1;
   pointer-events: all;
 }
 
-.modal__content {
+.gameModalUI__content {
   position: relative;
   background-color: $ui_purple;
   padding: 10px;
@@ -49,12 +50,12 @@
     0 calc($pixel * -15) 0 calc($pixel * -6) $pixel-border,
     0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
 
-  .modal__header {
+  .gameModalUI__header {
     display: flex;
     font-family: 'Minecraft';
     font-size: 1.5rem;
 
-    .modal__close-btn {
+    .gameModalUI__close-btn {
       display: block;
       margin-left: auto;
       margin-bottom: 0.5rem;
@@ -69,13 +70,13 @@
     }
   }
 
-  .modal__child-content {
+  .gameModalUI__child-content {
     width: 100%;
     height: fit-content;
     background: $ui_bg_dark-purple;
     padding: 20px;
 
-    .modal__stats {
+    .gameModalUI__stats {
       font-family: 'Minecraft';
       color: rgb(146, 104, 125);
       width: 50%;
@@ -99,7 +100,7 @@
   }
 }
 
-.modal__button {
+.gameModalUI__button {
   cursor: pointer;
   font-family: 'Minecraft';
   font-size: 1.5rem;
@@ -135,7 +136,7 @@
     0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
 }
 
-.modal__button:hover {
+.gameModalUI__button:hover {
   background-color: $ui_purple;
   box-shadow:
 	/* Inner Background Color */ 0 calc($pixel * -3) 0
@@ -162,6 +163,6 @@
     0 calc($pixel * 15) 0 calc($pixel * -6) $pixel-border;
 }
 
-.modal__button + .modal__button {
+.gameModalUI__button + .gameModalUI__button {
   margin-top: 2rem;
 }
