@@ -26,6 +26,9 @@ export const selectGameTotals = (state: RootState) => {
   return { gameTotals: totals, levelNum: game(state).currentLevel }
 }
 
+export const selectLevelScore = (state: RootState) =>
+  computeScore(game(state).levelStats, game(state).currentLevel)
+
 export const selectGameScore = (state: RootState) => {
   return (
     computeScore(game(state).levelStats, game(state).currentLevel) +
