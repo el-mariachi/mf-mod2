@@ -3,10 +3,10 @@ import tileset from '@sprites/tileset.png'
 import * as Types from '@game/core/types'
 
 export default class Gate extends GameObject {
-  name = Types.GameEntourageName.leftGateLeaf
+  name = Types.GameEntourageName.gate
   spriteSrc = tileset
   crossable = false
   static = true
-  animated = false
+  animated = true
   destroyable = false
 }

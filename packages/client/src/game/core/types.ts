@@ -1,3 +1,4 @@
+import _default from 'react-bootstrap/esm/Alert'
 import GameObjectView from './views/GameObjectView'
 
 export type Coords = [number, number]
@@ -173,13 +174,13 @@ export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
 export type UnitBehaviorDef = {
   type:
-    | IdleMotionType.idle
-    | MoveMotionType.move
-    | AttackMotionType.attack
-    | DamageMotionType.damage
-    | DeathMotionType.death
-    | TurnMotionType.turn
-    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+  | IdleMotionType.idle
+  | MoveMotionType.move
+  | AttackMotionType.attack
+  | DamageMotionType.damage
+  | DeathMotionType.death
+  | TurnMotionType.turn
+  | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
   dir?: AxisDirection | Rotation
 }
 
@@ -196,8 +197,7 @@ export enum GameItemName {
 
 export enum GameEntourageName {
   wall = 'wall',
-  leftGateLeaf = 'left gate leaf',
-  rightGateLeaf = 'right gate leaf',
+  gate = 'gate',
 }
 
 export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
@@ -234,6 +234,34 @@ export type GameInteractionDef = {
   subject: GameObjectDef
   animation?: CellSpriteAnimationProcess
 }
+
+export type GameAction = [GameEvent, number]
+
+export enum GameEvent {
+  Left = 'MOVE_LEFT',
+  Right = 'MOVE_RIGHT',
+  Up = 'MOVE_UP',
+  Down = 'MOVE_DOWN',
+  Fullscreen = 'FULLSCREEN',
+  Pause = 'PAUSE',
+  Escape = 'ESCAPE',
+  Mute = 'MUTE',
+  Resume = 'RESUME',
+}
+
+export const MapGameEvents2Direction = {
+  [GameEvent.Left]: AxisDirection.left,
+  [GameEvent.Right]: AxisDirection.right,
+  [GameEvent.Up]: AxisDirection.top,
+  [GameEvent.Down]: AxisDirection.bottom,
+}
+
+export const MoveGameEvents = [
+  GameEvent.Left,
+  GameEvent.Right,
+  GameEvent.Up,
+  GameEvent.Down,
+]
 
 // TODO in client common types ?
 export type RequiredField<T, K extends keyof T> = T & Required<Pick<T, K>>

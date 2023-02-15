@@ -7,7 +7,7 @@ export default class Coin extends GameObject {
   name = Types.GameItemName.coin
   spriteSrc: string = itemsSrc
   motions = itemsMotions.coin
-  crossable = true
+  crossable = false
   static = true
   animated = true
   destroyable = true

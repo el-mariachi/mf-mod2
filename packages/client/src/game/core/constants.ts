@@ -8,6 +8,7 @@ export const SPRITE_SIZE: Types.Size = [MAP_CELL, MAP_CELL]
 export const STEP_TIME = 1000
 export const DEF_FRAME_PER_SECOND_SPEED = 7
 export const DEF_MOVE_DURATION = 500
+export const HERO_MOVE_DELAY = 10
 
 // TODO это константы сайта
 
