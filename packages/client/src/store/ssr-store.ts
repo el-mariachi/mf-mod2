@@ -1,9 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import gameSlice from '@store/slices/game'
 import heroSlice from '@store/slices/hero'
-
-// ! user slice refactored for testing ssr
-import userSlice from '@store/slices/user-ssr'
+import userSlice from '@store/slices/user'
 import { gameInitialState } from '@constants/game'
 import { heroInitialState } from '@constants/hero'
 import { userInitialState } from '@constants/user'

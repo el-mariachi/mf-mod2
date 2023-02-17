@@ -2,12 +2,13 @@ import { useEffect, useRef } from 'react'
 import { useFonts } from '@hooks/useFonts'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { finishLevel } from '@store/slices/game'
-import { width, height, center } from '@utils/winsize'
+import { useWinSize } from '@hooks/useWinSize'
 import './MapScene.css'
 
 function LoadScene({ onExit }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts(false)
+  const [width, height, center] = useWinSize()
 
   const dispatch = useAppDispatch()
   const onGameFinish = () => {

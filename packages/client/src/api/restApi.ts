@@ -6,6 +6,7 @@ import axios, {
 } from 'axios'
 import { AppErrorCode, createAppError } from '@utils/errorsHandling'
 import { API_BASE_URL, API_TIMEOUT } from '@constants/api'
+import { MockApi } from '@api/ssrApiMock'
 
 enum RestApiMethods {
   get = 'get',
@@ -16,7 +17,7 @@ enum RestApiMethods {
 type RestApiOpts = AxiosRequestConfig
 type RestApiData = FormData | PlainObject
 
-export default class RestApi {
+class RestApi {
   protected _http: AxiosInstance
 
   constructor(
@@ -123,6 +124,19 @@ export default class RestApi {
       })
   }
 }
-export const restAuthApi = new RestApi('/auth')
-export const restUsersApi = new RestApi('/user')
-export const restResourceApi = new RestApi('/resources')
+
+let restAuthApi: MockApi | RestApi
+let restUsersApi: MockApi | RestApi
+let restResourceApi: MockApi | RestApi
+
+if (process.env.CUSTOM_SSR === 'CUSTOM_SSR') {
+  restAuthApi = new MockApi()
+  restUsersApi = new MockApi()
+  restResourceApi = new MockApi()
+} else {
+  restAuthApi = new RestApi('/auth')
+  restUsersApi = new RestApi('/user')
+  restResourceApi = new RestApi('/resources')
+}
+
+export { restAuthApi, restUsersApi, restResourceApi }

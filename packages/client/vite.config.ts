@@ -12,8 +12,12 @@ export default defineConfig({
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
+    'process.env.CUSTOM_SSR': false,
   },
   plugins: [react(), tsconfigPaths()],
+  build: {
+    minify: false,
+  },
   resolve: {
     alias: {
       '@': path.resolve('../../', __dirname, 'src'),

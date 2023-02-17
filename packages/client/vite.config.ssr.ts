@@ -9,6 +9,9 @@ dotenv.config()
 export default defineConfig(() => {
   return {
     plugins: [react(), tsconfigPaths()],
+    define: {
+      'process.env.CUSTOM_SSR': `'CUSTOM_SSR'`,
+    },
     build: {
       lib: {
         entry: path.resolve(__dirname, 'ssr.tsx'),
@@ -20,8 +23,6 @@ export default defineConfig(() => {
           dir: 'ssr-dist',
         },
       },
-      minify: false,
-      emptyOutDir: false,
     },
     resolve: {
       alias: {

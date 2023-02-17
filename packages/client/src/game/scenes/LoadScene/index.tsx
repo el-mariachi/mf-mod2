@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { ProgressBar } from '../../animations/ProgressBar'
 import { useFonts } from '@hooks/useFonts'
-import { width, height, center } from '@utils/winsize'
+import { useWinSize } from '@hooks/useWinSize'
 import { Text } from '@utils/fillCanvas'
 
 function LoadScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts(false)
+  const [width, height, center] = useWinSize()
 
   useEffect(() => {
     if (canvasRef.current) {
