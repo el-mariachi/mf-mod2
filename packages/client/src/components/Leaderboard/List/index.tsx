@@ -3,87 +3,52 @@ import Lb_User from '../Element'
 import { Stack } from 'react-bootstrap'
 import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
+import {
+  GetLeaderboardData,
+  LeaderboardDataReq,
+  LeaderboardDataResp,
+} from '@api/leaderboardApi'
+import SecondsToHMS from '@utils/secondsFormat'
 
-const inputData = [
-  {
-    nickname: 'User1',
-    score: 9999,
-    date: '26.12.2022',
-    time: '00:01:27',
-    kills: 0,
-  },
-  {
-    nickname: 'User2',
-    score: 8000,
-    date: '25.12.2022',
-    time: '00:10:35',
-    kills: 10,
-  },
-  {
-    nickname: 'User3',
-    score: 5000,
-    date: '14.12.2022',
-    time: '01:00:00',
-    kills: 1000,
-  },
-  {
-    nickname: 'User4',
-    score: 5000,
-    date: '14.12.2022',
-    time: '01:00:00',
-    kills: 1000,
-  },
-  {
-    nickname: 'User5',
-    score: 5000,
-    date: '14.12.2022',
-    time: '01:00:00',
-    kills: 1000,
-  },
-  {
-    nickname: 'User6',
-    score: 5000,
-    date: '14.12.2022',
-    time: '01:00:00',
-    kills: 1000,
-  },
-  {
-    nickname: 'User7',
-    score: 5000,
-    date: '14.12.2022',
-    time: '01:00:00',
-    kills: 1000,
-  },
-  {
-    nickname: 'User8',
-    score: 2000,
-    date: '30.12.2022',
-    time: '01:11:27',
-    kills: 2,
-  },
-]
+let inputData: LeaderboardDataResp[]
 
-type SortedVal = keyof typeof inputData[number]
+enum SortedVal {
+  coins = 'coins',
+  steps = 'steps',
+  time = 'time',
+  kills = 'killCount',
+}
 
 function LeaderboardList() {
   const [sortMode, setSortMode] = useState(1)
+  const [lbData, setLbData] = useState(inputData)
+
+  const req: LeaderboardDataReq = {
+    ratingFieldName: 'coins',
+    cursor: 0,
+    limit: 10,
+  }
+
+  GetLeaderboardData(req).then((data: LeaderboardDataResp[]) => {
+    setLbData(data)
+  })
 
   let counter = 0
-  let sortedVal: SortedVal = 'score'
+  let sortedVal = SortedVal.coins
 
   switch (sortMode) {
     case 1:
-      sortedVal = 'score'
-      inputData.sort((a, b) => {
-        return b.score - a.score
+      sortedVal = SortedVal.coins
+      lbData.sort((a, b) => {
+        return b.data.coins - a.data.coins
       })
       break
     case 2:
-      sortedVal = 'date'
-      inputData.sort((a, b) => {
-        if (b.date > a.date) {
+      sortedVal = SortedVal.steps
+      lbData.sort((a, b) => {
+        if (b.data.steps > a.data.steps) {
           return -1
-        } else if (b.date < a.date) {
+        } else if (b.data.steps < a.data.steps) {
           return 1
         } else {
           return 0
@@ -91,11 +56,11 @@ function LeaderboardList() {
       })
       break
     case 3:
-      sortedVal = 'time'
-      inputData.sort((a, b) => {
-        if (b.time > a.time) {
+      sortedVal = SortedVal.time
+      lbData.sort((a, b) => {
+        if (b.data.time > a.data.time) {
           return -1
-        } else if (b.time < a.time) {
+        } else if (b.data.time < a.data.time) {
           return 1
         } else {
           return 0
@@ -103,9 +68,9 @@ function LeaderboardList() {
       })
       break
     case 4:
-      sortedVal = 'kills'
-      inputData.sort((a, b) => {
-        return b.kills - a.kills
+      sortedVal = SortedVal.kills
+      lbData.sort((a, b) => {
+        return b.data.killCount - a.data.killCount
       })
       break
   }
@@ -122,26 +87,30 @@ function LeaderboardList() {
             setSortMode(Number(e.currentTarget.value))
           }}
           className="flex-1">
-          <option value="1">Счет</option>
-          <option value="2">Дата</option>
+          <option value="1">Монеты</option>
+          <option value="2">Шаги</option>
           <option value="3">Время</option>
           <option value="4">Враги</option>
         </Form.Select>
       </div>
       <div className="overflow-auto">
         <Stack gap={2}>
-          {inputData.map(user => {
+          {lbData.map(user => {
             counter++
             return (
               <Lb_User
-                key={user.nickname}
+                key={user.data.nickname}
                 place={counter}
-                nickname={user.nickname}
-                score={user.score}
-                date={user.date}
-                time={user.time}
-                kills={user.kills}
-                sortedVal={String(user[sortedVal])}
+                nickname={user.data.nickname}
+                coins={user.data.coins}
+                killCount={user.data.killCount}
+                time={user.data.time}
+                steps={user.data.steps}
+                sortedVal={
+                  sortedVal == SortedVal.time
+                    ? SecondsToHMS(user.data[sortedVal]).toString()
+                    : user.data[sortedVal].toString()
+                }
               />
             )
           })}
