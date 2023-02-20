@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -16,7 +16,8 @@ import { LoggedInCheck, nonAuthorizedPageAccessOpts } from 'hoc/LoggedInCheck'
 import ROUTES from '@constants/routes'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
-
+import OauthBox from '@components/OauthBox'
+import { signInWithYandex } from '@services/oauthController'
 export type SignInProps = {
   signUpPageUrl?: ROUTES
 }
@@ -158,6 +159,7 @@ const SignIn = (props: SignInProps) => {
           </>
         )}
       </Form>
+      <OauthBox />
     </AppDefaultTpl>
   )
 }

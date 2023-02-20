@@ -11,13 +11,11 @@ import startServiceWorker from '@services/ServiceWorkers/swStart'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <BrowserRouter>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ErrorBoundary>
   </React.StrictMode>
 )
 
-startServiceWorker({ always: true })
+//startServiceWorker({ always: true })
