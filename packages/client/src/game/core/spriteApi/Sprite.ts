@@ -7,7 +7,7 @@ import {
   nextCoordsByVector,
   roundCoords,
 } from '@game/utils'
-import { muteRes } from '@utils-kit'
+import { muteRes } from '@utils/index'
 
 type SpriteActiveAnimation = {
   params: Types.SpriteAnimationParams
@@ -340,8 +340,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
 
-        ;(this._geometry.origin as Types.Geometry).position[framesAxisInd] =
-          motionFrame * motionOrigin.size[framesAxisInd]
+          ; (this._geometry.origin as Types.Geometry).position[framesAxisInd] =
+            motionFrame * motionOrigin.size[framesAxisInd]
       }
     }
 

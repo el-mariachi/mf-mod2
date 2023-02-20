@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -17,19 +21,47 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "paths": {
-      "@components/*": ["components/*"],
-      "@utils-kit": ["utils"],
-      "@utils/*": ["utils/*"],
-      "@api/*": ["api/*"],
-      "@pages/*": ["pages/*"],
-      "@services/*": ["services/*"],
-      "@game/*": ["game/*"],
-      "@scenes/*": ["game/scenes/*"],
-      "@hooks/*": ["hooks/*"],
-      "@store/*": ["store/*"],
-      "@constants/*": ["constants/*"]
+      "@components/*": [
+        "components/*"
+      ],
+      "@utils/index": [
+        "utils"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@api/*": [
+        "api/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
+      "@game/*": [
+        "game/*"
+      ],
+      "@scenes/*": [
+        "game/scenes/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@store/*": [
+        "store/*"
+      ],
+      "@constants/*": [
+        "constants/*"
+      ]
     }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

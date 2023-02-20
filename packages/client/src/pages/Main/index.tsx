@@ -14,17 +14,6 @@ function Main() {
       </p>
 
       <p>
-        <iframe
-          width="100%"
-          height="350"
-          src="https://www.youtube.com/embed/_KKkPiIMogc"
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen></iframe>
-      </p>
-
-      <p>
         Тут будет информация как играть. Lorem ipsum dolor sit amet consectetur
         adipisicing elit. Possimus nam suscipit nisi minima beatae quis, debitis
         nemo dolore ratione exercitationem dolores rerum impedit natus totam
