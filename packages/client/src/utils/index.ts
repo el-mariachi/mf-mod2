@@ -9,3 +9,7 @@ export function redirect2(path = '/', except: string[] = []) {
 export const muteRes = () => {
   return
 }
+
+export const createRangeKeeper =
+  (min: number, max?: number) => (value: number) =>
+    Math.max(min, Math.min(max || Infinity, value))
