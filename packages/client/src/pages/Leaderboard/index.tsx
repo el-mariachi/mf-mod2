@@ -3,7 +3,6 @@ import AppDefaultTpl from '@components/AppDefaultTpl'
 import { Button } from 'react-bootstrap'
 import './Leaderboard.scss'
 import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
-import { GetLeaderboardData } from '@api/leaderboardApi'
 
 const Leaderboard = () => {
   return (

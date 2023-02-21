@@ -1,10 +1,10 @@
 import LeaderboardProps from '../Props'
 import Lb_User from '../Element'
 import { Stack } from 'react-bootstrap'
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import Form from 'react-bootstrap/Form'
 import {
-  GetLeaderboardData,
+  getLeaderboardData,
   LeaderboardDataReq,
   LeaderboardDataResp,
 } from '@api/leaderboardApi'
@@ -29,8 +29,10 @@ function LeaderboardList() {
     limit: 10,
   }
 
-  GetLeaderboardData(req).then((data: LeaderboardDataResp[]) => {
-    setLbData(data)
+  useEffect(() => {
+    getLeaderboardData(req).then((data: LeaderboardDataResp[]) => {
+      setLbData(data)
+    })
   })
 
   let counter = 0
