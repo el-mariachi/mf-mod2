@@ -39,6 +39,17 @@ async function startServer() {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))
   }
 
+  app.use('/sw.js', (_, res, next) => {
+    try {
+      res.status(200).sendFile(path.resolve(srcPath, 'sw.js'))
+    } catch (e) {
+      if (isDev()) {
+        vite.ssrFixStacktrace(e as Error)
+      }
+      next(e)
+    }
+  })
+
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl
 
