@@ -1,4 +1,19 @@
-export const width = 384
-export const height = 672
+import { defaultMapSize } from '@constants/game'
 
-export const center = { width: width / 2, height: height / 2 }
+let width: number
+let height: number
+
+if (process.env.CUSTOM_SSR === 'CUSTOM_SSR') {
+  width = defaultMapSize.width
+  height = defaultMapSize.height
+} else {
+  width = window.innerWidth
+  height = window.innerHeight
+}
+
+export { width, height }
+
+export const center = {
+  width: Math.floor(width / 2),
+  height: Math.floor(height / 2),
+}

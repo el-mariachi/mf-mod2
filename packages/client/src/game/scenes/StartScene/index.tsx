@@ -2,14 +2,13 @@ import { useEffect, useRef } from 'react'
 import { useFonts } from '@hooks/useFonts'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { startGame } from '@store/slices/game'
-import { useWinSize } from '@hooks/useWinSize'
+import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
 import './StartScene.scss'
 
 function StartScene({ onExit }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts(false)
-  const [width, height, center] = useWinSize()
 
   const dispatch = useAppDispatch()
   const onGameStart = () => {

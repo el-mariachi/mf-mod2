@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
+import type { ViteDevServer } from 'vite'
 
 dotenv.config()
 
@@ -19,13 +20,14 @@ async function startServer() {
   const srcPath = path.dirname(require.resolve('client'))
   const ssrClientPath = require.resolve('client/ssr-dist/client.cjs')
 
-  const vite = await createViteServer({
-    server: { middlewareMode: true },
-    root: srcPath,
-    appType: 'custom',
-  })
-
+  let vite: ViteDevServer
   if (isDev()) {
+    vite = await createViteServer({
+      server: { middlewareMode: true },
+      root: srcPath,
+      appType: 'custom',
+    })
+
     app.use(vite.middlewares)
   }
 

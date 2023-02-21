@@ -5,7 +5,7 @@ import './ResScene.scss'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
 import { resumeGame } from '@store/slices/game'
 import { selectGameTotals } from '@store/selectors'
-import { useWinSize } from '@hooks/useWinSize'
+import { width, height, center } from '@utils/winsize'
 
 function _RenderStroke(
   ctx: CanvasRenderingContext2D,
@@ -22,7 +22,6 @@ function _RenderStroke(
 }
 
 function ResScene({ onExit }: SceneProps) {
-  const [width, height, center] = useWinSize()
   const { levelNum, gameTotals } = useAppSelector(selectGameTotals)
   const { killCount, coins, time, steps } = gameTotals
   const dispatch = useAppDispatch()

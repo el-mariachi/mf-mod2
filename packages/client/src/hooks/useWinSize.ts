@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { defaultMapSize } from '@constants/game'
 
 type Center = {
   width: number
@@ -21,8 +22,8 @@ interface WinSize {
 }
 
 export const useWinSize: WinSize = (
-  initialWidth = 384,
-  initialHeight = 672
+  initialWidth = defaultMapSize.width,
+  initialHeight = defaultMapSize.height
 ) => {
   const [width, setWidth] = useState(initialWidth)
   const [height, setHeight] = useState(initialHeight)
