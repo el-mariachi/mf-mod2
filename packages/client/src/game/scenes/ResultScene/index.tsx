@@ -1,5 +1,5 @@
 import * as UI from '@constants/ui'
-import { Coords } from '@types/game'
+import { Coords } from '@type/game'
 import SecondsToHMS from '@utils/secondsFormat'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
 import { nextLevel, startGame } from '@store/slices/game'

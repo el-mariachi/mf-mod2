@@ -1,7 +1,7 @@
 import UnitView from '@game/views/UnitView'
 import GameObjectView from '@game/views/GameObjectView'
 import AnimatableView from '@game/views/AnimatableView'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
 import CellSprite from '@game/sprite/CellSprite'
 import GameObject from '@game/objects/GameObject'

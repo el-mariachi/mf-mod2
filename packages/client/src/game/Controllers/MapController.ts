@@ -2,7 +2,7 @@ import GameObject from '@game/objects/GameObject'
 import GameObjects from '@game/objects'
 import level1 from '@game/data/levels/1.json'
 import { LayerRecord } from './LayerController'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 
 /** ячейка игровой матрицы */
 export class Cell {

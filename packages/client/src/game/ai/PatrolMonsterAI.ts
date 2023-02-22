@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import * as Behaviors from '@game/animations/behavior'
 import UnitAI from '@game/ai/UnitAI'
 import Skeleton from '@game/objects/Skeleton'

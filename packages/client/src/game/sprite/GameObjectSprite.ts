@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import CellSprite from '@game/sprite/CellSprite'
 
 export default class GameObjectSprite extends CellSprite {

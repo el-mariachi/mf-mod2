@@ -1,4 +1,4 @@
-import { LevelMap, UnitBehaviorDef } from '@types/game'
+import { LevelMap, UnitBehaviorDef } from '@type/game'
 import GameObject from '@game/objects/GameObject'
 import Skeleton from '@game/objects/Skeleton'
 

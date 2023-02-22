@@ -27,7 +27,7 @@
       "@hooks/*": ["hooks/*"],
       "@store/*": ["store/*"],
       "@constants/*": ["constants/*"],
-      "@types/*": ["types/*"]
+      "@type/*": ["types/*"]
     }
   },
   "include": ["src", "src/test/jest-setup.ts"],

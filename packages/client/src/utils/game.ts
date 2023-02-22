@@ -1,5 +1,5 @@
 import { MAP_CELL } from '@constants/game'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import { roundArrValues, createRangeKeeper } from '@utils/index'
 import { center } from '@utils/winsize'
 

@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { AnimatableOnCanvas } from '@types/game'
+import { AnimatableOnCanvas } from '@type/game'
 import Canvas from '@components/Canvas'
 import { height, width } from '@utils/winsize'
 

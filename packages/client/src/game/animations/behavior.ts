@@ -1,5 +1,5 @@
 import { DEF_MOVE_DURATION, STEP_TIME } from '@constants/game'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 
 export const doNothing = {
   type: Types.UnspecifiedMotionType.none,

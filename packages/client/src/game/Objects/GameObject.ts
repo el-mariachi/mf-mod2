@@ -1,5 +1,5 @@
 import tileset from '@sprites/tileset.png'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import { View } from '@game/views/ViewFactory'
 import UnitAI from '@game/ai/UnitAI'
 import { Cell } from '@game/controllers/MapController'

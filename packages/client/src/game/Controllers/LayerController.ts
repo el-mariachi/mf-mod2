@@ -1,7 +1,7 @@
 import GameObject from '@game/objects/GameObject'
 import ViewFactory, { View } from '@game/views/ViewFactory'
 import GameObjectView from '@game/views/GameObjectView'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import tileset from '@sprites/tileset.png'
 import { relCoords, mapCoords, cellCoords2PixelCoords } from '@utils/game'
 import { MAP_CELL } from '@constants/game'

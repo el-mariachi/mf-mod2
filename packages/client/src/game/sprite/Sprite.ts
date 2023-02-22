@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import { DEF_FRAME_PER_SECOND_SPEED, motionTypes } from '@constants/game'
 import * as Utils from '@utils/game'
 import { muteRes } from '@utils/index'

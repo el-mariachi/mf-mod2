@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 
 const coin = {
   [Types.IdleMotionType.idle]: {

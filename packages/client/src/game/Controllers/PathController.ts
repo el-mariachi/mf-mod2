@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import patrolPaths from '@game/data/patrolPaths.json'
 
 export default class PathController {

@@ -1,5 +1,5 @@
 import GameObject from '@game/objects/GameObject'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import heroSrc from '@sprites/hero.png'
 import { heroMotions } from '@game/animations/hero'
 import UnitView from '@game/views/UnitView'

@@ -1,6 +1,6 @@
 import GameObject from './GameObject'
 import tileset from '@sprites/tileset.png'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 
 export default class Wall extends GameObject {
   name = Types.GameEntourageName.wall

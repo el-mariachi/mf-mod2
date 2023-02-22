@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import { SPRITE_SIZE } from '@constants/game'
 import Sprite from '@game/sprite/Sprite'
 import {

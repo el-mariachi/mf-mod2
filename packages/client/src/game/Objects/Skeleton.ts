@@ -1,5 +1,5 @@
 import GameObject from '@game/objects/GameObject'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import skeletonSrc from '@sprites/skeleton.png'
 import { skeletonMotions } from '@game/animations/skeleton'
 import UnitView from '@game/views/UnitView'

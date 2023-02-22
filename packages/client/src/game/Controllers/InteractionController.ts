@@ -1,5 +1,5 @@
 import { DEF_MOVE_DURATION } from '@constants/game'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import { store } from '@store/index'
 import {
   clearInteractions,

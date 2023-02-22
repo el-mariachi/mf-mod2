@@ -1,4 +1,4 @@
-import { GameEvent, GameAction } from '@types/game'
+import { GameEvent, GameAction } from '@type/game'
 
 export type GameActionType = [GameEvent, number, () => void]
 

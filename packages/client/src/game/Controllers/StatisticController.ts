@@ -1,5 +1,5 @@
 import { GameStats, GameStatType } from '@constants/game'
-import { CollectableItem, MonsterUnit } from '@types/game'
+import { CollectableItem, MonsterUnit } from '@type/game'
 import Timer from '@utils/Timer'
 import { store } from '@store/index'
 import { updateStats } from '@store/slices/game'

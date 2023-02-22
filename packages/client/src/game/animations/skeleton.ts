@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 
 export const skeletonMotions = {
   [Types.IdleMotionType.look2right]: {

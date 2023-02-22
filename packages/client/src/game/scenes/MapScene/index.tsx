@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import { useAppSelector } from 'hooks/redux_typed_hooks'
 import MapController from '@game/controllers/MapController'
 import { createLayers, LayerRecord } from '@game/controllers/LayerController'

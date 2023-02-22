@@ -1,6 +1,6 @@
 import GameObject from './GameObject'
 import itemsSrc from '@sprites/items.png'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import itemsMotions from '@game/animations/items'
 
 export default class Coin extends GameObject {

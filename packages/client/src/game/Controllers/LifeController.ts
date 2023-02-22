@@ -1,6 +1,6 @@
 import GameObject from '@game/objects/GameObject'
 import MapController, { Cell } from './MapController'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import PatrolMonsterAI from '@game/ai/PatrolMonsterAI'
 import Skeleton from '@game/objects/Skeleton'
 import PathController from './PathController'

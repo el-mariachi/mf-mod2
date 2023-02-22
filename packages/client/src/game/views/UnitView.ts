@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
 import AnimatableView from '@game/views/AnimatableView'
 import getAnimatedBehavior, * as Behaviors from '@game/animations/behavior'

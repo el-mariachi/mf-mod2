@@ -1,4 +1,4 @@
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 import GameObject from './GameObject'
 import Hero from './Hero'
 import Skeleton from './Skeleton'

@@ -1,5 +1,5 @@
 import SCENES from '@constants/scenes'
-import * as Types from '@types/game'
+import * as Types from '@type/game'
 
 export const MAP_CELL = 32
 export const SPRITE_SIZE: Types.Size = [MAP_CELL, MAP_CELL]
