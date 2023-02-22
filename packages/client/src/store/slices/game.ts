@@ -10,22 +10,39 @@ import { resetHeroResources } from '@store/slices/hero'
 import { computeScore } from '@utils/computeScore'
 import {
   gameInitialState,
-  TurnControllerState,
+  LifeControllerState,
   GameIntaractions,
+  noInteraction,
 } from '@constants/game'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 
-const resetLevelStats = (state: GameSlice) => {
-  state.levelStats = gameInitialState.levelStats
-}
+// const resetLevelStats = (state: GameSlice) => {
+//   state.levelStats = gameInitialState.levelStats
+// }
 
 const updateTotals = (state: GameSlice) => {
+  console.log('updateTotals state', state)
   state.gameTotals.coins += state.levelStats.coins
   state.gameTotals.killCount += state.levelStats.killCount
   state.gameTotals.steps += state.levelStats.steps
   state.gameTotals.time += state.levelStats.time
   state.score += computeScore(state.levelStats, state.currentLevel)
-  resetLevelStats(state)
+  console.log(
+    'updateTotals totals',
+    state.gameTotals,
+    computeScore(state.levelStats, state.currentLevel)
+  )
+  // resetLevelStats(state)
+}
+const invertStats = (levelStats: GameSlice['levelStats']) => {
+  const invertedStats = Object.keys(levelStats).reduce((result, current) => {
+    const key = current as keyof typeof levelStats
+    return Object.assign(result, {
+      [current]: -levelStats[key],
+    })
+  }, {})
+  console.log(invertedStats)
+  return invertedStats
 }
 
 const slicer = (initState: GameSlice) =>
@@ -46,31 +63,37 @@ const slicer = (initState: GameSlice) =>
           levelStats: initState.levelStats,
           levelComplete: false,
           currentScene: SCENES.MAP_SCENE,
-          turnControllerState: TurnControllerState.RUNNING,
+          lifeControllerState: LifeControllerState.RUNNING,
         }
       },
       endLevel(state) {
         state.levelComplete = true
-        state.turnControllerState = TurnControllerState.PAUSED
+        state.lifeControllerState = LifeControllerState.PAUSED
         updateTotals(state)
         state.currentScene = SCENES.RESULT_SCENE
       },
       // game
       pauseGame(state) {
-        state.turnControllerState = TurnControllerState.PAUSED
+        state.lifeControllerState = LifeControllerState.PAUSED
       },
       resumeGame(state) {
         state.currentScene = SCENES.MAP_SCENE
-        state.turnControllerState = TurnControllerState.RUNNING
+        state.lifeControllerState = LifeControllerState.RUNNING
       },
       exitGame(state) {
         state.currentScene = SCENES.LOAD_SCENE
-        state.turnControllerState = TurnControllerState.PAUSED
+        state.lifeControllerState = LifeControllerState.PAUSED
         state.levelStats = initState.levelStats
       },
       die(state) {
-        state.turnControllerState = TurnControllerState.PAUSED
+        state.lifeControllerState = LifeControllerState.PAUSED
         state.currentScene = SCENES.RESULT_SCENE
+      },
+      regInteraction(state, action: PayloadAction<GameSlice['interaction']>) {
+        state.interaction = action.payload
+      },
+      clearInteractions(state) {
+        state.interaction = noInteraction
       },
       // scenes
       showLoadScene(state) {
@@ -85,6 +108,9 @@ const slicer = (initState: GameSlice) =>
         state.currentScene = SCENES.RESULT_SCENE
       },
       // stats
+      resetTotals(state) {
+        state.gameTotals = initState.gameTotals
+      },
       updateStats(
         state,
         action: PayloadAction<Partial<GameSlice['levelStats']>>
@@ -107,25 +133,39 @@ const generateSlice = (initState: GameSlice) => slicer(initState).reducer
 
 const gameSlice = slicer(gameInitialState)
 
-export const { startLevel, endLevel, pauseGame, resumeGame, exitGame, die } =
-  gameSlice.actions
+export const {
+  startLevel,
+  endLevel,
+  pauseGame,
+  resumeGame,
+  exitGame,
+  die,
+  regInteraction,
+  clearInteractions,
+} = gameSlice.actions
 
 export const { showLoadScene, showStartScene, showResultScene } =
   gameSlice.actions
 
-export const { updateStats } = gameSlice.actions
+export const { resetTotals, updateStats } = gameSlice.actions
 
 export const startGame =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
     dispatch(resetHeroResources())
+    dispatch(resetTotals())
     dispatch(startLevel(1))
   }
 export const restartLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
   (dispatch, getState) => {
-    const { currentLevel } = getState().game
+    const { currentLevel, levelStats } = getState().game
     dispatch(resetHeroResources())
+    dispatch(updateStats(invertStats(levelStats)))
     dispatch(startLevel(currentLevel))
+
+    // TODO temporary hack: reinit map scene: touch result scene, then immediately resumeGame
+    dispatch(showResultScene())
+    setTimeout(() => dispatch(resumeGame()), 1)
   }
 export const finishLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
@@ -142,5 +182,5 @@ export const nextLevel =
 
 export default generateSlice
 
-export { TurnControllerState, GameIntaractions }
+export { LifeControllerState, GameIntaractions }
 export type { GameStats, GameIntaractionDef }

@@ -38,7 +38,7 @@ const slicer = (initState: HeroSlice) =>
         // allows any subset of resources
         // no limit checks
         state,
-        action: PayloadAction<Partial<typeof initState['resources']>>
+        action: PayloadAction<Partial<(typeof initState)['resources']>>
       ) {
         state.resources = {
           ...state.resources,
@@ -49,7 +49,7 @@ const slicer = (initState: HeroSlice) =>
         // will update the provided resource(s) with delta(s)
         // limits resulting value to range
         state,
-        action: PayloadAction<Partial<typeof initState['resources']>>
+        action: PayloadAction<Partial<(typeof initState)['resources']>>
       ) {
         const resourceDeltas = action.payload
         state.resources = {
@@ -70,7 +70,7 @@ const slicer = (initState: HeroSlice) =>
       },
       setResourceMaxValue(
         state,
-        action: PayloadAction<Partial<typeof initState['resourceMaxValues']>>
+        action: PayloadAction<Partial<(typeof initState)['resourceMaxValues']>>
       ) {
         state.resourceMaxValues = {
           ...state.resourceMaxValues,
