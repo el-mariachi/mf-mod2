@@ -1,10 +1,12 @@
 import SCENES from '@constants/scenes'
+import { GameInteractionDef, GameInteractionType } from '@game/core/types'
 
-export enum TurnControllerState {
+export enum LifeControllerState {
   RUNNING,
   PAUSED,
 }
 
+// DEPRICATED ?
 export enum GameIntaractions {
   NONE = 'none',
   ATTACK = 'attack',
@@ -13,7 +15,6 @@ export enum GameIntaractions {
   OPEN = 'open',
   // ...
 }
-
 export type GameIntaractionDef = {
   type: GameIntaractions
   progress: number
@@ -21,17 +22,20 @@ export type GameIntaractionDef = {
   // ...
 }
 
+export enum GameStatType {
+  COINS = 'coins',
+  STEPS = 'steps',
+  KILLS = 'killCount',
+  TIME = 'time',
+}
 export type GameStats = {
-  killCount: number
-  coins: number
-  time: number
-  steps: number
+  [key in GameStatType]: number
 }
 
 export type GameSlice = {
-  turnControllerState: TurnControllerState
+  lifeControllerState: LifeControllerState
   currentScene: SCENES
-  interaction: GameIntaractionDef // | null // как вариант
+  interaction: GameInteractionDef
   currentLevel: number
   totalLevels: number
   levelComplete: boolean
@@ -40,14 +44,12 @@ export type GameSlice = {
   score: number
 }
 
-const noInteraction: GameIntaractionDef = {
-  type: GameIntaractions.NONE,
-  progress: 0,
-  position: [0, 0],
+export const noInteraction: GameInteractionDef = {
+  type: GameInteractionType.none,
 }
 
 export const gameInitialState: GameSlice = {
-  turnControllerState: TurnControllerState.PAUSED,
+  lifeControllerState: LifeControllerState.PAUSED,
   currentScene: SCENES.LOAD_SCENE,
   interaction: noInteraction,
   currentLevel: 0,

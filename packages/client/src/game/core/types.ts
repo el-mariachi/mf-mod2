@@ -1,5 +1,5 @@
 import _default from 'react-bootstrap/esm/Alert'
-import GameObjectView from './views/GameObjectView'
+// import GameObjectView from './views/GameObjectView'
 
 export type Coords = [number, number]
 export type CoordsSpeed = [number, number]
@@ -18,6 +18,10 @@ export enum AxisDirection {
   bottom = 'bottom',
   left = 'left',
 }
+export type Direction = [
+  AxisDirection.top | AxisDirection.bottom | null,
+  AxisDirection.left | AxisDirection.right | null
+]
 export type AxisVector = {
   direction: AxisDirection | Axis
   length: number
@@ -174,13 +178,13 @@ export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
 export type UnitBehaviorDef = {
   type:
-  | IdleMotionType.idle
-  | MoveMotionType.move
-  | AttackMotionType.attack
-  | DamageMotionType.damage
-  | DeathMotionType.death
-  | TurnMotionType.turn
-  | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+    | IdleMotionType.idle
+    | MoveMotionType.move
+    | AttackMotionType.attack
+    | DamageMotionType.damage
+    | DeathMotionType.death
+    | TurnMotionType.turn
+    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
   dir?: AxisDirection | Rotation
 }
 
@@ -202,14 +206,14 @@ export enum GameEntourageName {
 
 export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
 
-export type GameObjectViewFactory<
-  ViewType extends GameObjectView = GameObjectView
-> = (
-  ctx: CanvasRenderingContext2D,
-  objectName: GameUnitName | GameItemName,
-  position: Coords,
-  initBehavior?: UnitBehaviorDef
-) => ViewType
+// export type GameObjectViewFactory<
+//   ViewType extends GameObjectView = GameObjectView
+// > = (
+//   ctx: CanvasRenderingContext2D,
+//   objectName: GameUnitName | GameItemName,
+//   position: Coords,
+//   initBehavior?: UnitBehaviorDef
+// ) => ViewType
 export type Path = Coords[]
 export enum PathDirection {
   forward = 'forward',
@@ -218,26 +222,10 @@ export enum PathDirection {
   counterClockwise = 'counterClockwise',
 }
 export type Area = [Coords, Coords] // square selection from point to point
-// TODO r next types temporary ?
-export interface GameObjectDef {
-  name: GameObjectName
-  crossable: boolean
-  destroyable: boolean
-}
-export type LevelMapCell = {
-  position: Coords
-  gameObjects: GameObjectDef[]
-}
-export type LevelMap = LevelMapCell[][]
-export type GameInteractionDef = {
-  behavior: UnitBehaviorDef
-  subject: GameObjectDef
-  animation?: CellSpriteAnimationProcess
-}
 
 export type GameAction = [GameEvent, number]
-
 export enum GameEvent {
+  None = 'NONE',
   Left = 'MOVE_LEFT',
   Right = 'MOVE_RIGHT',
   Up = 'MOVE_UP',
@@ -248,17 +236,48 @@ export enum GameEvent {
   Mute = 'MUTE',
   Resume = 'RESUME',
 }
-
 export const MapGameEvents2Direction = {
   [GameEvent.Left]: AxisDirection.left,
   [GameEvent.Right]: AxisDirection.right,
   [GameEvent.Up]: AxisDirection.top,
   [GameEvent.Down]: AxisDirection.bottom,
 }
-
 export const MoveGameEvents = [
   GameEvent.Left,
   GameEvent.Right,
   GameEvent.Up,
   GameEvent.Down,
 ]
+
+export enum GameInteractionType {
+  none = 'none',
+  movement = 'movement', // move, attack, etc from UnitBehaviorDef.type
+  collect = 'collect',
+  open = 'open',
+  // ...
+}
+// TODO type fields list in draft
+export type GameInteractionDef = {
+  type: GameInteractionType
+  position?: Coords
+  result?: unknown
+  subject?: GameUnitName
+  object?: GameItemName | GameEntourageName
+  behavior?: UnitBehaviorDef
+  animation?: CellSpriteAnimationProcessResult
+}
+
+// TODO r next types temporary ?
+export interface GameObjectDef {
+  name: GameObjectName
+  crossable: boolean
+  destroyable: boolean
+  cell: LevelMapCell
+}
+export type LevelMapCell = {
+  position: Coords
+  gameObjects: GameObjectDef[]
+}
+export type LevelMap = LevelMapCell[][]
+export interface MonsterUnit {}
+export interface CollectableItem {}

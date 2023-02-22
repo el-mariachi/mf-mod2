@@ -104,7 +104,7 @@ export const onMapCoords = (onCanvasCoords: Types.Coords) =>
 export const coords2rowcol = ([x, y]: Types.Coords) => [y, x] as Types.Coords
 export const rowcol2coords = ([row, col]: Types.Coords) =>
   [col, row] as Types.Coords // the same operation as above, just for semantic
-export const defineDir = (curPos: Types.Coords, nextPos: Types.Coords) => {
+export const defineAxisDir = (curPos: Types.Coords, nextPos: Types.Coords) => {
   if (isCoordsEqual(curPos, nextPos)) return null
 
   const [curX, curY] = curPos
@@ -117,6 +117,31 @@ export const defineDir = (curPos: Types.Coords, nextPos: Types.Coords) => {
     dir = curX > nextX ? Types.AxisDirection.left : Types.AxisDirection.right
   }
   return dir
+}
+export const defineDir = (curPos: Types.Coords, nextPos: Types.Coords) => {
+  const [curX, curY] = curPos
+  const [nextX, nextY] = nextPos
+  const horAxisDir = defineAxisDir([curX, 0], [nextX, 0])
+  const vertAxisDir = defineAxisDir([0, curY], [0, nextY])
+
+  return [horAxisDir, vertAxisDir] as Types.Direction
+}
+export const isDirectionsEqual = (
+  directionA: Types.Direction,
+  directionB: Types.Direction
+) => {
+  return directionA[0] === directionB[0] && directionA[1] === directionB[1]
+}
+export const isDestinationReached = (
+  cuPos: Types.Coords,
+  nextPos: Types.Coords,
+  destPos: Types.Coords
+) => {
+  // destination reaced when coords are equal or when direction changed (so we`re about passed through destination and miss it)
+  return (
+    isCoordsEqual(nextPos, destPos) ||
+    !isDirectionsEqual(defineDir(cuPos, destPos), defineDir(nextPos, destPos))
+  )
 }
 export const nearestCoords = (
   rel: Types.Coords,
@@ -161,11 +186,6 @@ export const getMapArea = (levelMap: Types.LevelMap, area: Types.Area) => {
   }
   return mapArea
 }
-// export const getMapAreaAround = (levelMap:Types.LevelMap, rel:Types.Coords, size:number) =>
-// {
-//   const area = getArea(rel, size)
-//   const mapArea = area ? getMapArea(levelMap, area).
-// }
 export const getMapCellsAround = (
   levelMap: Types.LevelMap,
   rel: Types.Coords,
@@ -179,7 +199,7 @@ export const getMapCellsAround = (
     .flat(1)
     .filter(cell => !isCoordsEqual(rowcol2coords(cell.position), rel))
 }
-
+// DEPRICATED, duplicate defineDir above
 export const defineDirection = (
   curPos: Types.Coords,
   nextPos: Types.Coords
