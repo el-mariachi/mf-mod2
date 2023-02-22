@@ -1,18 +1,17 @@
 import { useEffect, useState, useRef } from 'react'
-import { useAppDispatch } from 'hooks/redux_typed_hooks'
-import { finishLevel } from '@store/slices/game'
-import { updateHealthByAmount } from '@store/slices/hero'
-import { width, height } from '@utils/winsize'
-import './MapScene.css'
+import * as Types from '@game/core/types'
+import { useAppSelector } from 'hooks/redux_typed_hooks'
 import MapController from '@game/Controllers/MapController'
 import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
 import { useGameController, GameActionType } from '@hooks/useGameController'
 import LifeController from '@game/Controllers/LifeController'
-import * as Types from '@game/core/types'
+import MapSceneUI from '@game/components/MapSceneUI'
+import { selectPaused } from '@store/selectors'
 import hero from '@sprites/hero.png'
 import dungeonTileset from '@sprites/tileset.png'
 import skeleton from '@sprites/skeleton.png'
-import MapSceneUI from '@game/components/MapSceneUI'
+import { width, height } from '@utils/winsize'
+import './MapScene.scss'
 
 const images = [hero, dungeonTileset, skeleton]
 
@@ -25,20 +24,13 @@ function MapScene({ onExit }: SceneProps) {
     React.Dispatch<React.SetStateAction<LayerRecord>>
   ] = useState({})
   const layersRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef({} as MapController)
-
-  const dispatch = useAppDispatch()
-  const simFinishLevel = () => {
-    // TODO to be removed with the buttons
-    dispatch(finishLevel())
-  }
   const lifeRef = useRef({} as LifeController)
+  const mapRef = useRef({} as MapController)
+  const paused = useAppSelector(selectPaused)
 
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
     const removeKeyboardListener = useGameController(setGameAction)
-    //const [onGameEvent , ] = useGameController()
-    //onGameEvent((gameAction: GameActionType)=> {setGameAction(gameAction)})
     // TODO перенести в LoadScene после того как определится порядок загрузки сцен
     const promises = images.map(src => {
       return new Promise(res => {
@@ -89,24 +81,20 @@ function MapScene({ onExit }: SceneProps) {
   }, [gameAction])
 
   useEffect(() => {
-    //mapRef.current.resize(width, height)
-  }, [width, height])
+    if (lifeRef.current && lifeRef.current instanceof LifeController) {
+      lifeRef.current.toggle(!paused)
+      if (paused) {
+        setGameAction([Types.GameEvent.None, 0])
+      }
+    }
+  }, [paused])
 
   /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
       обращаться к каждому слою через ref */
   return (
-    // TODO remove test buttons
     <>
       <MapSceneUI />
       <div ref={layersRef} className="map-scene__layers"></div>
-      {/* <div className="map-scene__buttons">
-        <a className="mx-auto text-white" onClick={simFinishLevel}>
-          test finish level
-        </a>
-        <a className="mx-auto text-white" onClick={onExit}>
-        exit
-        </a>
-      </div> */}
     </>
   )
 }

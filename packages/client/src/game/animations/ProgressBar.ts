@@ -41,7 +41,7 @@ export class ProgressBar {
       if (delta >= this._width) {
         clearInterval(id)
       }
-    }, 400)
+    }, 200)
   }
   draw() {
     this._drawContainer()

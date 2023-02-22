@@ -1,30 +1,36 @@
-import { FC, HTMLAttributes } from 'react'
+import { FC, HTMLAttributes, useState } from 'react'
 import classNames from 'classnames'
 import './GameUIModal.scss'
 
-type GameUIModalProps = HTMLAttributes<HTMLDivElement> & {
-  active: boolean
-  close: () => void
+export type GameUIModalFullProps = HTMLAttributes<HTMLDivElement> & {
+  active?: boolean
+  close?: () => void
   title: string
 }
-const GameUIModal: FC<GameUIModalProps> = ({
-  active,
-  close,
+export type GameUIModalProps = Omit<GameUIModalFullProps, 'title' | 'children'>
+
+const GameUIModal: FC<GameUIModalFullProps> = ({
+  active = true,
+  close: onClose,
   title,
   className: cls,
   children: content,
   ...attrs
 }) => {
+  const [isActive, setIsActive] = useState(active)
+
+  const closeModal = () => {
+    onClose?.()
+    setIsActive(false)
+  }
   return (
     <div
       className={classNames(
         'game-ui-modal',
-        { 'game-ui-modal_active': active },
+        { 'game-ui-modal_active': isActive },
         cls
       )}
-      onClick={() => {
-        close()
-      }}
+      onClick={closeModal}
       {...attrs}>
       <div className="game-ui-modal__box" onClick={e => e.stopPropagation()}>
         <div className="game-ui-modal__boxWrapper">
@@ -33,9 +39,7 @@ const GameUIModal: FC<GameUIModalProps> = ({
             <button
               className="game-ui-modal__close-btn"
               title="Close window"
-              onClick={() => {
-                close()
-              }}>
+              onClick={closeModal}>
               close
             </button>
           </div>

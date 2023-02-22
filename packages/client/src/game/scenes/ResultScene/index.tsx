@@ -2,25 +2,20 @@ import * as UI from '@constants/ui'
 import { Coords } from '@game/core/types'
 import SecondsToHMS from '@game/utils/secondsFormat'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
-import { restartLevel, nextLevel, startGame } from '@store/slices/game'
-import {
-  selectGameTotals,
-  selectHeroIsDead,
-  selectPlayAgain,
-  selectContinue,
-  levelStats,
-  selectLevelScore,
-} from '@store/selectors'
+import { nextLevel, startGame } from '@store/slices/game'
+import * as SELECTORS from '@store/selectors'
 import { width, height, center } from '@utils/winsize'
 import SceneCanvas from '@game/components/SceneCanvas'
 import GameUIButton from '@game/components/GameUIButton'
+import RestartButton from '@game/components/RestartButton'
+import QuitButton from '@game/components/QuitButton'
 import './ResultScene.scss'
 
 const margin = width * 0.4 > 200 ? 200 : width * 0.4
 function _RenderStroke(
   ctx: CanvasRenderingContext2D,
   lStr: string,
-  rStr: string,
+  rStr: string | number,
   coords: Coords,
   bold = false
 ) {
@@ -29,32 +24,31 @@ function _RenderStroke(
   ctx.textAlign = 'left'
   ctx.fillText(lStr, coords[0] - margin, coords[1])
   ctx.textAlign = 'right'
-  ctx.fillText(rStr, coords[0] + margin, coords[1])
+  ctx.fillText(String(rStr), coords[0] + margin, coords[1])
 }
 
-function ResultScene({ onExit }: SceneProps) {
-  const { levelNum, gameTotals } = useAppSelector(selectGameTotals)
-  const heroIsDead = useAppSelector(selectHeroIsDead)
-  const showPlayAgainButton = useAppSelector(selectPlayAgain)
-  const showContinueButton = useAppSelector(selectContinue)
-  const score = useAppSelector(selectLevelScore)
-  const { killCount, coins, time, steps } = useAppSelector(levelStats)
+function ResultScene() {
+  const { levelNum, gameTotals } = useAppSelector(SELECTORS.selectGameTotals)
+  const heroIsDead = useAppSelector(SELECTORS.selectHeroIsDead)
+  const showPlayAgainButton = useAppSelector(SELECTORS.selectPlayAgain)
+  const showContinueButton = useAppSelector(SELECTORS.selectContinue)
+  const { killCount, coins, time, steps } = useAppSelector(SELECTORS.levelStats)
+  const {
+    killCount: totalKillCount,
+    coins: totalCoins,
+    time: totalTime,
+    steps: totalSteps,
+  } = gameTotals
+  const score = useAppSelector(SELECTORS.selectLevelScore)
+  const totalScore = useAppSelector(SELECTORS.selectGameScore)
   const dispatch = useAppDispatch()
-  const formatTime = SecondsToHMS(time)
-
-  const restartCurrentLevel = () => {
-    // TODO reset game controllers to level start
-    dispatch(restartLevel())
-  }
 
   const startNextLevel = () => {
-    dispatch(nextLevel)
+    dispatch(nextLevel())
   }
-
   const playAgain = () => {
-    dispatch(startGame)
+    dispatch(startGame())
   }
-
   const resumeFromSaved = () => {
     // TODO
   }
@@ -64,8 +58,9 @@ function ResultScene({ onExit }: SceneProps) {
   const resultMessage = !isLevelCompleted
     ? 'Oops, you`re failed'
     : !isGameCompleted
-      ? 'Level completed'
-      : 'Game completed!'
+    ? 'Level completed'
+    : 'Game completed!'
+
   const sceneDrawer: CanvasDrawingFunction = ctx => {
     let curHeight = height / 2
 
@@ -76,62 +71,79 @@ function ResultScene({ onExit }: SceneProps) {
     curHeight -= 207
     ctx.fillText(`Level ${levelNum}:`, center.width, curHeight)
 
-    ctx.fillStyle = isLevelCompleted
-      ? UI.COLOR_YELLOW
-      : UI.COLOR_DIRTY_PINK
+    ctx.fillStyle = isLevelCompleted ? UI.COLOR_YELLOW : UI.COLOR_DIRTY_PINK
     ctx.font = `700 ${isLevelCompleted ? '43px' : '36px'} Minecraft`
 
     curHeight += 40
     ctx.fillText(resultMessage, center.width, curHeight)
 
     curHeight += 24 * 2 + 25
-    _RenderStroke(ctx, 'score', String(score), [center.width, curHeight], true)
+    _RenderStroke(
+      ctx,
+      'score',
+      isGameCompleted ? totalScore : score,
+      [center.width, curHeight],
+      true
+    )
 
     curHeight += 24 * 2
-    _RenderStroke(ctx, 'killed enemies', String(killCount), [
+    _RenderStroke(
+      ctx,
+      'killed enemies',
+      isGameCompleted ? totalKillCount : killCount,
+      [center.width, curHeight]
+    )
+
+    curHeight += 24 * 2
+    _RenderStroke(ctx, 'gathered coins', isGameCompleted ? totalCoins : coins, [
       center.width,
       curHeight,
     ])
 
     curHeight += 24 * 2
-    _RenderStroke(ctx, 'gathered coins', String(coins), [
+    _RenderStroke(
+      ctx,
+      'time spent',
+      isGameCompleted ? SecondsToHMS(totalTime) : SecondsToHMS(time),
+      [center.width, curHeight]
+    )
+
+    curHeight += 24 * 2
+    _RenderStroke(ctx, 'steps', isGameCompleted ? totalSteps : steps, [
       center.width,
       curHeight,
     ])
-
-    curHeight += 24 * 2
-    _RenderStroke(ctx, 'time spent', formatTime, [center.width, curHeight])
-
-    curHeight += 24 * 2
-    _RenderStroke(ctx, 'steps', String(steps), [center.width, curHeight])
   }
 
+  let onLvlCompletedBtn = null
+  if (isLevelCompleted) {
+    if (showContinueButton) {
+      onLvlCompletedBtn = (
+        <GameUIButton className="mx-auto" onClick={startNextLevel}>
+          Continue
+        </GameUIButton>
+      )
+    } else if (showPlayAgainButton) {
+      onLvlCompletedBtn = (
+        <GameUIButton className="mx-auto" onClick={playAgain}>
+          Play again
+        </GameUIButton>
+      )
+    }
+  }
   return (
     <div className="res-scene__results">
       <SceneCanvas draw={sceneDrawer} width={width} height={100 + height / 2}>
         <div className="res-scene__buttons mt-4">
-          {showContinueButton ? (
-            <GameUIButton className="mx-auto" onClick={playAgain}>
-              continue
-            </GameUIButton>
-          ) : null}
-          {showPlayAgainButton ? (
-            <GameUIButton className="mx-auto" onClick={startNextLevel}>
-              play again
-            </GameUIButton>
-          ) : null}
-          <GameUIButton className="mx-auto" onClick={restartCurrentLevel}>
-            restart level
-          </GameUIButton>
+          {onLvlCompletedBtn}
           {/* TODO uncomment when savepoints are available */}
           {/* {heroIsDead ? (
-          <a className="mx-auto" onClick={resumeFromSaved}>
-            resume from saved
-          </a>
-        ) : null} */}
-          <GameUIButton className="mx-auto" onClick={onExit}>
-            exit
-          </GameUIButton>
+            <GameUIButton className="mx-auto" onClick={resumeFromSaved}>
+              resume from saved
+            </GameUIButton>
+          ) : null} */}
+          <RestartButton className="mx-auto" />
+          <QuitButton className="mx-auto" />
         </div>
       </SceneCanvas>
     </div>

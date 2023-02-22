@@ -9,7 +9,11 @@
     width: 100%;
     height: 150px;
     z-index: 9;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0)
+    );
   }
 
   &::after {
@@ -58,19 +62,61 @@
 
   ul:last-child {
     top: 0;
-    right: 0.8rem;
+    right: 2rem;
   }
 
-  ul>li {
+  ul > li {
     display: flex;
   }
 
-  ul>li>img {
+  ul > li > img {
     display: block;
     margin-bottom: auto;
     margin-top: auto;
     width: 1.25rem;
     margin-right: 0.5rem;
+  }
+}
+
+.map-scene-ui__pause-state {
+  opacity: 0.45;
+  position: fixed;
+  z-index: 12;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 110px;
+  color: $almost-white;
+  font-family: 'Minecraft';
+  animation: flickerPause 1.5s ease-in-out infinite;
+}
+
+@keyframes flickerPause {
+  0% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0.45;
+  }
+}
+
+.map-scene-ui__interaction-panel {
+  position: fixed;
+  z-index: 13;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: $dirty-pink-color;
+  font-family: 'Minecraft';
+
+  .game-ui-panel__content {
+    min-height: 80px;
+    max-width: 100px;
   }
 }
 
@@ -90,7 +136,7 @@
     display: flex;
   }
 
-  div>p {
+  div > p {
     display: block;
     margin: 0 0 5px;
   }
@@ -100,7 +146,7 @@
     position: relative;
   }
 
-  .map-scene-ui__char-info>.map-scene-ui__char-level {
+  .map-scene-ui__char-info > .map-scene-ui__char-level {
     position: absolute;
     bottom: 0px;
     left: 12px;

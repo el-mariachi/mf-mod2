@@ -33,7 +33,7 @@ export default class ViewFactory {
       const sprite = new GameObjectSprite(
         this.ctx,
         spriteImage,
-        gameObject.motions as Types.CellSpriteMotions 
+        gameObject.motions as Types.CellSpriteMotions
       )
       view = new AnimatableView(sprite, position)
       /** создаем View неповижных предметов*/

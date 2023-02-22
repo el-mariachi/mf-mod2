@@ -118,6 +118,6 @@ $buttonBorderActLeft: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAI
   }
 }
 
-.game-ui-button+.game-ui-button {
+.game-ui-button + .game-ui-button {
   margin-left: 0.5rem;
 }

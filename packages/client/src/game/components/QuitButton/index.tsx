@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from '@constants/routes'
 
 export type QuitButtonProps = GameUIButtonProps & {
-  onClick: () => void
+  onClick?: () => void
 }
 export const QuitButton: FC<QuitButtonProps> = ({
-  onClick: quit,
+  onClick: onQuit,
   ...props
 }) => {
   const dispatch = useAppDispatch()
@@ -17,12 +17,13 @@ export const QuitButton: FC<QuitButtonProps> = ({
   return (
     <GameUIButton
       onClick={() => {
-        quit()
+        onQuit?.()
         dispatch(exitGame())
         navigate(ROUTES.LEADERBOARD)
       }}
       {...props}>
-      Quit (q)
+      Exit
     </GameUIButton>
   )
 }
+export default QuitButton

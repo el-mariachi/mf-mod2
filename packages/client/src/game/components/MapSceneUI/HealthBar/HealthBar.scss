@@ -6,7 +6,7 @@ $bar-curval-color: rgb(146, 104, 125);
   padding-left: 1rem;
 
   &__bar {
-    width: 100%;
+    width: 125px;
     height: fit-content;
     padding: 0;
     border-bottom: 3px solid $bar-maxval-color;

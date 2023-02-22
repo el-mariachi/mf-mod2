@@ -41,8 +41,8 @@ function LoadScene() {
   }
 
   useEffect(() => {
-    // TODO it`mock, need resources manager
-    setTimeout(() => dispatch(startGame()), 5000)
+    // TODO it`mock. memory leak possible, will fixed in TS-111
+    setTimeout(() => dispatch(startGame()), 2500)
   }, [])
 
   return <SceneCanvas draw={sceneDrawer} width={width} height={height} />

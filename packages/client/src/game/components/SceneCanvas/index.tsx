@@ -1,8 +1,4 @@
-import {
-  FC,
-  HTMLAttributes,
-  useCallback
-} from 'react'
+import { FC, HTMLAttributes, useCallback } from 'react'
 import * as UI from '@constants/ui'
 import Canvas from '@components/Canvas'
 import { height, width } from '@utils/winsize'
@@ -25,11 +21,11 @@ const SceneCanvas: FC<SceneCanvasProps> = ({
   const getSceneDrawer = useCallback(() => {
     return fontLoaded
       ? (ctx: CanvasRenderingContext2D) => {
-        if (ctx) {
-          prepareSceneCanvas(ctx)
-          sceneDrawer(ctx)
+          if (ctx) {
+            prepareSceneCanvas(ctx)
+            sceneDrawer(ctx)
+          }
         }
-      }
       : (ctx: CanvasRenderingContext2D) => prepareSceneCanvas(ctx)
   }, [fontLoaded])
 

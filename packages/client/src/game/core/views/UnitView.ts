@@ -13,18 +13,20 @@ export default class UnitView extends AnimatableView {
     super(sprite, position)
     this.do(initBehavior, false)
   }
-  do(behavior: Types.UnitBehaviorDef, thenIdle = true, speed = DEF_FRAME_PER_SECOND_SPEED, quantity?: number) {
+  do(
+    behavior: Types.UnitBehaviorDef,
+    thenIdle = true,
+    speed = DEF_FRAME_PER_SECOND_SPEED,
+    quantity?: number
+  ) {
     const { type, dir } = behavior
     quantity = quantity ? Math.abs(Math.round(quantity)) : 0
 
     const animation = getAnimatedBehavior(behavior)
     if (quantity) {
-      if (
-        animation?.to?.length
-      ) {
+      if (animation?.to?.length) {
         animation.to.length *= quantity
-      }
-      else if (animation?.duration) {
+      } else if (animation?.duration) {
         animation.duration *= quantity
       }
     }

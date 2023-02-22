@@ -2,7 +2,7 @@ import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
 import './GameUIPanel.scss'
 
-type GameUIPanelProps = HTMLAttributes<HTMLDivElement>
+export type GameUIPanelProps = HTMLAttributes<HTMLDivElement>
 const GameUIPanel: FC<GameUIPanelProps> = ({
   className: cls,
   children: content,
