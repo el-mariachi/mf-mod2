@@ -5,7 +5,7 @@ const coin = {
     originPosition: [0, 0],
     frames: [0, 1, 2, 3],
   },
-} as Types.CellSpriteMotions 
+} as Types.CellSpriteMotions
 
 const chest = {
   [Types.IdleMotionType.idle]: {
@@ -19,13 +19,13 @@ const bottle = {
     originPosition: [0, 3],
     frames: [0, 1, 2, 3],
   },
-} as Types.CellSpriteMotions 
+} as Types.CellSpriteMotions
 
 const key = {
   [Types.IdleMotionType.idle]: {
     originPosition: [0, 1],
     frames: [0, 1, 2, 3],
   },
-} as Types.CellSpriteMotions 
+} as Types.CellSpriteMotions
 
 export default { coin, chest, key, bottle }

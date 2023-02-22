@@ -112,7 +112,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
           playMotion: {
             motion:
               Types.DamageMotionType[
-              `${type}From${dirCap}` as Types.DamageMotionType
+                `${type}From${dirCap}` as Types.DamageMotionType
               ],
             once: true,
           },
@@ -122,7 +122,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
           playMotion: {
             motion:
               Types.DeathMotionType[
-              `${type}From${dirCap}` as Types.DeathMotionType
+                `${type}From${dirCap}` as Types.DeathMotionType
               ],
             once: true,
           },

@@ -40,7 +40,7 @@ export default class PatrolMonsterAI extends UnitAI {
       cell => cell.gameObjects.some(item => item instanceof Hero)
     )
     if (heroCell) {
-      const dir = Utils.defineDir(
+      const dir = Utils.defineAxisDir(
         curPos,
         Utils.rowcol2coords(heroCell.position)
       )
@@ -51,7 +51,7 @@ export default class PatrolMonsterAI extends UnitAI {
     if (Utils.isCoordsEqual(curPos, this._goal)) {
       this._defineNextGoal()
     }
-    const dir = Utils.defineDir(curPos, this._goal)
+    const dir = Utils.defineAxisDir(curPos, this._goal)
     if (dir) {
       const nextPos = Utils.actualizeCellCoords(
         Utils.nearestCoords(curPos, dir)
@@ -60,7 +60,8 @@ export default class PatrolMonsterAI extends UnitAI {
         const [col, row] = nextPos
         const cellObjects = this._levelMap[row][col].gameObjects
         const action =
-          (!cellObjects.length || cellObjects.every(item => item.crossable)) && Math.random() >= PatrolMonsterAI._IDLE_CHANCE
+          (!cellObjects.length || cellObjects.every(item => item.crossable)) &&
+          Math.random() >= PatrolMonsterAI._IDLE_CHANCE
             ? 'move'
             : 'look'
         return Behaviors[`${action}2${dir}`]

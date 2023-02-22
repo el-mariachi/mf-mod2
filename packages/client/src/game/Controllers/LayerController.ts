@@ -24,37 +24,6 @@ export class Layer {
     this.canvas.width = width
     this.canvas.height = height
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
-
-    /*    if (this.name === 'static') {
-          this.ctx.fillStyle = 'black'
-          this.ctx.fillRect(0, 0, width, height)
-    
-          const img = new Image()
-          img.src = tileset
-          const patternCanvas = document.createElement('canvas')
-          patternCanvas.width = MAP_CELL*4
-          patternCanvas.height = MAP_CELL*3
-          const patternContext = patternCanvas.getContext('2d')
-          //const [x, y] = relCoords(mapCoords(), [])
-          const [sx, sy] = cellCoords2PixelCoords([6,0])
-          patternContext?.drawImage(
-            img,
-            sx,
-            sy,
-            MAP_CELL*4,
-            MAP_CELL*3,
-            0,
-            0,
-            MAP_CELL*4,
-            MAP_CELL*3,
-          )
-          const ptrn = this.ctx.createPattern(
-            patternCanvas,
-            'repeat'
-          ) as CanvasPattern
-          this.ctx.fillStyle = ptrn
-          this.ctx.fillRect(0, 0, 600, 600)
-        }*/
   }
   drawBackground(rows: number, columns: number) {
     this.ctx.fillStyle = BG_COLOR
@@ -101,20 +70,20 @@ export class Layer {
     let lastAnimationTime = performance.now()
     const { ctx, canvas, views } = this
 
-      ; (function animationLoop() {
-        const now = performance.now()
-        const dt = (now - lastAnimationTime) / 1000
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ;(function animationLoop() {
+      const now = performance.now()
+      const dt = (now - lastAnimationTime) / 1000
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        views.forEach(view => {
-          if ('update' in view) {
-            view.update(dt)
-            view.render()
-          }
-        })
-        lastAnimationTime = now
-        requestAnimationFrame(animationLoop)
-      })()
+      views.forEach(view => {
+        if ('update' in view) {
+          view.update(dt)
+          view.render()
+        }
+      })
+      lastAnimationTime = now
+      requestAnimationFrame(animationLoop)
+    })()
   }
 }
 

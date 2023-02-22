@@ -16,15 +16,15 @@ export class Cell {
   }
   addObject(gameObject: GameObject) {
     this.gameObjects.push(gameObject)
-    gameObject.cell = this;
+    gameObject.cell = this
     return gameObject
   }
   extract(gameObject: GameObject): GameObject {
     const index = this.gameObjects.indexOf(gameObject)
     const element = this.gameObjects.splice(index, 1)[0]
     //@ts-ignore
-    element.cell = undefined 
-    return element;
+    element.cell = undefined
+    return element
   }
 }
 
@@ -81,7 +81,7 @@ const Cells = class extends Array {
   }
 }
 
-const Matrix = class extends Array {
+export const Matrix = class extends Array {
   nearbyCells(
     cell: Cell,
     radius: number = 1,

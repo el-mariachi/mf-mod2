@@ -16,11 +16,11 @@ export const heroMotions = {
   [Types.MoveMotionType.move2right]: {
     originPosition: [0, 1],
     frames: [0, 1, 2, 3],
-  },  
+  },
   [Types.MoveMotionType.move2bottom]: {
     originPosition: [0, 7],
     frames: [0, 1, 2, 3],
-  },  
+  },
   [Types.MoveMotionType.move2left]: {
     originPosition: [0, 2],
     frames: [0, 1, 2, 3],
@@ -47,6 +47,6 @@ export const heroMotions = {
   },
   [Types.DeathMotionType.death]: {
     originPosition: [0, 3],
-	  frames: [0, 1, 2, 3],
+    frames: [0, 1, 2, 3],
   },
 } as Types.CellSpriteMotions

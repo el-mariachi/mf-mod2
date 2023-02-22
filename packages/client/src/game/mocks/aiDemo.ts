@@ -2,10 +2,7 @@ import * as Types from '@game/core/types'
 import Skeleton from '@game/Objects/Skeleton'
 import SmartSkeleton from '@game/mocks/SmartSkeleton'
 import PatrolMonsterAI from '@game/core/AI/PatrolMonsterAI'
-import {
-  isCoordsEqual,
-  rowcol2coords,
-} from '@game/utils'
+import { isCoordsEqual, rowcol2coords } from '@game/utils'
 import { STEP_TIME } from '@game/core/constants'
 
 type SkeletonPaths = [Types.LevelMapCell, Types.Path][] // is ['skeleton init pos', 'path coords'][]
