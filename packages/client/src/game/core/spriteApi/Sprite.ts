@@ -1,12 +1,6 @@
 import * as Types from '@game/core/types'
 import { DEF_FRAME_PER_SECOND_SPEED, motionTypes } from '@game/core/constants'
-import {
-  calcMoveCoords,
-  calcSpeed,
-  isCoordsEqual,
-  nextCoordsByVector,
-  roundCoords,
-} from '@game/utils'
+import * as Utils from '@game/utils'
 import { muteRes } from '@utils/index'
 
 type SpriteActiveAnimation = {
@@ -78,7 +72,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   }
   set geometry(nextGeometry: Partial<Types.SpriteGeometry>) {
     if (nextGeometry.position) {
-      this._geometry.position = roundCoords(nextGeometry.position)
+      this._geometry.position = Utils.roundCoords(nextGeometry.position)
     }
     if (nextGeometry.size) {
       this._geometry.size = nextGeometry.size
@@ -161,7 +155,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
           // ... but we dnt have this motion in set
           if (!(motion in this._motions)) {
             // ... so we`ll use default motion for each motion type (if we have it in set)
-
             // TODO need refactoring
             if (
               motion in Types.IdleMotionType &&
@@ -242,11 +235,11 @@ export default class Sprite implements Types.AnimatableOnCanvas {
         if (params.to) {
           params.to = (
             !Array.isArray(params.to)
-              ? nextCoordsByVector(this._geometry.position, params.to)
+              ? Utils.nextCoordsByVector(this._geometry.position, params.to)
               : params.to
           ) as Types.Coords
 
-          movementSpeed = calcSpeed(
+          movementSpeed = Utils.calcSpeed(
             this._geometry.position,
             params.to,
             duration
@@ -299,7 +292,12 @@ export default class Sprite implements Types.AnimatableOnCanvas {
       const hasMovement = !!to
 
       this._activeAnimation.elapsed += dt * 1000
-      if (!hasMovement && !isMotionFinite && duration && this._activeAnimation.elapsed >= duration) {
+      if (
+        !hasMovement &&
+        !isMotionFinite &&
+        duration &&
+        this._activeAnimation.elapsed >= duration
+      ) {
         this._activeAnimation.isMotionCompleted = true
       }
 
@@ -312,11 +310,15 @@ export default class Sprite implements Types.AnimatableOnCanvas {
       let isMovementCompleted = !hasMovement
       if (hasMovement) {
         const { movementSpeed } = this._activeAnimation
-        const nextPosition = roundCoords(
-          calcMoveCoords(this._geometry.position, movementSpeed, dt)
+        const nextPosition = Utils.roundCoords(
+          Utils.calcMoveCoords(this._geometry.position, movementSpeed, dt)
         )
 
-        isMovementCompleted = isCoordsEqual(to, nextPosition)
+        isMovementCompleted = Utils.isDestinationReached(
+          this._geometry.position,
+          nextPosition,
+          to
+        )
         this._geometry.position = !isMovementCompleted ? nextPosition : to
       }
 
@@ -359,8 +361,8 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
 
-          ; (this._geometry.origin as Types.Geometry).position[framesAxisInd] =
-            motionFrame * motionOrigin.size[framesAxisInd]
+        ;(this._geometry.origin as Types.Geometry).position[framesAxisInd] =
+          motionFrame * motionOrigin.size[framesAxisInd]
       }
     }
 

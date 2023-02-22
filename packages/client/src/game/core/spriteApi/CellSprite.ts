@@ -22,9 +22,9 @@ export default class CellSprite extends Sprite {
 
     const origin = originPosition
       ? {
-        position: cellCoords2PixelCoords(originPosition),
-        size: SPRITE_SIZE,
-      }
+          position: cellCoords2PixelCoords(originPosition),
+          size: SPRITE_SIZE,
+        }
       : null
 
     const cellInitGeometry = {
@@ -36,7 +36,7 @@ export default class CellSprite extends Sprite {
     if (motions) {
       resMotions = {} as Types.SpriteMotions
       Object.entries(motions).forEach(([motionType, motionParams]) => {
-        ; (resMotions as Types.SpriteMotions)[motionType as Types.MotionType] = {
+        ;(resMotions as Types.SpriteMotions)[motionType as Types.MotionType] = {
           origin: {
             position: cellCoords2PixelCoords(motionParams.originPosition),
             size: SPRITE_SIZE,
@@ -53,9 +53,9 @@ export default class CellSprite extends Sprite {
   set cellDefaultOrigin(nextDefOriginPos: Types.Coords | null) {
     this._defaultOrigin = nextDefOriginPos
       ? {
-        position: cellCoords2PixelCoords(nextDefOriginPos),
-        size: SPRITE_SIZE,
-      }
+          position: cellCoords2PixelCoords(nextDefOriginPos),
+          size: SPRITE_SIZE,
+        }
       : null
   }
   set cellGeometry(nextGeometry: Partial<Types.CellSpriteGeometry>) {
@@ -68,9 +68,9 @@ export default class CellSprite extends Sprite {
       const { originPosition } = nextGeometry
       const origin = originPosition
         ? {
-          position: cellCoords2PixelCoords(originPosition),
-          size: SPRITE_SIZE,
-        }
+            position: cellCoords2PixelCoords(originPosition),
+            size: SPRITE_SIZE,
+          }
         : null
       this._geometry.origin = origin
     }
