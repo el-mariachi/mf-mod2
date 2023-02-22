@@ -3,7 +3,7 @@ import * as Types from '@game/core/types'
 import { View } from '@game/hoc/ViewFactory'
 import UnitAI from '@game/core/AI/UnitAI'
 import { Cell } from '@game/Controllers/MapController'
-import { defineDir, defineDirection } from '@game/utils'
+import { defineAxisDir, defineDirection } from '@game/utils'
 import UnitView from '@game/core/views/UnitView'
 
 export default class GameObject {
@@ -52,11 +52,25 @@ export default class GameObject {
     return view.do({ type: Types.AttackMotionType.attack, dir })
   }
   defend(attacker: GameObject) {
+    // TODO there`s no decent animation or effect for now
+    // const dir: Types.AxisDirection = defineDirection(
+    //   attacker.cell.position,
+    //   this.cell.position
+    // )
+    // const view = this.view as UnitView
+    // return view.do({ type: Types.DamageMotionType.damage, dir })
+    return Promise.resolve(null)
+  }
+  die(attacker: GameObject) {
     const dir: Types.AxisDirection = defineDirection(
       attacker.cell.position,
       this.cell.position
     )
     const view = this.view as UnitView
-    return view.do({ type: Types.DamageMotionType.damage, dir })
+    return view
+      .do({ type: Types.DeathMotionType.death, dir }, false)
+      .then(() => {
+        this.remove()
+      })
   }
 }

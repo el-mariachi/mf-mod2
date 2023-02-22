@@ -15,12 +15,4 @@ export default class Hero extends GameObject {
   static = false
   animated = true
   destroyable = true
-  defend(attacker: GameObject) {
-    const dir: Types.AxisDirection = defineDirection(
-      this.cell.position,
-      attacker.cell.position
-    )
-    const view = this.view as UnitView
-    return view.do({ type: Types.DamageMotionType.damage, dir })
-  }
 }

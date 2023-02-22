@@ -1,14 +1,12 @@
 import GameObject from '@game/Objects/GameObject'
 import MapController, { Cell } from './MapController'
 import * as Types from '@game/core/types'
-import UnitView from '@game/core/views/UnitView'
 import PatrolMonsterAI from '@game/core/AI/PatrolMonsterAI'
 import Skeleton from '@game/Objects/Skeleton'
 import PathController from './PathController'
-import Hero from '@game/Objects/Hero'
-import { defineDir } from '@game/utils'
-import * as Behaviors from '@game/animations/behavior'
-import { DEF_MOVE_DURATION, HERO_MOVE_DELAY } from '@game/core/constants'
+import { HERO_MOVE_DELAY } from '@game/core/constants'
+import StatisticController from './StatisticController'
+import InteractionController from './InteractionController'
 
 enum Status {
   free,
@@ -19,18 +17,25 @@ export default class LifeController {
   map: MapController['map']
   cells: MapController['cells']
   pathController: PathController
+  statistic: StatisticController
+  interaction: InteractionController
   smartNPC: unknown[] = []
   status = Status.free
   nextTurn: null | Types.AxisDirection = null
-  constructor(mapController: MapController, statistic = null) {
+  protected _paused = false
+  constructor(mapController: MapController) {
     this.map = mapController.map
     this.cells = mapController.cells
     this.pathController = new PathController(mapController.levelN)
     this.makeNPCSmart()
+    this.statistic = new StatisticController()
+    this.interaction = new InteractionController(this.map, this.statistic)
   }
   async turn(direction: Types.AxisDirection) {
-    /** если уже есть ход в ожидании nextTurn больше не принимаем ход */
-    if (this.status === Status.busy && this.nextTurn) {
+    if (this._paused) {
+      return
+      /** если уже есть ход в ожидании nextTurn больше не принимаем ход */
+    } else if (this.status === Status.busy && this.nextTurn) {
       return
       /** если контроллер занят, но очередь свободна, занимаем очередь */
     } else if (this.status === Status.busy) {
@@ -54,14 +59,14 @@ export default class LifeController {
     }
   }
   async heroMove(direction: Types.AxisDirection) {
+    this.interaction.clear()
     return this.tend(this.cells.hero, direction)
-    //return new Promise(resolve => setTimeout(resolve, 100))
   }
   async NPCMove() {
     const promises: Promise<Types.CellSpriteAnimationProcessResult>[] = []
     this.cells.NPCCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
-        if (object.brain) {
+        if (object.brain && object.cell) {
           /** Ai принимает решение куда направиться и что делать */
           const tendBehavior = object.brain.makeDecision()
           const { type, dir } = tendBehavior
@@ -112,7 +117,7 @@ export default class LifeController {
     targetCell: Cell
   ): Promise<Types.CellSpriteAnimationProcessResult> {
     const results = targetCell.gameObjects.map(item =>
-      this.interaction(gameObject, item)
+      this.interaction.execute(gameObject, item)
     )
     const canMove =
       !results.length ||
@@ -120,6 +125,9 @@ export default class LifeController {
 
     /** если можно пройти */
     if (canMove) {
+      if (gameObject.name === Types.GameUnitName.hero) {
+        this.statistic.regStep()
+      }
       return gameObject.move(targetCell)
     }
     /** если нельзя пройти */
@@ -127,91 +135,11 @@ export default class LifeController {
       el => el instanceof Promise
     ) as Promise<Types.CellSpriteAnimationProcessResult>
   }
-  interaction(gameObjectActive: GameObject, gameObjectPasive: GameObject) {
-    /** hero - crossable item */
-    if (
-      gameObjectActive.name === Types.GameUnitName.hero &&
-      gameObjectPasive.crossable
-    ) {
-      return Types.MoveMotionType.move
-    }
-
-    /** hero - key */
-    if (
-      gameObjectActive.name === Types.GameUnitName.hero &&
-      gameObjectPasive.name === Types.GameItemName.key
-    ) {
-      const key: GameObject = gameObjectPasive.remove()
-      const hero = gameObjectActive as Hero
-      hero.bag.push(key)
-      return Types.MoveMotionType.move
-    }
-    /** hero - coin */
-    if (
-      gameObjectActive.name === Types.GameUnitName.hero &&
-      gameObjectPasive.name === Types.GameItemName.coin
-    ) {
-      gameObjectPasive.remove()
-      return Types.MoveMotionType.move
-    }
-    /** hero - gate */
-    if (
-      gameObjectActive.name === Types.GameUnitName.hero &&
-      gameObjectPasive.name === Types.GameEntourageName.gate
-    ) {
-      const hero = gameObjectActive as Hero
-      const gate = gameObjectPasive
-      const key = hero.bag.find(item => item.name === Types.GameItemName.key)
-      if (key) {
-        /** убираем ключ из сумки */
-        hero.bag.splice(hero.bag.indexOf(key), 1)
-        const gateNearbyCells = this.map.nearbyCells(gate.cell, 1) as Cell[]
-        /** убираем ворота */
-        gateNearbyCells.forEach(cell => {
-          cell.gameObjects.forEach(object => {
-            if (object.name === Types.GameEntourageName.gate) {
-              object.remove()
-            }
-          })
-        })
-
-        return Types.MoveMotionType.move
-      }
-      return Types.IdleMotionType.idle
-    }
-
-    const combination = [gameObjectActive, gameObjectPasive]
-    /** hero - npc */
-    if (
-      combination.some(object => object.name === Types.GameUnitName.hero) &&
-      combination.some(object => object.isNPC)
-    ) {
-      /** если атакует герой ничего не ждем, так как все  анимации нпс завершились
-       */
-
-      /** если атакует нпс
-       * прежде чем начать анимацию убеждаемся что предыдущие анимации закончились
-       */
-
-      return new Promise(resolve =>
-        this.waitEndOfMove(gameObjectPasive).then(() => {
-          Promise.all([
-            gameObjectActive.attack(gameObjectPasive),
-            gameObjectPasive.defend(gameObjectActive),
-          ]).then(resolve)
-        })
-      )
-    }
-  }
-  /** ждем пока закончится анимация движения героя перед атакой npc
-   * ? npc не ждут героя (у this.heroMove нет await)
-   * сделано чтобы у героя не было задержек между движениями
-   *    * */
-  waitEndOfMove(gameObject: GameObject) {
-    if (!gameObject.isNPC) {
-      return new Promise(resolve => setTimeout(resolve, DEF_MOVE_DURATION * 5))
-    } else {
-      return new Promise(resolve => resolve(1))
+  toggle(flag?: boolean) {
+    const toggle = flag ?? this._paused
+    this.statistic.timer.toggle(toggle)
+    if ((this._paused = !toggle)) {
+      this.nextTurn = null
     }
   }
 }
