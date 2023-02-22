@@ -1,8 +1,8 @@
-import * as Types from '@game/core/types'
-import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
-import AnimatableView from '@game/core/views/AnimatableView'
+import * as Types from '@types/game'
+import GameObjectSprite from '@game/sprite/GameObjectSprite'
+import AnimatableView from '@game/views/AnimatableView'
 import getAnimatedBehavior, * as Behaviors from '@game/animations/behavior'
-import { DEF_FRAME_PER_SECOND_SPEED } from '../constants'
+import { DEF_FRAME_PER_SECOND_SPEED } from '@constants/game'
 
 export default class UnitView extends AnimatableView {
   constructor(

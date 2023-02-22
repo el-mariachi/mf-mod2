@@ -1,6 +1,6 @@
-import * as Types from '@game/core/types'
-import GameObjectView from '@game/core/views/GameObjectView'
-import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
+import * as Types from '@types/game'
+import GameObjectView from '@game/views/GameObjectView'
+import GameObjectSprite from '@game/sprite/GameObjectSprite'
 import getAnimatedBehavior, { idle } from '@game/animations/behavior'
 
 export default class AnimatableView

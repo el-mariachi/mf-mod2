@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
-import * as Types from '@game/core/types'
+import * as Types from '@types/game'
 import { useAppSelector } from 'hooks/redux_typed_hooks'
-import MapController from '@game/Controllers/MapController'
-import { createLayers, LayerRecord } from '@game/Controllers/LayerController'
+import MapController from '@game/controllers/MapController'
+import { createLayers, LayerRecord } from '@game/controllers/LayerController'
 import { useGameController, GameActionType } from '@hooks/useGameController'
-import LifeController from '@game/Controllers/LifeController'
+import LifeController from '@game/controllers/LifeController'
 import MapSceneUI from '@game/components/MapSceneUI'
 import { selectPaused } from '@store/selectors'
 import hero from '@sprites/hero.png'
@@ -15,7 +15,7 @@ import './MapScene.scss'
 
 const images = [hero, dungeonTileset, skeleton]
 
-function MapScene({ onExit }: SceneProps) {
+function MapScene() {
   const [gameAction, setGameAction] = useState(
     [] as unknown as Types.GameAction
   )

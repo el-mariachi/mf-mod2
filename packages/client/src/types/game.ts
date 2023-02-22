@@ -1,6 +1,3 @@
-import _default from 'react-bootstrap/esm/Alert'
-// import GameObjectView from './views/GameObjectView'
-
 export type Coords = [number, number]
 export type CoordsSpeed = [number, number]
 export type Size = [number, number]
@@ -206,14 +203,6 @@ export enum GameEntourageName {
 
 export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
 
-// export type GameObjectViewFactory<
-//   ViewType extends GameObjectView = GameObjectView
-// > = (
-//   ctx: CanvasRenderingContext2D,
-//   objectName: GameUnitName | GameItemName,
-//   position: Coords,
-//   initBehavior?: UnitBehaviorDef
-// ) => ViewType
 export type Path = Coords[]
 export enum PathDirection {
   forward = 'forward',

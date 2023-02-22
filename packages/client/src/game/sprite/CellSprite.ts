@@ -1,6 +1,6 @@
-import * as Types from '@game/core/types'
-import { SPRITE_SIZE } from '@game/core/constants'
-import Sprite from '@game/core/spriteApi/Sprite'
+import * as Types from '@types/game'
+import { SPRITE_SIZE } from '@constants/game'
+import Sprite from '@game/sprite/Sprite'
 import {
   cellCoords2PixelCoords,
   cells2pixels,
@@ -8,7 +8,7 @@ import {
   pixelCoords2CellCoords,
   onCanvasCoords,
   onMapCoords,
-} from '@game/utils'
+} from '@utils/game'
 
 export default class CellSprite extends Sprite {
   constructor(

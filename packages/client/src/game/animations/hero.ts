@@ -1,4 +1,4 @@
-import * as Types from '@game/core/types'
+import * as Types from '@types/game'
 
 export const heroMotions = {
   [Types.IdleMotionType.look2top]: {

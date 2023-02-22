@@ -1,5 +1,5 @@
-import * as Types from '@game/core/types'
-import CellSprite from '@game/core/spriteApi/CellSprite'
+import * as Types from '@types/game'
+import CellSprite from '@game/sprite/CellSprite'
 
 export default class GameObjectSprite extends CellSprite {
   constructor(

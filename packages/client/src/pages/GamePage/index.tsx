@@ -8,7 +8,7 @@ import { currentScene as selectCurrentScene } from '@store/selectors'
 import SCENES from '@constants/scenes'
 import { authorizedPageAccessOpts, LoggedInCheck } from 'hoc/LoggedInCheck'
 
-type scenesType = Record<SCENES, FC<SceneProps>>
+type scenesType = Record<SCENES, FC>
 const scenes: scenesType = {
   [SCENES.LOAD_SCENE]: LoadScene,
   [SCENES.START_SCENE]: StartScene,

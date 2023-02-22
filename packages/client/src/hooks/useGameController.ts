@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { GameEvent } from '@game/core/types'
-import * as Types from '@game/core/types'
+import { GameEvent, GameAction } from '@types/game'
 
 export type GameActionType = [GameEvent, number, () => void]
 
@@ -16,7 +14,7 @@ const KeysToGameEvents: { [key: string]: GameEvent } = {
 }
 
 export const useGameController = (
-  setGameAction: React.Dispatch<React.SetStateAction<Types.GameAction>>
+  setGameAction: React.Dispatch<React.SetStateAction<GameAction>>
 ) => {
   function keydownHandler(e: KeyboardEvent) {
     const pressTime = Date.now()

@@ -1,4 +1,4 @@
-import Sprite from '@game/Sprite'
+import Sprite from '@components/Sprite'
 import spinnerImg from '@images/spinner_sprite_50.png'
 
 const spinner = new Sprite(

@@ -1,6 +1,6 @@
-import * as Types from '@game/core/types'
-import { DEF_FRAME_PER_SECOND_SPEED, motionTypes } from '@game/core/constants'
-import * as Utils from '@game/utils'
+import * as Types from '@types/game'
+import { DEF_FRAME_PER_SECOND_SPEED, motionTypes } from '@constants/game'
+import * as Utils from '@utils/game'
 import { muteRes } from '@utils/index'
 
 type SpriteActiveAnimation = {

@@ -1,8 +1,8 @@
-import GameObject from '@game/Objects/GameObject'
-import * as Types from '@game/core/types'
+import GameObject from '@game/objects/GameObject'
+import * as Types from '@types/game'
 import skeletonSrc from '@sprites/skeleton.png'
 import { skeletonMotions } from '@game/animations/skeleton'
-import UnitView from '@game/core/views/UnitView'
+import UnitView from '@game/views/UnitView'
 
 export default class Skeleton extends GameObject {
   declare view: UnitView

@@ -1,9 +1,9 @@
-import GameObject from '@game/Objects/GameObject'
-import * as Types from '@game/core/types'
+import GameObject from '@game/objects/GameObject'
+import * as Types from '@types/game'
 import heroSrc from '@sprites/hero.png'
 import { heroMotions } from '@game/animations/hero'
-import UnitView from '@game/core/views/UnitView'
-import { defineDirection } from '@game/utils'
+import UnitView from '@game/views/UnitView'
+import { defineDirection } from '@utils/game'
 
 export default class Hero extends GameObject {
   declare view: UnitView

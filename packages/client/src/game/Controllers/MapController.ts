@@ -1,8 +1,8 @@
-import GameObject from '@game/Objects/GameObject'
-import GameObjects from '@game/Objects'
-import level1 from '../Data/Levels/1.json'
+import GameObject from '@game/objects/GameObject'
+import GameObjects from '@game/objects'
+import level1 from '@game/data/levels/1.json'
 import { LayerRecord } from './LayerController'
-import * as Types from '@game/core/types'
+import * as Types from '@types/game'
 
 /** ячейка игровой матрицы */
 export class Cell {
@@ -70,8 +70,8 @@ const Cells = class extends Array {
     return this._notAnimatedObjects.length
       ? this._notAnimatedObjects
       : this.filterObjects(
-          (gameObject: GameObject) => gameObject.animated === false
-        )
+        (gameObject: GameObject) => gameObject.animated === false
+      )
   }
   get animatedObjectsTuple() {
     /** анимированные сущности могут исчезнуть с игрового поля, поэтому не кешируются */

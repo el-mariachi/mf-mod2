@@ -1,10 +1,10 @@
 import tileset from '@sprites/tileset.png'
-import * as Types from '@game/core/types'
-import { View } from '@game/hoc/ViewFactory'
-import UnitAI from '@game/core/AI/UnitAI'
-import { Cell } from '@game/Controllers/MapController'
-import { defineAxisDir, defineDirection } from '@game/utils'
-import UnitView from '@game/core/views/UnitView'
+import * as Types from '@types/game'
+import { View } from '@game/views/ViewFactory'
+import UnitAI from '@game/ai/UnitAI'
+import { Cell } from '@game/controllers/MapController'
+import { defineAxisDir, defineDirection } from '@utils/game'
+import UnitView from '@game/views/UnitView'
 
 export default class GameObject {
   name!: Types.GameObjectName

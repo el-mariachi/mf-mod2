@@ -1,5 +1,5 @@
-import { DEF_MOVE_DURATION } from '@game/core/constants'
-import * as Types from '@game/core/types'
+import { DEF_MOVE_DURATION } from '@constants/game'
+import * as Types from '@types/game'
 import { store } from '@store/index'
 import {
   clearInteractions,
@@ -7,8 +7,8 @@ import {
   regInteraction,
 } from '@store/slices/game'
 import { updateHealthByAmount } from '@store/slices/hero'
-import GameObject from '@game/Objects/GameObject'
-import Hero from '@game/Objects/Hero'
+import GameObject from '@game/objects/GameObject'
+import Hero from '@game/objects/Hero'
 import MapController, { Cell } from './MapController'
 import StatisticController from './StatisticController'
 
@@ -16,7 +16,7 @@ export default class InteractionController {
   constructor(
     protected _map: MapController['map'],
     protected _statistic: StatisticController
-  ) {}
+  ) { }
 
   execute(subject: GameObject, object: GameObject) {
     if (subject.name === Types.GameUnitName.hero && object.crossable) {

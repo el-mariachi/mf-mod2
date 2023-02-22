@@ -1,9 +1,9 @@
-import * as Types from '@game/core/types'
+import * as Types from '@types/game'
 import * as Behaviors from '@game/animations/behavior'
-import UnitAI from '@game/core/AI/UnitAI'
-import Skeleton from '@game/Objects/Skeleton'
-import * as Utils from '@game/utils'
-import Hero from '@game/Objects/Hero'
+import UnitAI from '@game/ai/UnitAI'
+import Skeleton from '@game/objects/Skeleton'
+import * as Utils from '@utils/game'
+import Hero from '@game/objects/Hero'
 
 export default class PatrolMonsterAI extends UnitAI {
   protected _patrolPath!: Types.Path
@@ -61,7 +61,7 @@ export default class PatrolMonsterAI extends UnitAI {
         const cellObjects = this._levelMap[row][col].gameObjects
         const action =
           (!cellObjects.length || cellObjects.every(item => item.crossable)) &&
-          Math.random() >= PatrolMonsterAI._IDLE_CHANCE
+            Math.random() >= PatrolMonsterAI._IDLE_CHANCE
             ? 'move'
             : 'look'
         return Behaviors[`${action}2${dir}`]

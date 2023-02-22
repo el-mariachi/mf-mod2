@@ -1,5 +1,5 @@
-import * as Types from '@game/core/types'
-import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
+import * as Types from '@types/game'
+import GameObjectSprite from '@game/sprite/GameObjectSprite'
 
 export default class GameObjectView implements Types.DrawableOnCanvas {
   constructor(protected _sprite: GameObjectSprite, position?: Types.Coords) {

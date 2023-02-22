@@ -7,7 +7,8 @@ import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
 import './StartScene.scss'
 
-function StartScene({ onExit }: SceneProps) {
+// TODO unactual func for now, need work out a task and implement 
+function StartScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts()
 
@@ -46,9 +47,11 @@ function StartScene({ onExit }: SceneProps) {
         <a className="mx-auto text-white" onClick={onGameStart}>
           start game
         </a>
+        {/* 
+        TODO use game/component/QuitButton
         <a className="mx-auto text-white" onClick={onExit}>
           exit
-        </a>
+        </a> */}
       </div>
     </>
   )

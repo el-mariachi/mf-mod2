@@ -1,10 +1,10 @@
-import UnitView from '@game/core/views/UnitView'
-import GameObjectView from '@game/core/views/GameObjectView'
-import AnimatableView from '@game/core/views/AnimatableView'
-import * as Types from '@game/core/types'
-import GameObjectSprite from '@game/core/spriteApi/GameObjectSprite'
-import CellSprite from '@game/core/spriteApi/CellSprite'
-import GameObject from '@game/Objects/GameObject'
+import UnitView from '@game/views/UnitView'
+import GameObjectView from '@game/views/GameObjectView'
+import AnimatableView from '@game/views/AnimatableView'
+import * as Types from '@types/game'
+import GameObjectSprite from '@game/sprite/GameObjectSprite'
+import CellSprite from '@game/sprite/CellSprite'
+import GameObject from '@game/objects/GameObject'
 
 export type View = UnitView | GameObjectView | AnimatableView
 

@@ -1,5 +1,23 @@
 import SCENES from '@constants/scenes'
-import { GameInteractionDef, GameInteractionType } from '@game/core/types'
+import * as Types from '@types/game'
+
+export const MAP_CELL = 32
+export const SPRITE_SIZE: Types.Size = [MAP_CELL, MAP_CELL]
+export const STEP_TIME = 1000
+export const DEF_FRAME_PER_SECOND_SPEED = 7
+export const DEF_MOVE_DURATION = 500
+export const HERO_MOVE_DELAY = 10
+
+// TODO need refactoring for motions/behaviors types
+export const motionTypes: Types.MotionTypes = {
+  ...Types.IdleMotionType,
+  ...Types.MoveMotionType,
+  ...Types.AttackMotionType,
+  ...Types.DeathMotionType,
+  ...Types.DamageMotionType,
+  ...Types.TurnMotionType,
+  ...Types.UnspecifiedMotionType,
+}
 
 export enum LifeControllerState {
   RUNNING,
@@ -35,7 +53,7 @@ export type GameStats = {
 export type GameSlice = {
   lifeControllerState: LifeControllerState
   currentScene: SCENES
-  interaction: GameInteractionDef
+  interaction: Types.GameInteractionDef
   currentLevel: number
   totalLevels: number
   levelComplete: boolean
@@ -44,8 +62,8 @@ export type GameSlice = {
   score: number
 }
 
-export const noInteraction: GameInteractionDef = {
-  type: GameInteractionType.none,
+export const noInteraction: Types.GameInteractionDef = {
+  type: Types.GameInteractionType.none,
 }
 
 export const gameInitialState: GameSlice = {

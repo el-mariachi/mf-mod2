@@ -6,7 +6,7 @@ import {
   GameEntourageName,
   GameInteractionType,
   GameItemName,
-} from '@game/core/types'
+} from '@types/game'
 
 type InteractionPanelProps = Omit<GameUIPanelProps, 'children'> & {}
 const InteractionPanel: FC<InteractionPanelProps> = props => {

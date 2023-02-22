@@ -26,7 +26,8 @@
       "@scenes/*": ["game/scenes/*"],
       "@hooks/*": ["hooks/*"],
       "@store/*": ["store/*"],
-      "@constants/*": ["constants/*"]
+      "@constants/*": ["constants/*"],
+      "@types/*": ["types/*"]
     }
   },
   "include": ["src", "src/test/jest-setup.ts"],

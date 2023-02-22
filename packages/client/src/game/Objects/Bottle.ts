@@ -1,6 +1,6 @@
 import GameObject from './GameObject'
 import itemsSrc from '@sprites/items.png'
-import * as Types from '@game/core/types'
+import * as Types from '@types/game'
 import itemsMotions from '@game/animations/items'
 
 export default class Key extends GameObject {
