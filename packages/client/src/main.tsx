@@ -20,4 +20,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>
 )
 
-startServiceWorker({ always: true })
+startServiceWorker({ always: false })

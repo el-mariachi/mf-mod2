@@ -3,7 +3,7 @@ import SecondsToHMS from '@utils/secondsFormat'
 import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
-import { restartGame } from '@store/slices/game'
+import { resumeGame } from '@store/slices/game'
 import { levelStats } from '@store/selectors'
 import { width, height, center } from '@utils/winsize'
 
@@ -39,7 +39,7 @@ function ResScene({ onExit }: SceneProps) {
   const formatTime = SecondsToHMS(time)
 
   const onRestart = () => {
-    dispatch(restartGame())
+    dispatch(resumeGame())
   }
 
   useEffect(() => {

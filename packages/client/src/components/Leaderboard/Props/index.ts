@@ -1,9 +1,10 @@
 export default interface LeaderboardProps {
   place: number
   nickname: string
+  killCount: number
   score: number
-  date: string
-  time: string
-  kills: number
+  coins: number
+  time: number
+  steps: number
   sortedVal: string
 }
