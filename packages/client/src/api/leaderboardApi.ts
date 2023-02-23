@@ -29,3 +29,5 @@ export const pushLeaderboardData = (data: LeaderboardData) =>
 
 export const getLeaderboardData = (data: LeaderboardDataReq) =>
   restLeaderboardApi.post<LeaderboardDataResp[]>('/team-seven-test', data)
+
+export default { pushLeaderboardData, getLeaderboardData }

@@ -3,11 +3,8 @@ import Lb_User from '../Element'
 import { Stack } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import Form from 'react-bootstrap/Form'
-import {
-  getLeaderboardData,
-  LeaderboardDataReq,
-  LeaderboardDataResp,
-} from '@api/leaderboardApi'
+import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
+import { getLBData } from '@services/leaderboardController'
 import SecondsToHMS from '@utils/secondsFormat'
 
 const inputData: LeaderboardDataResp[] = []
@@ -31,7 +28,7 @@ function LeaderboardList() {
   }
 
   useEffect(() => {
-    getLeaderboardData(req).then((data: LeaderboardDataResp[]) => {
+    getLBData(req).then((data: LeaderboardDataResp[]) => {
       setLbData(data)
     })
   })
