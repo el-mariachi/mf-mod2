@@ -16,6 +16,7 @@ export type LeaderboardDataReq = {
 export type LeaderboardDataResp = {
   data: {
     nickname: string
+    score: number
     killCount: number
     coins: number
     time: number
@@ -24,7 +25,7 @@ export type LeaderboardDataResp = {
 }
 
 export const pushLeaderboardData = (data: LeaderboardData) =>
-    restLeaderboardApi.post<number>('/', data)
+  restLeaderboardApi.post<number>('/', data)
 
 export const getLeaderboardData = (data: LeaderboardDataReq) =>
-    restLeaderboardApi.post<LeaderboardDataResp[]>('/team-seven-test', data)
+  restLeaderboardApi.post<LeaderboardDataResp[]>('/team-seven-test', data)
