@@ -4,4 +4,3 @@ node_modules/
 .vscode
 dist
 tmp
-ssr-dist

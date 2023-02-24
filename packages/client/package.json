@@ -6,7 +6,7 @@
     "dev": "vite",
     "build:orig": "tsc && vite build",
     "build:client": "rimraf dist && vite build",
-    "build:ssr": "rimraf ssr-dist && vite build --config vite.config.ssr.ts",
+    "build:ssr": "rimraf dist-ssr && vite build --config vite.config.ssr.ts",
     "build": "yarn build:client && yarn build:ssr",
     "preview": "vite preview",
     "lint": "eslint .",
