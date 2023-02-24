@@ -18,6 +18,7 @@ export function roundArrValues<T extends unknown[]>(arr: number[]) {
  * @param max number Optional max value, Infinity if omitted
  * @returns Function that returns number in range
  */
+
 export const createRangeKeeper =
   (min: number, max?: number) => (value: number) =>
     Math.max(min, Math.min(max || Infinity, value))
