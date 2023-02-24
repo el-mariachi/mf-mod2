@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 export const useFonts = (_isLoaded: boolean) => {
   const [isLoaded, setIsLoaded] = useState(_isLoaded)
-  if (process.env.CUSTOM_SSR === 'CUSTOM_SSR') {
+  if (RENDERED_ON_SERVER) {
     return true
   }
   document.fonts.ready.then(res => {

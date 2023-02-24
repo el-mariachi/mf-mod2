@@ -21,14 +21,27 @@ async function startServer() {
   const ssrClientPath = require.resolve('client/ssr-dist/client.cjs')
 
   let vite: ViteDevServer
+  let viteSSR: ViteDevServer
   if (isDev()) {
     vite = await createViteServer({
       server: { middlewareMode: true },
       root: srcPath,
       appType: 'custom',
+      define: {
+        RENDERED_ON_SERVER: false,
+      },
+    })
+    viteSSR = await createViteServer({
+      server: { middlewareMode: true, hmr: { port: 24680 } },
+      root: srcPath,
+      appType: 'custom',
+      define: {
+        RENDERED_ON_SERVER: true,
+      },
     })
 
     app.use(vite.middlewares)
+    app.use(viteSSR.middlewares)
   }
 
   app.get('/api', (_, res) => {
@@ -71,7 +84,7 @@ async function startServer() {
       // TODO remove next line for production
       delete require.cache[ssrClientPath]
       if (isDev()) {
-        render = (await vite.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
+        render = (await viteSSR.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
           .render
       } else {
         render = (await import(ssrClientPath)).render

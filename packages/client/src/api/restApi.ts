@@ -129,7 +129,7 @@ let restAuthApi: MockApi | RestApi
 let restUsersApi: MockApi | RestApi
 let restResourceApi: MockApi | RestApi
 
-if (process.env.CUSTOM_SSR === 'CUSTOM_SSR') {
+if (RENDERED_ON_SERVER) {
   restAuthApi = new MockApi()
   restUsersApi = new MockApi()
   restResourceApi = new MockApi()

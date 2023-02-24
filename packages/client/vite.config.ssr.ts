@@ -10,7 +10,7 @@ export default defineConfig(() => {
   return {
     plugins: [react(), tsconfigPaths()],
     define: {
-      'process.env.CUSTOM_SSR': `'CUSTOM_SSR'`,
+      RENDERED_ON_SERVER: true,
     },
     build: {
       lib: {

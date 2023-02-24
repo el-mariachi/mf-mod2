@@ -3,7 +3,7 @@ import { defaultMapSize } from '@constants/game'
 let width: number
 let height: number
 
-if (process.env.CUSTOM_SSR === 'CUSTOM_SSR') {
+if (RENDERED_ON_SERVER) {
   width = defaultMapSize.width
   height = defaultMapSize.height
 } else {

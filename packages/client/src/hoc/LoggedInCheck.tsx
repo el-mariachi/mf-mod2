@@ -32,7 +32,7 @@ const LoggedInCheck =
         (loadingStatus === LoadingStatus.Succeeded ||
           loadingStatus === LoadingStatus.Failed) &&
         ((loggedIn && !userRequired) || (!loggedIn && userRequired))
-      if (process.env.CUSTOM_SSR === 'CUSTOM_SSR') {
+      if (RENDERED_ON_SERVER) {
         isLoading = false
         needToRedirect = false
       }
