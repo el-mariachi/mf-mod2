@@ -4,7 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:orig": "tsc && vite build",
+    "build:client": "rimraf dist && vite build",
+    "build:ssr": "rimraf dist-ssr && vite build --config vite.config.ssr.ts",
+    "build": "yarn build:client && yarn build:ssr",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -25,6 +28,7 @@
     "react-hook-form": "^7.41.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.0",
+    "rimraf": "^4.1.2",
     "sass": "^1.57.1"
   },
   "devDependencies": {

@@ -1,4 +1,3 @@
-import LeaderboardProps from '../Props'
 import Lb_User from '../Element'
 import { Stack } from 'react-bootstrap'
 import { useEffect, useState } from 'react'

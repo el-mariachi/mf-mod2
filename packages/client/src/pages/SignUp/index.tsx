@@ -1,7 +1,4 @@
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 import FormControl from '@components/FormControl'
 import AppDefaultTpl from '@components/AppDefaultTpl'
 import { SubmitHandler, useForm } from 'react-hook-form'

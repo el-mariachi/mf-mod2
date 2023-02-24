@@ -27,11 +27,15 @@ const LoggedInCheck =
       const loggedIn = useLoginStatus() === Logged.In
       const { userRequired, escapeRoute } = options
       const loadingStatus = useUserLoadingStatus()
-      const isLoading =
-        loadingStatus === LoadingStatus.Loading ||
-        loadingStatus === LoadingStatus.Idle
-      const needToRedirect =
-        (loggedIn && !userRequired) || (!loggedIn && userRequired)
+      let isLoading = loadingStatus === LoadingStatus.Loading
+      let needToRedirect =
+        (loadingStatus === LoadingStatus.Succeeded ||
+          loadingStatus === LoadingStatus.Failed) &&
+        ((loggedIn && !userRequired) || (!loggedIn && userRequired))
+      if (RENDERED_ON_SERVER) {
+        isLoading = false
+        needToRedirect = false
+      }
       return isLoading ? (
         <Spinner />
       ) : needToRedirect ? (
