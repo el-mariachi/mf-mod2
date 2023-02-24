@@ -16,9 +16,9 @@ async function startServer() {
   app.use(cors())
   const port = Number(process.env.SERVER_PORT) || 3001
 
-  const distPath = path.dirname(require.resolve('client/dist/index.html'))
+  let distPath: string
   const srcPath = path.dirname(require.resolve('client'))
-  const ssrClientPath = require.resolve('client/dist-ssr/client.cjs')
+  let ssrClientPath: string
 
   let vite: ViteDevServer
   let viteSSR: ViteDevServer
@@ -39,9 +39,11 @@ async function startServer() {
         RENDERED_ON_SERVER: true,
       },
     })
-
     app.use(vite.middlewares)
     app.use(viteSSR.middlewares)
+  } else {
+    distPath = path.dirname(require.resolve('client/dist/index.html'))
+    ssrClientPath = require.resolve('client/dist-ssr/client.cjs')
   }
 
   app.get('/api', (_, res) => {
@@ -49,7 +51,8 @@ async function startServer() {
   })
 
   if (!isDev()) {
-    app.use('/assets', express.static(path.resolve(distPath, 'assets')))
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    app.use('/assets', express.static(path.resolve(distPath!, 'assets')))
   }
 
   app.use('/sw.js', (_, res, next) => {
@@ -68,25 +71,18 @@ async function startServer() {
 
     try {
       let template: string
+      let render: (url: string) => Promise<string>
 
       if (isDev()) {
         template = fs.readFileSync(path.resolve(srcPath, 'index.html'), 'utf-8')
         template = await vite.transformIndexHtml(url, template)
+        render = (await viteSSR.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
+          .render
       } else {
         template = fs.readFileSync(
           path.resolve(distPath, 'index.html'),
           'utf-8'
         )
-      }
-
-      let render: (url: string) => Promise<string>
-
-      // TODO remove next line for production
-      delete require.cache[ssrClientPath]
-      if (isDev()) {
-        render = (await viteSSR.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
-          .render
-      } else {
         render = (await import(ssrClientPath)).render
       }
 
