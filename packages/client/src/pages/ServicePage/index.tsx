@@ -1,6 +1,6 @@
 import { IServicePageProps } from './ServicePageProps'
 import { Link, useNavigate } from 'react-router-dom'
-import Button from 'react-bootstrap/Button'
+import { Button } from 'react-bootstrap'
 import './ServicePage.scss'
 
 function ServicePage({ errorCode, errorText }: IServicePageProps) {

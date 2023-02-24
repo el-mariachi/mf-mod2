@@ -7,6 +7,7 @@ export default {
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
+    RENDERED_ON_SERVER: false,
   },
   moduleNameMapper: {
     '\\.s?css$': '<rootDir>/src/test/cssStub',

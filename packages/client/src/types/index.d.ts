@@ -1,3 +1,5 @@
+import { RootState } from '@store/index'
+
 declare global {
   export type User = {
     id: number
@@ -152,6 +154,9 @@ declare global {
 
   type SceneProps = {
     onExit?: () => void
+  }
+  interface Window {
+    __PRELOADED_STATE__?: RootState
   }
 }
 

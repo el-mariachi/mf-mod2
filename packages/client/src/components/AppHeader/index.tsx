@@ -28,8 +28,13 @@ const AppHeader: FC<AppHeaderProps> = ({
           caption="One Bit Dungeon"
           paths={[
             {
-              title: 'Играть!',
+              title: 'Об игре',
               path: '/',
+              icon: 'InfoSquareFill',
+            },
+            {
+              title: 'Играть!',
+              path: '/game',
               icon: 'Dice3Fill',
             },
             {

@@ -1,5 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react'
-
+import { Link } from 'react-router-dom'
+import ROUTES from '@constants/routes'
 interface Props {
   children?: ReactNode
 }
@@ -15,12 +16,17 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true }
   }
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Ошибка:', error, errorInfo)
+    console.error('Ошибка в ErrorBoundary:', error, errorInfo)
   }
 
   render() {
     if (this.state.hasError) {
-      return <h1>Что-то пошло не так</h1>
+      return (
+        <h1>
+          Что-то пошло не так.
+          <Link to={ROUTES.ROOT}>Домой</Link>
+        </h1>
+      )
     }
     return this.props.children
   }

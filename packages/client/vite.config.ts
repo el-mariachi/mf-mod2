@@ -12,6 +12,7 @@ export default defineConfig({
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
+    RENDERED_ON_SERVER: false,
   },
   plugins: [react(), tsconfigPaths()],
   resolve: {
