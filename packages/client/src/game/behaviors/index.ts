@@ -1,5 +1,6 @@
 import { DEF_MOVE_DURATION, STEP_TIME } from '@constants/game'
 import * as Types from '@type/game'
+import { capitalize } from '@utils/index'
 
 export const doNothing = {
   type: Types.UnspecifiedMotionType.none,
@@ -55,20 +56,36 @@ export const attack2left = {
   type: Types.AttackMotionType.attack,
   dir: Types.AxisDirection.left,
 } as Types.UnitBehaviorDef
-export const deathFromTop = {
-  type: Types.DeathMotionType.death,
+export const damageFromTop = {
+  type: Types.DamageMotionType.damage,
   dir: Types.AxisDirection.top,
 } as Types.UnitBehaviorDef
-export const deathFromRight = {
-  type: Types.DeathMotionType.death,
+export const damageFromRight = {
+  type: Types.DamageMotionType.damage,
   dir: Types.AxisDirection.right,
 } as Types.UnitBehaviorDef
-export const deathFromBottom = {
-  type: Types.DeathMotionType.death,
+export const damageFromBottom = {
+  type: Types.DamageMotionType.damage,
   dir: Types.AxisDirection.bottom,
 } as Types.UnitBehaviorDef
-export const deathFromLeft = {
-  type: Types.DeathMotionType.death,
+export const damageFromLeft = {
+  type: Types.DamageMotionType.damage,
+  dir: Types.AxisDirection.left,
+} as Types.UnitBehaviorDef
+export const destructionFromTop = {
+  type: Types.DestructionMotionType.destruction,
+  dir: Types.AxisDirection.top,
+} as Types.UnitBehaviorDef
+export const destructionFromRight = {
+  type: Types.DestructionMotionType.destruction,
+  dir: Types.AxisDirection.right,
+} as Types.UnitBehaviorDef
+export const destructionFromBottom = {
+  type: Types.DestructionMotionType.destruction,
+  dir: Types.AxisDirection.bottom,
+} as Types.UnitBehaviorDef
+export const destructionFromLeft = {
+  type: Types.DestructionMotionType.destruction,
   dir: Types.AxisDirection.left,
 } as Types.UnitBehaviorDef
 
@@ -80,7 +97,7 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
     const isRotation = dirOrRot in Types.Rotation
     if (!isRotation) {
       const direction = dirOrRot as Types.AxisDirection
-      const dirCap = direction[0].toUpperCase() + direction.slice(1)
+      const dirCap = capitalize(direction)
 
       if (Types.IdleMotionType.idle == type) {
         animatedBehavior = {
@@ -117,12 +134,12 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
             once: true,
           },
         }
-      } else if (Types.DeathMotionType.death == type) {
+      } else if (Types.DestructionMotionType.destruction == type) {
         animatedBehavior = {
           playMotion: {
             motion:
-              Types.DeathMotionType[
-                `${type}From${dirCap}` as Types.DeathMotionType
+              Types.DestructionMotionType[
+                `${type}From${dirCap}` as Types.DestructionMotionType
               ],
             once: true,
           },
@@ -137,13 +154,14 @@ export default function getAnimatedBehavior(behavior: Types.UnitBehaviorDef) {
         }
     } else {
       const direction = dirOrRot as Types.Rotation
-      const dirCap = direction[0].toUpperCase() + direction.slice(1)
 
       if (Types.TurnMotionType.turn == type) {
         animatedBehavior = {
           playMotion: {
             motion:
-              Types.TurnMotionType[`turn${dirCap}` as Types.TurnMotionType],
+              Types.TurnMotionType[
+                `turn${capitalize(direction)}` as Types.TurnMotionType
+              ],
             once: true,
           },
         }

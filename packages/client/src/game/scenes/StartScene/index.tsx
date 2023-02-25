@@ -7,7 +7,7 @@ import { width, height, center } from '@utils/winsize'
 import { Text } from '@utils/fillCanvas'
 import './StartScene.scss'
 
-// TODO unactual func for now, need work out a task and implement 
+// TODO unactual func for now, need work out a task and implement
 function StartScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts()

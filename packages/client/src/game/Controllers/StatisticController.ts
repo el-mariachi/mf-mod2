@@ -1,5 +1,5 @@
 import { GameStats, GameStatType } from '@constants/game'
-import { CollectableItem, MonsterUnit } from '@type/game'
+import { Collectable, Monster } from '@type/game'
 import Timer from '@utils/Timer'
 import { store } from '@store/index'
 import { updateStats } from '@store/slices/game'
@@ -9,12 +9,12 @@ export default class StatisticController {
   constructor() {
     this.timer = new Timer()
   }
-  regMonsterKill(monster?: MonsterUnit) {
+  regMonsterKill(monster?: Monster) {
     this.regStep({
       [GameStatType.KILLS]: 1,
     })
   }
-  regItemCollect(item?: CollectableItem) {
+  regItemCollect(item?: Collectable) {
     this.regStep({
       [GameStatType.COINS]: 1,
     })

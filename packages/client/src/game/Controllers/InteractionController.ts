@@ -6,17 +6,17 @@ import {
   finishLevel,
   regInteraction,
 } from '@store/slices/game'
-import { updateHealthByAmount } from '@store/slices/hero'
 import GameObject from '@game/objects/GameObject'
-import Hero from '@game/objects/Hero'
+import _Hero from '@game/objects/Hero'
 import MapController, { Cell } from './MapController'
 import StatisticController from './StatisticController'
+import * as Utils from '@utils/game'
 
 export default class InteractionController {
   constructor(
     protected _map: MapController['map'],
     protected _statistic: StatisticController
-  ) { }
+  ) {}
 
   execute(subject: GameObject, object: GameObject) {
     if (subject.name === Types.GameUnitName.hero && object.crossable) {
@@ -28,8 +28,8 @@ export default class InteractionController {
       subject.name === Types.GameUnitName.hero &&
       object.name === Types.GameItemName.key
     ) {
-      const key: GameObject = object.remove()
-      const hero = subject as Hero
+      const key: Types.GameObjectDef = object.remove()
+      const hero = subject as _Hero
       hero.bag.push(key)
       return Types.MoveMotionType.move
     }
@@ -38,8 +38,8 @@ export default class InteractionController {
       subject.name === Types.GameUnitName.hero &&
       object.name === Types.GameItemName.coin
     ) {
+      this._statistic.regItemCollect(object)
       object.remove()
-      this._statistic.regItemCollect()
       return Types.MoveMotionType.move
     }
     /** hero - gate */
@@ -47,7 +47,7 @@ export default class InteractionController {
       subject.name === Types.GameUnitName.hero &&
       object.name === Types.GameEntourageName.gate
     ) {
-      const hero = subject as Hero
+      const hero = subject as _Hero
       const gate = object
       const key = hero.bag.find(item => item.name === Types.GameItemName.key)
       if (key) {
@@ -82,37 +82,50 @@ export default class InteractionController {
     const combination = [subject, object]
     /** hero - npc */
     if (
-      combination.some(object => object.name === Types.GameUnitName.hero) &&
-      combination.some(object => object.isNPC)
+      combination.some(object => Utils.isHero(object)) &&
+      combination.some(object => Utils.isMonster(object))
     ) {
-      /** если атакует герой ничего не ждем, так как все  анимации нпс завершились
-       */
+      if (Utils.isAttacker(subject) && Utils.isDestroyable(object)) {
+        const attack = subject.attackDelegate.with(object)
+        let attackResult = attack.result
 
-      /** если атакует нпс
-       * прежде чем начать анимацию убеждаемся что предыдущие анимации закончились
-       */
+        let defend: Types.DefendResult | null = null
+        if (Utils.isDefendable(object)) {
+          defend = object.defendDelegate.with(attackResult)
+          attackResult = defend.result
+        }
 
-      return new Promise(resolve =>
-        this._waitEndOfMove(object).then(() => {
-          Promise.all([
-            // TODO temporary hack
-            subject.cell ? subject.attack(object) : Promise.resolve(null),
-            object.cell ? object.defend(subject) : Promise.resolve(null),
-          ]).then(res => {
-            if (object.name === Types.GameUnitName.hero) {
-              if (subject.cell) {
-                store.dispatch(updateHealthByAmount(-50))
-              }
-              resolve(res)
-            } else {
-              this._statistic.regMonsterKill()
+        /** если атакует герой ничего не ждем, так как все  анимации нпс завершились
+         */
 
-              const targetCell = object.cell
-              object.die(subject).then(() => resolve(res))
-            }
+        /** если атакует нпс
+         * прежде чем начать анимацию убеждаемся что предыдущие анимации закончились
+         */
+        return new Promise(resolve =>
+          this._waitEndOfMove(object).then(() => {
+            Promise.all([
+              // TODO temporary hack
+              subject.cell ? attack.process : Promise.resolve(null),
+              object.cell && defend ? defend.process : Promise.resolve(null),
+            ]).then(res => {
+              const damage = object.damageDelegate.with(attackResult)
+
+              damage.process.then(() => {
+                const isKilled = damage.result
+                if (isKilled) {
+                  if (Utils.isMonster(object)) {
+                    this._statistic.regMonsterKill(object)
+                    object.remove()
+                  }
+                }
+                resolve(res)
+              })
+            })
           })
-        })
-      )
+        )
+      }
+
+      // TODO otherwise no action
     }
   }
   registrate(interaction: Types.GameInteractionDef) {
@@ -123,7 +136,7 @@ export default class InteractionController {
   }
   // TODO temporary hack
   _waitEndOfMove(gameObject: GameObject) {
-    if (!gameObject.isNPC) {
+    if (!Utils.isNpc(gameObject)) {
       return new Promise(resolve => setTimeout(resolve, DEF_MOVE_DURATION * 5))
     } else {
       return new Promise(resolve => resolve(1))

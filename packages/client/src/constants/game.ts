@@ -13,11 +13,19 @@ export const motionTypes: Types.MotionTypes = {
   ...Types.IdleMotionType,
   ...Types.MoveMotionType,
   ...Types.AttackMotionType,
-  ...Types.DeathMotionType,
+  ...Types.DestructionMotionType,
   ...Types.DamageMotionType,
   ...Types.TurnMotionType,
   ...Types.UnspecifiedMotionType,
 }
+
+export const emptyAnimationResult = {
+  params: null,
+  reason: 'end',
+} as Types.CellSpriteAnimationProcessResult
+export const emptyAnimationProcess = Promise.resolve(
+  emptyAnimationResult
+) as Types.CellSpriteAnimationProcess
 
 export enum LifeControllerState {
   RUNNING,

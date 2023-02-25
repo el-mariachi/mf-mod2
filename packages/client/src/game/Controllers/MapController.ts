@@ -3,9 +3,10 @@ import GameObjects from '@game/objects'
 import level1 from '@game/data/levels/1.json'
 import { LayerRecord } from './LayerController'
 import * as Types from '@type/game'
+import { isNpc } from '@utils/game'
 
 /** ячейка игровой матрицы */
-export class Cell {
+export class Cell implements Types.LevelMapCell {
   /** position = [row, col] */
   position: Types.Coords = [0, 0]
   gameObjects: GameObject[] = []
@@ -29,7 +30,7 @@ export class Cell {
 }
 
 /** массив ячеек игровой матрицы, с методами группировки игровых объектов */
-const Cells = class extends Array {
+const Cells = class extends Array implements Types.LevelMap {
   _notAnimatedObjects = []
   filterObjects(condition: (object: GameObject) => boolean) {
     return this.reduce((prev, cell) => {
@@ -60,18 +61,18 @@ const Cells = class extends Array {
     )[0]
   }
   get NPCCells() {
-    return this.filterCellsByObject((object: GameObject) => object.isNPC)
+    return this.filterCellsByObject((object: GameObject) => isNpc(object))
   }
   get NPC() {
-    return this.filterObjects((object: GameObject) => object.isNPC)
+    return this.filterObjects((object: GameObject) => isNpc(object)) // as Types.Npc[]
   }
   get notAnimatedObjectsTuple() {
     /** кеширование не анимированных сущностей */
     return this._notAnimatedObjects.length
       ? this._notAnimatedObjects
       : this.filterObjects(
-        (gameObject: GameObject) => gameObject.animated === false
-      )
+          (gameObject: GameObject) => gameObject.animated === false
+        )
   }
   get animatedObjectsTuple() {
     /** анимированные сущности могут исчезнуть с игрового поля, поэтому не кешируются */
@@ -81,14 +82,16 @@ const Cells = class extends Array {
   }
 }
 
+export const zeroLevelMap = [[new Cell([], [0, 0])]] as Types.LevelMap
+
 export const Matrix = class extends Array {
   nearbyCells(
-    cell: Cell,
+    cell: Types.LevelMapCell,
     radius: number = 1,
     direction: null | Types.AxisDirection = null
   ) {
     const [row, col] = cell.position
-    let cells: Cell[] = []
+    let cells: Types.LevelMapCell[] = []
     /** клетики по направлению  */
     if (direction) {
       do {
@@ -157,7 +160,7 @@ class MapController {
         /** в одной ячейке может находится несколько объектов, поэтому ячейка - это массив */
         const items = Array.isArray(item) ? item : [item]
         const objects = items.reduce<GameObject[]>((prev, id) => {
-          const Entity = GameObjects[id]
+          let Entity = GameObjects[id]
           prev.push(new Entity())
           return prev
         }, [])

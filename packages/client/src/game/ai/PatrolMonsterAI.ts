@@ -1,26 +1,22 @@
 import * as Types from '@type/game'
-import * as Behaviors from '@game/animations/behavior'
-import UnitAI from '@game/ai/UnitAI'
-import Skeleton from '@game/objects/Skeleton'
+import * as Behaviors from '@game/behaviors'
 import * as Utils from '@utils/game'
-import Hero from '@game/objects/Hero'
+import _Hero from '@game/objects/Hero'
+import DullAi from './DullAi'
+import { zeroLevelMap } from '@game/controllers/MapController'
 
-export default class PatrolMonsterAI extends UnitAI {
+export default class PatrolMonsterAi extends DullAi {
   protected _patrolPath!: Types.Path
   protected _goal!: Types.Coords
   protected static readonly _IDLE_CHANCE = 0.2
   constructor(
-    levelMap: Types.LevelMap,
-    // TODO need to refactor game objects hierarchy and use Monster or Unit type here
-    monster: Skeleton,
-    patrolPath: Types.Path,
+    npc: Types.Monster & Types.Movable,
+    knownMap: Types.LevelMap = zeroLevelMap,
+    patrolPath: Types.Path = [[0, 0]],
     public viewArea: number = 3
   ) {
-    super(levelMap, monster)
+    super(npc, knownMap)
     this.patrolPath = patrolPath
-  }
-  protected get _position() {
-    return this._monster.view.position
   }
   get patrolPath() {
     return this._patrolPath
@@ -36,8 +32,8 @@ export default class PatrolMonsterAI extends UnitAI {
   makeDecision() {
     const curPos = this._position
 
-    const heroCell = Utils.getMapCellsAround(this._levelMap, curPos, 1).find(
-      cell => cell.gameObjects.some(item => item instanceof Hero)
+    const heroCell = Utils.getMapCellsAround(this._knownMap, curPos, 1).find(
+      cell => cell.gameObjects.some(item => item instanceof _Hero)
     )
     if (heroCell) {
       const dir = Utils.defineAxisDir(
@@ -58,10 +54,10 @@ export default class PatrolMonsterAI extends UnitAI {
       )
       if (!Utils.isCoordsEqual(curPos, nextPos)) {
         const [col, row] = nextPos
-        const cellObjects = this._levelMap[row][col].gameObjects
+        const cellObjects = this._knownMap[row][col].gameObjects
         const action =
           (!cellObjects.length || cellObjects.every(item => item.crossable)) &&
-            Math.random() >= PatrolMonsterAI._IDLE_CHANCE
+          Math.random() >= PatrolMonsterAi._IDLE_CHANCE
             ? 'move'
             : 'look'
         return Behaviors[`${action}2${dir}`]

@@ -84,10 +84,10 @@ export default class Sprite implements Types.AnimatableOnCanvas {
 
   protected _processMotions(motions: Types.SpriteMotions) {
     // let`s define substituitions for motions if we dnt have a full animation set
-    ;['look', 'move', 'attack', 'damage', 'death'].forEach(type => {
+    ;['look', 'move', 'attack', 'damage', 'destruction'].forEach(type => {
       ;['right', 'left', 'top', 'bottom'].forEach(dir => {
         const dirCap = dir[0].toUpperCase() + dir.slice(1)
-        const isStandingMotion = ['damage', 'death'].includes(type)
+        const isStandingMotion = ['damage', 'destruction'].includes(type)
         const isVerticalDir = ['top', 'bottom'].includes(dir)
         const needMotion = (
           isStandingMotion ? `${type}From${dirCap}` : `${type}2${dir}`
@@ -172,10 +172,10 @@ export default class Sprite implements Types.AnimatableOnCanvas {
             ) {
               motion = Types.AttackMotionType.attack
             } else if (
-              motion in Types.DeathMotionType &&
-              Types.DeathMotionType.death in this._motions
+              motion in Types.DestructionMotionType &&
+              Types.DestructionMotionType.destruction in this._motions
             ) {
-              motion = Types.DeathMotionType.death
+              motion = Types.DestructionMotionType.destruction
             } else if (
               motion in Types.DamageMotionType &&
               Types.DamageMotionType.damage in this._motions

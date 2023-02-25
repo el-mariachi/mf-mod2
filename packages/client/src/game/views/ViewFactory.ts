@@ -1,19 +1,20 @@
-import UnitView from '@game/views/UnitView'
-import GameObjectView from '@game/views/GameObjectView'
-import AnimatableView from '@game/views/AnimatableView'
 import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
 import CellSprite from '@game/sprite/CellSprite'
 import GameObject from '@game/objects/GameObject'
-
-export type View = UnitView | GameObjectView | AnimatableView
+import UnitView from '@game/views/UnitView'
+import GameObjectView from '@game/views/GameObjectView'
+import AnimatableView from '@game/views/AnimatableView'
 
 export default class ViewFactory {
   ctx: CanvasRenderingContext2D
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx
   }
-  createView(gameObject: GameObject, position: Types.Coords): View {
+  createView(
+    gameObject: GameObject,
+    position: Types.Coords
+  ): Types.GameObjectViewDef {
     const { spriteSrc, spritePos } = gameObject
     const spriteImage = new Image()
     spriteImage.src = spriteSrc
@@ -28,7 +29,7 @@ export default class ViewFactory {
       )
       view = new UnitView(sprite, position)
 
-      /** создаем View анимировыннх предметов */
+      /** создаем View анимированных предметов */
     } else if (gameObject.animated) {
       const sprite = new GameObjectSprite(
         this.ctx,

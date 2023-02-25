@@ -5,7 +5,7 @@ import itemsMotions from '@game/animations/items'
 
 export default class Key extends GameObject {
   name = Types.GameItemName.bottle
-  spriteSrc: string = itemsSrc
+  spriteSrc = itemsSrc
   motions = itemsMotions.bottle
   crossable = true
   static = true

@@ -2,11 +2,7 @@ import { FC } from 'react'
 import { useAppSelector } from '@hooks/redux_typed_hooks'
 import { selectPaused, selectInteraction } from '@store/selectors'
 import GameUIPanel, { GameUIPanelProps } from '@game/components/GameUIPanel'
-import {
-  GameEntourageName,
-  GameInteractionType,
-  GameItemName,
-} from '@type/game'
+import { GameEntourageName, GameInteractionType } from '@type/game'
 
 type InteractionPanelProps = Omit<GameUIPanelProps, 'children'> & {}
 const InteractionPanel: FC<InteractionPanelProps> = props => {

@@ -1,12 +1,12 @@
 import GameObject from '@game/objects/GameObject'
 import MapController, { Cell } from './MapController'
 import * as Types from '@type/game'
-import PatrolMonsterAI from '@game/ai/PatrolMonsterAI'
-import Skeleton from '@game/objects/Skeleton'
+import PatrolMonsterAi from '@game/ai/PatrolMonsterAi'
 import PathController from './PathController'
 import { HERO_MOVE_DELAY } from '@constants/game'
 import StatisticController from './StatisticController'
 import InteractionController from './InteractionController'
+import { isMovable, isNpc } from '@utils/game'
 
 enum Status {
   free,
@@ -27,7 +27,7 @@ export default class LifeController {
     this.map = mapController.map
     this.cells = mapController.cells
     this.pathController = new PathController(mapController.levelN)
-    this.makeNPCSmart()
+    this.givePathes2Npc()
     this.statistic = new StatisticController()
     this.interaction = new InteractionController(this.map, this.statistic)
   }
@@ -66,7 +66,7 @@ export default class LifeController {
     const promises: Promise<Types.CellSpriteAnimationProcessResult>[] = []
     this.cells.NPCCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
-        if (object.brain && object.cell) {
+        if (isNpc(object)) {
           /** Ai принимает решение куда направиться и что делать */
           const tendBehavior = object.brain.makeDecision()
           const { type, dir } = tendBehavior
@@ -81,15 +81,13 @@ export default class LifeController {
     })
     return Promise.all(promises)
   }
-  makeNPCSmart() {
+  givePathes2Npc() {
     /** добавляем игровому объект AI в виде свойства brain  */
     this.cells.NPCCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
-        if (object.name === Types.GameUnitName.skeleton) {
-          const skeleton = object as Skeleton
-          const path = this.pathController.getPath(cell.position)
-          const brain = new PatrolMonsterAI(this.map, skeleton, path)
-          object.brain = brain
+        if (isNpc(object) && object.brain instanceof PatrolMonsterAi) {
+          object.brain.knownMap = this.map
+          object.brain.patrolPath = this.pathController.getPath(cell.position)
         }
       })
     })
@@ -124,11 +122,11 @@ export default class LifeController {
       results.every((motion: unknown) => motion === Types.MoveMotionType.move)
 
     /** если можно пройти */
-    if (canMove) {
+    if (canMove && isMovable(gameObject)) {
       if (gameObject.name === Types.GameUnitName.hero) {
         this.statistic.regStep()
       }
-      return gameObject.move(targetCell)
+      return gameObject.moveDelegate.with(targetCell).process
     }
     /** если нельзя пройти */
     return results.find(

@@ -1,7 +1,9 @@
 import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
 
-export default class GameObjectView implements Types.DrawableOnCanvas {
+export default class GameObjectView
+  implements Types.DrawableOnCanvas, Types.GameObjectViewDef
+{
   constructor(protected _sprite: GameObjectSprite, position?: Types.Coords) {
     if (position) {
       this.position = position

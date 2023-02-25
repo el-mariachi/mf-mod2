@@ -25,11 +25,11 @@ export const skeletonMotions = {
     originPosition: [0, 2],
     frames: [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0],
   },
-  [Types.DeathMotionType.deathFromRight]: {
+  [Types.DestructionMotionType.destructionFromRight]: {
     originPosition: [0, 5],
     frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9],
   },
-  [Types.DeathMotionType.deathFromLeft]: {
+  [Types.DestructionMotionType.destructionFromLeft]: {
     originPosition: [0, 1],
     frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9],
   },

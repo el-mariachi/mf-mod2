@@ -9,5 +9,5 @@ export default class Wall extends GameObject {
   crossable = false
   static = true
   animated = false
-  estroyable = false
+  destroyable = false
 }

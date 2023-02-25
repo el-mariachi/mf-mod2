@@ -1,7 +1,7 @@
 import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
 import AnimatableView from '@game/views/AnimatableView'
-import getAnimatedBehavior, * as Behaviors from '@game/animations/behavior'
+import getAnimatedBehavior, * as Behaviors from '@game/behaviors'
 import { DEF_FRAME_PER_SECOND_SPEED } from '@constants/game'
 
 export default class UnitView extends AnimatableView {

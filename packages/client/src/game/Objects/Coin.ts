@@ -5,7 +5,7 @@ import itemsMotions from '@game/animations/items'
 
 export default class Coin extends GameObject {
   name = Types.GameItemName.coin
-  spriteSrc: string = itemsSrc
+  spriteSrc = itemsSrc
   motions = itemsMotions.coin
   crossable = false
   static = true

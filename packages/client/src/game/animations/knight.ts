@@ -1,6 +1,6 @@
 import * as Types from '@type/game'
 
-export const heroMotions = {
+export const knightMotions = {
   [Types.IdleMotionType.look2top]: {
     originPosition: [0, 0],
   },
@@ -45,7 +45,7 @@ export const heroMotions = {
     originPosition: [0, 6],
     frames: [0, 1, 2, 3],
   },
-  [Types.DeathMotionType.death]: {
+  [Types.DestructionMotionType.destruction]: {
     originPosition: [0, 3],
     frames: [0, 1, 2, 3],
   },

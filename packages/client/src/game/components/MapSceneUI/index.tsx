@@ -12,7 +12,7 @@ import InteractionPanel from './InteractionPanel'
 import joystickIcn from '@images/joystick_icn.png'
 import scrollIcn from '@images/scroll_icn.png'
 import chestIcn from '@images/chest_icn.png'
-import heroThumb from '@images/hero-head.png'
+import heroThumb from '@images/knight-head.png'
 import './MapSceneUI.scss'
 
 enum ModalType {

@@ -217,3 +217,38 @@ export const defineDirection = (
   }
   return direction as Types.AxisDirection
 }
+
+export const isMovable = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Movable => 'moveDelegate' in gameObject
+export const isAttacker = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Attacker => 'attackDelegate' in gameObject
+export const isDefendable = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Defendable => 'defendDelegate' in gameObject
+export const isDestroyable = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Destroyable => 'damageDelegate' in gameObject
+
+export const isNpc = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Npc => 'brain' in gameObject
+export const isWarrior = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Warrior => isNpc(gameObject) && isAttacker(gameObject)
+export const isMonster = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Monster => isNpc(gameObject) && isAttacker(gameObject)
+export const isHero = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Hero => gameObject.name === Types.GameUnitName.hero
+
+export const setActualResourceVal = (
+  resource: Types.UnitResource,
+  value: number
+) => {
+  const { min = 0, max } = resource
+  const healthRangeKeeper = createRangeKeeper(min, max)
+  return healthRangeKeeper(value)
+}

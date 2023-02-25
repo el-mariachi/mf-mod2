@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks/redux_typed_hooks'
 import { selectHero, selectUserData } from '@store/selectors'
 import useGameModalClose from '@hooks/useGameModalClose'
 import GameUIButton from '../GameUIButton'
-import heroImg from '@images/hero.png'
+import heroImg from '@images/knight.png'
 
 const CharInfoModal: FC<GameUIModalProps> = ({ close, ...props }) => {
   const closeModal = useGameModalClose(close)

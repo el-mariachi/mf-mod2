@@ -21,3 +21,6 @@ export function roundArrValues<T extends unknown[]>(arr: number[]) {
 export const createRangeKeeper =
   (min: number, max?: number) => (value: number) =>
     Math.max(min, Math.min(max || Infinity, value))
+
+export const capitalize = (word: string) =>
+  word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ''

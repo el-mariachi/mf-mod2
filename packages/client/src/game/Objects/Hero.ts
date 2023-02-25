@@ -1,18 +1,25 @@
-import GameObject from '@game/objects/GameObject'
 import * as Types from '@type/game'
-import heroSrc from '@sprites/hero.png'
-import { heroMotions } from '@game/animations/hero'
-import UnitView from '@game/views/UnitView'
-import { defineDirection } from '@utils/game'
+import { store } from '@store/index'
+import { selectHealth } from '@store/selectors'
+import { updateHealthByAmount } from '@store/slices/hero'
+import _Warrior from './Warrior'
 
-export default class Hero extends GameObject {
-  declare view: UnitView
-  bag: GameObject[] = []
-  name = Types.GameUnitName.hero
-  spriteSrc: string = heroSrc
-  motions = heroMotions
-  crossable = false
-  static = false
-  animated = true
-  destroyable = true
+// abstract
+export default class _Hero extends _Warrior implements Types.Hero {
+  name: Types.GameUnitName.hero = Types.GameUnitName.hero
+  heroClass!: Types.HeroClass
+  bag: Types.GameObjectDef[] = []
+  protected _level = 1
+  get health() {
+    return selectHealth(store.getState()).health
+  }
+  set health(value: number) {
+    store.dispatch(updateHealthByAmount(value - this.health))
+  }
+  get level() {
+    return this._level
+  }
+  levelUp() {
+    this._level++
+  }
 }
