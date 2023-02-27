@@ -1,32 +1,24 @@
 import * as Types from '@type/game'
-import { defineDirection } from '@utils/game'
 import { emptyAnimationProcess } from '@constants/game'
 
-export default class Defend implements Types.DefendBehavior {
+export default class Defence implements Types.DefendBehavior {
   constructor(protected _subject: Types.Defendable) {}
   with(attack: Types.AttackDef) {
-    const { points: attackPoints, attacker } = attack
-
+    let behavior
     if (this._subject?.defend) {
-      return this._subject.defend(attack)
+      behavior = this._subject.defend(attack)
     } else {
-      const dir: Types.AxisDirection = defineDirection(
-        this._subject.cell.position,
-        // TODO opposite direction ?
-        attacker.cell.position
-      )
-      const behavior = {
-        type: Types.DamageMotionType.damage,
-        dir,
-      } as Types.UnitBehaviorDef
+      const { points: attackPoints } = attack
 
       attack.points = this._calcPoints(attackPoints)
 
-      return {
-        process: this._subject.view.do?.(behavior) ?? emptyAnimationProcess,
+      behavior = {
+        process: emptyAnimationProcess, // dnt have defence animation
         result: attack,
       } as Types.DefendResult
     }
+    this._subject.curBehavior = behavior
+    return behavior
   }
   protected _calcPoints(attackPoints: number) {
     const { stamina } = this._subject
@@ -42,10 +34,9 @@ export default class Defend implements Types.DefendBehavior {
     }
 
     let points = stamina
-    if (Math.random() >= successDefenceChance) {
+    if (successDefenceChance >= Math.random()) {
       points += attackPoints * successDefenceLevel
     }
-
-    return Math.round(points)
+    return attackPoints - Math.round(points)
   }
 }

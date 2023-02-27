@@ -231,12 +231,30 @@ export const isDestroyable = (
   gameObject: Types.GameObjectDef
 ): gameObject is Types.Destroyable => 'damageDelegate' in gameObject
 
+export const isCollectable = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Collectable =>
+  Types.GameItemName.key == gameObject.name ||
+  Types.GameItemName.coin == gameObject.name
+export const isUnlockable = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Unlockable =>
+  Types.GameEntourageName.gate == gameObject.name
+
+export const isUnit = (
+  gameObject: Types.GameObjectDef
+): gameObject is Types.Unit => 'active' in gameObject
 export const isNpc = (
   gameObject: Types.GameObjectDef
 ): gameObject is Types.Npc => 'brain' in gameObject
 export const isWarrior = (
   gameObject: Types.GameObjectDef
-): gameObject is Types.Warrior => isNpc(gameObject) && isAttacker(gameObject)
+): gameObject is Types.Warrior =>
+  isNpc(gameObject) &&
+  isMovable(gameObject) &&
+  isAttacker(gameObject) &&
+  isDefendable(gameObject) &&
+  isDestroyable(gameObject)
 export const isMonster = (
   gameObject: Types.GameObjectDef
 ): gameObject is Types.Monster => isNpc(gameObject) && isAttacker(gameObject)
@@ -249,6 +267,14 @@ export const setActualResourceVal = (
   value: number
 ) => {
   const { min = 0, max } = resource
-  const healthRangeKeeper = createRangeKeeper(min, max)
-  return healthRangeKeeper(value)
+  return createRangeKeeper(min, max)(value)
 }
+export const initResource = (value = 0) => {
+  return {
+    value,
+    max: value,
+  } as Types.UnitResource
+}
+
+// export const getHeroCell = (map:Types.LevelMap) => getMapCellsAround(map, curPos, 1).find(
+//   cell => cell.gameObjects.some(item => Utils.isHero(item))

@@ -5,6 +5,7 @@ export type Geometry = {
   position: Coords
   size: Size
 }
+export type Path = Coords[]
 export enum Axis {
   vertical = 'vertical',
   horizontal = 'horizontal',
@@ -23,6 +24,14 @@ export type AxisVector = {
   direction: AxisDirection | Axis
   length: number
 }
+
+export enum PathDirection {
+  forward = 'forward',
+  back = 'back',
+  clockwise = 'clockwise',
+  counterClockwise = 'counterClockwise',
+}
+export type Area = [Coords, Coords] // square selection from point to point
 
 export enum Rotation {
   topRight = 'topRight',
@@ -102,7 +111,6 @@ export type CellSpriteAnimationProcessResult = {
 export type CellSpriteAnimationProcess =
   Promise<CellSpriteAnimationProcessResult>
 
-// TODO need refactoring for motions/behaviors types
 export enum IdleMotionType {
   idle = 'idle',
   look2top = 'look2top',
@@ -169,30 +177,172 @@ export type MotionTypes = typeof IdleMotionType &
   typeof TurnMotionType &
   typeof UnspecifiedMotionType
 export type MotionType = keyof MotionTypes
+export type BehaviorMotion =
+  | IdleMotionType.idle
+  | MoveMotionType.move
+  | AttackMotionType.attack
+  | DamageMotionType.damage
+  | DestructionMotionType.destruction
+  | TurnMotionType.turn
+  | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
 
 export type SpriteMotions = Record<MotionType, AnimationMotionParams>
 export type CellSpriteMotions = Record<MotionType, CellAnimationMotionParams>
 
-export type UnitBehaviorDef = {
-  type:
-    | IdleMotionType.idle
-    | MoveMotionType.move
-    | AttackMotionType.attack
-    | DamageMotionType.damage
-    | DestructionMotionType.destruction
-    | TurnMotionType.turn
-    | Exclude<keyof typeof UnspecifiedMotionType, 'custom'>
+export interface LevelMapCell {
+  position: Coords
+  gameObjects: GameObjectDef[]
+  addObject(gameObject: GameObjectDef): GameObjectDef
+  extract(gameObject: GameObjectDef): GameObjectDef
+}
+export type LevelMap = LevelMapCell[][]
+
+// semantic aliases
+export type BehaviorDef = BehaviorMotion
+export type BehaviorAnimatedProcess = CellSpriteAnimationProcess
+export type BehaviorAnimationParams = CellSpriteAnimationParams
+
+export type ViewBehaviorDef = {
+  type: BehaviorDef
   dir?: AxisDirection | Rotation
 }
 
-export type Path = Coords[]
-export enum PathDirection {
-  forward = 'forward',
-  back = 'back',
-  clockwise = 'clockwise',
-  counterClockwise = 'counterClockwise',
+export interface GameObjectViewDef {
+  position: Coords
+  render(): void
+  toggle(flag?: boolean): void
+  update?(dt: number): void
+  do?(behavior: ViewBehaviorDef): BehaviorAnimatedProcess
 }
-export type Area = [Coords, Coords] // square selection from point to point
+export interface GameObjectDef {
+  name: GameObjectName
+  crossable: boolean
+  view: GameObjectViewDef
+  cell: LevelMapCell
+  remove(): GameObjectDef
+}
+export type AttackDef = {
+  attacker: Attacker
+  points: number
+}
+
+export type UnitBehaviorResult<
+  Result = unknown,
+  Process = BehaviorAnimatedProcess
+> = {
+  result: Result
+  process: Process
+}
+export interface Unit extends GameObjectDef {
+  get active(): boolean
+  curBehavior: UnitBehaviorResult | null
+}
+// export type UnitBehavior = () => UnitBehaviorResult
+export interface BehaviorDelegate<
+  Object = unknown,
+  Result = UnitBehaviorResult
+> {
+  with(target: Object): Result
+}
+export type MoveResult = UnitBehaviorResult
+export type MoveBehavior = BehaviorDelegate<LevelMapCell, MoveResult>
+export interface Movable extends Unit {
+  moveDelegate: BehaviorDelegate<LevelMapCell>
+  move?(target: LevelMapCell): UnitBehaviorResult
+}
+export type AttackResult = UnitBehaviorResult<AttackDef>
+export type AttackBehavior = BehaviorDelegate<Destroyable, AttackResult>
+export interface Attacker extends Unit {
+  get strength(): number
+  get criticalAttackChance(): number
+  get criticalAttackLevel(): number
+  attackDelegate: AttackBehavior
+  attack?(target: Destroyable): AttackResult
+}
+export type DefendResult = UnitBehaviorResult<AttackDef>
+export type DefendBehavior = BehaviorDelegate<AttackDef, DefendResult>
+export interface Defendable extends Unit {
+  get stamina(): number
+  get successDefenceChance(): number
+  get successDefenceLevel(): number
+  defendDelegate: DefendBehavior
+  defend?(attack: AttackDef): DefendResult
+}
+export type DamageResult = UnitBehaviorResult<boolean>
+export type DamageBehavior = BehaviorDelegate<AttackDef, DamageResult>
+export interface Destroyable extends Unit {
+  health: number
+  get healthMax(): number
+  damageDelegate: DamageBehavior
+  damage?(damage: AttackDef): DamageResult
+}
+
+export enum HeroClass {
+  knight = 'knight',
+  archer = 'archer',
+  wizard = 'wizard',
+}
+export type UnitResource = {
+  value: number
+  max: number
+  min?: number
+}
+export enum GameUnitName {
+  hero = 'hero',
+  skeleton = 'skeleton',
+}
+export enum GameItemName {
+  coin = 'coin',
+  key = 'key',
+  chest = 'chest',
+  bottle = 'bottle',
+}
+export enum GameEntourageName {
+  wall = 'wall',
+  gate = 'gate',
+}
+export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
+
+export type BehaviorDecision = {
+  subject: Unit
+  behavior: BehaviorDef
+  dir?: AxisDirection
+  object?: GameObjectDef
+  target?: LevelMapCell
+}
+export interface Ai {
+  makeDecision(): BehaviorDecision
+}
+export interface Npc extends Unit {
+  brain: Ai
+}
+export interface Monster extends Npc, Attacker {}
+export interface Collectable extends GameObjectDef {}
+export interface Unlockable extends GameObjectDef {}
+export interface Warrior extends Movable, Attacker, Defendable, Destroyable {}
+export interface Hero extends Unit, Warrior {
+  name: GameUnitName.hero
+  heroClass: HeroClass
+  bag: GameObjectDef[]
+  level: number
+}
+
+export enum GameInteractionType {
+  none = 'none',
+  battle = 'battle',
+  collect = 'collect',
+  unlock = 'unlock',
+  // ...
+}
+export type GameInteractionDef<Result = unknown> = {
+  type: GameInteractionType
+  position?: Coords
+  result?: Result
+  subject?: GameUnitName
+  object?: GameObjectName
+  behavior?: BehaviorDef
+  process?: BehaviorAnimatedProcess
+}
 
 export type GameAction = [GameEvent, number]
 export enum GameEvent {
@@ -219,140 +369,3 @@ export const MoveGameEvents = [
   GameEvent.Up,
   GameEvent.Down,
 ]
-
-export enum GameInteractionType {
-  none = 'none',
-  battle = 'battle',
-  collect = 'collect',
-  open = 'open',
-  // ...
-}
-export type GameInteractionDef<
-  Result = unknown,
-  Subject = GameUnitName,
-  Object = GameItemName | GameEntourageName,
-  Process = CellSpriteAnimationProcess
-> = {
-  type: GameInteractionType
-  position?: Coords
-  result?: Result
-  subject?: Subject
-  object?: Object
-  behavior?: UnitBehaviorDef
-  process?: Process
-}
-
-export interface LevelMapCell {
-  position: Coords
-  gameObjects: GameObjectDef[]
-  addObject(gameObject: GameObjectDef): GameObjectDef
-  extract(gameObject: GameObjectDef): GameObjectDef
-}
-export type LevelMap = LevelMapCell[][]
-
-export interface GameObjectViewDef {
-  position: Coords
-  render(): void
-  toggle(flag?: boolean): void
-  update?(dt: number): void
-  do?(behavior: UnitBehaviorDef): CellSpriteAnimationProcess
-}
-export interface GameObjectDef {
-  name: GameObjectName
-  crossable: boolean
-  view: GameObjectViewDef
-  cell: LevelMapCell
-  remove(): GameObjectDef
-}
-
-export type BehaviorResult<
-  Result = null,
-  Process = CellSpriteAnimationProcess
-> = {
-  result: Result
-  process: Process
-}
-export interface BehaviorDelegate<Object = unknown, Result = BehaviorResult> {
-  with(target: Object): Result
-}
-
-// TODO SEE constants/hero
-
-export type UnitResource = {
-  value: number
-  max: number
-  min?: number
-}
-export type AttackDef = {
-  attacker: Attacker
-  points: number
-}
-
-export type MoveResult = BehaviorResult
-export type MoveBehavior = BehaviorDelegate<LevelMapCell, MoveResult>
-export interface Movable extends GameObjectDef {
-  moveDelegate: BehaviorDelegate<LevelMapCell>
-  move?(target: LevelMapCell): BehaviorResult
-}
-export type AttackResult = BehaviorResult<AttackDef>
-export type AttackBehavior = BehaviorDelegate<Destroyable, AttackResult>
-export interface Attacker extends GameObjectDef {
-  get strength(): number
-  get criticalAttackChance(): number
-  get criticalAttackLevel(): number
-  attackDelegate: AttackBehavior
-  attack?(target: Destroyable): AttackResult
-}
-export type DefendResult = BehaviorResult<AttackDef>
-export type DefendBehavior = BehaviorDelegate<AttackDef, DefendResult>
-export interface Defendable extends GameObjectDef {
-  get stamina(): number
-  get successDefenceChance(): number
-  get successDefenceLevel(): number
-  defendDelegate: DefendBehavior
-  defend?(attack: AttackDef): DefendResult
-}
-export type DamageResult = BehaviorResult<boolean>
-export type DamageBehavior = BehaviorDelegate<AttackDef, DamageResult>
-export interface Destroyable extends GameObjectDef {
-  health: number
-  damageDelegate: DamageBehavior
-  damage?(damage: AttackDef): DamageResult
-}
-
-export enum HeroClass {
-  knight = 'knight',
-  archer = 'archer',
-  wizard = 'wizard',
-}
-export enum GameUnitName {
-  hero = 'hero',
-  skeleton = 'skeleton',
-}
-export enum GameItemName {
-  coin = 'coin',
-  key = 'key',
-  chest = 'chest',
-  bottle = 'bottle',
-}
-export enum GameEntourageName {
-  wall = 'wall',
-  gate = 'gate',
-}
-export type GameObjectName = GameUnitName | GameItemName | GameEntourageName
-
-export interface AI {
-  makeDecision(): UnitBehaviorDef
-}
-export interface Npc extends GameObjectDef {
-  brain: AI
-}
-export interface Monster extends Npc, Attacker {}
-export interface Collectable extends GameObjectDef {}
-
-export interface Warrior extends Movable, Attacker, Defendable, Destroyable {}
-export interface Hero extends GameObjectDef, Warrior {
-  name: GameUnitName.hero
-  heroClass: HeroClass
-  bag: GameObjectDef[]
-}

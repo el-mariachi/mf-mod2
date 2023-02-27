@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import classNames from 'classnames'
+import MapController from '@game/controllers/MapController'
 import GameUIButton from '@game/components/GameUIButton'
 import GameUIPanel from '@game/components/GameUIPanel'
 import HealthBar from './HealthBar'
@@ -20,7 +21,10 @@ enum ModalType {
   info,
   inventory,
 }
-function MapSceneUI() {
+export type MapSceneUIProps = {
+  map: MapController['cells']
+}
+const MapSceneUI: FC<MapSceneUIProps> = ({ map }) => {
   const [modalType, setModalType] = useState<ModalType | null>(null)
   const closeModal = () => setModalType(null)
 
@@ -31,11 +35,11 @@ function MapSceneUI() {
       break
 
     case ModalType.info:
-      modal = <CharInfoModal close={closeModal} />
+      modal = <CharInfoModal hero={map?.hero} close={closeModal} />
       break
 
     case ModalType.inventory:
-      modal = <InventoryModal close={closeModal} />
+      modal = <InventoryModal hero={map?.hero} close={closeModal} />
       break
   }
 

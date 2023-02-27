@@ -1,29 +1,29 @@
 import * as Types from '@type/game'
-import * as Behaviors from '@game/behaviors'
-import { defineDirection } from '@utils/game'
-import { emptyAnimationProcess } from '@constants/game'
+import { getBehaviorAnimatedProcess } from '@game/behaviors'
 
 export default class Attack implements Types.AttackBehavior {
   constructor(protected _subject: Types.Attacker) {}
   with(target: Types.Destroyable) {
+    let behavior
     if (this._subject?.attack) {
-      return this._subject.attack(target)
+      behavior = this._subject.attack(target)
     } else {
-      const dir: Types.AxisDirection = defineDirection(
-        this._subject.cell.position,
-        target.cell.position
+      const process = getBehaviorAnimatedProcess(
+        Types.AttackMotionType.attack,
+        this._subject,
+        target.cell
       )
 
-      return {
-        process:
-          this._subject.view.do?.(Behaviors[`attack2${dir}`]) ??
-          emptyAnimationProcess,
+      behavior = {
+        process,
         result: this._calcPoints(),
       }
     }
+    this._subject.curBehavior = behavior
+    return behavior
   }
   protected _calcPoints() {
-    const { strength: strength } = this._subject
+    const { strength } = this._subject
     let { criticalAttackChance = 0, criticalAttackLevel = 0 } = this._subject
 
     criticalAttackChance = Math.abs(criticalAttackChance)
@@ -36,7 +36,7 @@ export default class Attack implements Types.AttackBehavior {
     }
 
     let points = strength
-    if (Math.random() <= criticalAttackChance) {
+    if (criticalAttackChance >= Math.random()) {
       points += strength * criticalAttackLevel
     }
 

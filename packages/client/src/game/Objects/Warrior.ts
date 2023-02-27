@@ -1,16 +1,16 @@
-import { UnitResource, Warrior } from '@type/game'
-import { setActualResourceVal } from '@utils/game'
+import { Warrior } from '@type/game'
 import Attack from '@game/behaviors/Attack'
 import Movement from '@game/behaviors/Movement'
-import Defend from '@game/behaviors/Defend'
+import Defence from '@game/behaviors/Defence'
 import Destruction from '@game/behaviors/Destruction'
-import Unit from './Unit'
+import { setActualResourceVal, initResource } from '@utils/game'
+import _Unit from './Unit'
 
 // abstract
-export default class _Warrior extends Unit implements Warrior {
+export default class _Warrior extends _Unit implements Warrior {
   moveDelegate: Movement
   attackDelegate: Attack
-  defendDelegate: Defend
+  defendDelegate: Defence
   damageDelegate: Destruction
   protected _strength = 0
   protected _criticalAttackChance = 0
@@ -18,16 +18,13 @@ export default class _Warrior extends Unit implements Warrior {
   protected _stamina = 0
   protected _successDefenceChance = 0
   protected _successDefenceLevel = 0
-  protected _healthResourse = {
-    value: 0,
-    max: 0,
-  } as UnitResource
+  protected _healthResourse = initResource()
 
   constructor() {
     super()
     this.moveDelegate = new Movement(this)
     this.attackDelegate = new Attack(this)
-    this.defendDelegate = new Defend(this)
+    this.defendDelegate = new Defence(this)
     this.damageDelegate = new Destruction(this)
   }
   get strength() {
@@ -52,6 +49,12 @@ export default class _Warrior extends Unit implements Warrior {
     return this._healthResourse.value
   }
   set health(value: number) {
-    setActualResourceVal(this._healthResourse, value)
+    this._healthResourse.value = setActualResourceVal(
+      this._healthResourse,
+      value
+    )
+  }
+  get healthMax() {
+    return this._healthResourse.max
   }
 }

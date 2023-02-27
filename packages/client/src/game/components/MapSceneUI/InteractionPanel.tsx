@@ -13,7 +13,7 @@ const InteractionPanel: FC<InteractionPanelProps> = props => {
 
   let message = ''
   switch (type) {
-    case GameInteractionType.open:
+    case GameInteractionType.unlock:
       if (GameEntourageName.gate == object && !result)
         message = 'The door is locked'
       break

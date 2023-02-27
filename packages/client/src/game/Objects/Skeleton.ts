@@ -3,6 +3,7 @@ import PatrolMonsterAi from '@game/ai/PatrolMonsterAi'
 import { skeletonMotions } from '@game/animations/skeleton'
 import _Warrior from './Warrior'
 import skeletonSrc from '@sprites/skeleton.png'
+import { initResource } from '@utils/game'
 
 export default class Skeleton extends _Warrior implements Types.Npc {
   brain: PatrolMonsterAi
@@ -10,15 +11,12 @@ export default class Skeleton extends _Warrior implements Types.Npc {
   spriteSrc = skeletonSrc
   motions = skeletonMotions
   protected _strength = 50
-  protected _criticalAttackChance = 0.25
-  protected _criticalAttackLevel = 0.05
-  protected _stamina = 20
-  protected _successDefenceChance = 0.05
-  protected _successDefenceLevel = 0.01
-  protected _healthResourse = {
-    value: 75,
-    max: 75,
-  } as Types.UnitResource
+  protected _criticalAttackChance = 0.5
+  protected _criticalAttackLevel = 0.3
+  protected _stamina = 10
+  protected _successDefenceChance = 0.25
+  protected _successDefenceLevel = 0.1
+  protected _healthResourse = initResource(40)
   constructor() {
     super()
     this.brain = new PatrolMonsterAi(this)

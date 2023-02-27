@@ -73,6 +73,7 @@ export type GameSlice = {
 export const noInteraction: Types.GameInteractionDef = {
   type: Types.GameInteractionType.none,
 }
+export const noInteractionRes = Promise.resolve(noInteraction)
 
 export const gameInitialState: GameSlice = {
   lifeControllerState: LifeControllerState.PAUSED,

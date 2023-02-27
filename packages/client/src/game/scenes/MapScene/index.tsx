@@ -93,7 +93,7 @@ function MapScene() {
       обращаться к каждому слою через ref */
   return (
     <>
-      <MapSceneUI />
+      <MapSceneUI map={mapRef.current.cells} />
       <div ref={layersRef} className="map-scene__layers"></div>
     </>
   )

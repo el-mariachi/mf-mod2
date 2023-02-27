@@ -1,14 +1,32 @@
 import { FC } from 'react'
+import { GameItemName, Hero } from '@type/game'
 import GameUIModal, { GameUIModalProps } from '@game/components/GameUIModal'
 import useGameModalClose from '@hooks/useGameModalClose'
+import GameUIButton from '../GameUIButton'
 
-const InventoryModal: FC<GameUIModalProps> = ({ close, ...props }) => {
+export type InventoryModalProps = GameUIModalProps & {
+  hero?: Hero
+}
+const InventoryModal: FC<InventoryModalProps> = ({ close, hero, ...props }) => {
   const closeModal = useGameModalClose(close)
 
   return (
     <GameUIModal close={closeModal} title="Inventory" {...props}>
-      {/* TODO make page for inventory */}
-      <div className="minecrafted">nothing here yet...</div>
+      <div className="map-scene-ui__inventory">
+        {hero ? (
+          <ul className="mb-4">
+            <li>
+              Keys:{' '}
+              <span>
+                {hero.bag.filter(item => GameItemName.key == item.name).length}
+              </span>
+            </li>
+          </ul>
+        ) : null}
+        <div className="text-center">
+          <GameUIButton onClick={closeModal}>Close</GameUIButton>
+        </div>
+      </div>
     </GameUIModal>
   )
 }

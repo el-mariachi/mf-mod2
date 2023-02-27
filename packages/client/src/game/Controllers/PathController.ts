@@ -1,5 +1,6 @@
 import * as Types from '@type/game'
-import patrolPaths from '@game/data/patrolPaths.json'
+// TODO need to load dynamically by levelNum from store
+import patrolPaths from '@game/data/levels/1/patrolPaths.json'
 
 export default class PathController {
   level: number = 0

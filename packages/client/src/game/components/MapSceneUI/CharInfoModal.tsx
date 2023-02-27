@@ -1,15 +1,18 @@
 import { FC } from 'react'
-import GameUIModal, { GameUIModalProps } from '@game/components/GameUIModal'
+import { Hero } from '@type/game'
 import { useAppSelector } from '@hooks/redux_typed_hooks'
-import { selectHero, selectUserData } from '@store/selectors'
+import { selectUserData } from '@store/selectors'
 import useGameModalClose from '@hooks/useGameModalClose'
-import GameUIButton from '../GameUIButton'
+import GameUIModal, { GameUIModalProps } from '@game/components/GameUIModal'
+import GameUIButton from '@game/components/GameUIButton'
 import heroImg from '@images/knight.png'
 
-const CharInfoModal: FC<GameUIModalProps> = ({ close, ...props }) => {
+export type CharInfoModalProps = GameUIModalProps & {
+  hero?: Hero
+}
+const CharInfoModal: FC<CharInfoModalProps> = ({ close, hero, ...props }) => {
   const closeModal = useGameModalClose(close)
   const { display_name } = useAppSelector(selectUserData)
-  const { resources } = useAppSelector(selectHero)
 
   return (
     <GameUIModal close={closeModal} title="Character info" {...props}>
@@ -17,21 +20,30 @@ const CharInfoModal: FC<GameUIModalProps> = ({ close, ...props }) => {
         <img src={heroImg} />
         <div className="map-scene-ui__char-info-props">
           <h4 className="map-scene-ui__char-info-nick mb-3">{display_name}</h4>
-          <ul className="mb-4">
-            {/* TODO replace mock props with real ones when appropriate */}
-            <li>
-              Unit class: <span>knight</span>
-            </li>
-            <li>
-              Unit level: <span>1</span>
-            </li>
-            <li>
-              Attack damage: <span>{resources.hits}</span>
-            </li>
-            <li>
-              Defence level: <span>16</span>
-            </li>
-          </ul>
+          {hero ? (
+            <ul className="mb-4">
+              <li>
+                Unit class: <span>{hero.heroClass}</span>
+              </li>
+              <li>
+                Unit level: <span>{hero.level}</span>
+              </li>
+              <li>
+                Attack:{' '}
+                <span>
+                  {hero.strength} ({hero?.criticalAttackChance * 100}/
+                  {hero?.criticalAttackLevel * 100})
+                </span>
+              </li>
+              <li>
+                Defence:{' '}
+                <span>
+                  {hero.stamina} ({hero?.successDefenceChance * 100}/
+                  {hero?.successDefenceLevel * 100})
+                </span>
+              </li>
+            </ul>
+          ) : null}
           <div>
             <GameUIButton onClick={closeModal}>Close</GameUIButton>
           </div>

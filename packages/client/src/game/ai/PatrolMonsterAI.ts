@@ -1,14 +1,13 @@
 import * as Types from '@type/game'
-import * as Behaviors from '@game/behaviors'
+import Behaviors from '@game/behaviors'
 import * as Utils from '@utils/game'
-import _Hero from '@game/objects/Hero'
 import DullAi from './DullAi'
 import { zeroLevelMap } from '@game/controllers/MapController'
 
 export default class PatrolMonsterAi extends DullAi {
   protected _patrolPath!: Types.Path
   protected _goal!: Types.Coords
-  protected static readonly _IDLE_CHANCE = 0.2
+  protected static readonly _IDLE_CHANCE = 0.1
   constructor(
     npc: Types.Monster & Types.Movable,
     knownMap: Types.LevelMap = zeroLevelMap,
@@ -29,19 +28,24 @@ export default class PatrolMonsterAi extends DullAi {
 
     this._goal = this.patrolPath[0]
   }
-  makeDecision() {
+  makeDecision(): Types.BehaviorDecision {
+    const subject = this._npc
     const curPos = this._position
 
     const heroCell = Utils.getMapCellsAround(this._knownMap, curPos, 1).find(
-      cell => cell.gameObjects.some(item => item instanceof _Hero)
+      cell => cell.gameObjects.some(item => Utils.isHero(item))
     )
     if (heroCell) {
-      const dir = Utils.defineAxisDir(
-        curPos,
-        Utils.rowcol2coords(heroCell.position)
-      )
+      const heroPos = Utils.rowcol2coords(heroCell.position)
+      const dir = Utils.defineAxisDir(curPos, heroPos)
       if (dir) {
-        return Behaviors[`attack2${dir}`]
+        return {
+          subject,
+          behavior: Types.AttackMotionType.attack as Types.BehaviorDef,
+          object: heroCell.gameObjects.find(item => Utils.isHero(item)),
+          dir,
+          target: heroCell,
+        }
       }
     }
     if (Utils.isCoordsEqual(curPos, this._goal)) {
@@ -53,17 +57,27 @@ export default class PatrolMonsterAi extends DullAi {
         Utils.nearestCoords(curPos, dir)
       )
       if (!Utils.isCoordsEqual(curPos, nextPos)) {
-        const [col, row] = nextPos
-        const cellObjects = this._knownMap[row][col].gameObjects
-        const action =
-          (!cellObjects.length || cellObjects.every(item => item.crossable)) &&
+        const [row, col] = Utils.coords2rowcol(nextPos)
+        const target = this._knownMap[row][col]
+        const { gameObjects } = target
+        const behavior = (
+          (!gameObjects.length || gameObjects.every(item => item.crossable)) &&
           Math.random() >= PatrolMonsterAi._IDLE_CHANCE
-            ? 'move'
-            : 'look'
-        return Behaviors[`${action}2${dir}`]
+            ? Types.MoveMotionType.move
+            : Types.IdleMotionType.idle
+        ) as Types.BehaviorDef
+        return {
+          subject,
+          behavior,
+          dir,
+          target,
+        }
       }
     }
-    return Behaviors.doNothing
+    return {
+      subject,
+      behavior: Behaviors.doNothing.type,
+    }
   }
   protected _defineNextGoal() {
     const pathLength = this.patrolPath.length

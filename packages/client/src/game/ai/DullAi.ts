@@ -1,10 +1,13 @@
-import { AI, LevelMap, Npc } from '@type/game'
+import { Ai, BehaviorDecision, LevelMap, Npc } from '@type/game'
 import { doNothing } from '@game/behaviors'
 
-export default class DullAi implements AI {
+export default class DullAi implements Ai {
   constructor(protected _npc: Npc, protected _knownMap: LevelMap) {}
   makeDecision() {
-    return doNothing
+    return {
+      subject: this._npc,
+      behavior: doNothing.type,
+    } as BehaviorDecision
   }
   set knownMap(map: LevelMap) {
     this._knownMap = map

@@ -27,8 +27,16 @@ export default class ViewFactory {
         spriteImage,
         gameObject.motions as Types.CellSpriteMotions
       )
-      view = new UnitView(sprite, position)
-
+      let viewOpts = []
+      switch (gameObject.name) {
+        case Types.GameUnitName.skeleton:
+          viewOpts.push({
+            [Types.MoveMotionType.move]: 22,
+            [Types.AttackMotionType.attack]: 14,
+          })
+          break
+      }
+      view = new UnitView(sprite, position, ...viewOpts)
       /** создаем View анимированных предметов */
     } else if (gameObject.animated) {
       const sprite = new GameObjectSprite(

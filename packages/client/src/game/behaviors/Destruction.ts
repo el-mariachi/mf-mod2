@@ -1,31 +1,34 @@
 import * as Types from '@type/game'
-import { emptyAnimationProcess } from '@constants/game'
-import { defineDirection } from '@utils/game'
+import { getBehaviorAnimatedProcess } from '@game/behaviors'
 
 export default class Destruction implements Types.DamageBehavior {
   constructor(protected _subject: Types.Destroyable) {}
   with(damage: Types.AttackDef) {
-    const { points: damagePoints, attacker } = damage
-
+    let behavior
     if (this._subject?.damage) {
-      return this._subject.damage(damage)
+      behavior = this._subject.damage(damage)
     } else {
-      const dir: Types.AxisDirection = defineDirection(
-        this._subject.cell.position,
-        attacker.cell.position
-      )
-      const behavior = {
-        type: Types.DestructionMotionType.destruction,
-        dir,
-      } as Types.UnitBehaviorDef
+      const { points: damagePoints, attacker } = damage
 
       this._applyDamage(damagePoints)
 
-      return {
-        process: this._subject.view.do?.(behavior) ?? emptyAnimationProcess,
-        result: this._hasDestroyed(),
+      const hasDestroyed = this._hasDestroyed()
+      const behaviorDef = hasDestroyed
+        ? Types.DestructionMotionType.destruction
+        : Types.DamageMotionType.damage
+      const process = getBehaviorAnimatedProcess(
+        behaviorDef,
+        this._subject,
+        attacker.cell
+      )
+
+      behavior = {
+        process,
+        result: hasDestroyed,
       }
     }
+    this._subject.curBehavior = behavior
+    return behavior
   }
   protected _applyDamage(damagePoints: number) {
     this._subject.health -= damagePoints

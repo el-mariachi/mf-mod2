@@ -3,10 +3,10 @@ import MapController, { Cell } from './MapController'
 import * as Types from '@type/game'
 import PatrolMonsterAi from '@game/ai/PatrolMonsterAi'
 import PathController from './PathController'
-import { HERO_MOVE_DELAY } from '@constants/game'
+import { emptyAnimationProcess, HERO_MOVE_DELAY } from '@constants/game'
 import StatisticController from './StatisticController'
 import InteractionController from './InteractionController'
-import { isMovable, isNpc } from '@utils/game'
+import * as Utils from '@utils/game'
 
 enum Status {
   free,
@@ -19,23 +19,24 @@ export default class LifeController {
   pathController: PathController
   statistic: StatisticController
   interaction: InteractionController
-  smartNPC: unknown[] = []
   status = Status.free
   nextTurn: null | Types.AxisDirection = null
   protected _paused = false
   constructor(mapController: MapController) {
     this.map = mapController.map
     this.cells = mapController.cells
-    this.pathController = new PathController(mapController.levelN)
-    this.givePathes2Npc()
     this.statistic = new StatisticController()
-    this.interaction = new InteractionController(this.map, this.statistic)
+    this.interaction = new InteractionController(
+      this.statistic,
+      this.map,
+      this.cells.hero
+    )
+    this.pathController = new PathController(mapController.levelN)
+    this.makeNpcsSmart()
   }
   async turn(direction: Types.AxisDirection) {
-    if (this._paused) {
-      return
-      /** если уже есть ход в ожидании nextTurn больше не принимаем ход */
-    } else if (this.status === Status.busy && this.nextTurn) {
+    if (this._paused || (this.status === Status.busy && this.nextTurn)) {
+      /** если пауза или уже есть ход в ожидании nextTurn больше не принимаем ход */
       return
       /** если контроллер занят, но очередь свободна, занимаем очередь */
     } else if (this.status === Status.busy) {
@@ -46,12 +47,13 @@ export default class LifeController {
       this.status = Status.busy
       this.nextTurn = null
     }
-
     /** если контроллер свободен, начинаем обработку и меняем статус на занят */
     this.status = Status.busy
-    this.heroMove(direction)
-    await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
-    await this.NPCMove()
+    if (this._haveActiveNpcs()) {
+      this.heroMove(direction)
+      await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
+      await this.npcMove()
+    } else await this.heroMove(direction)
     this.status = Status.free
     /** проверяем не появился ли ход в очереди, если появился забираем ход */
     if (this.nextTurn) {
@@ -62,30 +64,48 @@ export default class LifeController {
     this.interaction.clear()
     return this.tend(this.cells.hero, direction)
   }
-  async NPCMove() {
-    const promises: Promise<Types.CellSpriteAnimationProcessResult>[] = []
-    this.cells.NPCCells.forEach((cell: Cell) => {
+  async npcMove() {
+    const promises: Types.BehaviorAnimatedProcess[] = []
+    this.cells.NpcCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
-        if (isNpc(object)) {
-          /** Ai принимает решение куда направиться и что делать */
-          const tendBehavior = object.brain.makeDecision()
-          const { type, dir } = tendBehavior
-          /** находим клетку по пути движения
-           * (данная реализация игнорирует решение AI что делать)
-           * решение принимается в tendToCell
-           */
-          const result = this.tend(object, dir as Types.AxisDirection)
+        if (Utils.isNpc(object) && object.active) {
+          const decision = object.brain.makeDecision()
+          let result = this.interaction
+            .byNpcDecision(decision)
+            .then(interaction => {
+              const { target, dir, behavior } = decision
+              if (Types.GameInteractionType.none == interaction.type) {
+                switch (behavior) {
+                  case Types.IdleMotionType.idle:
+                    if (dir && object.view.do) {
+                      return object.view.do({
+                        type: behavior,
+                        dir,
+                      })
+                    }
+                    break
+                  case Types.MoveMotionType.move:
+                    if (target && Utils.isMovable(object)) {
+                      return object.moveDelegate.with(target).process
+                    }
+                    break
+                }
+              }
+              return emptyAnimationProcess
+            })
           promises.push(result)
         }
       })
     })
     return Promise.all(promises)
   }
-  givePathes2Npc() {
-    /** добавляем игровому объект AI в виде свойства brain  */
-    this.cells.NPCCells.forEach((cell: Cell) => {
+  makeNpcsSmart() {
+    this.cells.NpcCells.forEach((cell: Cell) => {
       cell.gameObjects.forEach(object => {
-        if (isNpc(object) && object.brain instanceof PatrolMonsterAi) {
+        if (
+          Utils.isMonster(object) &&
+          object.brain instanceof PatrolMonsterAi
+        ) {
           object.brain.knownMap = this.map
           object.brain.patrolPath = this.pathController.getPath(cell.position)
         }
@@ -96,7 +116,7 @@ export default class LifeController {
   async tend(
     object: GameObject,
     direction: Types.AxisDirection
-  ): Promise<Types.CellSpriteAnimationProcessResult> {
+  ): Types.BehaviorAnimatedProcess {
     const radius = 1
     /** находим первую клетку по пути движения */
     const targetCells = this.map.nearbyCells(
@@ -110,28 +130,35 @@ export default class LifeController {
     return result
   }
   /** намериваемся передвинуть объект из ячейки currentCell в targetCell */
-  tendToCell(
+  async tendToCell(
     gameObject: GameObject,
     targetCell: Cell
-  ): Promise<Types.CellSpriteAnimationProcessResult> {
+  ): Types.BehaviorAnimatedProcess {
     const results = targetCell.gameObjects.map(item =>
-      this.interaction.execute(gameObject, item)
+      Utils.isHero(gameObject)
+        ? this.interaction.heroWith(item)
+        : this.interaction.perform(gameObject, item)
     )
-    const canMove =
-      !results.length ||
-      results.every((motion: unknown) => motion === Types.MoveMotionType.move)
 
-    /** если можно пройти */
-    if (canMove && isMovable(gameObject)) {
-      if (gameObject.name === Types.GameUnitName.hero) {
-        this.statistic.regStep()
+    if (Utils.isMovable(gameObject)) {
+      const canMove =
+        !results.length ||
+        results.every((motion: unknown) => motion === Types.MoveMotionType.move)
+
+      // TODO is it need move after another action (attack f.e.)
+
+      /** если можно пройти */
+      if (canMove) {
+        if (Utils.isHero(gameObject)) {
+          this.statistic.regStep()
+        }
+        return gameObject.moveDelegate.with(targetCell).process
       }
-      return gameObject.moveDelegate.with(targetCell).process
     }
     /** если нельзя пройти */
     return results.find(
       el => el instanceof Promise
-    ) as Promise<Types.CellSpriteAnimationProcessResult>
+    ) as Types.BehaviorAnimatedProcess
   }
   toggle(flag?: boolean) {
     const toggle = flag ?? this._paused
@@ -139,5 +166,11 @@ export default class LifeController {
     if ((this._paused = !toggle)) {
       this.nextTurn = null
     }
+  }
+  protected _haveActiveNpcs() {
+    return this.cells.filterObjects(
+      (object: Types.GameObjectDef) => Utils.isNpc(object) && object.active
+    ).length
+    // return this.cells.NpcCells.some((cell: Cell) => (cell.gameObjects.filter(object => Utils.isNpc(object) && object.active).length > 0))
   }
 }

@@ -1,9 +1,10 @@
 import GameObject from '@game/objects/GameObject'
 import GameObjects from '@game/objects'
-import level1 from '@game/data/levels/1.json'
+// TODO need to load dynamically by levelNum from store
+import level1 from '@game/data/levels/1/map.json'
 import { LayerRecord } from './LayerController'
 import * as Types from '@type/game'
-import { isNpc } from '@utils/game'
+import { isHero, isNpc } from '@utils/game'
 
 /** ячейка игровой матрицы */
 export class Cell implements Types.LevelMapCell {
@@ -30,7 +31,7 @@ export class Cell implements Types.LevelMapCell {
 }
 
 /** массив ячеек игровой матрицы, с методами группировки игровых объектов */
-const Cells = class extends Array implements Types.LevelMap {
+export const Cells = class extends Array implements Types.LevelMap {
   _notAnimatedObjects = []
   filterObjects(condition: (object: GameObject) => boolean) {
     return this.reduce((prev, cell) => {
@@ -51,20 +52,18 @@ const Cells = class extends Array implements Types.LevelMap {
     )
   }
   get hero() {
-    return this.heroCell.gameObjects.find(
-      (gameObject: GameObject) => gameObject.name === Types.GameUnitName.hero
+    return this.heroCell.gameObjects.find((gameObject: GameObject) =>
+      isHero(gameObject)
     )
   }
   get heroCell() {
-    return this.filterCellsByObject(
-      (object: GameObject) => object.name === Types.GameUnitName.hero
-    )[0]
+    return this.filterCellsByObject((object: GameObject) => isHero(object))[0]
   }
-  get NPCCells() {
+  get NpcCells() {
     return this.filterCellsByObject((object: GameObject) => isNpc(object))
   }
-  get NPC() {
-    return this.filterObjects((object: GameObject) => isNpc(object)) // as Types.Npc[]
+  get Npc() {
+    return this.filterObjects((object: GameObject) => isNpc(object))
   }
   get notAnimatedObjectsTuple() {
     /** кеширование не анимированных сущностей */
@@ -145,6 +144,7 @@ class MapController {
   level: LevelInstance
   levelN: number
   layers: LayerRecord
+  // TODO need to get level from store
   constructor({ layers, level: levelN }: MapControllerPropsType) {
     this.layers = layers
     this.level = level1 as LevelInstance

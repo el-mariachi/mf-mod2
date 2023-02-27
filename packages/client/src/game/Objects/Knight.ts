@@ -7,7 +7,7 @@ export default class Knight extends _Hero {
   heroClass = Types.HeroClass.knight
   spriteSrc = knightSrc
   motions = knightMotions
-  // TODO further, belows will calculate and depends on level, equipments, weapons, etc
+  // TODO further, the belows will calculate and depends on level, equipments, weapons, etc
   get strength() {
     return 50
   }
@@ -21,9 +21,9 @@ export default class Knight extends _Hero {
     return 20
   }
   get successDefenceChance() {
-    return 0.05
+    return 0.2
   }
   get successDefenceLevel() {
-    return 0.01
+    return 0.1
   }
 }

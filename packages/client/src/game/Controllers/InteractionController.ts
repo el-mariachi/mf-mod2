@@ -1,4 +1,3 @@
-import { DEF_MOVE_DURATION } from '@constants/game'
 import * as Types from '@type/game'
 import { store } from '@store/index'
 import {
@@ -7,126 +6,55 @@ import {
   regInteraction,
 } from '@store/slices/game'
 import GameObject from '@game/objects/GameObject'
-import _Hero from '@game/objects/Hero'
-import MapController, { Cell } from './MapController'
+import MapController from './MapController'
 import StatisticController from './StatisticController'
 import * as Utils from '@utils/game'
 
 export default class InteractionController {
   constructor(
+    protected _statistic: StatisticController,
+    // TODO here need other type
     protected _map: MapController['map'],
-    protected _statistic: StatisticController
+    protected _hero: Types.Hero
   ) {}
+  byNpcDecision(
+    decision: Types.BehaviorDecision
+  ): Promise<Types.GameInteractionDef> {
+    const { subject, behavior, object } = decision
 
-  execute(subject: GameObject, object: GameObject) {
-    if (subject.name === Types.GameUnitName.hero && object.crossable) {
-      return Types.MoveMotionType.move
-    }
-
-    /** hero - key */
-    if (
-      subject.name === Types.GameUnitName.hero &&
-      object.name === Types.GameItemName.key
-    ) {
-      const key: Types.GameObjectDef = object.remove()
-      const hero = subject as _Hero
-      hero.bag.push(key)
-      return Types.MoveMotionType.move
-    }
-    /** hero - coin */
-    if (
-      subject.name === Types.GameUnitName.hero &&
-      object.name === Types.GameItemName.coin
-    ) {
-      this._statistic.regItemCollect(object)
-      object.remove()
-      return Types.MoveMotionType.move
-    }
-    /** hero - gate */
-    if (
-      subject.name === Types.GameUnitName.hero &&
-      object.name === Types.GameEntourageName.gate
-    ) {
-      const hero = subject as _Hero
-      const gate = object
-      const key = hero.bag.find(item => item.name === Types.GameItemName.key)
-      if (key) {
-        /** убираем ключ из сумки */
-        hero.bag.splice(hero.bag.indexOf(key), 1)
-        const gateNearbyCells = this._map.nearbyCells(gate.cell, 1) as Cell[]
-        if (0 !== gate.view?.position[1]) {
-          /** убираем ворота */
-          gateNearbyCells.forEach(cell => {
-            cell.gameObjects.forEach(object => {
-              if (object.name === Types.GameEntourageName.gate) {
-                object.remove()
+    let interaction = Promise.resolve({
+      type: Types.GameInteractionType.none,
+      behavior,
+    })
+    switch (behavior) {
+      case Types.AttackMotionType.attack:
+        if (
+          Utils.isAttacker(subject) &&
+          object &&
+          Utils.isDestroyable(object)
+        ) {
+          interaction = this._waitEndOfProcess4(object)
+            .then(() => this._battle(subject, object))
+            .then(() => {
+              return {
+                type: Types.GameInteractionType.battle,
+                behavior,
               }
             })
-          })
-
-          return Types.MoveMotionType.move
-        } else {
-          store.dispatch(finishLevel())
-          return Types.IdleMotionType.idle
         }
-      } else
-        this.registrate({
-          type: Types.GameInteractionType.open,
-          object: object.name,
-          result: false,
-        })
-
-      return Types.IdleMotionType.idle
+        break
     }
-
-    const combination = [subject, object]
-    /** hero - npc */
-    if (
-      combination.some(object => Utils.isHero(object)) &&
-      combination.some(object => Utils.isMonster(object))
-    ) {
-      if (Utils.isAttacker(subject) && Utils.isDestroyable(object)) {
-        const attack = subject.attackDelegate.with(object)
-        let attackResult = attack.result
-
-        let defend: Types.DefendResult | null = null
-        if (Utils.isDefendable(object)) {
-          defend = object.defendDelegate.with(attackResult)
-          attackResult = defend.result
-        }
-
-        /** если атакует герой ничего не ждем, так как все  анимации нпс завершились
-         */
-
-        /** если атакует нпс
-         * прежде чем начать анимацию убеждаемся что предыдущие анимации закончились
-         */
-        return new Promise(resolve =>
-          this._waitEndOfMove(object).then(() => {
-            Promise.all([
-              // TODO temporary hack
-              subject.cell ? attack.process : Promise.resolve(null),
-              object.cell && defend ? defend.process : Promise.resolve(null),
-            ]).then(res => {
-              const damage = object.damageDelegate.with(attackResult)
-
-              damage.process.then(() => {
-                const isKilled = damage.result
-                if (isKilled) {
-                  if (Utils.isMonster(object)) {
-                    this._statistic.regMonsterKill(object)
-                    object.remove()
-                  }
-                }
-                resolve(res)
-              })
-            })
-          })
-        )
-      }
-
-      // TODO otherwise no action
+    return interaction
+  }
+  heroWith(object: Types.GameObjectDef) {
+    if (Utils.isCollectable(object)) {
+      return this._collect(object)
+    } else if (Utils.isUnlockable(object)) {
+      return this._unlock(object)
+    } else if (Utils.isMonster(object) && Utils.isDestroyable(object)) {
+      return this._attack(object)
     }
+    return Types.IdleMotionType.idle
   }
   registrate(interaction: Types.GameInteractionDef) {
     store.dispatch(regInteraction(interaction))
@@ -134,12 +62,142 @@ export default class InteractionController {
   clear() {
     store.dispatch(clearInteractions())
   }
-  // TODO temporary hack
-  _waitEndOfMove(gameObject: GameObject) {
-    if (!Utils.isNpc(gameObject)) {
-      return new Promise(resolve => setTimeout(resolve, DEF_MOVE_DURATION * 5))
-    } else {
-      return new Promise(resolve => resolve(1))
+  protected _collect(object: Types.Collectable) {
+    switch (object.name) {
+      case Types.GameItemName.key:
+        this._hero.bag.push(object.remove())
+        return Types.MoveMotionType.move
+        break
+
+      case Types.GameItemName.coin:
+        this._statistic.regItemCollect(object.remove())
+        return Types.MoveMotionType.move
+        break
+
+      default:
+        return Types.IdleMotionType.idle
+        break
     }
+  }
+  protected _unlock(object: Types.Unlockable) {
+    switch (object.name) {
+      case Types.GameEntourageName.gate:
+        const gate = object
+        const key = this._hero.bag.find(
+          item => item.name === Types.GameItemName.key
+        )
+        if (key) {
+          /** убираем ключ из сумки */
+          this._hero.bag.splice(this._hero.bag.indexOf(key), 1)
+          const gateNearbyCells = this._map.nearbyCells(
+            gate.cell,
+            1
+          ) as Types.LevelMapCell[]
+          if (0 !== gate.view?.position[1]) {
+            /** убираем ворота */
+            gateNearbyCells.forEach(cell => {
+              cell.gameObjects.forEach(object => {
+                if (object.name === Types.GameEntourageName.gate) {
+                  object.remove()
+                }
+              })
+            })
+            return Types.MoveMotionType.move
+          } else {
+            store.dispatch(finishLevel())
+            // TODO check that after pause and no any actions
+            return Types.IdleMotionType.idle
+          }
+        } else
+          this.registrate({
+            type: Types.GameInteractionType.unlock,
+            object: object.name,
+            result: false,
+          })
+        break
+
+      default:
+        return Types.IdleMotionType.idle
+        break
+    }
+  }
+  protected _attack(target: Types.Destroyable) {
+    this._battle(this._hero, target)
+  }
+  protected _battle(attacker: Types.Attacker, attacked: Types.Destroyable) {
+    return new Promise(resolve =>
+      // this._waitEndOfMove(attacked).then(() =>
+      this._waitEndOfProcess4(attacked).then(() => {
+        const attack = attacker.attackDelegate.with(attacked)
+        let attackResult = attack.result
+
+        // console.log('before defence', attackResult)
+
+        let defend: Types.DefendResult | null = null
+        if (Utils.isDefendable(attacked)) {
+          defend = attacked.defendDelegate.with(attackResult)
+          attackResult = defend.result
+        }
+
+        // console.log('after defence', attackResult)
+
+        // console.log('before damage', attacked.health)
+
+        const damage = attacked.damageDelegate.with(attackResult)
+
+        // console.log('after damage', attacked.health, damage)
+
+        // if (isDestroyed) {
+        //   attacked.remove()
+        // }
+
+        Promise.all([
+          attack.process,
+          defend ? defend.process : Promise.resolve(),
+        ]).then(res => {
+          damage.process.then(() => {
+            const isDestroyed = damage.result
+            if (isDestroyed) {
+              if (Utils.isMonster(attacked)) {
+                this._statistic.regMonsterKill(attacked)
+              }
+              attacked.remove()
+            }
+            resolve(res)
+          })
+        })
+      })
+    )
+  }
+  protected _waitEndOfProcess4(object: Types.GameObjectDef) {
+    return new Promise<unknown>(resolve => {
+      if (
+        object instanceof Object &&
+        Utils.isUnit(object) &&
+        object.curBehavior
+      ) {
+        object.curBehavior.process.then(resolve)
+      } else resolve(null)
+    })
+  }
+  // DEPRICATED
+  perform(subject: Types.GameObjectDef, object: Types.GameObjectDef) {
+    if (object.crossable) {
+      return Types.MoveMotionType.move
+    }
+    if (Utils.isHero(subject)) {
+      return this.heroWith(object)
+    } else {
+      const combination = [subject, object]
+      if (
+        combination.some(object => Utils.isHero(object)) &&
+        combination.some(object => Utils.isMonster(object))
+      ) {
+        if (Utils.isAttacker(subject) && Utils.isDestroyable(object)) {
+          return this._battle(subject, object)
+        }
+      }
+    }
+    return Types.IdleMotionType.idle
   }
 }

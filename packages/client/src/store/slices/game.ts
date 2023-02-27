@@ -41,7 +41,7 @@ const invertStats = (levelStats: GameSlice['levelStats']) => {
       [current]: -levelStats[key],
     })
   }, {})
-  console.log(invertedStats)
+  // console.log(invertedStats)
   return invertedStats
 }
 
