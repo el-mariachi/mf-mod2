@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import SignIn from '@pages/SignIn'
 import ForumPage from '@pages/ForumPage'
 import GamePage from '@pages/GamePage'
@@ -11,11 +11,15 @@ import ROUTES from '@constants/routes'
 import { useEffect } from 'react'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
+import { SignInWithOauth } from '@services/oauthController'
 
 function App() {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   useEffect(() => {
-    dispatch(loadUser())
+    SignInWithOauth()
+      .then(() => dispatch(loadUser()))
+      .catch(() => navigate(ROUTES.SERVER_ERROR))
   }, [])
   return (
     <div className="app">

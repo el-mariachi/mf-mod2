@@ -10,7 +10,7 @@ export default {
     RENDERED_ON_SERVER: false,
   },
   moduleNameMapper: {
-    '\\.s?css$': '<rootDir>/src/test/cssStub',
+    '\\.(s?css|svg)$': '<rootDir>/src/test/cssStub',
     '@components/(.*)': '<rootDir>/src/components/$1',
     '@utils/(.*)': '<rootDir>/src/utils/$1',
     '@api/(.*)': '<rootDir>/src/api/$1',
@@ -22,5 +22,5 @@ export default {
     '@store/(.*)': '<rootDir>/src/store/$1',
     '@constants/(.*)': '<rootDir>/src/constants/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts']
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 }
