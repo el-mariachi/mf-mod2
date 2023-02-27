@@ -5,7 +5,6 @@ import {
   finishLevel,
   regInteraction,
 } from '@store/slices/game'
-import GameObject from '@game/objects/GameObject'
 import MapController from './MapController'
 import StatisticController from './StatisticController'
 import * as Utils from '@utils/game'
@@ -126,12 +125,9 @@ export default class InteractionController {
   }
   protected _battle(attacker: Types.Attacker, attacked: Types.Destroyable) {
     return new Promise(resolve =>
-      // this._waitEndOfMove(attacked).then(() =>
       this._waitEndOfProcess4(attacked).then(() => {
         const attack = attacker.attackDelegate.with(attacked)
         let attackResult = attack.result
-
-        // console.log('before defence', attackResult)
 
         let defend: Types.DefendResult | null = null
         if (Utils.isDefendable(attacked)) {
@@ -139,23 +135,41 @@ export default class InteractionController {
           attackResult = defend.result
         }
 
-        // console.log('after defence', attackResult)
-
-        // console.log('before damage', attacked.health)
-
-        const damage = attacked.damageDelegate.with(attackResult)
-
-        // console.log('after damage', attacked.health, damage)
-
-        // if (isDestroyed) {
-        //   attacked.remove()
-        // }
-
+        let damage: Types.DamageResult
+        const interaction2register: Types.GameInteractionDef<Types.UnitResource> =
+          {
+            type: Types.GameInteractionType.battle,
+            subject: attacker.name,
+            object: attacked.name,
+            result: {
+              value: attacked.health,
+              max: attacked.healthMax,
+            },
+          }
+        if (Utils.isHero(attacker)) {
+          console.log(interaction2register)
+          this.registrate(interaction2register)
+          damage = attacked.damageDelegate.with(attackResult)
+        }
         Promise.all([
           attack.process,
           defend ? defend.process : Promise.resolve(),
         ]).then(res => {
+          if (!damage) {
+            damage = attacked.damageDelegate.with(attackResult)
+          }
           damage.process.then(() => {
+            if (Utils.isHero(attacker)) {
+              this.registrate({
+                ...interaction2register,
+                ...{
+                  result: {
+                    value: attacked.health,
+                    max: attacked.healthMax,
+                  },
+                },
+              })
+            }
             const isDestroyed = damage.result
             if (isDestroyed) {
               if (Utils.isMonster(attacked)) {

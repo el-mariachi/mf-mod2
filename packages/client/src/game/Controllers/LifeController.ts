@@ -145,8 +145,6 @@ export default class LifeController {
         !results.length ||
         results.every((motion: unknown) => motion === Types.MoveMotionType.move)
 
-      // TODO is it need move after another action (attack f.e.)
-
       /** если можно пройти */
       if (canMove) {
         if (Utils.isHero(gameObject)) {
@@ -171,6 +169,5 @@ export default class LifeController {
     return this.cells.filterObjects(
       (object: Types.GameObjectDef) => Utils.isNpc(object) && object.active
     ).length
-    // return this.cells.NpcCells.some((cell: Cell) => (cell.gameObjects.filter(object => Utils.isNpc(object) && object.active).length > 0))
   }
 }

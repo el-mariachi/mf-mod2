@@ -115,8 +115,9 @@
   font-family: 'Minecraft';
 
   .game-ui-panel__content {
-    min-height: 80px;
-    max-width: 100px;
+    min-height: 50px;
+    min-width: 80px;
+    max-width: 200px;
   }
 }
 

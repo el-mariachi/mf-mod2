@@ -338,7 +338,7 @@ export type GameInteractionDef<Result = unknown> = {
   type: GameInteractionType
   position?: Coords
   result?: Result
-  subject?: GameUnitName
+  subject?: GameObjectName
   object?: GameObjectName
   behavior?: BehaviorDef
   process?: BehaviorAnimatedProcess
