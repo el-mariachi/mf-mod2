@@ -3,8 +3,8 @@ import SecondsToHMS from '@utils/secondsFormat'
 import { useFonts } from '@hooks/useFonts'
 import './ResScene.scss'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
-import { restartGame } from '@store/slices/game'
-import { levelStats } from '@store/selectors'
+import { resumeGame } from '@store/slices/game'
+import { selectGameTotals } from '@store/selectors'
 import { width, height, center } from '@utils/winsize'
 
 function _RenderStroke(
@@ -22,14 +22,8 @@ function _RenderStroke(
 }
 
 function ResScene({ onExit }: SceneProps) {
-  const lvlStats = useAppSelector(levelStats) || {
-    levelNum: 1,
-    killCount: 0,
-    coins: 0,
-    time: 0,
-    steps: 0,
-  }
-  const { levelNum, killCount, coins, time, steps } = lvlStats
+  const { levelNum, gameTotals } = useAppSelector(selectGameTotals)
+  const { killCount, coins, time, steps } = gameTotals
   const dispatch = useAppDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   let curHeight = height / 4
@@ -39,7 +33,7 @@ function ResScene({ onExit }: SceneProps) {
   const formatTime = SecondsToHMS(time)
 
   const onRestart = () => {
-    dispatch(restartGame())
+    dispatch(resumeGame())
   }
 
   useEffect(() => {
@@ -100,7 +94,7 @@ function ResScene({ onExit }: SceneProps) {
         curHeight += 24 * 2
       }
     }
-  }, [fontLoaded, levelStats])
+  }, [fontLoaded, gameTotals])
 
   return (
     <div className="res-scene__results">

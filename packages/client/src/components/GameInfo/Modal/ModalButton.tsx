@@ -11,7 +11,7 @@ const ModalButton = ({
 }) => {
   return (
     <div
-      className={'modal__button ' + className}
+      className={'gameModalUI__button ' + className}
       onClick={() => {
         onCloseFn()
       }}>

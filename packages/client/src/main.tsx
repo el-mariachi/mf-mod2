@@ -5,17 +5,23 @@ import './main.scss' // it must be before next for correct style overriding
 import App from '@components/App/App'
 import ErrorBoundary from '@services/ErrorBoundary'
 import { Provider } from 'react-redux'
-import { store } from '@store/index'
+import { createSSRStore } from '@store/ssr-store'
 import startServiceWorker from '@services/ServiceWorkers/swStart'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+const store = createSSRStore(window.__PRELOADED_STATE__)
+delete window.__PRELOADED_STATE__
+
+ReactDOM.hydrateRoot(
+  document.getElementById('root') as HTMLElement,
   <React.StrictMode>
-    <ErrorBoundary>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </ErrorBoundary>
+    <BrowserRouter>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </ErrorBoundary>
+    </BrowserRouter>
   </React.StrictMode>
 )
 
-//startServiceWorker({ always: true })
+startServiceWorker({ always: false })

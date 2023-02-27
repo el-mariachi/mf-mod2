@@ -1,6 +1,5 @@
-import Row from 'react-bootstrap/Row'
-import Button from 'react-bootstrap/Button'
-import { OauthIcons } from '@components/Icon'
+import {Row, Button} from 'react-bootstrap'
+import Icon from '@components/Icon'
 import oauth from '@services/oauthController'
 import './OauthBox.css'
 
@@ -21,7 +20,7 @@ const OauthBox = () => {
           variant="link"
           className="w-auto"
           title="яндекс id">
-          <OauthIcons.Yandex />
+          <Icon iconName="OauthYandexIcon" className="me-2" />
         </Button>
       </Row>
     </>

@@ -7,7 +7,7 @@ type OauthSigninRequestData = {
 type OauthServiceIdResponseData = { service_id: string }
 
 const signInWithYandexId = (data: OauthSigninRequestData) =>
-  restOauthApi.post('', data, { withCredentials: false })
+  restOauthApi.post('', data)
 
 const getYandexServiceId = (redirect_uri: string) =>
   restOauthApi.get<OauthServiceIdResponseData>(

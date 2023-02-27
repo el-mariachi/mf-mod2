@@ -65,7 +65,7 @@ const inputData = [
   },
 ] as const
 
-export type SignUpFormFields = typeof inputData[number]['name']
+export type SignUpFormFields = (typeof inputData)[number]['name']
 export type SignUpFormStruct = Record<SignUpFormFields, string>
 
 const defaultValues: SignUpFormStruct = {

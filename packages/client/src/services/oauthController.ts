@@ -1,8 +1,5 @@
 import oauthApi from '@api/oauthApi'
 import { API_OAUTH_REDIRECT_URL, API_YANDEX_OAUTH_URL } from '@constants/api'
-import { store } from '@store/index'
-import { loadUser } from '@store/slices/user'
-import { defineUser } from './authController'
 
 interface Strategy {
   authenticate(args: unknown[]): Promise<boolean>
@@ -10,22 +7,19 @@ interface Strategy {
 
 export const signInWithYandex = () => {
   const code = new URLSearchParams(window.location.search).get('code')
-  console.log('code', code)
   if (code) {
-    // Меняем url страницы на чистый, без code
-    window.history.pushState({}, '', API_OAUTH_REDIRECT_URL)
-
-    const user = oauthApi
-      .signInWithYandexId({
-        code,
-        redirect_uri: API_OAUTH_REDIRECT_URL,
-      })
-      .then(() => defineUser().catch(() => null))
-      .catch(() => null)
-    return user
+    return new Promise((resolve, reject) => {
+      window.history.pushState({}, '', API_OAUTH_REDIRECT_URL)
+      return oauthApi
+        .signInWithYandexId({
+          code,
+          redirect_uri: API_OAUTH_REDIRECT_URL,
+        })
+        .then(resolve)
+        .catch(reject)
+    })
   }
-
-  return defineUser().catch(() => null)
+  return Promise.resolve()
 }
 
 export const SignInWithOauth = () => {
@@ -57,15 +51,14 @@ class YandexStrategy implements Strategy {
     const url = new URL(API_YANDEX_OAUTH_URL)
     url.searchParams.set('client_id', service_id)
     url.searchParams.set('redirect_uri', API_OAUTH_REDIRECT_URL)
-
-    console.log('url', url)
     window.location.href = url.href
-
     return true
   }
 }
 
 const auth = new Authenticator()
+/** использовать авторизацию Яндекса,
+ * также можно добавить другие сервисы авторизации VK, Google */
 auth.use('yandex', new YandexStrategy())
 
 const oauth = (mode: string, ...args: unknown[]) => {

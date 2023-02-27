@@ -6,6 +6,7 @@ import axios, {
 } from 'axios'
 import { AppErrorCode, createAppError } from '@utils/errorsHandling'
 import { API_BASE_URL, API_TIMEOUT } from '@constants/api'
+import { MockApi } from '@api/ssrApiMock'
 
 enum RestApiMethods {
   get = 'get',
@@ -16,7 +17,7 @@ enum RestApiMethods {
 type RestApiOpts = AxiosRequestConfig
 type RestApiData = FormData | PlainObject
 
-export default class RestApi {
+class RestApi {
   protected _http: AxiosInstance
 
   constructor(
@@ -123,7 +124,26 @@ export default class RestApi {
       })
   }
 }
-export const restAuthApi = new RestApi('/auth')
-export const restUsersApi = new RestApi('/user')
-export const restResourceApi = new RestApi('/resources')
-export const restOauthApi = new RestApi('/oauth/yandex')
+
+let restAuthApi: MockApi | RestApi
+let restUsersApi: MockApi | RestApi
+let restResourceApi: MockApi | RestApi
+let restLeaderboardApi: MockApi | RestApi
+let restOauthApi : MockApi | RestApi
+
+if (RENDERED_ON_SERVER) {
+  restAuthApi = new MockApi()
+  restUsersApi = new MockApi()
+  restResourceApi = new MockApi()
+  restOauthApi = new MockApi()
+  restLeaderboardApi = new MockApi()
+} else {
+  restAuthApi = new RestApi('/auth')
+  restUsersApi = new RestApi('/user')
+  restResourceApi = new RestApi('/resources')
+  restLeaderboardApi = new RestApi('/leaderboard')
+  restOauthApi = new RestApi('/oauth/yandex')
+  restLeaderboardApi = new RestApi('/leaderboard')
+}
+
+export { restAuthApi, restUsersApi, restResourceApi, restLeaderboardApi, restOauthApi }
