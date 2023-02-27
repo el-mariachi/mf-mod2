@@ -8,3 +8,5 @@ export default function SecondsToHMS(time: number) {
 
   return formatTime
 }
+export const MsecondsToHMS = (mseconds: number) =>
+  SecondsToHMS(Math.round(mseconds / 1000))

@@ -1,6 +1,6 @@
 import * as UI from '@constants/ui'
 import { Coords } from '@type/game'
-import SecondsToHMS from '@utils/secondsFormat'
+import { MsecondsToHMS } from '@utils/secondsFormat'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
 import { nextLevel, startGame } from '@store/slices/game'
 import * as SELECTORS from '@store/selectors'
@@ -104,7 +104,7 @@ function ResultScene() {
     _RenderStroke(
       ctx,
       'time spent',
-      isGameCompleted ? SecondsToHMS(totalTime) : SecondsToHMS(time),
+      isGameCompleted ? MsecondsToHMS(totalTime) : MsecondsToHMS(time),
       [center.width, curHeight]
     )
 

@@ -1,5 +1,5 @@
 import { GameStats, GameStatType } from '@constants/game'
-import { Collectable, Monster } from '@type/game'
+import { Collectable, GameItemName, Monster } from '@type/game'
 import Timer from '@utils/Timer'
 import { store } from '@store/index'
 import { updateStats } from '@store/slices/game'
@@ -9,31 +9,38 @@ export default class StatisticController {
   constructor() {
     this.timer = new Timer()
   }
-  regMonsterKill(monster?: Monster) {
-    this.regStep({
+  regMonsterKill(monster?: Monster, withStep = false) {
+    const stat = {
       [GameStatType.KILLS]: 1,
-    })
+    }
+    withStep ? this.regWithStep(stat) : this.registrate(stat)
   }
-  regItemCollect(item?: Collectable) {
-    this.regStep({
-      [GameStatType.COINS]: 1,
-    })
+  regItemCollect(item?: Collectable, withStep = false) {
+    if (GameItemName.coin == item?.name) {
+      const stat = {
+        [GameStatType.COINS]: 1,
+      }
+      withStep ? this.regWithStep(stat) : this.registrate(stat)
+    }
   }
-  regStep(
-    stepStats: Omit<
-      Partial<GameStats>,
-      GameStatType.STEPS | GameStatType.TIME
-    > = {}
+  regStep() {
+    this.registrate(this._stepStats)
+  }
+  regWithStep(
+    stats: Omit<Partial<GameStats>, GameStatType.STEPS | GameStatType.TIME> = {}
   ) {
     this.registrate({
-      ...stepStats,
-      ...{
-        [GameStatType.TIME]: this.timer.sincePrevElapsed,
-        [GameStatType.STEPS]: 1,
-      },
+      ...stats,
+      ...this._stepStats,
     })
   }
   registrate(stats: Partial<GameStats>) {
     store.dispatch(updateStats(stats))
+  }
+  protected get _stepStats() {
+    return {
+      [GameStatType.TIME]: this.timer.sincePrevElapsed,
+      [GameStatType.STEPS]: 1,
+    }
   }
 }

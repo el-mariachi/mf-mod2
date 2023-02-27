@@ -2,7 +2,7 @@ export default class Timer {
   protected _pauseTime = 0
   protected _pauseDuration = 0
   protected _prevTime = 0
-  constructor(public from = Date.now(), public inSeconds = true) {
+  constructor(public inSeconds = false, public from = Date.now()) {
     this._prevTime = this.from
   }
   get elapsed() {

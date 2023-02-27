@@ -1,4 +1,3 @@
-import GameObject from '@game/objects/GameObject'
 import MapController, { Cell } from './MapController'
 import * as Types from '@type/game'
 import PatrolMonsterAi from '@game/ai/PatrolMonsterAi'
@@ -22,6 +21,7 @@ export default class LifeController {
   status = Status.free
   nextTurn: null | Types.AxisDirection = null
   protected _paused = false
+  protected _finished = false
   constructor(mapController: MapController) {
     this.map = mapController.map
     this.cells = mapController.cells
@@ -51,8 +51,10 @@ export default class LifeController {
     this.status = Status.busy
     if (this._haveActiveNpcs()) {
       this.heroMove(direction)
-      await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
-      await this.npcMove()
+      if (!this._finished) {
+        await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
+        await this.npcMove()
+      }
     } else await this.heroMove(direction)
     this.status = Status.free
     /** проверяем не появился ли ход в очереди, если появился забираем ход */
@@ -62,7 +64,7 @@ export default class LifeController {
   }
   async heroMove(direction: Types.AxisDirection) {
     this.interaction.clear()
-    return this.tend(this.cells.hero, direction)
+    return this.tend(direction)
   }
   async npcMove() {
     const promises: Types.BehaviorAnimatedProcess[] = []
@@ -70,7 +72,7 @@ export default class LifeController {
       cell.gameObjects.forEach(object => {
         if (Utils.isNpc(object) && object.active) {
           const decision = object.brain.makeDecision()
-          let result = this.interaction
+          const result = this.interaction
             .byNpcDecision(decision)
             .then(interaction => {
               const { target, dir, behavior } = decision
@@ -113,50 +115,45 @@ export default class LifeController {
     })
   }
   /** намериваемся двинуться в направлении */
-  async tend(
-    object: GameObject,
-    direction: Types.AxisDirection
-  ): Types.BehaviorAnimatedProcess {
+  async tend(dir: Types.AxisDirection): Types.BehaviorAnimatedProcess {
     const radius = 1
     /** находим первую клетку по пути движения */
     const targetCells = this.map.nearbyCells(
-      object.cell,
+      this.cells.hero.cell,
       radius,
-      direction
+      dir
     ) as Cell[]
 
-    /** Выражаем намерение двинуться в клетку targetCell. */
-    const result = this.tendToCell(object, targetCells[0])
-    return result
-  }
-  /** намериваемся передвинуть объект из ячейки currentCell в targetCell */
-  async tendToCell(
-    gameObject: GameObject,
-    targetCell: Cell
-  ): Types.BehaviorAnimatedProcess {
-    const results = targetCell.gameObjects.map(item =>
-      Utils.isHero(gameObject)
-        ? this.interaction.heroWith(item)
-        : this.interaction.perform(gameObject, item)
+    const targetCell = targetCells[0]
+    const cellObjects = targetCell.gameObjects
+    const results: Promise<Types.GameInteractionDef>[] = cellObjects.map(item =>
+      this.interaction.heroWith(item)
     )
-
-    if (Utils.isMovable(gameObject)) {
-      const canMove =
-        !results.length ||
-        results.every((motion: unknown) => motion === Types.MoveMotionType.move)
-
-      /** если можно пройти */
-      if (canMove) {
-        if (Utils.isHero(gameObject)) {
-          this.statistic.regStep()
+    return Promise.all(results)
+      .then(interactions => {
+        if (
+          interactions.every(interaction => {
+            const { type, result } = interaction
+            if (Types.GameInteractionType.battle == type) {
+              return false
+            }
+            return true
+          }) &&
+          cellObjects.every(object => object.crossable)
+        ) {
+          return this.cells.hero.moveDelegate.with(targetCell).process
         }
-        return gameObject.moveDelegate.with(targetCell).process
-      }
-    }
-    /** если нельзя пройти */
-    return results.find(
-      el => el instanceof Promise
-    ) as Types.BehaviorAnimatedProcess
+        // just turn to dir of last tendation if no interaction or move
+        this.cells.hero.view.do({
+          type: Types.IdleMotionType.idle,
+          dir,
+        })
+        return emptyAnimationProcess
+      })
+      .then(res => {
+        this.statistic.regStep()
+        return res
+      })
   }
   toggle(flag?: boolean) {
     const toggle = flag ?? this._paused

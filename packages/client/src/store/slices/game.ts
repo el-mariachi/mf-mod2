@@ -21,17 +21,17 @@ import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 // }
 
 const updateTotals = (state: GameSlice) => {
-  console.log('updateTotals state', state)
+  // console.log('updateTotals state', state)
   state.gameTotals.coins += state.levelStats.coins
   state.gameTotals.killCount += state.levelStats.killCount
   state.gameTotals.steps += state.levelStats.steps
   state.gameTotals.time += state.levelStats.time
   state.score += computeScore(state.levelStats, state.currentLevel)
-  console.log(
-    'updateTotals totals',
-    state.gameTotals,
-    computeScore(state.levelStats, state.currentLevel)
-  )
+  // console.log(
+  //   'updateTotals totals',
+  //   state.gameTotals,
+  //   computeScore(state.levelStats, state.currentLevel)
+  // )
   // resetLevelStats(state)
 }
 const invertStats = (levelStats: GameSlice['levelStats']) => {
@@ -69,6 +69,7 @@ const slicer = (initState: GameSlice) =>
       endLevel(state) {
         state.levelComplete = true
         state.lifeControllerState = LifeControllerState.PAUSED
+        console.log('lifeControllerState paused')
         updateTotals(state)
         state.currentScene = SCENES.RESULT_SCENE
       },

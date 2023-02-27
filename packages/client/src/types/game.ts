@@ -332,6 +332,7 @@ export enum GameInteractionType {
   battle = 'battle',
   collect = 'collect',
   unlock = 'unlock',
+  finish = 'finish',
   // ...
 }
 export type GameInteractionDef<Result = unknown> = {

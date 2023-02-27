@@ -2,7 +2,7 @@ import { FC, HTMLAttributes } from 'react'
 import { GameStatType } from '@constants/game'
 import { useAppSelector } from '@hooks/redux_typed_hooks'
 import { levelStats, selectLevelScore } from '@store/selectors'
-import SecondsToHMS from '@utils/secondsFormat'
+import { MsecondsToHMS } from '@utils/secondsFormat'
 import coinsIcon from '@images/coin_icn.png'
 import stepsIcon from '@images/steps_icn.png'
 import deathIcon from '@images/death_icn.png'
@@ -20,7 +20,7 @@ const iconMap = {
 }
 export const LevelStatItem: FC<LevelStatItemProps> = ({ type, quantity }) => {
   const value: string | number =
-    type == GameStatType.TIME ? SecondsToHMS(quantity) : quantity
+    type == GameStatType.TIME ? MsecondsToHMS(quantity) : quantity
 
   return (
     <li>

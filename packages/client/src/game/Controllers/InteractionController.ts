@@ -8,11 +8,12 @@ import {
 import MapController from './MapController'
 import StatisticController from './StatisticController'
 import * as Utils from '@utils/game'
+import { noInteractionRes } from '@constants/game'
 
 export default class InteractionController {
   constructor(
     protected _statistic: StatisticController,
-    // TODO here need other type
+    // TODO here need LevelMap type
     protected _map: MapController['map'],
     protected _hero: Types.Hero
   ) {}
@@ -20,11 +21,6 @@ export default class InteractionController {
     decision: Types.BehaviorDecision
   ): Promise<Types.GameInteractionDef> {
     const { subject, behavior, object } = decision
-
-    let interaction = Promise.resolve({
-      type: Types.GameInteractionType.none,
-      behavior,
-    })
     switch (behavior) {
       case Types.AttackMotionType.attack:
         if (
@@ -32,7 +28,7 @@ export default class InteractionController {
           object &&
           Utils.isDestroyable(object)
         ) {
-          interaction = this._waitEndOfProcess4(object)
+          return this._waitEndOfAnimations(object)
             .then(() => this._battle(subject, object))
             .then(() => {
               return {
@@ -43,9 +39,12 @@ export default class InteractionController {
         }
         break
     }
-    return interaction
+    return noInteractionRes
   }
-  heroWith(object: Types.GameObjectDef) {
+  heroWith(object: Types.GameObjectDef): Promise<Types.GameInteractionDef> {
+    // if (object.crossable) {
+    //   return noInteractionRes
+    // } else
     if (Utils.isCollectable(object)) {
       return this._collect(object)
     } else if (Utils.isUnlockable(object)) {
@@ -53,7 +52,7 @@ export default class InteractionController {
     } else if (Utils.isMonster(object) && Utils.isDestroyable(object)) {
       return this._attack(object)
     }
-    return Types.IdleMotionType.idle
+    return noInteractionRes
   }
   registrate(interaction: Types.GameInteractionDef) {
     store.dispatch(regInteraction(interaction))
@@ -61,26 +60,33 @@ export default class InteractionController {
   clear() {
     store.dispatch(clearInteractions())
   }
-  protected _collect(object: Types.Collectable) {
+  protected _collect(
+    object: Types.Collectable
+  ): Promise<Types.GameInteractionDef> {
     switch (object.name) {
       case Types.GameItemName.key:
         this._hero.bag.push(object.remove())
-        return Types.MoveMotionType.move
         break
 
       case Types.GameItemName.coin:
         this._statistic.regItemCollect(object.remove())
-        return Types.MoveMotionType.move
-        break
-
-      default:
-        return Types.IdleMotionType.idle
         break
     }
+    return Promise.resolve({
+      type: Types.GameInteractionType.collect,
+      object: object.name,
+    })
   }
-  protected _unlock(object: Types.Unlockable) {
+  protected _unlock(
+    object: Types.Unlockable
+  ): Promise<Types.GameInteractionDef> {
     switch (object.name) {
       case Types.GameEntourageName.gate:
+        let interaction = {
+          type: Types.GameInteractionType.unlock,
+          object: object.name,
+          result: false,
+        } as Types.GameInteractionDef
         const gate = object
         const key = this._hero.bag.find(
           item => item.name === Types.GameItemName.key
@@ -92,7 +98,9 @@ export default class InteractionController {
             gate.cell,
             1
           ) as Types.LevelMapCell[]
+
           if (0 !== gate.view?.position[1]) {
+            // gate not in the level`s end (map top)
             /** убираем ворота */
             gateNearbyCells.forEach(cell => {
               cell.gameObjects.forEach(object => {
@@ -101,31 +109,29 @@ export default class InteractionController {
                 }
               })
             })
-            return Types.MoveMotionType.move
-          } else {
-            store.dispatch(finishLevel())
-            // TODO check that after pause and no any actions
-            return Types.IdleMotionType.idle
+            return Promise.resolve({ ...interaction, ...{ result: true } })
           }
-        } else
-          this.registrate({
-            type: Types.GameInteractionType.unlock,
-            object: object.name,
-            result: false,
+          store.dispatch(finishLevel())
+          return Promise.resolve({
+            type: Types.GameInteractionType.finish,
           })
-        break
-
-      default:
-        return Types.IdleMotionType.idle
-        break
+        }
+        this.registrate(interaction)
+        return Promise.resolve(interaction)
     }
+    return noInteractionRes
   }
-  protected _attack(target: Types.Destroyable) {
-    this._battle(this._hero, target)
+  protected _attack(
+    target: Types.Destroyable
+  ): Promise<Types.GameInteractionDef> {
+    return this._battle(this._hero, target)
   }
-  protected _battle(attacker: Types.Attacker, attacked: Types.Destroyable) {
+  protected _battle(
+    attacker: Types.Attacker,
+    attacked: Types.Destroyable
+  ): Promise<Types.GameInteractionDef<Types.UnitResource>> {
     return new Promise(resolve =>
-      this._waitEndOfProcess4(attacked).then(() => {
+      this._waitEndOfAnimations(attacked).then(() => {
         const attack = attacker.attackDelegate.with(attacked)
         let attackResult = attack.result
 
@@ -136,39 +142,39 @@ export default class InteractionController {
         }
 
         let damage: Types.DamageResult
-        const interaction2register: Types.GameInteractionDef<Types.UnitResource> =
-          {
-            type: Types.GameInteractionType.battle,
-            subject: attacker.name,
-            object: attacked.name,
-            result: {
-              value: attacked.health,
-              max: attacked.healthMax,
-            },
-          }
+        let interaction: Types.GameInteractionDef<Types.UnitResource> = {
+          type: Types.GameInteractionType.battle,
+          subject: attacker.name,
+          object: attacked.name,
+          result: {
+            value: attacked.health,
+            max: attacked.healthMax,
+          },
+        }
         if (Utils.isHero(attacker)) {
-          console.log(interaction2register)
-          this.registrate(interaction2register)
+          console.log(interaction)
+          this.registrate(interaction)
           damage = attacked.damageDelegate.with(attackResult)
         }
         Promise.all([
           attack.process,
           defend ? defend.process : Promise.resolve(),
-        ]).then(res => {
+        ]).then(() => {
           if (!damage) {
             damage = attacked.damageDelegate.with(attackResult)
           }
           damage.process.then(() => {
             if (Utils.isHero(attacker)) {
-              this.registrate({
-                ...interaction2register,
+              interaction = {
+                ...interaction,
                 ...{
                   result: {
                     value: attacked.health,
                     max: attacked.healthMax,
                   },
                 },
-              })
+              }
+              this.registrate(interaction)
             }
             const isDestroyed = damage.result
             if (isDestroyed) {
@@ -177,13 +183,13 @@ export default class InteractionController {
               }
               attacked.remove()
             }
-            resolve(res)
+            resolve(interaction)
           })
         })
       })
     )
   }
-  protected _waitEndOfProcess4(object: Types.GameObjectDef) {
+  protected _waitEndOfAnimations(object: Types.GameObjectDef) {
     return new Promise<unknown>(resolve => {
       if (
         object instanceof Object &&
@@ -195,12 +201,14 @@ export default class InteractionController {
     })
   }
   // DEPRICATED
-  perform(subject: Types.GameObjectDef, object: Types.GameObjectDef) {
-    if (object.crossable) {
-      return Types.MoveMotionType.move
-    }
+  perform(
+    subject: Types.GameObjectDef,
+    object: Types.GameObjectDef
+  ): Promise<Types.GameInteractionDef> {
     if (Utils.isHero(subject)) {
       return this.heroWith(object)
+      // } else if (object.crossable) {
+      //   return noInteractionRes
     } else {
       const combination = [subject, object]
       if (
@@ -212,6 +220,6 @@ export default class InteractionController {
         }
       }
     }
-    return Types.IdleMotionType.idle
+    return noInteractionRes
   }
 }
