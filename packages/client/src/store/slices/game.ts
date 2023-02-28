@@ -69,7 +69,7 @@ const slicer = (initState: GameSlice) =>
       endLevel(state) {
         state.levelComplete = true
         state.lifeControllerState = LifeControllerState.PAUSED
-        console.log('lifeControllerState paused')
+        // console.log('lifeControllerState paused')
         updateTotals(state)
         state.currentScene = SCENES.RESULT_SCENE
       },
@@ -86,6 +86,7 @@ const slicer = (initState: GameSlice) =>
         state.lifeControllerState = LifeControllerState.PAUSED
         state.levelStats = initState.levelStats
       },
+      // DEPRICATED
       die(state) {
         state.lifeControllerState = LifeControllerState.PAUSED
         state.currentScene = SCENES.RESULT_SCENE

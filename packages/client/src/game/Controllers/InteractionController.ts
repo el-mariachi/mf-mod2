@@ -8,7 +8,11 @@ import {
 import MapController from './MapController'
 import StatisticController from './StatisticController'
 import * as Utils from '@utils/game'
-import { noInteractionRes } from '@constants/game'
+import {
+  finishInteraction,
+  noInteraction,
+  noInteractionRes,
+} from '@constants/game'
 
 export default class InteractionController {
   constructor(
@@ -17,9 +21,7 @@ export default class InteractionController {
     protected _map: MapController['map'],
     protected _hero: Types.Hero
   ) {}
-  byNpcDecision(
-    decision: Types.BehaviorDecision
-  ): Promise<Types.GameInteractionDef> {
+  byNpcDecision(decision: Types.BehaviorDecision): Types.GameInteractionResult {
     const { subject, behavior, object } = decision
     switch (behavior) {
       case Types.AttackMotionType.attack:
@@ -28,58 +30,51 @@ export default class InteractionController {
           object &&
           Utils.isDestroyable(object)
         ) {
-          return this._waitEndOfAnimations(object)
-            .then(() => this._battle(subject, object))
-            .then(() => {
-              return {
-                type: Types.GameInteractionType.battle,
-                behavior,
-              }
-            })
+          return this._waitEndOfAnimations(object).then(() =>
+            this._battle(subject, object)
+          )
+          // .then(() => {
+          //   return {
+          //     type: Types.GameInteractionType.battle,
+          //     behavior,
+          //   }
+          // })
         }
         break
     }
-    return noInteractionRes
+    return noInteraction
   }
-  heroWith(object: Types.GameObjectDef): Promise<Types.GameInteractionDef> {
-    // if (object.crossable) {
-    //   return noInteractionRes
-    // } else
-    if (Utils.isCollectable(object)) {
-      return this._collect(object)
+  heroWith(object: Types.GameObjectDef): Types.GameInteractionResult {
+    if (Utils.isMonster(object) && Utils.isDestroyable(object)) {
+      return this._heroAttack(object)
     } else if (Utils.isUnlockable(object)) {
       return this._unlock(object)
-    } else if (Utils.isMonster(object) && Utils.isDestroyable(object)) {
-      return this._attack(object)
+    } else if (Utils.isCollectable(object)) {
+      return this._collect(object)
     }
-    return noInteractionRes
+    return noInteraction
   }
-  registrate(interaction: Types.GameInteractionDef) {
+  show(interaction: Types.GameInteractionDef) {
     store.dispatch(regInteraction(interaction))
   }
   clear() {
     store.dispatch(clearInteractions())
   }
-  protected _collect(
-    object: Types.Collectable
-  ): Promise<Types.GameInteractionDef> {
-    switch (object.name) {
-      case Types.GameItemName.key:
-        this._hero.bag.push(object.remove())
-        break
-
-      case Types.GameItemName.coin:
-        this._statistic.regItemCollect(object.remove())
-        break
-    }
-    return Promise.resolve({
-      type: Types.GameInteractionType.collect,
-      object: object.name,
-    })
+  protected _heroAttack(
+    target: Types.Destroyable
+  ): Types.GameInteractionProcess {
+    return this._battle(this._hero, target)
+    // return {
+    //   type: Types.GameInteractionType.battle,
+    //   subject: target.name,
+    //   object: target.name,
+    //   result: {
+    //     value: target.health,
+    //     max: target.healthMax,
+    //   },
+    // }
   }
-  protected _unlock(
-    object: Types.Unlockable
-  ): Promise<Types.GameInteractionDef> {
+  protected _unlock(object: Types.Unlockable): Types.GameInteractionDef {
     switch (object.name) {
       case Types.GameEntourageName.gate:
         let interaction = {
@@ -99,37 +94,58 @@ export default class InteractionController {
             1
           ) as Types.LevelMapCell[]
 
-          if (0 !== gate.view?.position[1]) {
-            // gate not in the level`s end (map top)
-            /** убираем ворота */
-            gateNearbyCells.forEach(cell => {
-              cell.gameObjects.forEach(object => {
-                if (object.name === Types.GameEntourageName.gate) {
-                  object.remove()
-                }
-              })
+          const isExitLevelGate = 0 === gate.view?.position[1]
+          /** убираем ворота */
+          gateNearbyCells.forEach(cell => {
+            cell.gameObjects.forEach(object => {
+              if (object.name === Types.GameEntourageName.gate) {
+                object.remove()
+              }
             })
-            return Promise.resolve({ ...interaction, ...{ result: true } })
-          }
-          store.dispatch(finishLevel())
-          return Promise.resolve({
-            type: Types.GameInteractionType.finish,
           })
+          return !isExitLevelGate
+            ? { ...interaction, ...{ result: true } }
+            : finishInteraction
+
+          // if (0 !== gate.view?.position[1]) {
+
+          //   return { ...interaction, ...{ result: true } }
+          // }
+          // // gate in the level`s end
+          // else return finishInteraction
         }
-        this.registrate(interaction)
-        return Promise.resolve(interaction)
+        this.show(interaction)
+        return interaction
     }
-    return noInteractionRes
+    return noInteraction
   }
-  protected _attack(
-    target: Types.Destroyable
-  ): Promise<Types.GameInteractionDef> {
-    return this._battle(this._hero, target)
+  protected _collect(object: Types.Collectable): Types.GameInteractionDef {
+    switch (object.name) {
+      case Types.GameItemName.key:
+        this._hero.bag.push(object.remove())
+        break
+
+      case Types.GameItemName.coin:
+        this._statistic.regItemCollect(object.remove())
+        break
+    }
+    return {
+      type: Types.GameInteractionType.collect,
+      object: object.name,
+    }
   }
+  // protected _finish(): Types.GameInteractionDef {
+  //   store.dispatch(finishLevel())
+  //   return {
+  //     type: Types.GameInteractionType.finish,
+  //   }
+  // }
+
+  // TODO need to decompose
   protected _battle(
     attacker: Types.Attacker,
     attacked: Types.Destroyable
-  ): Promise<Types.GameInteractionDef<Types.UnitResource>> {
+  ): Types.GameInteractionProcess {
     return new Promise(resolve =>
       this._waitEndOfAnimations(attacked).then(() => {
         const attack = attacker.attackDelegate.with(attacked)
@@ -141,7 +157,6 @@ export default class InteractionController {
           attackResult = defend.result
         }
 
-        let damage: Types.DamageResult
         let interaction: Types.GameInteractionDef<Types.UnitResource> = {
           type: Types.GameInteractionType.battle,
           subject: attacker.name,
@@ -151,9 +166,9 @@ export default class InteractionController {
             max: attacked.healthMax,
           },
         }
+        let damage: Types.DamageResult
         if (Utils.isHero(attacker)) {
-          console.log(interaction)
-          this.registrate(interaction)
+          this.show(interaction)
           damage = attacked.damageDelegate.with(attackResult)
         }
         Promise.all([
@@ -174,14 +189,17 @@ export default class InteractionController {
                   },
                 },
               }
-              this.registrate(interaction)
+              this.show(interaction)
             }
             const isDestroyed = damage.result
             if (isDestroyed) {
               if (Utils.isMonster(attacked)) {
                 this._statistic.regMonsterKill(attacked)
               }
-              attacked.remove()
+              if (Utils.isHero(attacked)) {
+                attacked.view.toggle(false)
+                resolve(finishInteraction)
+              } else attacked.remove()
             }
             resolve(interaction)
           })
@@ -204,11 +222,9 @@ export default class InteractionController {
   perform(
     subject: Types.GameObjectDef,
     object: Types.GameObjectDef
-  ): Promise<Types.GameInteractionDef> {
+  ): Types.GameInteractionProcess | Types.GameInteractionDef {
     if (Utils.isHero(subject)) {
       return this.heroWith(object)
-      // } else if (object.crossable) {
-      //   return noInteractionRes
     } else {
       const combination = [subject, object]
       if (

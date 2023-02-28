@@ -199,7 +199,7 @@ export type LevelMap = LevelMapCell[][]
 
 // semantic aliases
 export type BehaviorDef = BehaviorMotion
-export type BehaviorAnimatedProcess = CellSpriteAnimationProcess
+export type AnimatedBehaviorProcess = CellSpriteAnimationProcess
 export type BehaviorAnimationParams = CellSpriteAnimationParams
 
 export type ViewBehaviorDef = {
@@ -212,7 +212,7 @@ export interface GameObjectViewDef {
   render(): void
   toggle(flag?: boolean): void
   update?(dt: number): void
-  do?(behavior: ViewBehaviorDef): BehaviorAnimatedProcess
+  do?(behavior: ViewBehaviorDef): AnimatedBehaviorProcess
 }
 export interface GameObjectDef {
   name: GameObjectName
@@ -228,7 +228,7 @@ export type AttackDef = {
 
 export type UnitBehaviorResult<
   Result = unknown,
-  Process = BehaviorAnimatedProcess
+  Process = AnimatedBehaviorProcess
 > = {
   result: Result
   process: Process
@@ -237,12 +237,12 @@ export interface Unit extends GameObjectDef {
   get active(): boolean
   curBehavior: UnitBehaviorResult | null
 }
-// export type UnitBehavior = () => UnitBehaviorResult
+export type UnitBehavior = () => UnitBehaviorResult
 export interface BehaviorDelegate<
-  Object = unknown,
+  Target = unknown,
   Result = UnitBehaviorResult
 > {
-  with(target: Object): Result
+  with(target: Target): Result
 }
 export type MoveResult = UnitBehaviorResult
 export type MoveBehavior = BehaviorDelegate<LevelMapCell, MoveResult>
@@ -342,8 +342,14 @@ export type GameInteractionDef<Result = unknown> = {
   subject?: GameObjectName
   object?: GameObjectName
   behavior?: BehaviorDef
-  process?: BehaviorAnimatedProcess
+  process?: AnimatedBehaviorProcess
 }
+export type GameInteractionProcess<Result = unknown> = Promise<
+  GameInteractionDef<Result>
+>
+export type GameInteractionResult<Result = unknown> =
+  | GameInteractionDef<Result>
+  | GameInteractionProcess<Result>
 
 export type GameAction = [GameEvent, number]
 export enum GameEvent {

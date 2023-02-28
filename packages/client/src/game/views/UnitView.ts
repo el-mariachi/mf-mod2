@@ -46,6 +46,6 @@ export default class UnitView extends AnimatableView {
         this._sprite.animate(idleAnimation)
       }
       return res
-    }) as Types.BehaviorAnimatedProcess
+    }) as Types.AnimatedBehaviorProcess
   }
 }

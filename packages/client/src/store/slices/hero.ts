@@ -98,10 +98,11 @@ export const updateHealthByAmount =
   (amount: number): ThunkAction<void, RootState, unknown, AnyAction> =>
   (dispatch, getState) => {
     dispatch(updateHealth(amount))
-    const { hero } = getState()
-    if (hero.health <= 0) {
-      dispatch(die())
-    }
+    // it could be handy, but buisness-logic in store makes controller code tricky oO
+    // const { hero } = getState()
+    // if (hero.health <= 0) {
+    //   dispatch(die())
+    // }
   }
 
 export default generateSlice

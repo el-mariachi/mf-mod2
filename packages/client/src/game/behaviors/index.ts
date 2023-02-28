@@ -123,7 +123,7 @@ export function getBehaviorAnimatedProcess(
     : null
 
   return viewBehavior && subject.view.do
-    ? (subject.view.do(viewBehavior) as Types.BehaviorAnimatedProcess)
+    ? (subject.view.do(viewBehavior) as Types.AnimatedBehaviorProcess)
     : emptyAnimationProcess
 }
 

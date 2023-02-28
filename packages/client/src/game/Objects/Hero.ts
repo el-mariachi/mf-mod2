@@ -16,6 +16,9 @@ export default class _Hero extends _Warrior implements Types.Hero {
   set health(value: number) {
     store.dispatch(updateHealthByAmount(value - this.health))
   }
+  get healthMax() {
+    return selectHealth(store.getState()).maxHealth
+  }
   get level() {
     return this._level
   }

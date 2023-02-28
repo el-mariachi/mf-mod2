@@ -15,8 +15,8 @@ export default class StatisticController {
     }
     withStep ? this.regWithStep(stat) : this.registrate(stat)
   }
-  regItemCollect(item?: Collectable, withStep = false) {
-    if (GameItemName.coin == item?.name) {
+  regItemCollect(item: Collectable, withStep = false) {
+    if (GameItemName.coin == item.name) {
       const stat = {
         [GameStatType.COINS]: 1,
       }
@@ -27,7 +27,7 @@ export default class StatisticController {
     this.registrate(this._stepStats)
   }
   regWithStep(
-    stats: Omit<Partial<GameStats>, GameStatType.STEPS | GameStatType.TIME> = {}
+    stats: Omit<Partial<GameStats>, GameStatType.STEPS | GameStatType.TIME>
   ) {
     this.registrate({
       ...stats,

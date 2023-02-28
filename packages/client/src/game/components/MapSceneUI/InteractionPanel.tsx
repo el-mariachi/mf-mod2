@@ -30,7 +30,7 @@ const InteractionPanel: FC<InteractionPanelProps> = props => {
       if (result) {
         const { value = 0, max } = result as UnitResource
         if (max) {
-          message = value ? `${value} from ${max}` : 'is dead'
+          message = value ? `health: ${value} / ${max}` : 'is dead'
         }
       }
       break
