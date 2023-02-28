@@ -1,0 +1,28 @@
+ARG NODE_VERSION=18
+ARG SERVER_PORT
+ARG VITE_HMR_PORT
+ARG VITE_SSR_HMR_PORT
+
+FROM node:$NODE_VERSION-buster
+RUN apt-get update; apt install -y netcat
+
+WORKDIR /app
+
+COPY package.json yarn.lock /app/
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn lerna bootstrap
+
+COPY packages/server/wait-for.sh /app/wait-for.sh
+RUN chmod +x /app/wait-for.sh
+
+WORKDIR /app/packages/client
+RUN yarn link
+WORKDIR /app/packages/server
+RUN yarn link client
+
+EXPOSE $SERVER_PORT
+EXPOSE $VITE_HMR_PORT
+EXPOSE $VITE_SSR_HMR_PORT

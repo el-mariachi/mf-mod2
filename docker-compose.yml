@@ -2,34 +2,47 @@ version: "3.9"
 
 services:
     client:
-        container_name: prakticum-client
-        image: prakticum-client
-        build:
-            context: .
-            dockerfile: Dockerfile.client
-            args:
-              CLIENT_PORT: ${CLIENT_PORT}
-        restart: always
-        ports:
-            - "${CLIENT_PORT}:80"
-        environment:
-          - CLIENT_PORT=${CLIENT_PORT}
-          - SERVER_PORT=${SERVER_PORT}
+      container_name: prakticum-client
+      image: prakticum-client
+      build:
+          context: .
+          dockerfile: Dockerfile.client
+          args:
+            CLIENT_PORT: ${CLIENT_PORT}
+      restart: always
+      depends_on:
+        - postgres
+      ports:
+          - "${CLIENT_PORT}:80"
+      environment:
+        - CLIENT_PORT=${CLIENT_PORT}
+        - SERVER_PORT=${SERVER_PORT}
+      networks:
+        - onebit
+
     server:
-        container_name: prakticum-server
-        image: prackicum-server
-        build:
-            context: .
-            dockerfile: Dockerfile.server
-            args:
-              SERVER_PORT: ${SERVER_PORT}
-        restart: always
-        ports:
-            - "${SERVER_PORT}:${SERVER_PORT}"
-        environment:
-          SERVER_PORT: ${SERVER_PORT}
+      container_name: prakticum-server
+      image: prakticum-server
+      build:
+          context: .
+          dockerfile: Dockerfile.server
+          args:
+            SERVER_PORT: ${SERVER_PORT}
+      command: ./wait-for.sh postgres:${POSTGRES_PORT} -- node index.js
+      restart: always
+      depends_on:
+        - postgres
+      ports:
+          - "${SERVER_PORT}:${SERVER_PORT}"
+      env_file: .env
+      environment:
+        NODE_ENV: production
+        POSTGRES_HOST: postgres
+      networks:
+      - onebit
 
     postgres:
+      container_name: prakticum-postgres
       image: postgres:14     
       ports:
         - "${POSTGRES_PORT}:${POSTGRES_PORT}"
@@ -39,4 +52,9 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
         - ./tmp/pgdata:/var/lib/postgresql/data
+      networks:
+        - onebit
 
+networks:
+  onebit:
+    driver: bridge

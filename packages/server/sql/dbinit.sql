@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS themes (
+    id SERIAL PRIMARY KEY,
+    theme VARCHAR(255) NOT NULL
+);
+
+INSERT INTO themes (theme) VALUES 
+('main'),
+('develop');
+
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    user_name VARCHAR(255) NOT NULL,
+    theme_id INTEGER DEFAULT 1
+);
+
+ALTER TABLE users ADD CONSTRAINT fk_theme FOREIGN KEY (theme_id) REFERENCES themes (id) ON UPDATE CASCADE ON DELETE SET DEFAULT;
