@@ -7,13 +7,6 @@ const {
   POSTGRES_PORT,
   POSTGRES_HOST,
 } = process.env
-console.log(
-  POSTGRES_USER,
-  POSTGRES_PASSWORD,
-  POSTGRES_DB,
-  POSTGRES_PORT,
-  POSTGRES_HOST
-)
 
 export const createClientAndConnect = async (): Promise<Client | null> => {
   try {

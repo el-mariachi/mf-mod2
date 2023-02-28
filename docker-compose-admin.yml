@@ -12,7 +12,7 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
         - ./tmp/pgdata:/var/lib/postgresql/data
-        - ./packages/server/sql/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+        - ./packages/server/db/sql/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
       networks:
         - onebit
 
