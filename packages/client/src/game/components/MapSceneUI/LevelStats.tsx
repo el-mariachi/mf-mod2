@@ -33,8 +33,6 @@ export const LevelStatItem: FC<LevelStatItemProps> = ({ type, quantity }) => {
 export type LevelStatsProps = HTMLAttributes<HTMLDivElement> & {}
 const LevelStats: FC<LevelStatsProps> = attrs => {
   const score = useAppSelector(selectLevelScore)
-  // const { gameTotals } = useAppSelector(selectGameTotals)
-  // const { killCount, coins, steps, time } = gameTotals
   const { killCount, coins, time, steps } = useAppSelector(levelStats)
 
   return (

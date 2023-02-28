@@ -16,33 +16,12 @@ import {
 } from '@constants/game'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 
-// const resetLevelStats = (state: GameSlice) => {
-//   state.levelStats = gameInitialState.levelStats
-// }
-
 const updateTotals = (state: GameSlice) => {
-  // console.log('updateTotals state', state)
   state.gameTotals.coins += state.levelStats.coins
   state.gameTotals.killCount += state.levelStats.killCount
   state.gameTotals.steps += state.levelStats.steps
   state.gameTotals.time += state.levelStats.time
   state.score += computeScore(state.levelStats, state.currentLevel)
-  // console.log(
-  //   'updateTotals totals',
-  //   state.gameTotals,
-  //   computeScore(state.levelStats, state.currentLevel)
-  // )
-  // resetLevelStats(state)
-}
-const invertStats = (levelStats: GameSlice['levelStats']) => {
-  const invertedStats = Object.keys(levelStats).reduce((result, current) => {
-    const key = current as keyof typeof levelStats
-    return Object.assign(result, {
-      [current]: -levelStats[key],
-    })
-  }, {})
-  // console.log(invertedStats)
-  return invertedStats
 }
 
 const slicer = (initState: GameSlice) =>
@@ -69,7 +48,6 @@ const slicer = (initState: GameSlice) =>
       endLevel(state) {
         state.levelComplete = true
         state.lifeControllerState = LifeControllerState.PAUSED
-        // console.log('lifeControllerState paused')
         updateTotals(state)
         state.currentScene = SCENES.RESULT_SCENE
       },
@@ -86,8 +64,8 @@ const slicer = (initState: GameSlice) =>
         state.lifeControllerState = LifeControllerState.PAUSED
         state.levelStats = initState.levelStats
       },
-      // DEPRICATED
       die(state) {
+        // DEPRICATED
         state.lifeControllerState = LifeControllerState.PAUSED
         state.currentScene = SCENES.RESULT_SCENE
       },
@@ -112,6 +90,20 @@ const slicer = (initState: GameSlice) =>
       // stats
       resetTotals(state) {
         state.gameTotals = initState.gameTotals
+        state.score = initState.score
+      },
+      cancelLevelStats(state, action: PayloadAction<GameSlice['levelStats']>) {
+        const statDeltas = action.payload
+        state.gameTotals = {
+          ...state.gameTotals,
+          ...Object.keys(statDeltas).reduce((result, current) => {
+            const key = current as keyof typeof statDeltas
+            return Object.assign(result, {
+              [current]: state.gameTotals[key] - (statDeltas[key] || 0),
+            })
+          }, {}),
+        }
+        state.score -= computeScore(statDeltas, state.currentLevel)
       },
       updateStats(
         state,
@@ -149,7 +141,7 @@ export const {
 export const { showLoadScene, showStartScene, showResultScene } =
   gameSlice.actions
 
-export const { resetTotals, updateStats } = gameSlice.actions
+export const { resetTotals, updateStats, cancelLevelStats } = gameSlice.actions
 
 export const startGame =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
@@ -160,14 +152,17 @@ export const startGame =
 export const restartLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
   (dispatch, getState) => {
-    const { currentLevel, levelStats } = getState().game
+    const { currentLevel, levelStats, currentScene } = getState().game
     dispatch(resetHeroResources())
-    dispatch(updateStats(invertStats(levelStats)))
+    if (SCENES.RESULT_SCENE == currentScene) {
+      // cancel gained level statistics
+      dispatch(cancelLevelStats(levelStats))
+    }
     dispatch(startLevel(currentLevel))
-
-    // TODO temporary hack: reinit map scene: touch result scene, then immediately resumeGame
-    dispatch(showResultScene())
-    setTimeout(() => dispatch(resumeGame()), 1)
+    if (SCENES.MAP_SCENE == currentScene) {
+      // TODO temporary hack for reinit map scene: touch start scene
+      dispatch(showStartScene())
+    }
   }
 export const finishLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {

@@ -17,23 +17,15 @@ export const selectPaused = (state: RootState) =>
 
 // add currentLevel stats to gameTotals
 export const selectGameTotals = (state: RootState) => {
-  const { gameTotals, levelStats } = game(state)
-  const totals = { ...gameTotals }
-  Object.keys(gameTotals).forEach(stat => {
-    const key = stat as keyof typeof gameTotals
-    totals[key] += levelStats[key]
-  })
-  return { gameTotals: totals, levelNum: game(state).currentLevel }
+  const { gameTotals } = game(state)
+  return { gameTotals, levelNum: game(state).currentLevel }
 }
 
 export const selectLevelScore = (state: RootState) =>
   computeScore(game(state).levelStats, game(state).currentLevel)
 
 export const selectGameScore = (state: RootState) => {
-  return (
-    computeScore(game(state).gameTotals, game(state).currentLevel) +
-    game(state).score
-  )
+  return computeScore(game(state).gameTotals, game(state).currentLevel)
 }
 
 // result screen button selectors

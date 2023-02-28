@@ -1,10 +1,6 @@
 import * as Types from '@type/game'
 import { store } from '@store/index'
-import {
-  clearInteractions,
-  finishLevel,
-  regInteraction,
-} from '@store/slices/game'
+import { clearInteractions, regInteraction } from '@store/slices/game'
 import MapController from './MapController'
 import StatisticController from './StatisticController'
 import * as Utils from '@utils/game'
@@ -33,12 +29,6 @@ export default class InteractionController {
           return this._waitEndOfAnimations(object).then(() =>
             this._battle(subject, object)
           )
-          // .then(() => {
-          //   return {
-          //     type: Types.GameInteractionType.battle,
-          //     behavior,
-          //   }
-          // })
         }
         break
     }
@@ -64,15 +54,6 @@ export default class InteractionController {
     target: Types.Destroyable
   ): Types.GameInteractionProcess {
     return this._battle(this._hero, target)
-    // return {
-    //   type: Types.GameInteractionType.battle,
-    //   subject: target.name,
-    //   object: target.name,
-    //   result: {
-    //     value: target.health,
-    //     max: target.healthMax,
-    //   },
-    // }
   }
   protected _unlock(object: Types.Unlockable): Types.GameInteractionDef {
     switch (object.name) {
@@ -106,13 +87,6 @@ export default class InteractionController {
           return !isExitLevelGate
             ? { ...interaction, ...{ result: true } }
             : finishInteraction
-
-          // if (0 !== gate.view?.position[1]) {
-
-          //   return { ...interaction, ...{ result: true } }
-          // }
-          // // gate in the level`s end
-          // else return finishInteraction
         }
         this.show(interaction)
         return interaction
@@ -134,13 +108,6 @@ export default class InteractionController {
       object: object.name,
     }
   }
-  // protected _finish(): Types.GameInteractionDef {
-  //   store.dispatch(finishLevel())
-  //   return {
-  //     type: Types.GameInteractionType.finish,
-  //   }
-  // }
-
   // TODO need to decompose
   protected _battle(
     attacker: Types.Attacker,
