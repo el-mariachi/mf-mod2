@@ -13,7 +13,7 @@ import { LoggedInCheck, nonAuthorizedPageAccessOpts } from 'hoc/LoggedInCheck'
 import ROUTES from '@constants/routes'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
-
+import OauthBox from '@components/OauthBox'
 export type SignInProps = {
   signUpPageUrl?: ROUTES
 }
@@ -155,6 +155,7 @@ const SignIn = (props: SignInProps) => {
           </>
         )}
       </Form>
+      <OauthBox />
     </AppDefaultTpl>
   )
 }
