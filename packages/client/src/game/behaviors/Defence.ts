@@ -17,8 +17,7 @@ export default class Defence implements Types.DefendBehavior {
         result: attack,
       } as Types.DefendResult
     }
-    this._subject.curBehavior = behavior
-    return behavior
+    return (this._subject.lastBehavior = behavior)
   }
   protected _calcPoints(attackPoints: number) {
     const { stamina } = this._subject

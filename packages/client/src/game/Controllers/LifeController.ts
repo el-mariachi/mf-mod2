@@ -7,7 +7,6 @@ import MapController, { Cell } from './MapController'
 import PathController from './PathController'
 import StatisticController from './StatisticController'
 import InteractionController from './InteractionController'
-import Behaviors from '@game/behaviors'
 import * as Utils from '@utils/game'
 
 enum Status {
@@ -47,18 +46,17 @@ export default class LifeController {
       return
       /** если контроллер свободен и есть очередь, очищаем очередь, меняем статус на занят */
     } else if (this.status === Status.free && this.nextTurn) {
-      this.status = Status.busy
       this.nextTurn = null
     }
     /** если контроллер свободен, начинаем обработку и меняем статус на занят */
     this.status = Status.busy
-    if (this._haveActiveNpc()) {
-      this.heroMove(direction)
-      if (!this._finished) {
-        await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
-        await this.npcsMove()
-      }
-    } else await this.heroMove(direction)
+
+    await this._hero.lastBehavior?.process
+    this.heroMove(direction)
+    if (!this._finished) {
+      await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
+      await this.npcsMove()
+    }
     this.status = Status.free
     /** проверяем не появился ли ход в очереди, если появился забираем ход */
     if (this.nextTurn) {
@@ -67,6 +65,10 @@ export default class LifeController {
   }
   async heroMove(direction: Types.AxisDirection) {
     this.interaction.clear()
+
+    this._hero.lastBehavior = null
+    Utils.actualizePosition(this._hero)
+
     return this.tend(direction)
   }
   async npcsMove(): Types.AnimatedBehaviorProcess {
@@ -74,6 +76,9 @@ export default class LifeController {
     this.cells.NpcCells.every((cell: Cell) => {
       cell.gameObjects.every(object => {
         if (Utils.isNpc(object) && object.active) {
+          object.lastBehavior = null
+          Utils.actualizePosition(object)
+
           const decision = object.brain.makeDecision()
           const { target, dir, behavior } = decision
           const interaction = this.interaction.byNpcDecision(decision)
@@ -94,15 +99,8 @@ export default class LifeController {
             Utils.isMovable(object)
           ) {
             resultProcess = object.moveDelegate.with(target).process
-          } else if (
-            Types.IdleMotionType.idle == behavior &&
-            dir &&
-            object.view.do
-          ) {
-            object.view.do({
-              type: behavior,
-              dir,
-            })
+          } else if (Types.IdleMotionType.idle == behavior && dir) {
+            object.view.idle?.(dir)
           }
           promises.push(resultProcess)
         }
@@ -154,11 +152,9 @@ export default class LifeController {
     if (!isFinished) {
       if (haveLastingInteractions) {
         resultProcess = Promise.all(interactionsProcess).then(interactions => {
-          if (!isFinished) {
-            this.statistic.regStep()
-            this._finishByInteractionIfFound(interactions)
-            this._hero.view.do?.(Behaviors[`look2${dir}`])
-          }
+          this.statistic.regStep()
+          this._finishByInteractionIfFound(interactions)
+          this._hero.view.idle?.(dir)
           return emptyAnimationProcess
         })
       } else if (isTargetCellCrossable) {
@@ -170,7 +166,7 @@ export default class LifeController {
           })
       } else {
         this.statistic.regStep()
-        this._hero.view.do?.(Behaviors[`look2${dir}`])
+        this._hero.view.idle?.(dir)
       }
     }
     return resultProcess

@@ -179,9 +179,9 @@ export default class InteractionController {
       if (
         object instanceof Object &&
         Utils.isUnit(object) &&
-        object.curBehavior
+        object.lastBehavior
       ) {
-        object.curBehavior.process.then(resolve)
+        object.lastBehavior.process.then(resolve)
       } else resolve(null)
     })
   }

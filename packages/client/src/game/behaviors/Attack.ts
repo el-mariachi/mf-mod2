@@ -13,14 +13,12 @@ export default class Attack implements Types.AttackBehavior {
         this._subject,
         target.cell
       )
-
       behavior = {
         process,
         result: this._calcPoints(),
       }
     }
-    this._subject.curBehavior = behavior
-    return behavior
+    return (this._subject.lastBehavior = behavior)
   }
   protected _calcPoints() {
     const { strength } = this._subject

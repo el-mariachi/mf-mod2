@@ -3,26 +3,25 @@ import { getBehaviorAnimatedProcess } from '@game/behaviors'
 
 export default class Movement implements Types.MoveBehavior {
   constructor(protected _subject: Types.Movable) {}
-  with(target: Types.LevelMapCell) {
+  with(targetCell: Types.LevelMapCell) {
     let behavior
     if (this._subject?.move) {
-      behavior = this._subject.move(target)
+      behavior = this._subject.move(targetCell)
     } else {
       const process = getBehaviorAnimatedProcess(
         Types.MoveMotionType.move,
         this._subject,
-        target
+        targetCell
       )
 
-      const subject = this._subject.cell.extract?.(this._subject)
-      target.addObject?.(subject)
+      const gameObject = this._subject.cell.extract(this._subject)
+      targetCell.addObject?.(gameObject)
 
       behavior = {
         process,
         result: null,
       }
     }
-    this._subject.curBehavior = behavior
-    return behavior
+    return (this._subject.lastBehavior = behavior)
   }
 }

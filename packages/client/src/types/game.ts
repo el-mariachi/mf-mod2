@@ -213,6 +213,7 @@ export interface GameObjectViewDef {
   toggle(flag?: boolean): void
   update?(dt: number): void
   do?(behavior: ViewBehaviorDef): AnimatedBehaviorProcess
+  idle?(dir?: AxisDirection): void
 }
 export interface GameObjectDef {
   name: GameObjectName
@@ -235,7 +236,7 @@ export type UnitBehaviorResult<
 }
 export interface Unit extends GameObjectDef {
   get active(): boolean
-  curBehavior: UnitBehaviorResult | null
+  lastBehavior: UnitBehaviorResult | null
 }
 export type UnitBehavior = () => UnitBehaviorResult
 export interface BehaviorDelegate<

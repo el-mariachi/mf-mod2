@@ -16,19 +16,18 @@ export default class Destruction implements Types.DamageBehavior {
       const behaviorDef = hasDestroyed
         ? Types.DestructionMotionType.destruction
         : Types.DamageMotionType.damage
+
       const process = getBehaviorAnimatedProcess(
         behaviorDef,
         this._subject,
         attacker.cell
       )
-
       behavior = {
         process,
         result: hasDestroyed,
       }
     }
-    this._subject.curBehavior = behavior
-    return behavior
+    return (this._subject.lastBehavior = behavior)
   }
   protected _applyDamage(damagePoints: number) {
     this._subject.health -= damagePoints

@@ -137,7 +137,7 @@ export const isDestinationReached = (
   nextPos: Types.Coords,
   destPos: Types.Coords
 ) => {
-  // destination reaced when coords are equal or when direction changed (so we`re about passed through destination and miss it)
+  // destination reached when coords are equal or when direction changed (so we`re about passed through destination and miss it)
   return (
     isCoordsEqual(nextPos, destPos) ||
     !isDirectionsEqual(defineDir(cuPos, destPos), defineDir(nextPos, destPos))
@@ -276,5 +276,11 @@ export const initResource = (value = 0) => {
   } as Types.UnitResource
 }
 
-// export const getHeroCell = (map:Types.LevelMap) => getMapCellsAround(map, curPos, 1).find(
-//   cell => cell.gameObjects.some(item => Utils.isHero(item))
+export const actualizePosition = (unit: Types.GameObjectDef) => {
+  // prevent unit object cell coords and its view coords out of sync
+  const cellPosition = rowcol2coords(unit.cell.position)
+  const viewPosition = unit.view.position
+  if (!isCoordsEqual(cellPosition, viewPosition)) {
+    unit.view.position = cellPosition
+  }
+}
