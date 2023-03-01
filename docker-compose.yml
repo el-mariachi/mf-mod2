@@ -43,7 +43,8 @@ services:
 
     postgres:
       container_name: prakticum-postgres
-      image: postgres:14     
+      image: postgres:14
+      restart: always
       ports:
         - "${POSTGRES_PORT}:${POSTGRES_PORT}"
       environment:
@@ -52,7 +53,6 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
         - ./tmp/pgdata:/var/lib/postgresql/data
-        - ./packages/server/db/sql/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
       networks:
         - onebit
 
