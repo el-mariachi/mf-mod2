@@ -3,18 +3,25 @@ import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 
+import { startApp } from './db/index'
+
 dotenv.config()
 
 import express from 'express'
+// import { createClientAndConnect } from './db'
 import * as fs from 'fs'
 import * as path from 'path'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
+// createClientAndConnect()
+
 async function startServer() {
   const app = express()
   app.use(cors())
   const port = Number(process.env.SERVER_PORT) || 3001
+  const viteHmrPort = Number(process.env.VITE_HMR_PORT)
+  const viteSsrHmrPort = Number(process.env.VITE_SSR_HMR_PORT)
 
   let distPath: string
   const srcPath = path.dirname(require.resolve('client'))
@@ -24,7 +31,7 @@ async function startServer() {
   let viteSSR: ViteDevServer
   if (isDev()) {
     vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, hmr: { port: viteHmrPort } },
       root: srcPath,
       appType: 'custom',
       define: {
@@ -32,7 +39,7 @@ async function startServer() {
       },
     })
     viteSSR = await createViteServer({
-      server: { middlewareMode: true, hmr: { port: 24680 } },
+      server: { middlewareMode: true, hmr: { port: viteSsrHmrPort } },
       root: srcPath,
       appType: 'custom',
       define: {
@@ -107,4 +114,4 @@ async function startServer() {
   })
 }
 
-startServer()
+startApp(startServer)
