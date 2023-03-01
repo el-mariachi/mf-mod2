@@ -1,6 +1,5 @@
 import LeaderboardProps from '../Props'
-import Button from 'react-bootstrap/Button'
-import Collapse from 'react-bootstrap/Collapse'
+import { Button, Collapse } from 'react-bootstrap'
 import dummyAvatarImg from '@images/king.png'
 import { useState } from 'react'
 import SecondsToHMS from '@utils/secondsFormat'

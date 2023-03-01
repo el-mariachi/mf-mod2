@@ -1,9 +1,30 @@
-import * as icons from 'react-bootstrap-icons'
+import {
+  IconProps as IconPropsNative,
+  XSquareFill,
+  Dice3Fill,
+  BarChartLineFill,
+  ChatLeftTextFill,
+  PersonSquare,
+  InfoSquareFill,
+} from 'react-bootstrap-icons'
 import classNames from 'classnames'
 import './Icon.scss'
+import logo from '@images/Y_log_30_bordo_transp.svg'
+
+const OauthYandexIcon =  () => <img width="32px" src={logo} />
+
+const icons = {
+  Dice3Fill,
+  BarChartLineFill,
+  ChatLeftTextFill,
+  PersonSquare,
+  XSquareFill,
+  InfoSquareFill,
+  OauthYandexIcon
+}
 
 export type IconName = keyof typeof icons
-interface IconProps extends icons.IconProps {
+interface IconProps extends IconPropsNative {
   iconName: IconName
 }
 const Icon = ({ iconName, className: cls, ...props }: IconProps) => {

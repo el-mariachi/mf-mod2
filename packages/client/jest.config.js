@@ -7,9 +7,10 @@ export default {
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
+    RENDERED_ON_SERVER: false,
   },
   moduleNameMapper: {
-    '\\.s?css$': '<rootDir>/src/test/cssStub',
+    '\\.(s?css|svg)$': '<rootDir>/src/test/cssStub',
     '@components/(.*)': '<rootDir>/src/components/$1',
     '@utils/(.*)': '<rootDir>/src/utils/$1',
     '@api/(.*)': '<rootDir>/src/api/$1',
@@ -22,5 +23,5 @@ export default {
     '@constants/(.*)': '<rootDir>/src/constants/$1',
     '@type/(.*)': '<rootDir>/src/types/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts']
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 }

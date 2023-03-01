@@ -1,8 +1,4 @@
-import reducer, {
-  updateHealth,
-  updateHealthByAmount,
-  updateResourceByAmount,
-} from './hero'
+import reducer, { updateHealth, updateResourceByAmount } from './hero'
 import {
   defaultMaxValues,
   heroPresets,

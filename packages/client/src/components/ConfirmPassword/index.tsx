@@ -1,6 +1,4 @@
-import Modal from 'react-bootstrap/Modal'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import { Modal, Form, Button } from 'react-bootstrap'
 import FormGroupView from '@components/FormGroupView'
 import { changePasswordInputData, ChangePasswordFormStruct } from './constants'
 import { useForm } from 'react-hook-form'
