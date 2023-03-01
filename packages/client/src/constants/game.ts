@@ -32,7 +32,7 @@ export enum LifeControllerState {
   PAUSED,
 }
 
-// DEPRICATED ?
+// DEPRICATED
 export enum GameIntaractions {
   NONE = 'none',
   ATTACK = 'attack',

@@ -126,3 +126,4 @@ export default class RestApi {
 export const restAuthApi = new RestApi('/auth')
 export const restUsersApi = new RestApi('/user')
 export const restResourceApi = new RestApi('/resources')
+export const restLeaderboardApi = new RestApi('/leaderboard')
