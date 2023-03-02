@@ -1,5 +1,5 @@
 import * as Types from '@type/game'
-import PatrolMonsterAi from '@game/ai/PatrolMonsterAi'
+import PatrolMonsterAi from '@game/ai/PatrolMonsterAI'
 import { skeletonMotions } from '@game/animations/skeleton'
 import _Warrior from './Warrior'
 import skeletonSrc from '@sprites/skeleton.png'
