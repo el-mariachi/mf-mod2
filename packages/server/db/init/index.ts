@@ -1,7 +1,5 @@
 import dotenv from 'dotenv'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
-import { User } from '../models/user.model'
-import { Theme } from '../models/theme.model'
 dotenv.config()
 
 const {
@@ -19,12 +17,11 @@ const sequelizeOptions: SequelizeOptions = {
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   dialect: 'postgres',
-  // models: [__dirname, '../models/*.model.ts'],
+  models: [__dirname + '/../models'],
 }
 
 // Create Sequelize instance
 export const sequelize = new Sequelize(sequelizeOptions)
-sequelize.addModels([Theme, User])
 
 export async function dbConnect() {
   try {

@@ -5,9 +5,7 @@ import {
   Column,
   AllowNull,
   Unique,
-  HasMany,
 } from 'sequelize-typescript'
-import { User } from './user.model'
 
 @Table({
   timestamps: false,
@@ -19,9 +17,4 @@ export class Theme extends Model {
   @AllowNull(false)
   @Column(DataType.STRING(255))
   declare theme: string
-
-  @HasMany(() => User, {
-    onDelete: 'SET DEFAULT', // Options for associations update
-  })
-  declare users: User[]
 }
