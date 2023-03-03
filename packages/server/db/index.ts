@@ -1,36 +1,36 @@
 import { dbConnect } from './init'
-import { User } from './models/user.model'
-import { Theme } from './models/theme.model'
-import { Op } from 'sequelize'
+import { Theme } from './models/Theme'
+// import { User } from './models/User'
 
-export async function getAllThemes() {
+async function getAllThemes() {
   return Theme.findAll()
 }
-export async function getAllUsers() {
-  return User.findAll()
-}
-export async function getUserById(id: number) {
-  return User.findOne({ where: { id } })
-}
-export async function getUsersByName(user_name: string) {
-  return User.findAll({ where: { user_name } })
-}
-export async function deleteUserById(id: number) {
-  return User.destroy({ where: { id } })
-}
-export async function getThemeById(id: number) {
-  return Theme.findOne({ where: { id } })
-}
-export async function getThemeByName(theme: string) {
-  return Theme.findOne({ where: { theme } })
-}
-export async function createTheme(theme: string) {
+async function createTheme(theme: string) {
   return Theme.create({ theme })
 }
-export async function clearExtraThemes() {
-  return Theme.destroy({ where: { id: { [Op.gt]: 1 } } })
+async function clearThemes() {
+  return Theme.destroy({ truncate: true })
 }
-
+/*
+async function getAllUsers() {
+  return User.findAll()
+}
+async function getUserById(id: number) {
+  return User.findOne({ where: { id } })
+}
+async function getUsersByName(user_name: string) {
+  return User.findAll({ where: { user_name } })
+}
+async function deleteUserById(id: number) {
+  return User.destroy({ where: { id } })
+}
+async function getThemeById(id: number) {
+  return Theme.findOne({ where: { id } })
+}
+async function getThemeByName(theme: string) {
+  return Theme.findOne({ where: { theme } })
+}
+*/
 export async function startApp(callback: () => void) {
   await dbConnect()
   await callback() // In this example it's starting the express server
@@ -39,7 +39,7 @@ export async function startApp(callback: () => void) {
   // not allowed to delete all records here since there's a foreign key that refers to themes
   // and is set to default value of 1 on delete
   try {
-    await clearExtraThemes()
+    await clearThemes()
   } catch (error) {
     console.error('⛔️ Cannot delete records', error)
   }
