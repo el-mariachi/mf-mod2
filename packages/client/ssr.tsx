@@ -2,8 +2,7 @@ import App from './src/components/App/App'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
 import { Provider } from 'react-redux'
-import { createSSRStore } from './src/store/ssr-store'
-const store = createSSRStore()
+import { store } from './src/store'
 
 export function render(url: string) {
   const reactHtml = renderToString(
