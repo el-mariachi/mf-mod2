@@ -9,7 +9,7 @@ async function createTheme(theme: string) {
   return Theme.create({ theme })
 }
 async function clearThemes() {
-  return Theme.destroy({ truncate: true })
+  return Theme.destroy({ truncate: true, cascade: true })
 }
 /*
 async function getAllUsers() {
