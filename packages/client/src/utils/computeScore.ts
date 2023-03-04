@@ -8,8 +8,10 @@ export const computeScore = (stats: GameStats, level = 1) =>
     let value = stats[key]
     switch (key) {
       case GameStatType.TIME:
-        const seconds = Math.round(value / 1000)
-        value = -Math.round(seconds / 15)
+        {
+          const seconds = Math.round(value / 1000)
+          value = -Math.round(seconds / 15)
+        }
         break
       case GameStatType.COINS:
         value *= 5

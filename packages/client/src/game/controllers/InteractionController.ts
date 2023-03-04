@@ -56,13 +56,14 @@ export default class InteractionController {
     return this._battle(this._hero, target)
   }
   protected _unlock(object: Types.Unlockable): Types.GameInteractionDef {
+    const interaction = {
+      type: Types.GameInteractionType.unlock,
+    } as Types.GameInteractionDef
     switch (object.name) {
-      case Types.GameEntourageName.gate:
-        let interaction = {
-          type: Types.GameInteractionType.unlock,
-          object: object.name,
-          result: false,
-        } as Types.GameInteractionDef
+      case Types.GameEntourageName.gate: {
+        interaction.object = object.name
+        interaction.result = false
+
         const gate = object
         const key = this._hero.bag.find(
           item => item.name === Types.GameItemName.key
@@ -84,12 +85,13 @@ export default class InteractionController {
               }
             })
           })
-          return !isExitLevelGate
-            ? { ...interaction, ...{ result: true } }
-            : finishInteraction
+          interaction.result = true
+
+          return !isExitLevelGate ? interaction : finishInteraction
         }
         this.show(interaction)
         return interaction
+      }
     }
     return noInteraction
   }

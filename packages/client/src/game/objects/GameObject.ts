@@ -7,13 +7,13 @@ export default class GameObject implements Types.GameObjectDef {
   spriteSrc = tileset
   spritePos?: Types.Coords
   motions?: Types.CellSpriteMotions
-  cell!: Types.LevelMapCell
+  cell?: Types.LevelMapCell
   crossable = false
   static = true
   animated = false
   destroyable = false // DEPRICATED, use Destroyable behavior delegate
-  remove(): Types.GameObjectDef {
+  remove(): Types.GameObjectDef | null {
     this.view.toggle(false)
-    return this.cell.extract(this)
+    return this.cell?.extract(this) ?? null
   }
 }

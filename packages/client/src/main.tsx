@@ -24,4 +24,5 @@ ReactDOM.hydrateRoot(
   </React.StrictMode>
 )
 
-startServiceWorker({ always: false })
+// TODO need to fix in TS-125
+// startServiceWorker({ always: false })

@@ -3,7 +3,7 @@ import * as Types from '@type/game'
 import patrolPaths from '@game/data/levels/1/patrolPaths.json'
 
 export default class PathController {
-  level: number = 0
+  level = 0
   constructor(level: number) {
     this.level = level
   }

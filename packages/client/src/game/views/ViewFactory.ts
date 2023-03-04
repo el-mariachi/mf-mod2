@@ -27,7 +27,7 @@ export default class ViewFactory {
         spriteImage,
         gameObject.motions as Types.CellSpriteMotions
       )
-      let viewOpts = []
+      const viewOpts = []
       switch (gameObject.name) {
         case Types.GameUnitName.skeleton:
           viewOpts.push({

@@ -201,6 +201,8 @@ export type LevelMap = LevelMapCell[][]
 export type BehaviorDef = BehaviorMotion
 export type AnimatedBehaviorProcess = CellSpriteAnimationProcess
 export type BehaviorAnimationParams = CellSpriteAnimationParams
+export type Collectable = GameObjectDef
+export type Unlockable = GameObjectDef
 
 export type ViewBehaviorDef = {
   type: BehaviorDef
@@ -219,8 +221,8 @@ export interface GameObjectDef {
   name: GameObjectName
   crossable: boolean
   view: GameObjectViewDef
-  cell: LevelMapCell
-  remove(): GameObjectDef
+  cell?: LevelMapCell
+  remove(): GameObjectDef | null
 }
 export type AttackDef = {
   attacker: Attacker
@@ -318,8 +320,6 @@ export interface Npc extends Unit {
   brain: Ai
 }
 export interface Monster extends Npc, Attacker {}
-export interface Collectable extends GameObjectDef {}
-export interface Unlockable extends GameObjectDef {}
 export interface Warrior extends Movable, Attacker, Defendable, Destroyable {}
 export interface Hero extends Unit, Warrior {
   name: GameUnitName.hero

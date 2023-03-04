@@ -9,7 +9,7 @@ import {
 } from '@type/game'
 import { capitalize } from '@utils/index'
 
-type InteractionPanelProps = Omit<GameUIPanelProps, 'children'> & {}
+type InteractionPanelProps = Omit<GameUIPanelProps, 'children'>
 const InteractionPanel: FC<InteractionPanelProps> = props => {
   const interaction = useAppSelector(selectInteraction)
   const { type, object, result } = interaction

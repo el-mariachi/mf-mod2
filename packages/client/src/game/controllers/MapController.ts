@@ -86,11 +86,11 @@ export const zeroLevelMap = [[new Cell([], [0, 0])]] as Types.LevelMap
 export const Matrix = class extends Array {
   nearbyCells(
     cell: Types.LevelMapCell,
-    radius: number = 1,
+    radius = 1,
     direction: null | Types.AxisDirection = null
   ) {
     const [row, col] = cell.position
-    let cells: Types.LevelMapCell[] = []
+    const cells: Types.LevelMapCell[] = []
     /** клетики по направлению  */
     if (direction) {
       do {
@@ -160,7 +160,7 @@ class MapController {
         /** в одной ячейке может находится несколько объектов, поэтому ячейка - это массив */
         const items = Array.isArray(item) ? item : [item]
         const objects = items.reduce<GameObject[]>((prev, id) => {
-          let Entity = GameObjects[id]
+          const Entity = GameObjects[id]
           prev.push(new Entity())
           return prev
         }, [])

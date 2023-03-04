@@ -34,6 +34,7 @@ export default defineConfig(() => {
         ),
         '@images': path.resolve('../../', __dirname, 'src/assets/images'),
         '@fonts': path.resolve('../../', __dirname, 'src/assets/fonts'),
+        '@sprites': path.resolve('../../', __dirname, 'src/assets/sprites'),
       },
     },
   }

@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks/redux_typed_hooks'
 import { selectPaused } from '@store/selectors'
 import Icon from '@components/Icon'
 
-export type PauseStateProps = HTMLAttributes<HTMLDivElement> & {}
+export type PauseStateProps = HTMLAttributes<HTMLDivElement>
 const PauseState: FC<PauseStateProps> = attrs => {
   const paused = useAppSelector(selectPaused)
   return paused ? (

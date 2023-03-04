@@ -3,7 +3,7 @@ import * as Types from '@type/game'
 import { useAppSelector } from 'hooks/redux_typed_hooks'
 import MapController from '@game/controllers/MapController'
 import { createLayers, LayerRecord } from '@game/controllers/LayerController'
-import { useGameController, GameActionType } from '@hooks/useGameController'
+import { useGameController } from '@hooks/useGameController'
 import LifeController from '@game/controllers/LifeController'
 import MapSceneUI from '@game/components/MapSceneUI'
 import { selectPaused } from '@store/selectors'
@@ -56,7 +56,9 @@ function MapScene() {
   useEffect(() => {
     if (layersRef.current) {
       Object.entries(layers).forEach(([_, layer]) => {
-        layersRef.current!.append(layer.canvas)
+        if (layersRef.current) {
+          layersRef.current.append(layer.canvas)
+        }
       })
     }
     if (Object.keys(layers).length !== 0) {
@@ -71,7 +73,7 @@ function MapScene() {
 
   useEffect(() => {
     if (gameAction) {
-      const [gameEvent, _]: Types.GameAction = gameAction
+      const [gameEvent]: Types.GameAction = gameAction
       if (Types.MoveGameEvents.includes(gameEvent)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
