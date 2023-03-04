@@ -111,10 +111,12 @@ export function getBehaviorAnimatedProcess(
   subject: Types.GameObjectDef,
   targetCell: Types.LevelMapCell
 ) {
-  const dir = defineAxisDir(
-    rowcol2coords(subject.cell.position),
-    rowcol2coords(targetCell.position)
-  )
+  const dir = subject.cell
+    ? defineAxisDir(
+        rowcol2coords(subject.cell.position),
+        rowcol2coords(targetCell.position)
+      )
+    : null
   const viewBehavior = dir
     ? ({
         type: behavior,

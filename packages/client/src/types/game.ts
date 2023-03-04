@@ -56,7 +56,6 @@ export type SpriteGeometry = Geometry & {
 export type SpriteAtlas = HTMLImageElement
 
 export interface DrawableOnCanvas {
-  [x: string]: any
   canvas: CanvasRenderingContext2D
   position: Coords
   size: Size
@@ -222,7 +221,8 @@ export interface GameObjectDef {
   crossable: boolean
   view: GameObjectViewDef
   cell?: LevelMapCell
-  remove(): GameObjectDef | null
+  remove(): GameObjectDef
+  get isOnMap(): boolean
 }
 export type AttackDef = {
   attacker: Attacker
@@ -238,7 +238,7 @@ export type UnitBehaviorResult<
 }
 export interface Unit extends GameObjectDef {
   get active(): boolean
-  lastBehavior: UnitBehaviorResult | null
+  prevBehavior: UnitBehaviorResult | null
 }
 export type UnitBehavior = () => UnitBehaviorResult
 export interface BehaviorDelegate<
@@ -326,6 +326,8 @@ export interface Hero extends Unit, Warrior {
   heroClass: HeroClass
   bag: GameObjectDef[]
   level: number
+  prevInteractions: GameInteractionProcess[]
+  get prevStepProcess(): Promise<void>
 }
 
 export enum GameInteractionType {

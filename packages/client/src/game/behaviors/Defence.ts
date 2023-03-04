@@ -4,22 +4,22 @@ import { emptyAnimationProcess } from '@constants/game'
 export default class Defence implements Types.DefendBehavior {
   constructor(protected _subject: Types.Defendable) {}
   with(attack: Types.AttackDef) {
-    let behavior
-    if (this._subject?.defend) {
-      behavior = this._subject.defend(attack)
-    } else {
-      const { points: attackPoints } = attack
-
-      attack.points = this._calcPoints(attackPoints)
-
-      behavior = {
-        process: emptyAnimationProcess, // dnt have defence animation
-        result: attack,
-      } as Types.DefendResult
-    }
-    return (this._subject.lastBehavior = behavior)
+    const { points: attackPoints, attacker } = attack
+    let behavior = {
+      process: emptyAnimationProcess,
+      result: attack,
+    } as Types.DefendResult
+    if (this._subject.isOnMap && attacker.isOnMap) {
+      if (this._subject?.defend) {
+        behavior = this._subject.defend(attack)
+      } else behavior.result.points = this._calcPoints(attackPoints)
+    } else behavior.result.points = 0
+    return (this._subject.prevBehavior = behavior)
   }
   protected _calcPoints(attackPoints: number) {
+    if (attackPoints <= 0) {
+      return 0
+    }
     const { stamina } = this._subject
     let { successDefenceChance = 0, successDefenceLevel = 0 } = this._subject
 

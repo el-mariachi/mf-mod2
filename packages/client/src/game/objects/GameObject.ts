@@ -12,8 +12,12 @@ export default class GameObject implements Types.GameObjectDef {
   static = true
   animated = false
   destroyable = false // DEPRICATED, use Destroyable behavior delegate
-  remove(): Types.GameObjectDef | null {
+  remove(): Types.GameObjectDef {
     this.view.toggle(false)
-    return this.cell?.extract(this) ?? null
+    this.cell?.extract(this)
+    return this
+  }
+  get isOnMap() {
+    return !!this.cell
   }
 }

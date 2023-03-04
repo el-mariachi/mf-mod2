@@ -276,11 +276,14 @@ export const initResource = (value = 0) => {
   } as Types.UnitResource
 }
 
-export const actualizePosition = (unit: Types.GameObjectDef) => {
+export const actualizePosition = (unit: Types.Unit) => {
   // prevent unit object cell coords and its view coords out of sync
-  const cellPosition = rowcol2coords(unit.cell.position)
-  const viewPosition = unit.view.position
-  if (!isCoordsEqual(cellPosition, viewPosition)) {
-    unit.view.position = cellPosition
+  if (unit.cell) {
+    const cellPosition = rowcol2coords(unit.cell.position)
+    const viewPosition = unit.view.position
+    if (!isCoordsEqual(cellPosition, viewPosition)) {
+      unit.view.position = cellPosition
+      unit.view.render()
+    }
   }
 }

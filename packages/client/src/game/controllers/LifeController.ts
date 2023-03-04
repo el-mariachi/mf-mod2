@@ -51,7 +51,7 @@ export default class LifeController {
     /** если контроллер свободен, начинаем обработку и меняем статус на занят */
     this.status = Status.busy
 
-    await this._hero.lastBehavior?.process
+    await this._hero.prevStepProcess
     this.heroMove(direction)
     if (!this._finished) {
       await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
@@ -66,17 +66,17 @@ export default class LifeController {
   async heroMove(direction: Types.AxisDirection) {
     this.interaction.clear()
 
-    this._hero.lastBehavior = null
+    this._hero.prevInteractions = []
     Utils.actualizePosition(this._hero)
 
     return this.tend(direction)
   }
   async npcsMove(): Types.AnimatedBehaviorProcess {
     const promises: Types.AnimatedBehaviorProcess[] = []
-    this.cells.NpcCells.every((cell: Cell) => {
-      cell.gameObjects.every(object => {
+    this.cells.NpcCells.some((cell: Cell) => {
+      cell.gameObjects.some(object => {
         if (Utils.isNpc(object) && object.active) {
-          object.lastBehavior = null
+          object.prevBehavior = null
           Utils.actualizePosition(object)
 
           const decision = object.brain.makeDecision()
@@ -104,9 +104,9 @@ export default class LifeController {
           }
           promises.push(resultProcess)
         }
-        return !this._finished
+        return this._finished
       })
-      return !this._finished
+      return this._finished
     })
     return Promise.all(promises).then(() => emptyAnimationProcess)
   }
@@ -128,7 +128,7 @@ export default class LifeController {
     const radius = 1
     /** находим первую клетку по пути движения */
     const targetCells = this.map.nearbyCells(
-      this._hero.cell,
+      this._hero.cell as Types.LevelMapCell,
       radius,
       dir
     ) as Cell[]
@@ -141,20 +141,22 @@ export default class LifeController {
     )
     const interactionsProcess = interactions.filter(
       interaction => interaction instanceof Promise
-    )
+    ) as Types.GameInteractionProcess[]
     const haveLastingInteractions = interactionsProcess.length
     const isTargetCellCrossable = targetCellObjects.every(
       object => object.crossable
     )
+    this._hero.prevInteractions = interactionsProcess
 
     let resultProcess: Types.AnimatedBehaviorProcess = emptyAnimationProcess
-    const isFinished = this._finishByInteractionIfFound(interactions, true)
+    const isFinished = this._finishByInteractionIfFound(interactions)
     if (!isFinished) {
       if (haveLastingInteractions) {
         resultProcess = Promise.all(interactionsProcess).then(interactions => {
           this.statistic.regStep()
-          this._finishByInteractionIfFound(interactions)
-          this._hero.view.idle?.(dir)
+          if (!this._finishByInteractionIfFound(interactions)) {
+            this._hero.view.idle?.(dir)
+          }
           return emptyAnimationProcess
         })
       } else if (isTargetCellCrossable) {
@@ -168,7 +170,8 @@ export default class LifeController {
         this.statistic.regStep()
         this._hero.view.idle?.(dir)
       }
-    }
+    } else this.statistic.regStep()
+
     return resultProcess
   }
   toggle(flag?: boolean) {
@@ -188,8 +191,8 @@ export default class LifeController {
     return this.cells.hero as Types.Hero
   }
   protected _finishByInteractionIfFound(
-    interaction: Types.GameInteractionResult | Types.GameInteractionResult[],
-    regStepBefore = false
+    interaction: Types.GameInteractionResult | Types.GameInteractionResult[]
+    // regStepBefore = false
   ) {
     const foundFinishInteraction = Array.isArray(interaction)
       ? interaction.some(interaction =>
@@ -198,9 +201,9 @@ export default class LifeController {
       : this._checkIsFinishInteraction(interaction)
 
     if (foundFinishInteraction) {
-      if (regStepBefore) {
-        this.statistic.regStep()
-      }
+      // if (regStepBefore) {
+      //   this.statistic.regStep()
+      // }
       this.finish()
     }
     return foundFinishInteraction

@@ -55,7 +55,7 @@ function MapScene() {
 
   useEffect(() => {
     if (layersRef.current) {
-      Object.entries(layers).forEach(([_, layer]) => {
+      Object.entries(layers).forEach(([, layer]) => {
         if (layersRef.current) {
           layersRef.current.append(layer.canvas)
         }
