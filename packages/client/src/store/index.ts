@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import type { EnhancedStore } from '@reduxjs/toolkit'
 import gameSlice from '@store/slices/game'
 import userSlice from '@store/slices/user'
 import heroSlice from '@store/slices/hero'
-import { gameInitialState, GameSlice } from '@constants/game'
-import { heroInitialState, HeroSlice } from '@constants/hero'
-import { userInitialState, UserSlice } from '@constants/user'
+import { gameInitialState } from '@constants/game'
+import { heroInitialState } from '@constants/hero'
+import { userInitialState } from '@constants/user'
 
 const fallBackState = {
   game: gameInitialState,
@@ -26,11 +25,7 @@ export const store = configureStore({
     name: 'The real McCoy',
   },
 })
-type RootStore = EnhancedStore<{
-  game: GameSlice
-  hero: HeroSlice
-  user: UserSlice
-}>
-export type RootState = ReturnType<RootStore['getState']>
 
-export type AppDispatch = RootStore['dispatch']
+export type RootState = ReturnType<typeof store.getState>
+
+export type AppDispatch = typeof store.dispatch
