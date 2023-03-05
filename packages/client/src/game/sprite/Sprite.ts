@@ -82,54 +82,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
     }
   }
 
-  protected _processMotions(motions: Types.SpriteMotions) {
-    // let`s define substituitions for motions if we dnt have a full animation set
-    ;['look', 'move', 'attack', 'damage', 'destruction'].forEach(type => {
-      ;['right', 'left', 'top', 'bottom'].forEach(dir => {
-        const dirCap = dir[0].toUpperCase() + dir.slice(1)
-        const isStandingMotion = ['damage', 'destruction'].includes(type)
-        const isVerticalDir = ['top', 'bottom'].includes(dir)
-        const needMotion = (
-          isStandingMotion ? `${type}From${dirCap}` : `${type}2${dir}`
-        ) as Types.MotionType
-
-        let substituteMotion!: Types.MotionType
-        if (!(needMotion in motions)) {
-          if (isVerticalDir) {
-            if (isStandingMotion) {
-              substituteMotion = (
-                'top' == dir ? `${type}FromRight` : `${type}FromLeft`
-              ) as Types.MotionType
-            } else {
-              substituteMotion = (
-                'top' == dir ? `${type}2right` : `${type}2left`
-              ) as Types.MotionType
-            }
-          }
-
-          if (!substituteMotion || !(substituteMotion in motions)) {
-            substituteMotion = `look2${dir}` as Types.MotionType
-          }
-
-          if (substituteMotion in motions) {
-            motions[needMotion] = motions[
-              substituteMotion
-            ] as Types.AnimationMotionParams
-          }
-        }
-      })
-    })
-    // by default units look to bottom (where map`s begun) when idle
-    // TODO motion func need to be defined in views as behavior?
-    if (
-      !(Types.IdleMotionType.idle in motions) &&
-      Types.IdleMotionType.look2bottom in motions
-    ) {
-      motions[Types.IdleMotionType.idle] =
-        motions[Types.IdleMotionType.look2bottom]
-    }
-    return motions
-  }
   get isAnimated() {
     return !!this._activeAnimation
   }
@@ -141,71 +93,11 @@ export default class Sprite implements Types.AnimatableOnCanvas {
       reason: 'end',
     } as Types.SpriteAnimationProcessResult
     if (params) {
-      let motionType: Types.MotionType = Types.UnspecifiedMotionType.none
-      if (params.playMotion) {
-        let { motion } = params.playMotion
+      const motionType = this._defineMotion(params)
 
-        // if we have motions set for sprite and motion is of type MotionType
-        if (
-          this._motions &&
-          typeof motion == 'string' &&
-          motion in motionTypes
-        ) {
-          // const this._motions = Object.keys(this._motions);
-          // ... but we dnt have this motion in set
-          if (!(motion in this._motions)) {
-            // ... so we`ll use default motion for each motion type (if we have it in set)
-            // TODO need refactoring
-            if (
-              motion in Types.IdleMotionType &&
-              Types.IdleMotionType.idle in this._motions
-            ) {
-              motion = Types.IdleMotionType.idle
-            } else if (
-              motion in Types.MoveMotionType &&
-              Types.MoveMotionType.move in this._motions
-            ) {
-              motion = Types.MoveMotionType.move
-            } else if (
-              motion in Types.AttackMotionType &&
-              Types.AttackMotionType.attack in this._motions
-            ) {
-              motion = Types.AttackMotionType.attack
-            } else if (
-              motion in Types.DestructionMotionType &&
-              Types.DestructionMotionType.destruction in this._motions
-            ) {
-              motion = Types.DestructionMotionType.destruction
-            } else if (
-              motion in Types.DamageMotionType &&
-              Types.DamageMotionType.damage in this._motions
-            ) {
-              motion = Types.DamageMotionType.damage
-            } else if (
-              motion in Types.TurnMotionType &&
-              Types.TurnMotionType.turn in this._motions
-            ) {
-              motion = Types.TurnMotionType.turn
-            } else motion = Types.UnspecifiedMotionType.none
-          }
-
-          // ... and finally get AnimationMotionParams object from set, instead of MotionType string
-          if (Types.UnspecifiedMotionType.none != motion) {
-            params.playMotion.motion = this._motions[
-              motion
-            ] as Types.AnimationMotionParams
-            motionType = motion
-          }
-        }
-        // if motion is of type AnimationMotionParams
-        else if (typeof motion == 'object' && 'frames' in motion) {
-          motionType = Types.UnspecifiedMotionType.custom
-        }
-
-        if (Types.UnspecifiedMotionType.none == motionType) {
-          this.resetOrigin()
-          delete params.playMotion
-        }
+      if (Types.UnspecifiedMotionType.none == motionType) {
+        this.resetOrigin()
+        delete params.playMotion
       }
 
       if (params.playMotion || (params.to && params.duration)) {
@@ -272,15 +164,6 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   }
   cancelAnimation() {
     this._stopAnimation('cancel')
-  }
-  protected _stopAnimation(method: 'end' | 'cancel' = 'end') {
-    if (this._activeAnimation) {
-      this._activeAnimation[method]()
-      this._activeAnimation = null
-    }
-  }
-  toggle(flag?: boolean) {
-    this.isVisible = !!flag
   }
 
   update(dt: number) {
@@ -354,9 +237,13 @@ export default class Sprite implements Types.AnimatableOnCanvas {
             this._activeAnimation.isMotionCompleted = true
 
             if (motionFrame > framesCnt - 1) {
-              motionFrame = framesCnt - 2
+              motionFrame = framesCnt - 1
             }
           } else motionFrame = frames[frameInd % framesCnt]
+
+          if (motionFrame < 0) {
+            motionFrame = 0
+          }
         } else motionFrame = 0
 
         const framesAxisInd = !axis || Types.Axis.horizontal == axis ? 0 : 1
@@ -387,5 +274,119 @@ export default class Sprite implements Types.AnimatableOnCanvas {
         this.size[0],
         this.size[1]
       )
+  }
+
+  toggle(flag?: boolean) {
+    this.isVisible = !!flag
+  }
+
+  protected _stopAnimation(method: 'end' | 'cancel' = 'end') {
+    if (this._activeAnimation) {
+      this._activeAnimation[method]()
+      this._activeAnimation = null
+    }
+  }
+  protected _processMotions(motions: Types.SpriteMotions) {
+    // let`s define substituitions for motions if we dnt have a full animation set
+    ;['move', 'attack', 'damage', 'destruction'].forEach(type => {
+      ;['top', 'bottom', 'right', 'left'].forEach(dir => {
+        const dirCap = dir[0].toUpperCase() + dir.slice(1)
+        const isStandingMotion = ['damage', 'destruction'].includes(type)
+        const isVerticalDir = ['top', 'bottom'].includes(dir)
+        const needMotion = (
+          isStandingMotion ? `${type}From${dirCap}` : `${type}2${dir}`
+        ) as Types.MotionType
+
+        let substituteMotion!: Types.MotionType
+        if (!(needMotion in motions)) {
+          if (isVerticalDir) {
+            if (isStandingMotion) {
+              substituteMotion = (
+                'top' == dir ? `${type}FromRight` : `${type}FromLeft`
+              ) as Types.MotionType
+            } else {
+              substituteMotion = (
+                'top' == dir ? `${type}2right` : `${type}2left`
+              ) as Types.MotionType
+            }
+          }
+
+          if (!substituteMotion || !(substituteMotion in motions)) {
+            if (
+              Types.DestructionMotionType.destruction == type &&
+              Types.DestructionMotionType.destruction in motions
+            ) {
+              substituteMotion = Types.DestructionMotionType.destruction
+            } else substituteMotion = `look2${dir}` as Types.MotionType
+          }
+
+          if (substituteMotion in motions) {
+            motions[needMotion] = motions[
+              substituteMotion
+            ] as Types.AnimationMotionParams
+          }
+        }
+      })
+    })
+    return motions
+  }
+  protected _defineMotion(params: Types.SpriteAnimationParams) {
+    let motionType: Types.MotionType = Types.UnspecifiedMotionType.none
+
+    if (params.playMotion) {
+      let { motion } = params.playMotion
+
+      // if we have motions set for sprite and motion is of type MotionType
+      if (this._motions && typeof motion == 'string' && motion in motionTypes) {
+        // ... but we dnt have this motion in set
+        if (!(motion in this._motions)) {
+          // ... so we`ll use default motion for each motion type (if we have it in set)
+          if (
+            motion in Types.IdleMotionType &&
+            Types.IdleMotionType.idle in this._motions
+          ) {
+            motion = Types.IdleMotionType.idle
+          } else if (
+            motion in Types.MoveMotionType &&
+            Types.MoveMotionType.move in this._motions
+          ) {
+            motion = Types.MoveMotionType.move
+          } else if (
+            motion in Types.AttackMotionType &&
+            Types.AttackMotionType.attack in this._motions
+          ) {
+            motion = Types.AttackMotionType.attack
+          } else if (
+            motion in Types.DestructionMotionType &&
+            Types.DestructionMotionType.destruction in this._motions
+          ) {
+            motion = Types.DestructionMotionType.destruction
+          } else if (
+            motion in Types.DamageMotionType &&
+            Types.DamageMotionType.damage in this._motions
+          ) {
+            motion = Types.DamageMotionType.damage
+          } else if (
+            motion in Types.TurnMotionType &&
+            Types.TurnMotionType.turn in this._motions
+          ) {
+            motion = Types.TurnMotionType.turn
+          } else motion = Types.UnspecifiedMotionType.none
+        }
+
+        // ... and finally get AnimationMotionParams object from set, instead of MotionType string
+        if (Types.UnspecifiedMotionType.none != motion) {
+          params.playMotion.motion = this._motions[
+            motion
+          ] as Types.AnimationMotionParams
+          motionType = motion
+        }
+      }
+      // if motion is of type AnimationMotionParams
+      else if (typeof motion == 'object' && 'frames' in motion) {
+        motionType = Types.UnspecifiedMotionType.custom
+      }
+    }
+    return motionType
   }
 }

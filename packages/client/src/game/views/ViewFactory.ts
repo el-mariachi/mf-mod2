@@ -19,16 +19,23 @@ export default class ViewFactory {
     const spriteImage = new Image()
     spriteImage.src = spriteSrc
 
+    const { name, animated, motions } = gameObject
+    if (
+      motions &&
+      !(Types.IdleMotionType.idle in motions) &&
+      Types.IdleMotionType.look2bottom in motions
+    ) {
+      // by default units look to bottom (where map`s begun) when idle
+      motions[Types.IdleMotionType.idle] =
+        motions[Types.IdleMotionType.look2bottom]
+    }
+
     /** создаем View персонажей*/
     let view!: GameObjectView
-    if (gameObject.name in Types.GameUnitName) {
-      const sprite = new GameObjectSprite(
-        this.ctx,
-        spriteImage,
-        gameObject.motions as Types.CellSpriteMotions
-      )
+    if (name in Types.GameUnitName) {
+      const sprite = new GameObjectSprite(this.ctx, spriteImage, motions)
       const viewOpts = []
-      switch (gameObject.name) {
+      switch (name) {
         case Types.GameUnitName.skeleton:
           viewOpts.push({
             [Types.MoveMotionType.move]: 22,
@@ -38,12 +45,8 @@ export default class ViewFactory {
       }
       view = new UnitView(sprite, position, ...viewOpts)
       /** создаем View анимированных предметов */
-    } else if (gameObject.animated) {
-      const sprite = new GameObjectSprite(
-        this.ctx,
-        spriteImage,
-        gameObject.motions as Types.CellSpriteMotions
-      )
+    } else if (animated) {
+      const sprite = new GameObjectSprite(this.ctx, spriteImage, motions)
       view = new AnimatableView(sprite, position)
       /** создаем View неповижных предметов*/
     } else {
