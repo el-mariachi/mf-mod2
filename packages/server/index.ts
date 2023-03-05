@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
-
+import router from './router'
 import { startApp } from './db/index'
 
 dotenv.config()
@@ -108,7 +108,11 @@ async function startServer() {
       next(e)
     }
   })
+
+  app.use(router)
+
   await startApp()
+
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
   })
