@@ -31,13 +31,10 @@ async function getThemeByName(theme: string) {
   return Theme.findOne({ where: { theme } })
 }
 */
-export async function startApp(callback: () => void) {
+export async function startApp() {
   await dbConnect()
-  await callback() // In this example it's starting the express server
 
-  // clear themes with id > 1
-  // not allowed to delete all records here since there's a foreign key that refers to themes
-  // and is set to default value of 1 on delete
+  // clear themes
   try {
     await clearThemes()
   } catch (error) {

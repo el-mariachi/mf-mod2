@@ -108,10 +108,10 @@ async function startServer() {
       next(e)
     }
   })
-
+  await startApp()
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
   })
 }
 
-startApp(startServer)
+startServer()
