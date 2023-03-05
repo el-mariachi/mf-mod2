@@ -50,7 +50,6 @@ export default class LifeController {
     }
     /** если контроллер свободен, начинаем обработку и меняем статус на занят */
     this.status = Status.busy
-
     await this._hero.prevStepProcess
     this.heroMove(direction)
     if (!this._finished) {
@@ -192,7 +191,6 @@ export default class LifeController {
   }
   protected _finishByInteractionIfFound(
     interaction: Types.GameInteractionResult | Types.GameInteractionResult[]
-    // regStepBefore = false
   ) {
     const foundFinishInteraction = Array.isArray(interaction)
       ? interaction.some(interaction =>
@@ -201,9 +199,6 @@ export default class LifeController {
       : this._checkIsFinishInteraction(interaction)
 
     if (foundFinishInteraction) {
-      // if (regStepBefore) {
-      //   this.statistic.regStep()
-      // }
       this.finish()
     }
     return foundFinishInteraction

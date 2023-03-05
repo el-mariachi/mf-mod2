@@ -24,12 +24,12 @@ export default class Timer {
   }
   resume() {
     if (this._pauseTime) {
-      this._pauseDuration += Date.now() - this._pauseTime
+      this._pauseDuration = Date.now() - this._pauseTime
       this._pauseTime = 0
     }
   }
   toggle(flag?: boolean) {
-    const toggle = flag ?? this._pauseTime
+    const toggle = flag ?? !!this._pauseTime
     toggle ? this.resume() : this.pause()
   }
   protected _getElapsed(curTime: number, prevTime: number) {
@@ -37,6 +37,7 @@ export default class Timer {
     if (this.inSeconds) {
       elapsed = Math.floor(elapsed / 1000)
     }
+    this._pauseDuration = 0
     return elapsed > 0 ? elapsed : 0
   }
 }
