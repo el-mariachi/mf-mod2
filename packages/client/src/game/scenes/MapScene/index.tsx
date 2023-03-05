@@ -55,7 +55,7 @@ function MapScene() {
 
   useEffect(() => {
     if (layersRef.current) {
-      Object.entries(layers).forEach(([_, layer]) => {
+      Object.entries(layers).forEach(([, layer]) => {
         if (layersRef.current) {
           layersRef.current.append(layer.canvas)
         }
@@ -74,7 +74,11 @@ function MapScene() {
   useEffect(() => {
     if (gameAction) {
       const [gameEvent]: Types.GameAction = gameAction
-      if (Types.MoveGameEvents.includes(gameEvent)) {
+      if (
+        lifeRef.current &&
+        lifeRef.current instanceof LifeController &&
+        Types.MoveGameEvents.includes(gameEvent)
+      ) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         lifeRef.current.turn(Types.MapGameEvents2Direction[gameEvent])

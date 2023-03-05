@@ -72,7 +72,7 @@ export default class InteractionController {
           /** убираем ключ из сумки */
           this._hero.bag.splice(this._hero.bag.indexOf(key), 1)
           const gateNearbyCells = this._map.nearbyCells(
-            gate.cell,
+            gate.cell as Types.LevelMapCell,
             1
           ) as Types.LevelMapCell[]
 
@@ -181,9 +181,9 @@ export default class InteractionController {
       if (
         object instanceof Object &&
         Utils.isUnit(object) &&
-        object.lastBehavior
+        object.prevBehavior
       ) {
-        object.lastBehavior.process.then(resolve)
+        object.prevBehavior.process.then(resolve)
       } else resolve(null)
     })
   }

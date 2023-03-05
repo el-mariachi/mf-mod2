@@ -9,8 +9,8 @@ export default class _Unit extends GameObject implements Unit {
   static = false
   animated = true
   destroyable = true
-  lastBehavior: UnitBehaviorResult | null = null
+  prevBehavior: UnitBehaviorResult | null = null
   get active(): boolean {
-    return !!(this.cell && (!isDestroyable(this) || this.health))
+    return !!(this.isOnMap && (!isDestroyable(this) || this.health))
   }
 }

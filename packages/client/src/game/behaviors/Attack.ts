@@ -1,24 +1,33 @@
 import * as Types from '@type/game'
 import { getBehaviorAnimatedProcess } from '@game/behaviors'
+import { emptyAnimationProcess } from '@constants/game'
 
 export default class Attack implements Types.AttackBehavior {
   constructor(protected _subject: Types.Attacker) {}
   with(target: Types.Destroyable) {
-    let behavior
-    if (this._subject?.attack) {
-      behavior = this._subject.attack(target)
-    } else {
-      const process = getBehaviorAnimatedProcess(
-        Types.AttackMotionType.attack,
-        this._subject,
-        target.cell
-      )
-      behavior = {
-        process,
-        result: this._calcPoints(),
+    let behavior = {
+      process: emptyAnimationProcess,
+      result: {
+        attacker: this._subject,
+        points: 0,
+      },
+    } as Types.AttackResult
+    if (this._subject.isOnMap && target.isOnMap) {
+      if (this._subject?.attack) {
+        behavior = this._subject.attack(target)
+      } else {
+        const process = getBehaviorAnimatedProcess(
+          Types.AttackMotionType.attack,
+          this._subject,
+          target.cell as Types.LevelMapCell
+        )
+        behavior = {
+          process,
+          result: this._calcPoints(),
+        }
       }
     }
-    return (this._subject.lastBehavior = behavior)
+    return (this._subject.prevBehavior = behavior)
   }
   protected _calcPoints() {
     const { strength } = this._subject

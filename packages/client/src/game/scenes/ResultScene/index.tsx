@@ -49,9 +49,9 @@ function ResultScene() {
   const playAgain = () => {
     dispatch(startGame())
   }
-  const resumeFromSaved = () => {
-    // TODO
-  }
+  // TODO
+  // const resumeFromSaved = () => {
+  // }
 
   const isLevelCompleted = !heroIsDead
   const isGameCompleted = !showContinueButton
