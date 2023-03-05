@@ -8,6 +8,7 @@ import PathController from './PathController'
 import StatisticController from './StatisticController'
 import InteractionController from './InteractionController'
 import * as Utils from '@utils/game'
+import { delay } from '@utils/index'
 
 enum Status {
   free,
@@ -53,7 +54,7 @@ export default class LifeController {
     await this._hero.prevStepProcess
     this.heroMove(direction)
     if (!this._finished) {
-      await new Promise(resolve => setTimeout(resolve, HERO_MOVE_DELAY))
+      await delay(HERO_MOVE_DELAY)
       await this.npcsMove()
     }
     this.status = Status.free

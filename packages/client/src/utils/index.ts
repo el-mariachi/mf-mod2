@@ -24,3 +24,9 @@ export const createRangeKeeper =
 
 export const capitalize = (word: string) =>
   word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ''
+
+export const delay = (time: number, callback?: () => void) =>
+  new Promise<void>(res => {
+    callback?.()
+    setTimeout(res, time)
+  })

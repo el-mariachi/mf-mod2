@@ -7,13 +7,8 @@ import { useGameController } from '@hooks/useGameController'
 import LifeController from '@game/controllers/LifeController'
 import MapSceneUI from '@game/components/MapSceneUI'
 import { selectPaused } from '@store/selectors'
-import hero from '@sprites/knight.png'
-import dungeonTileset from '@sprites/tileset.png'
-import skeleton from '@sprites/skeleton.png'
 import { width, height } from '@utils/winsize'
 import './MapScene.scss'
-
-const images = [hero, dungeonTileset, skeleton]
 
 function MapScene() {
   const [gameAction, setGameAction] = useState(
@@ -31,24 +26,11 @@ function MapScene() {
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
     const removeKeyboardListener = useGameController(setGameAction)
-    // TODO перенести в LoadScene после того как определится порядок загрузки сцен
-    const promises = images.map(src => {
-      return new Promise(res => {
-        const img = new Image()
-        img.src = src
-        img.onload = () => {
-          res(null)
-        }
-      })
-    })
-
-    Promise.all(promises).then(() => {
-      const layers: LayerRecord = createLayers(
-        ['static', 'active', 'effetcs'],
-        [width, height]
-      )
-      setLayers(layers)
-    })
+    const layers: LayerRecord = createLayers(
+      ['static', 'active', 'effetcs'],
+      [width, height]
+    )
+    setLayers(layers)
 
     return removeKeyboardListener
   }, [])

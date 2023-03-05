@@ -6,7 +6,10 @@ import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { startGame } from '@store/slices/game'
 import * as UI from '@constants/ui'
 import SceneCanvas from '@game/components/SceneCanvas'
+import resources from '@game/mocks/resources'
+import { delay } from '@utils/index'
 
+const MIN_LOAD_SCENE_PLAYING_TIME = 2500
 function LoadScene() {
   const dispatch = useAppDispatch()
 
@@ -42,7 +45,9 @@ function LoadScene() {
 
   useEffect(() => {
     // TODO it`mock. memory leak possible, will fixed in TS-111
-    setTimeout(() => dispatch(startGame()), 2500)
+    Promise.all([delay(MIN_LOAD_SCENE_PLAYING_TIME), ...resources.load()]).then(
+      () => dispatch(startGame())
+    )
   }, [])
 
   return <SceneCanvas draw={sceneDrawer} width={width} height={height} />
