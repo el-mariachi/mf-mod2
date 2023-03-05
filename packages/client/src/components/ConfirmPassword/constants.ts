@@ -46,6 +46,6 @@ export const changePasswordInputData = [
 ] as const
 
 export type ChangePasswordFormFields =
-  typeof changePasswordInputData[number]['name']
+  (typeof changePasswordInputData)[number]['name']
 
 export type ChangePasswordFormStruct = Record<ChangePasswordFormFields, string>

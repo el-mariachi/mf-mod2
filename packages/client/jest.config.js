@@ -21,6 +21,7 @@ export default {
     '@hooks/(.*)': '<rootDir>/src/hooks/$1',
     '@store/(.*)': '<rootDir>/src/store/$1',
     '@constants/(.*)': '<rootDir>/src/constants/$1',
+    '@type/(.*)': '<rootDir>/src/types/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 }
