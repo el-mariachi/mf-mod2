@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
 import { getLBData } from '@services/leaderboardController'
-import SecondsToHMS from '@utils/secondsFormat'
+import { MsecondsToHMS } from '@utils/secondsFormat'
 
 const inputData: LeaderboardDataResp[] = []
 
@@ -21,7 +21,7 @@ function LeaderboardList() {
   const [lbData, setLbData] = useState(inputData)
 
   const req: LeaderboardDataReq = {
-    ratingFieldName: 'coins',
+    ratingFieldName: 'score',
     cursor: 0,
     limit: 10,
   }
@@ -30,7 +30,7 @@ function LeaderboardList() {
     getLBData(req).then((data: LeaderboardDataResp[]) => {
       setLbData(data)
     })
-  })
+  }, [])
 
   let counter = 0
   let sortedVal = SortedVal.score
@@ -105,7 +105,7 @@ function LeaderboardList() {
             counter++
             const val =
               sortedVal == SortedVal.time
-                ? SecondsToHMS(user?.data[sortedVal]).toString()
+                ? MsecondsToHMS(user.data[sortedVal])?.toString()
                 : user.data[sortedVal]?.toString()
             return (
               <Lb_User

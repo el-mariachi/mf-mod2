@@ -2,7 +2,7 @@ import LeaderboardProps from '../Props'
 import { Button, Collapse } from 'react-bootstrap'
 import dummyAvatarImg from '@images/king.png'
 import { useState } from 'react'
-import SecondsToHMS from '@utils/secondsFormat'
+import { MsecondsToHMS } from '@utils/secondsFormat'
 
 function Lb_User({
   place,
@@ -33,7 +33,7 @@ function Lb_User({
           <ul className="d-inline-block flex-1 p-0 m-0">
             <li className="list-group-item">Счет: {score} </li>
             <li className="list-group-item">Монеты: {coins} </li>
-            <li className="list-group-item">Время: {SecondsToHMS(time)} </li>
+            <li className="list-group-item">Время: {MsecondsToHMS(time)} </li>
             <li className="list-group-item">Шаги: {steps} </li>
             <li className="list-group-item">Убитых врагов: {killCount} </li>
           </ul>
