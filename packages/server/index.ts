@@ -18,6 +18,7 @@ const isDev = () => process.env.NODE_ENV === 'development'
 
 async function startServer() {
   const app = express()
+  app.use(express.json())
   app.use(cors())
   const port = Number(process.env.SERVER_PORT) || 3001
   const viteHmrPort = Number(process.env.VITE_HMR_PORT)

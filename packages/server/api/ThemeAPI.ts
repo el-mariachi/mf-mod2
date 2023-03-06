@@ -12,12 +12,14 @@ class ThemeAPI {
     const { body } = request
     const theme = await themeService.find(body)
     if (theme !== null) {
-      response.status(200).json(theme)
+      return response.status(200).json(theme)
     }
+    return response.status(404).send('Theme not found')
   }
-  public static create = async (request: Request) => {
+  public static create = async (request: Request, response: Response) => {
     const { body } = request
     await themeService.create(body)
+    return response.status(201).end('Success')
   }
 }
 export { ThemeAPI }

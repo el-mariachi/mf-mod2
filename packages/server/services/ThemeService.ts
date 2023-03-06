@@ -7,7 +7,7 @@ interface FindRequest {
 }
 
 interface CreateRequest {
-  title: string
+  theme: string
   description?: string
 }
 
@@ -26,17 +26,17 @@ class ThemeService implements BaseRESTService {
     })
   }
   public create = (data: CreateRequest) => {
-    const { title, description } = data
+    const { theme, description } = data
     if (description !== undefined) {
-      return Theme.create({ title, description })
+      return Theme.create({ theme, description })
     } else {
-      return Theme.create({ title })
+      return Theme.create({ theme })
     }
   }
-  public update = (theme: Theme, data: CreateRequest) => {
-    const { title, description } = data
-    return theme.update({ title, description })
-  }
+  // public update = (oldTheme: Theme, data: CreateRequest) => {
+  //   const { theme, description } = data
+  //   return oldTheme.update({ theme, description })
+  // }
   public delete = (theme: Theme) => {
     return Theme.destroy({
       where: {
