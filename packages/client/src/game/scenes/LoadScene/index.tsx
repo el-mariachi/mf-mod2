@@ -46,7 +46,9 @@ function LoadScene() {
   useEffect(() => {
     // TODO it`mock. memory leak possible, will fixed in TS-111
     Promise.all([delay(MIN_LOAD_SCENE_PLAYING_TIME), ...resources.load()]).then(
-      () => dispatch(startGame())
+      () => {
+        dispatch(startGame())
+      }
     )
   }, [])
 

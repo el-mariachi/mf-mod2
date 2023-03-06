@@ -13,8 +13,12 @@ import {
   LifeControllerState,
   GameIntaractions,
   noInteraction,
+  TEAM_NAME_LB_API,
 } from '@constants/game'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
+import { selectHeroIsDead } from '@store/selectors'
+import leaderboardApi, { LeaderboardData } from '@api/leaderboardApi'
+import { putLBData } from '@services/leaderboardController'
 
 const updateTotals = (state: GameSlice) => {
   state.gameTotals.coins += state.levelStats.coins
@@ -150,19 +154,52 @@ export const restartLevel =
     const { currentLevel, levelStats, currentScene } = getState().game
     dispatch(resetHeroResources())
     if (SCENES.RESULT_SCENE == currentScene) {
-      // cancel gained level statistics
       dispatch(cancelLevelStats(levelStats))
     }
     dispatch(startLevel(currentLevel))
     if (SCENES.MAP_SCENE == currentScene) {
-      // TODO temporary hack for reinit map scene: touch start scene
+      const stats = getState().game.levelStats
+      const lbData: LeaderboardData = {
+        data: {
+          nickname: getState().user.data.display_name,
+          coins: stats.coins,
+          steps: stats.steps,
+          killCount: stats.killCount,
+          time: stats.time,
+          score: getState().game.score,
+        },
+        ratingFieldName: 'score',
+        teamName: TEAM_NAME_LB_API,
+      }
+      leaderboardApi.pushLeaderboardData(lbData)
       dispatch(showStartScene())
     }
   }
 export const finishLevel =
-  (): ThunkAction<void, RootState, unknown, AnyAction> => dispatch => {
+  (): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
     dispatch(endLevel())
-    // TODO save stats to server
+
+    if (!selectHeroIsDead(getState())) {
+      const stats = getState().game.levelStats
+      const lbData: LeaderboardData = {
+        data: {
+          nickname: getState().user.data.display_name,
+          coins: stats.coins,
+          steps: stats.steps,
+          killCount: stats.killCount,
+          time: stats.time,
+          score: getState().game.score,
+        },
+        ratingFieldName: 'score',
+        teamName: TEAM_NAME_LB_API,
+      }
+
+      console.log('Sending store data to server...')
+      console.log(lbData)
+
+      putLBData(lbData)
+    }
   }
 export const nextLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
