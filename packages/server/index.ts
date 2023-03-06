@@ -53,9 +53,7 @@ async function startServer() {
     ssrClientPath = require.resolve('client/dist-ssr/client.cjs')
   }
 
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)')
-  })
+  app.use('/api', router)
 
   if (!isDev()) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -108,8 +106,6 @@ async function startServer() {
       next(e)
     }
   })
-
-  app.use(router)
 
   await startApp()
 

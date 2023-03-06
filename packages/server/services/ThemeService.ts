@@ -1,4 +1,4 @@
-import type { BaseRESTService } from './baseService'
+import type { BaseRESTService } from './BaseService'
 import { Theme } from '../db/models/Theme'
 
 interface FindRequest {
