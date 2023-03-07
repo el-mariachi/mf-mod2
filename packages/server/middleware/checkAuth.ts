@@ -10,29 +10,8 @@ const axiosInstance = axios.create({
   timeout: API_TIMEOUT,
   withCredentials: true,
 })
-/*
-axiosInstance.interceptors.request.use(
-  request => {
-    console.log('Starting Request', JSON.stringify(request, null, 2))
-    return request
-  },
-  error => {
-    console.error('✉️ error', error)
-  }
-)
-/*
-axiosInstance.interceptors.response.use(
-  response => {
-    console.log('Response:', JSON.stringify(response, null, 2))
-    return response
-  },
-  error => {
-    console.error('✉️ error', error)
-  }
-)
-*/
+
 export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
-  console.log('req ', req)
   axiosInstance
     .get(YA_API_BASE_URL + '/auth/user', {
       headers: {
