@@ -13,3 +13,10 @@ export const createThemeValidations: ValidatorRules<Theme> = [
     required: false,
   },
 ]
+export const deleteThemeValidations: ValidatorRules<Theme> = [
+  {
+    key: 'id',
+    validator: value => typeof value !== 'number',
+    required: true,
+  },
+]

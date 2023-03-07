@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import type { BaseRESTService } from './BaseService'
 import { Theme } from '../db/models/Theme'
 
@@ -21,7 +22,9 @@ class ThemeService implements BaseRESTService {
     }
     return Theme.findOne({
       where: {
-        theme: `%${title}%`,
+        theme: {
+          [Op.like]: `%${title}%`,
+        },
       },
     })
   }

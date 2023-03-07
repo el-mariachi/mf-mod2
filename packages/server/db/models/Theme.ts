@@ -26,5 +26,5 @@ export class Theme extends Model {
   declare description: string
 
   @HasOne(() => UserTheme)
-  declare user_id: number
+  declare user_theme: number
 }

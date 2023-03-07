@@ -18,8 +18,25 @@ class ThemeAPI {
   }
   public static create = async (request: Request, response: Response) => {
     const { body } = request
-    await themeService.create(body)
-    return response.status(201).end('Success')
+    try {
+      await themeService.create(body)
+      return response.status(201).end('Success')
+    } catch (error) {
+      return response.status(500).end('Failed to create theme')
+    }
+  }
+  public static delete = async (request: Request, response: Response) => {
+    const { body } = request
+    try {
+      const deleted = await themeService.delete(body)
+      if (deleted === 0) {
+        return response.status(404).end(`No such theme`)
+      } else {
+        return response.status(200).end(`Success. Deleted ${deleted} record(s)`)
+      }
+    } catch (error) {
+      return response.status(500).end('Failed to delete theme')
+    }
   }
 }
 export { ThemeAPI }
