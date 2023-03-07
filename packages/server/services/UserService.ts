@@ -15,7 +15,9 @@ interface CreateRequest {
   user_name: string
   theme: string
 }
-
+interface DeleteRequest {
+  yandex_id: number
+}
 class UserService implements BaseRESTService {
   public getAll = () => {
     return User.findAll()
@@ -26,9 +28,13 @@ class UserService implements BaseRESTService {
       include: [
         {
           model: UserTheme,
-          attributes: ['theme_id'],
-          required: true,
-          include: [{ model: Theme }],
+          attributes: ['id', 'theme_id'],
+          include: [
+            {
+              model: Theme,
+              attributes: ['theme', 'description'],
+            },
+          ],
         },
       ],
     })
@@ -63,14 +69,10 @@ class UserService implements BaseRESTService {
       }
     }
   }
-  // public update = (oldTheme: Theme, data: CreateRequest) => {
-  //   const { theme, description } = data
-  //   return oldTheme.update({ theme, description })
-  // }
-  public delete = (user: User) => {
+  public delete = ({ yandex_id }: DeleteRequest) => {
     return User.destroy({
       where: {
-        yandex_id: user.id,
+        yandex_id,
       },
     })
   }

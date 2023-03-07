@@ -1,9 +1,12 @@
 import { Router } from 'express'
 import { UserAPI } from '../api/UserAPI'
-import { validator } from '../validators/validator'
+import { bodyValidator } from '../validators/bodyValidator'
+import { paramsValidator } from '../validators/paramsValidator'
 import {
+  findUserValidations,
   createUserValidations,
   deleteUserValidations,
+  setUserThemeValidations,
 } from '../validators/userValidations'
 
 export const userRoutes = (router: Router) => {
@@ -12,9 +15,14 @@ export const userRoutes = (router: Router) => {
 
   const userRouter = Router()
   userRouter
-    .get('/:id', UserAPI.find)
-    .post('/', validator(createUserValidations), UserAPI.create)
-    .delete('/', validator(deleteUserValidations), UserAPI.delete)
+    .get('/:id', paramsValidator(findUserValidations), UserAPI.find)
+    .post(
+      '/:id/theme',
+      bodyValidator(setUserThemeValidations),
+      UserAPI.setTheme
+    )
+    .post('/', bodyValidator(createUserValidations), UserAPI.create)
+    .delete('/', bodyValidator(deleteUserValidations), UserAPI.delete)
 
   router.use('/users', usersRouter)
   router.use('/user', userRouter)

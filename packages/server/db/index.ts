@@ -5,12 +5,12 @@ import { Theme } from './models/Theme'
 async function getAllThemes() {
   return Theme.findAll()
 }
-async function createTheme(theme: string) {
-  return Theme.create({ theme })
-}
-async function clearThemes() {
-  return Theme.destroy({ truncate: true, cascade: true })
-}
+// async function createTheme(theme: string) {
+//   return Theme.create({ theme })
+// }
+// async function clearThemes() {
+//   return Theme.destroy({ truncate: true, cascade: true })
+// }
 /*
 async function getAllUsers() {
   return User.findAll()
@@ -35,27 +35,38 @@ export async function startApp() {
   await dbConnect()
 
   // clear themes
+  // try {
+  //   await clearThemes()
+  // } catch (error) {
+  //   console.error('⛔️ Cannot delete records', error)
+  // }
+  // let themes: { theme: string }[]
+  // themes = (await getAllThemes()).map(({ theme }) => ({ theme }))
+  // console.log('Список тем из БД:', themes)
+  // console.log('Добавим пару тем: main & develop')
+  // try {
+  //   // Если не использовать try/catch, то приложение падает:
+  //   // нельзя добавить запись с именем, которое уже есть в базе, если выставлен UNIQUE
+  //   await createTheme('main')
+  // } catch (error) {
+  //   console.error('⛔️ Cannot add theme main', error)
+  // }
+  // try {
+  //   await createTheme('develop')
+  // } catch (error) {
+  //   console.log('⛔️ Cannot add theme develop', error)
+  // }
   try {
-    await clearThemes()
+    await Theme.bulkCreate([
+      { theme: 'default' },
+      { theme: 'acid' },
+      { theme: 'doomer' },
+      { theme: 'frozen' },
+      { theme: 'mint' },
+    ])
   } catch (error) {
-    console.error('⛔️ Cannot delete records', error)
+    console.log('⛔️ Theme creation failed')
   }
-  let themes: { theme: string }[]
-  themes = (await getAllThemes()).map(({ theme }) => ({ theme }))
-  console.log('Список тем из БД:', themes)
-  console.log('Добавим пару тем: main & develop')
-  try {
-    // Если не использовать try/catch, то приложение падает:
-    // нельзя добавить запись с именем, которое уже есть в базе, если выставлен UNIQUE
-    await createTheme('main')
-  } catch (error) {
-    console.error('⛔️ Cannot add theme main', error)
-  }
-  try {
-    await createTheme('develop')
-  } catch (error) {
-    console.log('⛔️ Cannot add theme develop', error)
-  }
-  themes = (await getAllThemes()).map(({ theme }) => ({ theme }))
+  const themes = (await getAllThemes()).map(({ theme }) => ({ theme }))
   console.log('Список тем из БД:', themes)
 }

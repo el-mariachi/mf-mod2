@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { themesRoutes } from '../handles/themes'
+import { themeRoutes } from '../handles/theme'
 import { userRoutes } from '../handles/user'
 
 const router = Router()
-themesRoutes(router)
+themeRoutes(router)
 userRoutes(router)
 export default router

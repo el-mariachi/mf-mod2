@@ -9,8 +9,8 @@ class ThemeAPI {
     return response.status(200).json(allThemes)
   }
   public static find = async (request: Request, response: Response) => {
-    const { body } = request
-    const theme = await themeService.find(body)
+    const { params } = request
+    const theme = await themeService.find({ id: Number(params.id) })
     if (theme !== null) {
       return response.status(200).json(theme)
     }

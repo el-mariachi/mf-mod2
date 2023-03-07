@@ -5,6 +5,7 @@ import {
   Column,
   AllowNull,
   ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript'
 import { User } from './User'
 import { Theme } from './Theme'
@@ -24,4 +25,7 @@ export class UserTheme extends Model {
   @AllowNull(false)
   @Column(DataType.INTEGER)
   declare theme_id: number
+
+  @BelongsTo(() => Theme)
+  declare theme: Theme
 }

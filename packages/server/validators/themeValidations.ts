@@ -1,7 +1,16 @@
 import type { Theme } from '../db/models/Theme'
-import type { ValidatorRules } from './validator'
+import type { BodyValidatorRules } from './bodyValidator'
+import type { ParamsValidatorRules } from './paramsValidator'
 
-export const createThemeValidations: ValidatorRules<Theme> = [
+export const findThemeValidations: ParamsValidatorRules = [
+  {
+    key: 'id',
+    validator: value => isNaN(Number(value)),
+    required: true,
+  },
+]
+
+export const createThemeValidations: BodyValidatorRules<Theme> = [
   {
     key: 'theme',
     validator: value => typeof value !== 'string',
@@ -13,7 +22,7 @@ export const createThemeValidations: ValidatorRules<Theme> = [
     required: false,
   },
 ]
-export const deleteThemeValidations: ValidatorRules<Theme> = [
+export const deleteThemeValidations: BodyValidatorRules<Theme> = [
   {
     key: 'id',
     validator: value => typeof value !== 'number',

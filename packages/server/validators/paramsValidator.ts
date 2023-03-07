@@ -1,20 +1,20 @@
 import type { Request, Response, NextFunction } from 'express'
 
-export type ValidatorRules<T> = {
-  key: keyof T
-  validator: (v: T[keyof T]) => boolean // validator must return true if value doesn't pass
+export type ParamsValidatorRules = {
+  key: string
+  validator: (v: string) => boolean // validator must return true if value doesn't pass
   required: boolean
 }[]
 
-export function validator<T extends object>(rules: ValidatorRules<T> = []) {
+export function paramsValidator(rules: ParamsValidatorRules = []) {
   return (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { body } = request
-      if (body === undefined) {
+      const { params } = request
+      if (params === undefined) {
         throw new Error('Empty request')
       }
       for (const { key, validator, required } of rules) {
-        const value = body[key]
+        const value = params[key]
         if (value === undefined && required) {
           throw new Error(`Property '${String(key)}' is missing but required`)
         }
