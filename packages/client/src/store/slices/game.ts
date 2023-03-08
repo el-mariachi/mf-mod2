@@ -177,7 +177,7 @@ export const restartLevel =
   }
 export const finishLevel =
   (): ThunkAction<void, RootState, unknown, AnyAction> =>
-  (dispatch, getState) => {
+  async (dispatch, getState) => {
     dispatch(endLevel())
 
     if (!selectHeroIsDead(getState())) {
@@ -195,7 +195,7 @@ export const finishLevel =
         teamName: TEAM_NAME_LB_API,
       }
 
-      putLBData(lbData)
+      await putLBData(lbData)
     }
   }
 export const nextLevel =
