@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 
@@ -17,7 +18,7 @@ dbConnect()
 async function startServer() {
   const app = express()
   app.use(cors())
-  
+  app.use(bodyParser.json())
   const port = Number(process.env.SERVER_PORT) || 3001
 
   let distPath: string
