@@ -21,8 +21,8 @@ export class User extends Model {
   declare yandex_id: number
 
   @AllowNull(false)
-  @Column({ type: DataType.STRING, comment: 'display_name' })
-  declare user_name: string
+  @Column({ type: DataType.STRING })
+  declare login: string
 
   @HasOne(() => UserTheme)
   declare user_theme: number

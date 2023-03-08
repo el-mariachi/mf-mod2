@@ -3,7 +3,7 @@ import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 import router from './router'
-import { startApp } from './db/index'
+import { dbConnect } from './db/init'
 
 dotenv.config()
 
@@ -108,7 +108,7 @@ async function startServer() {
     }
   })
 
-  await startApp()
+  await dbConnect()
 
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)

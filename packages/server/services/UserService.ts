@@ -7,12 +7,12 @@ import { sequelize } from '../db/init'
 
 interface FindRequest {
   yandex_id?: number
-  user_name?: string
+  login?: string
 }
 
 interface CreateRequest {
   yandex_id: number
-  user_name: string
+  login: string
   theme: string
 }
 interface DeleteRequest {
@@ -40,16 +40,13 @@ class UserService implements BaseRESTService {
     })
   }
   public create = async (data: CreateRequest) => {
-    const { yandex_id, user_name, theme } = data
+    const { yandex_id, login, theme } = data
     if (theme === undefined) {
-      return User.create({ yandex_id, user_name })
+      return User.create({ yandex_id, login })
     } else {
       const transaction = await sequelize.transaction()
       try {
-        const user = await User.create(
-          { yandex_id, user_name },
-          { transaction }
-        )
+        const user = await User.create({ yandex_id, login }, { transaction })
         const user_theme = await Theme.findOne({
           where: {
             theme: {

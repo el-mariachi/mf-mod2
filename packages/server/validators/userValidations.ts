@@ -20,7 +20,7 @@ export const createUserValidations: BodyValidatorRules<
     required: true,
   },
   {
-    key: 'user_name',
+    key: 'login',
     validator: value => typeof value !== 'string',
     required: true,
   },
@@ -38,7 +38,7 @@ export const deleteUserValidations: BodyValidatorRules<User> = [
     required: true,
   },
   {
-    key: 'user_name',
+    key: 'login',
     validator: value => typeof value !== 'string',
     required: false,
   },
