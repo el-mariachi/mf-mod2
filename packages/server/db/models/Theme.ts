@@ -9,7 +9,7 @@ import {
   HasOne,
   Length,
 } from 'sequelize-typescript'
-import { UserTheme } from './UserTheme'
+import { UserTheme } from '@models/UserTheme'
 
 @Table({
   timestamps: false,

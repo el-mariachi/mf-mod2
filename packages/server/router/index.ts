@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { themeRoutes } from '../handles/theme'
-import { userRoutes } from '../handles/user'
+import { themeRoutes } from '@handles/theme'
+import { userRoutes } from '@handles/user'
 
 const router = Router()
 themeRoutes(router)

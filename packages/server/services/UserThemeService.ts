@@ -1,5 +1,5 @@
-import type { BaseRESTService } from './BaseService'
-import { UserTheme } from '../db/models/UserTheme'
+import type { BaseRESTService } from '@services/BaseService'
+import { UserTheme } from '@models/UserTheme'
 
 interface CreateRequest {
   user_id: number
