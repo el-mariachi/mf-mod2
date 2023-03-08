@@ -5,7 +5,7 @@ import {
   AnyAction,
 } from '@reduxjs/toolkit'
 import type { RootState } from '@store/index'
-import { die } from '@store/slices/game'
+// import { die } from '@store/slices/game'
 import { createRangeKeeper } from '@utils/index'
 import { heroPresets, heroInitialState } from '@constants/hero'
 import type { HeroSlice } from '@constants/hero'
@@ -93,12 +93,13 @@ export const {
 
 export const updateHealthByAmount =
   (amount: number): ThunkAction<void, RootState, unknown, AnyAction> =>
-  (dispatch, getState) => {
+  dispatch => {
     dispatch(updateHealth(amount))
-    const { hero } = getState()
-    if (hero.health <= 0) {
-      dispatch(die())
-    }
+    // it could be handy, but buisness-logic in store makes controller code tricky oO
+    // const { hero } = getState()
+    // if (hero.health <= 0) {
+    //   dispatch(die())
+    // }
   }
 
 export default heroSlice.reducer

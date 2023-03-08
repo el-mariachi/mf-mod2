@@ -1,16 +1,16 @@
 import reducer, { updateHealth, updateResourceByAmount } from './hero'
 import {
-  HeroClass,
   defaultMaxValues,
   heroPresets,
   defaultMaxHealth,
 } from '@constants/hero'
+import { HeroClass } from '@type/game'
 
 const defaultHero = {
-  heroClass: HeroClass.L3X3III,
+  heroClass: HeroClass.knight,
   health: 100,
   maxHealth: defaultMaxHealth,
-  resources: heroPresets[HeroClass.L3X3III],
+  resources: heroPresets[HeroClass.knight],
   resourceMaxValues: defaultMaxValues,
 }
 

@@ -1,10 +1,4 @@
-export enum HeroClass {
-  L3X3III = 'L3X3III',
-  GINEFF = 'GINEFF',
-  TAURENGOLD = 'TAURENGOLD',
-  NEON_KONCH = 'NEON_KONCH',
-  MITSON = 'MITSON',
-}
+import { HeroClass } from '@type/game'
 
 type HeroResources = {
   hits: number
@@ -14,19 +8,13 @@ type ResourcePresets = {
 }
 
 export const heroPresets: ResourcePresets = {
-  [HeroClass.L3X3III]: {
+  [HeroClass.knight]: {
     hits: 32,
   },
-  [HeroClass.GINEFF]: {
+  [HeroClass.archer]: {
     hits: 32,
   },
-  [HeroClass.TAURENGOLD]: {
-    hits: 32,
-  },
-  [HeroClass.NEON_KONCH]: {
-    hits: 32,
-  },
-  [HeroClass.MITSON]: {
+  [HeroClass.wizard]: {
     hits: 32,
   },
 }
@@ -46,9 +34,9 @@ export type HeroSlice = {
 }
 
 export const heroInitialState: HeroSlice = {
-  heroClass: HeroClass.L3X3III,
+  heroClass: HeroClass.knight,
   health: defaultMaxHealth,
   maxHealth: defaultMaxHealth,
-  resources: heroPresets[HeroClass.L3X3III],
+  resources: heroPresets[HeroClass.knight],
   resourceMaxValues: defaultMaxValues,
 }

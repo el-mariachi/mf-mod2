@@ -1,10 +1,38 @@
 import SCENES from '@constants/scenes'
+import * as Types from '@type/game'
 
-export enum TurnControllerState {
+export const MAP_CELL = 32
+export const SPRITE_SIZE: Types.Size = [MAP_CELL, MAP_CELL]
+export const STEP_TIME = 1000
+export const DEF_FRAME_PER_SECOND_SPEED = 7
+export const DEF_MOVE_DURATION = 500
+export const HERO_MOVE_DELAY = 10
+
+// TODO need refactoring for motions/behaviors types
+export const motionTypes: Types.MotionTypes = {
+  ...Types.IdleMotionType,
+  ...Types.MoveMotionType,
+  ...Types.AttackMotionType,
+  ...Types.DestructionMotionType,
+  ...Types.DamageMotionType,
+  ...Types.TurnMotionType,
+  ...Types.UnspecifiedMotionType,
+}
+
+export const emptyAnimationResult = {
+  params: null,
+  reason: 'end',
+} as Types.CellSpriteAnimationProcessResult
+export const emptyAnimationProcess = Promise.resolve(
+  emptyAnimationResult
+) as Types.CellSpriteAnimationProcess
+
+export enum LifeControllerState {
   RUNNING,
   PAUSED,
 }
 
+// DEPRICATED
 export enum GameIntaractions {
   NONE = 'none',
   ATTACK = 'attack',
@@ -13,7 +41,6 @@ export enum GameIntaractions {
   OPEN = 'open',
   // ...
 }
-
 export type GameIntaractionDef = {
   type: GameIntaractions
   progress: number
@@ -21,17 +48,20 @@ export type GameIntaractionDef = {
   // ...
 }
 
+export enum GameStatType {
+  COINS = 'coins',
+  STEPS = 'steps',
+  KILLS = 'killCount',
+  TIME = 'time',
+}
 export type GameStats = {
-  killCount: number
-  coins: number
-  time: number
-  steps: number
+  [key in GameStatType]: number
 }
 
 export type GameSlice = {
-  turnControllerState: TurnControllerState
+  lifeControllerState: LifeControllerState
   currentScene: SCENES
-  interaction: GameIntaractionDef // | null // как вариант
+  interaction: Types.GameInteractionDef
   currentLevel: number
   totalLevels: number
   levelComplete: boolean
@@ -40,14 +70,17 @@ export type GameSlice = {
   score: number
 }
 
-const noInteraction: GameIntaractionDef = {
-  type: GameIntaractions.NONE,
-  progress: 0,
-  position: [0, 0],
+export const noInteraction: Types.GameInteractionDef = {
+  type: Types.GameInteractionType.none,
 }
+export const finishInteraction: Types.GameInteractionDef = {
+  type: Types.GameInteractionType.finish,
+}
+export const noInteractionRes = Promise.resolve(noInteraction)
+export const finishInteractionRes = Promise.resolve(finishInteraction)
 
 export const gameInitialState: GameSlice = {
-  turnControllerState: TurnControllerState.PAUSED,
+  lifeControllerState: LifeControllerState.PAUSED,
   currentScene: SCENES.LOAD_SCENE,
   interaction: noInteraction,
   currentLevel: 0,

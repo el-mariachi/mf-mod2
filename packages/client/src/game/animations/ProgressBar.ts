@@ -1,5 +1,11 @@
-import { ProgressBarProps } from './ProgressBarProps'
-
+export type ProgressBarProps = {
+  ctx: CanvasRenderingContext2D | null
+  x: number
+  y: number
+  width: number
+  heigth: number
+  color: string
+}
 export class ProgressBar {
   private _ctx: CanvasRenderingContext2D | null
   private _x: number
@@ -35,7 +41,7 @@ export class ProgressBar {
       if (delta >= this._width) {
         clearInterval(id)
       }
-    }, 400)
+    }, 200)
   }
   draw() {
     this._drawContainer()
