@@ -7,6 +7,7 @@ import {
   Unique,
   Index,
   HasOne,
+  Length,
 } from 'sequelize-typescript'
 import { UserTheme } from './UserTheme'
 
@@ -19,6 +20,7 @@ export class Theme extends Model {
   @Index
   @Unique
   @AllowNull(false)
+  @Length({ max: 20, msg: 'Name must be under 20 characters' })
   @Column(DataType.STRING)
   declare theme: string
 

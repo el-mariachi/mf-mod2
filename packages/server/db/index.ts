@@ -57,13 +57,18 @@ export async function startApp() {
   //   console.log('⛔️ Cannot add theme develop', error)
   // }
   try {
-    await Theme.bulkCreate([
-      { theme: 'default' },
-      { theme: 'acid' },
-      { theme: 'doomer' },
-      { theme: 'frozen' },
-      { theme: 'mint' },
-    ])
+    await Theme.bulkCreate(
+      [
+        { theme: 'default' },
+        { theme: 'acid' },
+        { theme: 'doomer' },
+        { theme: 'frozen' },
+        { theme: 'mint' },
+      ],
+      {
+        ignoreDuplicates: true,
+      }
+    )
   } catch (error) {
     console.log('⛔️ Theme creation failed')
   }

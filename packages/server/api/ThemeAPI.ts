@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import { ThemeService } from '../services/ThemeService'
-
+import { combineValidationErrors } from '../utils'
 const themeService = new ThemeService()
 
 class ThemeAPI {
@@ -22,7 +22,9 @@ class ThemeAPI {
       await themeService.create(body)
       return response.status(201).end('Success')
     } catch (error) {
-      return response.status(500).end('Failed to create theme')
+      return response
+        .status(500)
+        .json({ reason: combineValidationErrors(error) })
     }
   }
   public static delete = async (request: Request, response: Response) => {
