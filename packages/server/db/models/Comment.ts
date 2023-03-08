@@ -18,7 +18,7 @@ export class Comment extends Model {
   @AllowNull
   @Default(null)
   @Column(DataType.INTEGER)
-  comment_id!: number;
+  parent_id!: number;
 
   @AllowNull(false)
   @Column(DataType.STRING)
@@ -31,5 +31,5 @@ export class Comment extends Model {
   user!: User;
 
   @BelongsTo(() => Comment)
-  comment!: Comment;
+  parent!: Comment;
 }
