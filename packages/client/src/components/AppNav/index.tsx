@@ -1,14 +1,14 @@
 import classNames from 'classnames'
 import { FC } from 'react'
-import { Nav, Navbar, Offcanvas } from 'react-bootstrap'
+import { Nav, Navbar, NavbarProps, Offcanvas } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import { logout } from '@services/authController'
 import Icon, { IconName } from '@components/Icon'
-import './AppNav.scss'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { clearUser } from '@store/slices/user'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from '@constants/routes'
+import './AppNav.scss'
 
 type AppNavPath = {
   title: string
@@ -17,11 +17,11 @@ type AppNavPath = {
   callback?: () => void
   extLink?: string
 }
-export type AppNavProps = {
+export type AppNavProps = NavbarProps & {
   paths: AppNavPath[]
   caption?: string
 }
-const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
+const AppNav: FC<AppNavProps> = ({ paths, caption, className: cls }) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const navItems = paths.map(({ title, icon, path, callback, extLink }) => {
@@ -56,7 +56,7 @@ const AppNav: FC<AppNavProps> = ({ paths, caption }) => {
     )
   })
   return (
-    <Navbar className="app-nav" expand={false}>
+    <Navbar className={classNames('app-nav', cls)} expand={false}>
       <Navbar.Toggle
         className="app-nav__toggler"
         aria-controls="offcanvasNavbar"

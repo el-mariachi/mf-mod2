@@ -1,12 +1,10 @@
 .app-nav {
-  margin-left: 20px;
-
   &__ {
     &toggler {
       border-width: 1px;
       border-color: rgba($color: white, $alpha: 0.25);
       border-radius: 0;
-      padding: 2px 4px;
+      padding: 3px 5px;
 
       .navbar-toggler-icon {
         background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6.5H19V8H5V6.5Z" fill="white"/><path d="M5 16.5H19V18H5V16.5Z" fill="white"/><path d="M5 11.5H19V13H5V11.5Z" fill="white"/></svg>');

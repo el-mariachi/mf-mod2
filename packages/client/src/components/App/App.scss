@@ -1,0 +1,16 @@
+.app {
+  &[data-theme='default'] > * {
+  }
+  &[data-theme='acid'] > * {
+    filter: hue-rotate(10deg) saturate(250%) contrast(115%) brightness(1.2);
+  }
+  &[data-theme='doomer'] > * {
+    filter: saturate(30%) contrast(85%) brightness(0.9);
+  }
+  &[data-theme='frozen'] > * {
+    filter: hue-rotate(250deg) contrast(90%) saturate(200%);
+  }
+  &[data-theme='mint'] > * {
+    filter: saturate(150%) invert(85%) brightness(0.95) contrast(1.25);
+  }
+}

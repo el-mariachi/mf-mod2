@@ -8,16 +8,16 @@ import { signInInputData, defaultValues, AuthFormStruct } from './constants'
 import { Link } from 'react-router-dom'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import { signInUser } from '@services/authController'
-import './SignIn.scss'
 import { LoggedInCheck, nonAuthorizedPageAccessOpts } from 'hoc/LoggedInCheck'
 import ROUTES from '@constants/routes'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
 import OauthBox from '@components/OauthBox'
+import './SignIn.scss'
+
 export type SignInProps = {
   signUpPageUrl?: ROUTES
 }
-
 const SignIn = (props: SignInProps) => {
   const [mode, setMode] = useState('auth')
   const [loading, setLoading] = useState(false)

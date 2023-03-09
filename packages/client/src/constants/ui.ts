@@ -5,6 +5,7 @@ export const COLOR_PURPLE = '#653e69'
 export const COLOR_DARK_PURPLE = '#251320'
 export const COLOR_DIRTY_PINK = '#9e6274'
 export const COLOR_DARK_DIRTY_PINK = '#683e48'
+
 let FONT_MINECRAFT_REGULAR
 let FONT_MINECRAFT_BOLD
 if (RENDERED_ON_SERVER) {
@@ -29,3 +30,11 @@ if (RENDERED_ON_SERVER) {
   )
 }
 export const MINECRAFT_FONTS = [FONT_MINECRAFT_REGULAR, FONT_MINECRAFT_BOLD]
+
+export const appThemeDefault = {
+  active: 'default',
+  switch: (theme: string) => {
+    appThemeDefault.active = theme
+  },
+  list: ['default'],
+}

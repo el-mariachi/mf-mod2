@@ -1,4 +1,4 @@
-import App from './src/components/App/App'
+import App from './src/components/App'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom/server'
 import { Provider } from 'react-redux'

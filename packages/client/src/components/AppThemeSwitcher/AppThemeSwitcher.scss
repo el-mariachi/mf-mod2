@@ -1,0 +1,8 @@
+.app-theme-switcher {
+  .dropdown-toggle.btn,
+  .dropdown-toggle.btn:hover {
+    border-color: rgba($color: white, $alpha: 0.25);
+    background-color: transparent;
+    color: white;
+  }
+}
