@@ -2,8 +2,8 @@ version: "3.9"
 
 services:
     client:
-      container_name: prakticum-client
-      image: prakticum-client
+      container_name: prakticum-client-local
+      image: prakticum-client-local
       build:
           context: .
           dockerfile: Dockerfile.client
@@ -19,12 +19,13 @@ services:
         - SERVER_PORT=${SERVER_PORT}
       volumes:
         - onebit_logs:/var/log/nginx
+        - ./tmp/nginx:/etc/nginx/conf.d
       networks:
         - onebit
 
     server:
-      container_name: prakticum-server
-      image: prakticum-server
+      container_name: prakticum-server-local
+      image: prakticum-server-local
       build:
           context: .
           dockerfile: Dockerfile.server
@@ -44,7 +45,7 @@ services:
       - onebit
 
     postgres:
-      container_name: prakticum-postgres
+      container_name: prakticum-postgres-local
       image: postgres:14
       restart: always
       ports:
@@ -54,12 +55,11 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
-        - pgdata:/var/lib/postgresql/data
+        - ./tmp/pgdata:/var/lib/postgresql/data
       networks:
         - onebit
-        
+
 volumes:
-  pgdata:
   onebit_logs:
 
 networks:
