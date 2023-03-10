@@ -16,7 +16,8 @@ export class Layer {
   constructor({ name, zindex, size: [width, height] }: LayerProps) {
     this.name = name
     this.canvas = document.createElement('canvas')
-    this.canvas.style.zIndex = zindex
+    this.canvas.style.position = 'fixed'
+    this.canvas.style.zIndex = String(+zindex * 100)
     this.canvas.id = name
     this.canvas.width = width
     this.canvas.height = height

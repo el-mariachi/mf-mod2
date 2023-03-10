@@ -8,6 +8,7 @@ import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { clearUser } from '@store/slices/user'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from '@constants/routes'
+import { AppContainerContext } from 'context'
 import './AppNav.scss'
 
 type AppNavPath = {
@@ -56,46 +57,51 @@ const AppNav: FC<AppNavProps> = ({ paths, caption, className: cls }) => {
     )
   })
   return (
-    <Navbar className={classNames('app-nav', cls)} expand={false}>
-      <Navbar.Toggle
-        className="app-nav__toggler"
-        aria-controls="offcanvasNavbar"
-      />
-      <Navbar.Offcanvas
-        id="offcanvasNavbar"
-        aria-labelledby="offcanvasNavbarLabel"
-        placement="end">
-        <Offcanvas.Header className="app-nav__header px-4" closeButton>
-          {caption ? (
-            <Offcanvas.Title
-              className="offcanvas-title minecrafted minecrafted_bold"
-              id="offcanvasNavbarLabel">
-              {caption}
-            </Offcanvas.Title>
-          ) : null}
-        </Offcanvas.Header>
-        <Offcanvas.Body className="p-4">
-          <Nav className="justify-content-end flex-grow-1 pe-3" as="ul">
-            {navItems}
-            <li key="exit" className="nav-item">
-              <Nav.Link
-                onClick={(e: React.SyntheticEvent) => {
-                  e.preventDefault()
-                  logout().then(() => {
-                    dispatch(clearUser())
-                    navigate(ROUTES.SIGN_IN)
-                  })
-                }}
-                className="nav-link d-flex align-items-center"
-                href="#">
-                <Icon iconName="XSquareFill" className="me-2" />
-                <span>Выход</span>
-              </Nav.Link>
-            </li>
-          </Nav>
-        </Offcanvas.Body>
-      </Navbar.Offcanvas>
-    </Navbar>
+    <AppContainerContext.Consumer>
+      {container => (
+        <Navbar className={classNames('app-nav', cls)} expand={false}>
+          <Navbar.Toggle
+            className="app-nav__toggler"
+            aria-controls="offcanvasNavbar"
+          />
+          <Navbar.Offcanvas
+            id="offcanvasNavbar"
+            container={container}
+            aria-labelledby="offcanvasNavbarLabel"
+            placement="end">
+            <Offcanvas.Header className="app-nav__header px-4" closeButton>
+              {caption ? (
+                <Offcanvas.Title
+                  className="offcanvas-title minecrafted minecrafted_bold"
+                  id="offcanvasNavbarLabel">
+                  {caption}
+                </Offcanvas.Title>
+              ) : null}
+            </Offcanvas.Header>
+            <Offcanvas.Body className="p-4">
+              <Nav className="justify-content-end flex-grow-1 pe-3" as="ul">
+                {navItems}
+                <li key="exit" className="nav-item">
+                  <Nav.Link
+                    onClick={(e: React.SyntheticEvent) => {
+                      e.preventDefault()
+                      logout().then(() => {
+                        dispatch(clearUser())
+                        navigate(ROUTES.SIGN_IN)
+                      })
+                    }}
+                    className="nav-link d-flex align-items-center"
+                    href="#">
+                    <Icon iconName="XSquareFill" className="me-2" />
+                    <span>Выход</span>
+                  </Nav.Link>
+                </li>
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Navbar>
+      )}
+    </AppContainerContext.Consumer>
   )
 }
 export default AppNav

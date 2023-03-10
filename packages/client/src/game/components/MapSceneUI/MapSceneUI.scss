@@ -1,6 +1,9 @@
 @import '@vars';
 
 .map-scene-ui {
+  position: fixed;
+  z-index: 400;
+
   &::before {
     content: '';
     position: fixed;
