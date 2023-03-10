@@ -22,7 +22,7 @@ export default new (class {
     //   .catch(error => apiErrorHandler(error))
   }
   getTheme() {
-    return Promise.resolve('acid')
+    return Promise.resolve('default')
 
     // if (this._userId) {
     //   return appUsersApi.getAppUser(this._userId)
