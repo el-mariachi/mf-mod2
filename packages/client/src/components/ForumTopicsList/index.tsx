@@ -1,36 +1,54 @@
+import { FC, HTMLAttributes } from 'react'
 import ForumTopic, { ForumTopicProps } from '@components/ForumTopic'
+import { Button } from 'react-bootstrap'
 import './ForumTopicsList.scss'
-const topics: ForumTopicProps[] = [
+
+const mockTopics: Omit<ForumTopicProps, 'mock2topic'>[] = [
   {
-    topicAuthor: 'Петр',
-    topicTitle: 'Тема от Петра',
+    author: 'Петр',
+    title: 'Тема от Петра',
+    dateCreate: new Date(),
+    msgCount: 6,   
+    dateLastMsg: new Date(),
   },
   {
-    topicAuthor: 'Антон',
-    topicTitle: 'Тема от Антона',
+    author: 'Антон',
+    title: 'Тема от Антона',
+    dateCreate: new Date(),
   },
   {
-    topicAuthor: 'Стас',
-    topicTitle: 'Тема от Стаса',
+    author: 'Стас',
+    title: 'Тема от Стаса',
+    dateCreate: new Date(),
   },
   {
-    topicAuthor: 'Настя',
-    topicTitle: 'Тема от Насти',
+    author: 'Настя',
+    title: 'Тема от Насти',
+    dateCreate: new Date(),
   },
 ]
 
-function ForumTopicsList() {
-  return (
+export type ForumTopicsListProps = HTMLAttributes<HTMLDivElement> & {
+  mock2addTopic: () => void
+  mock2topic: () => void
+}
+const ForumTopicsList: FC<ForumTopicsListProps> = ({ 
+  mock2addTopic,
+  mock2topic,
+  className: cls,
+  ...attrs 
+}) => {     
+  return (<>
+    <Button onClick={mock2addTopic}>Создать тему</Button>
     <ul className="forum-topic-list d-flex flex-column">
-      {topics.map((topic, index) => (
+      {mockTopics.map((topicProps, index) => (
         <ForumTopic
           key={index}
-          topicAuthor={topic.topicAuthor}
-          topicTitle={topic.topicTitle}
+          onClick={mock2topic}
+          {...topicProps}
         />
       ))}
     </ul>
-  )
+  </>)
 }
-
 export default ForumTopicsList
