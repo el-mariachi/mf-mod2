@@ -47,6 +47,6 @@ export const knightMotions = {
   },
   [Types.DestructionMotionType.destruction]: {
     originPosition: [0, 3],
-    frames: [0, 1, 2, 3, 3, 3, 3, 3],
+    frames: [0, 1, 2, 3, 3, 3, 3],
   },
 } as Types.CellSpriteMotions

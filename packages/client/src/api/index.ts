@@ -24,8 +24,8 @@ if (RENDERED_ON_SERVER) {
   restLeaderboardApi = new RestApi('/leaderboard')
   restOauthApi = new RestApi('/oauth/yandex')
   restLeaderboardApi = new RestApi('/leaderboard')
-  restAppThemesApi = new RestApi('/themes', {}, '/api')
-  restAppUserApi = new RestApi('/user', {}, '/api')
+  restAppThemesApi = new RestApi('/themes', {withCredentials: false}, '/api')
+  restAppUserApi = new RestApi('/user', {withCredentials: false}, '/api')
 }
 
 export {
