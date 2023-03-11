@@ -5,7 +5,7 @@ import AddForumCommentForm from '@components/AddForumCommentForm'
 import './ForumCommentsList.scss'
 
 type MockForumCommentProps = ForumCommentProps & {
-  text:string
+  text: string
 }
 const mockComments: MockForumCommentProps[] = [
   {
@@ -31,19 +31,23 @@ const mockComments: MockForumCommentProps[] = [
 ]
 
 export type ForumCommentsListProps = HTMLAttributes<HTMLDivElement> & {
-  // ... 
+  // ...
 }
-const ForumCommentsList: FC<ForumCommentsListProps> = ({ 
+const ForumCommentsList: FC<ForumCommentsListProps> = ({
   className: cls,
-  ...attrs 
-}) => {     
-  return (<>
-    <ul className="forum-topic-list d-flex flex-column">
-      {mockComments.map(({text, ...commentProps}, index) => (
-        <ForumComment key={index} {...commentProps}>{text}</ForumComment>
-      ))}
-    </ul>
-    <AddForumCommentForm />
-  </>)
+  ...attrs
+}) => {
+  return (
+    <>
+      <ul className="forum-topic-list d-flex flex-column">
+        {mockComments.map(({ text, ...commentProps }, index) => (
+          <ForumComment key={index} {...commentProps}>
+            {text}
+          </ForumComment>
+        ))}
+      </ul>
+      <AddForumCommentForm />
+    </>
+  )
 }
 export default ForumCommentsList

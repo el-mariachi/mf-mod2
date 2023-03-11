@@ -8,15 +8,15 @@ export type ForumCommentProps = HTMLAttributes<HTMLDivElement> & {
   avatar?: string
   dateCreate: Date
 }
-const ForumComment: FC<ForumCommentProps> = ({ 
+const ForumComment: FC<ForumCommentProps> = ({
   // TODO author name, avatar...
-  author, 
+  author,
   avatar,
   dateCreate,
   className: cls,
   children: text,
-  ...attrs 
-}) => {  
+  ...attrs
+}) => {
   return (
     <li className="forum-topic__container border d-flex align-items-center justify-content-between">
       <div className="forum-topic__left-block d-flex align-items-center">

@@ -9,42 +9,44 @@ export type ForumTopicDetailProps = HTMLAttributes<HTMLDivElement> & {
   avatar?: string
   title: string
   dateCreate: Date
-  msgCount?: number  
+  msgCount?: number
   dateLastMsg?: Date
   mock2list: () => void
 }
-const ForumTopicDetail: FC<ForumTopicDetailProps> = ({ 
-  author, 
+const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
+  author,
   avatar,
-  title, 
+  title,
   dateCreate,
-  msgCount,  
+  msgCount,
   dateLastMsg,
   mock2list,
   className: cls,
   children: text,
-  ...attrs 
+  ...attrs
 }) => {
-  return (<>
-    <div className="forum-topic__container border d-flex align-items-center justify-content-between">
-      <div className="forum-topic__left-block d-flex align-items-center">
-        <img
-          className="rounded-circle flex-2 d-inline-block border border-2 p-1 forum-topic__avatar"
-          src={avatar ? avatar : dummyAvatarImg}
-        />
-        <div className="forum-topic__data">
-          <p className="forum-topic__title fw-bold">{title}</p>
-          <p className="forum-topic__author">Автор: {author}</p>
+  return (
+    <>
+      <div className="forum-topic__container border d-flex align-items-center justify-content-between">
+        <div className="forum-topic__left-block d-flex align-items-center">
+          <img
+            className="rounded-circle flex-2 d-inline-block border border-2 p-1 forum-topic__avatar"
+            src={avatar ? avatar : dummyAvatarImg}
+          />
+          <div className="forum-topic__data">
+            <p className="forum-topic__title fw-bold">{title}</p>
+            <p className="forum-topic__author">Автор: {author}</p>
+          </div>
+          <div>Собощений: {msgCount}</div>
+          {dateLastMsg ? <div>Последнее: {dateLastMsg.getDate()}</div> : null}
+          <div>Создан:{dateCreate.getDate()}</div>
         </div>
-        <div>Собощений: {msgCount}</div>
-        {dateLastMsg ? <div>Последнее: {dateLastMsg.getDate()}</div> : null}
-        <div>Создан:{dateCreate.getDate()}</div>
+        {text}
       </div>
-      {text}
-    </div>
-    <Button>Ответить</Button>
-    <Button onClick={mock2list}>Назад, к списку</Button>
-    <ForumCommentsList />
-  </>)
+      <Button>Ответить</Button>
+      <Button onClick={mock2list}>Назад, к списку</Button>
+      <ForumCommentsList />
+    </>
+  )
 }
 export default ForumTopicDetail

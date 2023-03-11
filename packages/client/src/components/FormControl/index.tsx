@@ -36,6 +36,7 @@ const FormControl: FC<FormControlProps> = ({
       <Col sm={9}>
         <Form.Control
           type={type}
+          as={'textarea' == type ? type : undefined}
           isInvalid={errors[name] !== undefined}
           placeholder={placeholder}
           {...register(name, {
