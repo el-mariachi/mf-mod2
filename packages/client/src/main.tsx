@@ -5,7 +5,7 @@ import './main.scss' // it must be before App for correct style overriding
 import App from '@components/App/App'
 import ErrorBoundary from '@services/ErrorBoundary'
 import { Provider } from 'react-redux'
-import startServiceWorker from '@services/ServiceWorkers/swStart'
+// import startServiceWorker from '@services/ServiceWorkers/swStart'
 
 import { store } from '@store/index'
 delete window.__PRELOADED_STATE__

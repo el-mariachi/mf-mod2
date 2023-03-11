@@ -2,8 +2,8 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
-
-import { startApp } from './db/index'
+import router from './router'
+import { dbConnect } from './db/init'
 
 dotenv.config()
 
@@ -18,6 +18,7 @@ const isDev = () => process.env.NODE_ENV === 'development'
 
 async function startServer() {
   const app = express()
+  app.use(express.json())
   app.use(cors())
   const port = Number(process.env.SERVER_PORT) || 3001
   const viteHmrPort = Number(process.env.VITE_HMR_PORT)
@@ -53,9 +54,7 @@ async function startServer() {
     ssrClientPath = require.resolve('client/dist-ssr/client.cjs')
   }
 
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)')
-  })
+  app.use('/api', router)
 
   if (!isDev()) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -109,9 +108,11 @@ async function startServer() {
     }
   })
 
+  await dbConnect()
+
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
   })
 }
 
-startApp(startServer)
+startServer()

@@ -5,7 +5,11 @@ import {
   Column,
   AllowNull,
   Unique,
+  Index,
+  HasOne,
+  Length,
 } from 'sequelize-typescript'
+import { UserTheme } from '@models/UserTheme'
 
 @Table({
   timestamps: false,
@@ -13,8 +17,16 @@ import {
   tableName: 'themes',
 })
 export class Theme extends Model {
+  @Index
   @Unique
   @AllowNull(false)
-  @Column(DataType.STRING(255))
+  @Length({ max: 20, msg: 'Name must be under 20 characters' })
+  @Column(DataType.STRING)
   declare theme: string
+
+  @Column(DataType.STRING)
+  declare description: string
+
+  @HasOne(() => UserTheme)
+  declare user_theme: number
 }
