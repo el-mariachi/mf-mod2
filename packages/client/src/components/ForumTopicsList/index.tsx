@@ -56,9 +56,8 @@ const ForumTopicsList: FC<ForumTopicsListProps> = ({
       </div>
       <ul className="forum-topic-list__list d-flex flex-column mt-4 mt-sm-5">
         {mockTopics.map((topicProps, index) => (
-          <li className="forum-topic-list__topic-container border">
+          <li key={index} className="forum-topic-list__topic-container border">
             <ForumTopic
-              key={index}
               onClick={mock2topic}
               className="forum-topic-list__topic"
               {...topicProps}

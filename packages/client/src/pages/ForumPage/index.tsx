@@ -23,9 +23,9 @@ function ForumPage() {
           mock2list={() => setMockForumPage(mockForumPages.list)}
           author="Петр"
           title="Тема от Петра"
-          dateCreate={new Date()}
+          dateCreate={new Date(2023, 0, 18, 12, 5)}
           msgCount={6}
-          dateLastMsg={new Date()}>
+          dateLastMsg={new Date(2023, 2, 10, 18, 45)}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus nam
           suscipit nisi minima beatae quis, debitis nemo dolore ratione
           exercitationem dolores rerum impedit natus totam veniam est

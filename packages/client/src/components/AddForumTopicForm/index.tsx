@@ -55,7 +55,7 @@ const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
   const formControls = inputData.map((controlProps, index) => (
     <FormControl
       key={index}
-      formName="signUpForm"
+      formName="forumTopicForum"
       register={register}
       errors={errors}
       readOnly={readOnly}

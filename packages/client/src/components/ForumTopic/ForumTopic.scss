@@ -4,11 +4,7 @@
     height: 75px;
     border-radius: 50%;
   }
-  &__about {
-    p {
-      margin: 0;
-    }
-  }
+
   &__created {
     font-size: 0.9rem;
 
@@ -16,6 +12,7 @@
       width: 120px;
     }
   }
+
   &__messages {
     font-size: 0.9rem;
 

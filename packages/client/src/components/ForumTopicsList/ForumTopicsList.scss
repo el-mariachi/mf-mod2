@@ -5,9 +5,9 @@
   &__list {
     list-style: none;
     padding: 0;
-    margin-top: 20px;
     gap: 10px;
   }
+
   &__topic {
     cursor: pointer;
     &:hover {
@@ -15,6 +15,7 @@
     }
   }
 }
+
 @include media-breakpoint-up(sm) {
   .forum-topic-list {
     margin-top: -60px;
