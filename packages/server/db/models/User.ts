@@ -1,4 +1,13 @@
-import { DataType, Model, Table, Column, AllowNull } from 'sequelize-typescript'
+import {
+  DataType,
+  Model,
+  Table,
+  Column,
+  AllowNull,
+  PrimaryKey,
+  HasOne,
+} from 'sequelize-typescript'
+import { UserTheme } from '@models/UserTheme'
 
 @Table({
   timestamps: false,
@@ -6,7 +15,15 @@ import { DataType, Model, Table, Column, AllowNull } from 'sequelize-typescript'
   tableName: 'users',
 })
 export class User extends Model {
+  @PrimaryKey
   @AllowNull(false)
-  @Column(DataType.STRING(255))
-  declare user_name: string
+  @Column(DataType.INTEGER)
+  declare yandex_id: number
+
+  @AllowNull(false)
+  @Column({ type: DataType.STRING })
+  declare login: string
+
+  @HasOne(() => UserTheme)
+  declare user_theme: number
 }
