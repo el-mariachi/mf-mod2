@@ -2,11 +2,13 @@ import { FC, HTMLAttributes, ReactNode } from 'react'
 import classNames from 'classnames'
 import ForumTopic, { ForumTopicProps } from '@components/ForumTopic'
 import { Button, Pagination } from 'react-bootstrap'
+import avatar from '@images/king.png'
 import './ForumTopicsList.scss'
 
 const mockTopics: Omit<ForumTopicProps, 'mock2topic'>[] = [
   {
     author: 'Петр',
+    avatar,
     title: 'Тема от Петра',
     dateCreate: new Date(2023, 0, 18, 12, 5),
     msgCount: 4,
@@ -14,16 +16,19 @@ const mockTopics: Omit<ForumTopicProps, 'mock2topic'>[] = [
   },
   {
     author: 'Антон',
+    avatar,
     title: 'Тема от Антона',
     dateCreate: new Date(2023, 2, 11, 18, 34),
   },
   {
     author: 'Стас',
+    avatar,
     title: 'Тема от Стаса с более длиннным названием',
     dateCreate: new Date(2023, 2, 2, 10, 42),
   },
   {
     author: 'Настя',
+    avatar,
     title: '!!!',
     dateCreate: new Date(2023, 1, 9, 13, 18),
   },

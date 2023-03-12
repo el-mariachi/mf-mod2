@@ -2,8 +2,8 @@ import { FC, HTMLAttributes, useState } from 'react'
 import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 import AddForumCommentForm from '@components/AddForumCommentForm'
+import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
-import dummyAvatarImg from '@images/king.png'
 import './ForumComment.scss'
 
 export type ForumCommentProps = HTMLAttributes<HTMLDivElement> & {
@@ -26,12 +26,11 @@ const ForumComment: FC<ForumCommentProps> = ({
   return (
     <div className={classNames(cls, 'forum-comment p-3 border')} {...attrs}>
       <div className="d-sm-flex align-items-start">
-        <div className="flex-grow-0 me-3 forum-comment__avatar">
-          <img
-            className="rounded-circle flex-2 d-inline-block border border-2 p-1 forum-comment__avatar"
-            src={avatar ? avatar : dummyAvatarImg}
-          />
-        </div>
+        <ForumAvatar
+          image={avatar}
+          title={`Аватар ${author}`}
+          className="flex-grow-0 me-3 forum-comment__avatar"
+        />
         <div>
           <div className="forum-comment__about mb-1">
             <span className="fw-bold m-0 forum-comment__author me-2">

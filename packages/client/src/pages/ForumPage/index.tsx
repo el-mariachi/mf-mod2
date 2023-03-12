@@ -4,6 +4,7 @@ import AppDefaultTpl from '@components/AppDefaultTpl'
 import ForumTopicsList from '@components/ForumTopicsList'
 import AddForumTopicForm from '@components/AddForumTopicForm'
 import ForumTopicDetail from '@components/ForumTopicDetail'
+import avatar from '@images/king.png'
 import './ForumPage.scss'
 
 // TODO for mock nav
@@ -22,6 +23,7 @@ function ForumPage() {
         <ForumTopicDetail
           mock2list={() => setMockForumPage(mockForumPages.list)}
           author="Петр"
+          avatar={avatar}
           title="Тема от Петра"
           dateCreate={new Date(2023, 0, 18, 12, 5)}
           msgCount={6}

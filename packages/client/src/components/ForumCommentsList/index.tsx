@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { Pagination } from 'react-bootstrap'
 import ForumComment, { ForumCommentProps } from '@components/ForumComment'
 import { datePrettify } from '@utils/datePrettify'
+import avatar from '@images/king.png'
 import './ForumCommentsList.scss'
 
 type MockForumCommentProps = ForumCommentProps & {
@@ -13,22 +14,26 @@ const mockComments: MockForumCommentProps[] = [
     author: 'Петр',
     text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     dateCreate: new Date(2023, 0, 18, 14, 33),
+    avatar,
   },
   {
     author: 'Антон',
     text: 'Lorem ipsum.',
     dateCreate: new Date(2023, 1, 8, 17, 58),
+    avatar,
   },
   {
     author: 'Стас',
     text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     dateCreate: new Date(2023, 1, 27, 6, 17),
+    avatar,
   },
   {
     author: 'Настя',
     respondTo: `@Стас ${datePrettify(new Date(2023, 1, 27, 6, 17), true)}`,
     text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     dateCreate: new Date(2023, 2, 10, 18, 45),
+    avatar,
   },
 ]
 const mockActivePage = 3

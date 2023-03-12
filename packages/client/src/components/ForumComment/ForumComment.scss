@@ -1,12 +1,6 @@
 @import '@vars';
 
 .forum-comment {
-  &__avatar {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-  }
-
   &__respond {
     color: $dirty-pink-color;
   }

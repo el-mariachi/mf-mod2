@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 import ForumCommentsList from '@components/ForumCommentsList'
 import AddForumCommentForm from '@components/AddForumCommentForm'
+import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
-import dummyAvatarImg from '@images/king.png'
 import './ForumTopicDetail.scss'
 
 export type ForumTopicDetailProps = HTMLAttributes<HTMLDivElement> & {
@@ -34,12 +34,12 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
     <div className={classNames(cls, 'forum-topic-detail ')} {...attrs}>
       <div className="forum-topic-detail__topic p-3 border mb-3">
         <div className="d-flex align-items-center mb-3 forum-topic-detail__topic-header">
-          <div className="flex-grow-0 me-4 forum-topic-detail__avatar">
-            <img
-              className="rounded-circle flex-2 d-inline-block border border-2 p-1 forum-topic-detail__avatar"
-              src={avatar ? avatar : dummyAvatarImg}
-            />
-          </div>
+          <ForumAvatar
+            image={avatar}
+            size="large"
+            title={`Аватар ${author}`}
+            className="flex-grow-0 me-4 forum-topic-detail__avatar"
+          />
           <div className="forum-topic-detail__about">
             <h2 className="h4 fw-light mb-3">{title}</h2>
             <div className="d-flex align-items-center">

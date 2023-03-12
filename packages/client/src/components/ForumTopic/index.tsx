@@ -1,7 +1,7 @@
 import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
+import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
-import dummyAvatarImg from '@images/king.png'
 import './ForumTopic.scss'
 
 export type ForumTopicProps = HTMLAttributes<HTMLDivElement> & {
@@ -29,12 +29,11 @@ const ForumTopic: FC<ForumTopicProps> = ({
         'forum-topic p-3 d-sm-flex align-items-center'
       )}
       {...attrs}>
-      <div className="flex-grow-0 me-3 forum-topic__avatar">
-        <img
-          className="rounded-circle flex-2 d-inline-block border border-2 p-1 forum-topic__avatar"
-          src={avatar ? avatar : dummyAvatarImg}
-        />
-      </div>
+      <ForumAvatar
+        image={avatar}
+        title={`Аватар ${author}`}
+        className="flex-grow-0 me-3 forum-topic__avatar"
+      />
       <div className="flex-grow-1 me-3 forum-topic__about">
         <p className="fw-bold m-0 forum-topic__title">{title}</p>
       </div>
