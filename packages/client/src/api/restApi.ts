@@ -3,6 +3,7 @@ import axios, {
   AxiosRequestConfig,
   AxiosError,
   isAxiosError,
+  AxiosResponse,
 } from 'axios'
 import { AppErrorCode, createAppError } from '@utils/errorsHandling'
 import { API_BASE_URL, API_TIMEOUT } from '@constants/api'
@@ -15,6 +16,11 @@ enum RestApiMethods {
 }
 type RestApiOpts = AxiosRequestConfig
 type RestApiData = FormData | PlainObject
+type RestApiResponse<T> = AxiosResponse<T> & {
+  data: {
+    reason: string
+  }
+}
 
 export default class RestApi {
   protected _http: AxiosInstance
@@ -68,7 +74,9 @@ export default class RestApi {
       .then(response => response.data as T)
       .catch((error: AxiosError | Error) => {
         const rawMsg = error.message
-        const response = isAxiosError(error) ? error.response : null
+        const response = isAxiosError(error)
+          ? (error.response as RestApiResponse<T>)
+          : null
         const request = isAxiosError(error) ? error.request : null
 
         let msg = rawMsg
@@ -76,8 +84,9 @@ export default class RestApi {
 
         if (response) {
           const statusCode = response.status
-          msg = response.data?.reason
-
+          if (response?.data?.reason) {
+            msg = response.data.reason as string
+          }
           switch (statusCode) {
             case AppErrorCode.restApiRequest:
             case 409:

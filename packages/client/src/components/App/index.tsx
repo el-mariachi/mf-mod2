@@ -15,6 +15,7 @@ import { SignInWithOauth } from '@services/oauthController'
 import appThemesController from '@services/appThemesController'
 import { AppContainerContext, AppThemeContext } from 'context'
 import { appThemeDefault } from '@constants/ui'
+import { AppError } from '@utils/errorsHandling'
 import { isArraysEqual } from '@utils/isEqual'
 import './App.scss'
 
@@ -87,7 +88,13 @@ function App() {
           await appThemesController.getList()
         )
       )
-      .catch(() => navigate(ROUTES.SERVER_ERROR))
+      .catch(error => {
+        const { code } = (error as AppError).cause
+        if (code >= 500 && code < 600) {
+          navigate(ROUTES.SERVER_ERROR)
+        }
+        // client-side error`ll be shown only in console
+      })
   }, [])
 
   const refAppContainer = useRef<HTMLDivElement>(null)
