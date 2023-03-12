@@ -24,6 +24,13 @@
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
+      "@api/*": ["api/*"],
+      "@db/*": ["db/*"],
+      "@handles/*": ["handles/*"],
+      "@models/*": ["db/models/*"],
+      "@services/*": ["services/*"],
+      "@utils/*": ["utils/*"],
+      "@validators/*": ["validators/*"],
       "*": ["types/*"]
     },
     "outDir": "dist"

@@ -21,8 +21,8 @@ services:
       image: dpage/pgadmin4:6.20
       restart: unless-stopped
       environment:
-        PGADMIN_DEFAULT_EMAIL: one.bit@dunge.on
-        PGADMIN_DEFAULT_PASSWORD: mf-mod2
+        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
         PGADMIN_LISTEN_PORT: 80
       ports:
         - "8080:80"

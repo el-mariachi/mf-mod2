@@ -129,7 +129,7 @@ let restAuthApi: MockApi | RestApi
 let restUsersApi: MockApi | RestApi
 let restResourceApi: MockApi | RestApi
 let restLeaderboardApi: MockApi | RestApi
-let restOauthApi : MockApi | RestApi
+let restOauthApi: MockApi | RestApi
 
 if (RENDERED_ON_SERVER) {
   restAuthApi = new MockApi()
@@ -146,4 +146,10 @@ if (RENDERED_ON_SERVER) {
   restLeaderboardApi = new RestApi('/leaderboard')
 }
 
-export { restAuthApi, restUsersApi, restResourceApi, restLeaderboardApi, restOauthApi }
+export {
+  restAuthApi,
+  restUsersApi,
+  restResourceApi,
+  restLeaderboardApi,
+  restOauthApi,
+}
