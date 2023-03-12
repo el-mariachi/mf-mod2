@@ -12,6 +12,7 @@ type MockForumCommentProps = ForumCommentProps & {
 const mockComments: MockForumCommentProps[] = [
   {
     author: 'Петр',
+    isOwner: true,
     text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     dateCreate: new Date(2023, 0, 18, 14, 33),
     avatar,
@@ -46,9 +47,7 @@ for (let number = 1; number <= 3; number++) {
   )
 }
 
-export type ForumCommentsListProps = HTMLAttributes<HTMLDivElement> & {
-  // ...
-}
+export type ForumCommentsListProps = HTMLAttributes<HTMLDivElement>
 const ForumCommentsList: FC<ForumCommentsListProps> = ({
   className: cls,
   ...attrs

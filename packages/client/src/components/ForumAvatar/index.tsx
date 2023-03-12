@@ -5,11 +5,13 @@ import './ForumAvatar.scss'
 
 export type ForumAvatarProps = HTMLAttributes<HTMLDivElement> & {
   image?: string
+  alt?: string
   title?: string
   size?: 'small' | 'regular' | 'large' | 'auto'
 }
 const ForumAvatar: FC<ForumAvatarProps> = ({
   image = dummyAvatarImg,
+  alt = 'Аватар',
   title = 'Аватар',
   size = 'regular',
   className: cls,
@@ -27,7 +29,8 @@ const ForumAvatar: FC<ForumAvatarProps> = ({
           { 'border-2 p-1': 'small' != size },
           'forum-avatar__image'
         )}
-        alt={title}
+        alt={alt}
+        title={title}
         src={image}
       />
     </div>

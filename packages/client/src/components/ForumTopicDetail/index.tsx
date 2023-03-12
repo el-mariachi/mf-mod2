@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 import ForumCommentsList from '@components/ForumCommentsList'
 import AddForumCommentForm from '@components/AddForumCommentForm'
+import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
 import './ForumTopicDetail.scss'
@@ -10,6 +11,7 @@ import './ForumTopicDetail.scss'
 export type ForumTopicDetailProps = HTMLAttributes<HTMLDivElement> & {
   author: string
   avatar?: string
+  isOwner?: boolean
   title: string
   dateCreate: Date
   msgCount?: number
@@ -19,6 +21,7 @@ export type ForumTopicDetailProps = HTMLAttributes<HTMLDivElement> & {
 const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
   author,
   avatar,
+  isOwner = false,
   title,
   dateCreate,
   msgCount,
@@ -30,8 +33,19 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
 }) => {
   const [doResponse, setDoResponse] = useState(false)
 
+  const onEdit = (e: React.SyntheticEvent) => {
+    // TODO
+    e.preventDefault()
+    console.log('edit topic')
+  }
+  const onDelete = (e: React.SyntheticEvent) => {
+    // TODO
+    e.preventDefault()
+    console.log('delete topic')
+  }
+
   return (
-    <div className={classNames(cls, 'forum-topic-detail ')} {...attrs}>
+    <div className={classNames(cls, 'forum-topic-detail')} {...attrs}>
       <div className="forum-topic-detail__topic p-3 border mb-3">
         <div className="d-flex align-items-center mb-3 forum-topic-detail__topic-header">
           <ForumAvatar
@@ -77,10 +91,31 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
         </div>
         <div className="forum-topic-detail__text mb-3">{text}</div>
         <div className="forum-topic-detail__topic-buttons d-flex justify-content-sm-end">
-          <Button className="me-2" onClick={() => setDoResponse(!doResponse)}>
-            {doResponse ? 'Не отвечать' : 'Ответить'}
-          </Button>
-          <Button variant="secondary" onClick={mock2list}>
+          {isOwner ? (
+            <div className="forum-topic__actions">
+              <Button
+                onClick={onEdit}
+                className="mt-1 me-2 d-inline-flex align-items-center"
+                title={`Редактировать тему ${title}`}>
+                <Icon iconName="PencilFill" size={18} className="me-1" />
+                <span className="fs-6">редактировать</span>
+              </Button>
+              <Button
+                onClick={onDelete}
+                className="mt-1 me-2 d-inline-flex align-items-center"
+                title={`Удалить тему ${title}`}>
+                <Icon iconName="TrashFill" size={18} className="me-1" />
+                <span className="fs-6">удалить</span>
+              </Button>
+            </div>
+          ) : (
+            <Button
+              className="mt-1 me-2"
+              onClick={() => setDoResponse(!doResponse)}>
+              {doResponse ? 'Не отвечать' : 'Ответить'}
+            </Button>
+          )}
+          <Button variant="secondary" className="mt-1" onClick={mock2list}>
             Назад, к списку
           </Button>
         </div>

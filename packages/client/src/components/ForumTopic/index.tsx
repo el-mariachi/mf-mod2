@@ -1,5 +1,7 @@
 import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
+import { Button } from 'react-bootstrap'
+import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
 import './ForumTopic.scss'
@@ -7,21 +9,35 @@ import './ForumTopic.scss'
 export type ForumTopicProps = HTMLAttributes<HTMLDivElement> & {
   author: string
   avatar?: string
+  isOwner?: boolean
   title: string
   dateCreate: Date
   msgCount?: number
   dateLastMsg?: Date
+  mock2topic: () => void
 }
 const ForumTopic: FC<ForumTopicProps> = ({
   author,
   avatar,
+  isOwner = false,
   title,
   dateCreate,
   msgCount,
   dateLastMsg,
+  mock2topic,
   className: cls,
   ...attrs
 }) => {
+  const onEdit = (e: React.SyntheticEvent) => {
+    // TODO
+    e.preventDefault()
+    console.log('edit topic')
+  }
+  const onDelete = (e: React.SyntheticEvent) => {
+    // TODO
+    e.preventDefault()
+    console.log('delete topic')
+  }
   return (
     <div
       className={classNames(
@@ -31,11 +47,40 @@ const ForumTopic: FC<ForumTopicProps> = ({
       {...attrs}>
       <ForumAvatar
         image={avatar}
-        title={`Аватар ${author}`}
-        className="flex-grow-0 me-3 forum-topic__avatar"
+        alt={`Аватар ${author}`}
+        title={`Перейти к топику ${title}`}
+        onClick={mock2topic}
+        className="flex-grow-0 me-3 interactive forum-topic__avatar"
       />
       <div className="flex-grow-1 me-3 forum-topic__about">
-        <p className="fw-bold m-0 forum-topic__title">{title}</p>
+        <p className="fw-bold m-0 forum-topic__title">
+          <span
+            className="interactive"
+            onClick={mock2topic}
+            title={`Перейти к топику ${title}`}>
+            {title}
+          </span>
+        </p>
+        {isOwner ? (
+          <div className="forum-topic__actions">
+            <Button
+              onClick={onEdit}
+              variant="link"
+              className="p-0 me-2 text-nowrap d-inline-flex align-items-center"
+              title={`Редактировать тему ${title}`}>
+              <Icon iconName="PencilFill" size={16} className="me-1" />
+              <span className="">редактировать</span>
+            </Button>
+            <Button
+              onClick={onDelete}
+              variant="link"
+              className="p-0 text-nowrap d-inline-flex align-items-center"
+              title={`Удалить тему ${title}`}>
+              <Icon iconName="TrashFill" size={16} className="me-1" />
+              удалить
+            </Button>
+          </div>
+        ) : null}
       </div>
       <div className="flex-grow-0 me-1 lh-sm text-muted forum-topic__created">
         <p className="m-0">

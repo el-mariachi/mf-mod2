@@ -12,6 +12,7 @@ import { useEffect } from 'react'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { loadUser } from '@store/slices/user'
 import { SignInWithOauth } from '@services/oauthController'
+import './App.scss'
 
 function App() {
   const dispatch = useAppDispatch()

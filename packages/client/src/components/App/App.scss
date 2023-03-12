@@ -1,0 +1,8 @@
+@import '@vars';
+
+/* bootstrap css-vars overrides */
+:root {
+  --bs-link-color: #{$primary};
+  --bs-link-hover-color: #{$primary};
+  --bs-link-active-color: #{$primary};
+}

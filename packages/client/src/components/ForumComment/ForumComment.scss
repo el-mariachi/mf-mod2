@@ -4,4 +4,10 @@
   &__respond {
     color: $dirty-pink-color;
   }
+
+  &__actions {
+    .btn {
+      font-size: 0.75rem;
+    }
+  }
 }

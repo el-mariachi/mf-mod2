@@ -24,6 +24,7 @@ function ForumPage() {
           mock2list={() => setMockForumPage(mockForumPages.list)}
           author="Петр"
           avatar={avatar}
+          isOwner={true}
           title="Тема от Петра"
           dateCreate={new Date(2023, 0, 18, 12, 5)}
           msgCount={6}
