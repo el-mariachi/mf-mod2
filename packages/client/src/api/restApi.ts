@@ -129,7 +129,9 @@ let restAuthApi: MockApi | RestApi
 let restUsersApi: MockApi | RestApi
 let restResourceApi: MockApi | RestApi
 let restLeaderboardApi: MockApi | RestApi
-let restOauthApi : MockApi | RestApi
+let restOauthApi: MockApi | RestApi
+let restTopicApi: MockApi | RestApi
+let restCommentApi: MockApi | RestApi
 
 if (RENDERED_ON_SERVER) {
   restAuthApi = new MockApi()
@@ -137,6 +139,8 @@ if (RENDERED_ON_SERVER) {
   restResourceApi = new MockApi()
   restOauthApi = new MockApi()
   restLeaderboardApi = new MockApi()
+  restTopicApi = new MockApi()
+  restCommentApi = new MockApi()
 } else {
   restAuthApi = new RestApi('/auth')
   restUsersApi = new RestApi('/user')
@@ -144,6 +148,16 @@ if (RENDERED_ON_SERVER) {
   restLeaderboardApi = new RestApi('/leaderboard')
   restOauthApi = new RestApi('/oauth/yandex')
   restLeaderboardApi = new RestApi('/leaderboard')
+  restTopicApi = new RestApi('/topic')
+  restCommentApi = new RestApi('/comment')
 }
 
-export { restAuthApi, restUsersApi, restResourceApi, restLeaderboardApi, restOauthApi }
+export {
+  restAuthApi,
+  restUsersApi,
+  restResourceApi,
+  restLeaderboardApi,
+  restOauthApi,
+  restTopicApi,
+  restCommentApi,
+}
