@@ -24,10 +24,9 @@ export const removeTopic = createAsyncThunk(
   }
 )
 
-const slicer = (initState: ForumSlice) =>
-  createSlice({
+const forumSlice = createSlice({
     name: 'forum',
-    initialState: initState,
+    initialState: forumInitialState,
     reducers: {},
     extraReducers: builder => {
       builder
@@ -62,10 +61,5 @@ const slicer = (initState: ForumSlice) =>
     },
   })
 
-const generateSlice = (initState: ForumSlice) => slicer(initState).reducer
-
-const forumSlice = slicer(forumInitialState)
-
-//export const { clearUser, setUser } = userSlice.actions
-
-export default generateSlice
+  export default forumSlice.reducer
+  
