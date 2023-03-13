@@ -1,35 +1,33 @@
-import ForumTopic, { ForumTopicProps } from '@components/ForumTopic'
+import ForumTopic from '@components/ForumTopic'
+import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
+import { selectTopics, selectForumLoadingStatus } from '@store/selectors'
+import { loadTopic } from '@store/slices/forum'
+import { useEffect } from 'react'
 import './ForumTopicsList.scss'
-const topics: ForumTopicProps[] = [
-  {
-    topicAuthor: 'Петр',
-    topicTitle: 'Тема от Петра',
-  },
-  {
-    topicAuthor: 'Антон',
-    topicTitle: 'Тема от Антона',
-  },
-  {
-    topicAuthor: 'Стас',
-    topicTitle: 'Тема от Стаса',
-  },
-  {
-    topicAuthor: 'Настя',
-    topicTitle: 'Тема от Насти',
-  },
-]
+import BootstrapSpinner from '@components/BootstrapSpinner'
+import { LoadingStatus } from '@constants/user'
+import ErrorBox from '@components/ErrorBox'
 
 function ForumTopicsList() {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(loadTopic())
+  }, [])
+
+  const topics = useAppSelector(selectTopics)
+  const loadingStatus = useAppSelector(selectForumLoadingStatus)
+  console.log('loadingStatus', loadingStatus)
+
   return (
-    <ul className="forum-topic-list d-flex flex-column">
-      {topics.map((topic, index) => (
-        <ForumTopic
-          key={index}
-          topicAuthor={topic.topicAuthor}
-          topicTitle={topic.topicTitle}
-        />
-      ))}
-    </ul>
+    <>
+      {loadingStatus === LoadingStatus.Loading && <BootstrapSpinner />}
+      {loadingStatus === LoadingStatus.Succeeded && <ErrorBox />}
+      <ul className="forum-topic-list d-flex flex-column">
+        {topics.map((topic, index) => (
+          <ForumTopic key={index} topic={topic} />
+        ))}
+      </ul>
+    </>
   )
 }
 
