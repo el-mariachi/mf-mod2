@@ -65,6 +65,21 @@ export function pickUserError(error: AppError) {
 
   return AppErrorCode.userInput == code ? msg : null
 }
+export function serverErrorHandler(
+  error: AppError,
+  handler: (msg: string) => void
+) {
+  const serverError = pickServerError(error)
+  if (serverError) {
+    handler(serverError)
+  }
+  // client-side error`ll be shown only in console (by RestApi.request)
+}
+export function pickServerError(error: AppError) {
+  const { code, msg } = error.cause
+
+  return code >= 500 && code < 600 ? msg : null
+}
 type AppErrorCause = {
   code: AppErrorCode
   msg: string

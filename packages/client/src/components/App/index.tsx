@@ -15,7 +15,7 @@ import { SignInWithOauth } from '@services/oauthController'
 import appThemesController from '@services/appThemesController'
 import { AppContainerContext, AppThemeContext } from 'context'
 import { appThemeDefault } from '@constants/ui'
-import { AppError } from '@utils/errorsHandling'
+import { serverErrorHandler } from '@utils/errorsHandling'
 import { isArraysEqual } from '@utils/isEqual'
 import './App.scss'
 
@@ -47,7 +47,10 @@ function App() {
       appThemeName.current = themeName
       appThemesController
         .setTheme(themeName)
-        .then(() => localStorage.setItem('activeTheme', themeName))
+        .catch(error =>
+          serverErrorHandler(error, () => navigate(ROUTES.SERVER_ERROR))
+        )
+        .finally(() => localStorage.setItem('activeTheme', themeName)) // local storage as fallback
       setTheme({
         active: themeName,
         switch: switchTheme,
@@ -82,19 +85,29 @@ function App() {
 
     SignInWithOauth()
       .then(() => dispatch(loadUser()))
-      .then(async () =>
-        setAppTheme(
-          await appThemesController.getTheme(),
-          await appThemesController.getList()
-        )
+      .then(() =>
+        Promise.allSettled([
+          appThemesController.getTheme(),
+          appThemesController.getList(),
+        ]).then(res => {
+          const [themeRes, themesListRes] = res
+          const theme = 'fulfilled' == themeRes.status ? themeRes.value : ''
+          const themesList =
+            'fulfilled' == themesListRes.status ? themesListRes.value : []
+
+          setAppTheme(theme, themesList)
+
+          const resRejected = res.find(
+            resItem => 'rejected' == resItem.status && resItem.reason
+          ) as PromiseRejectedResult | undefined
+          if (resRejected) {
+            throw resRejected.reason
+          }
+        })
       )
-      .catch(error => {
-        const { code } = (error as AppError).cause
-        if (code >= 500 && code < 600) {
-          navigate(ROUTES.SERVER_ERROR)
-        }
-        // client-side error`ll be shown only in console
-      })
+      .catch(error =>
+        serverErrorHandler(error, () => navigate(ROUTES.SERVER_ERROR))
+      )
   }, [])
 
   const refAppContainer = useRef<HTMLDivElement>(null)
