@@ -56,12 +56,11 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
-        - pgdata:/var/lib/postgresql/data
+        - ./tmp/pgdata:/var/lib/postgresql/data
       networks:
         - onebit
         
 volumes:
-  pgdata:
   onebit_logs:
 
 networks:
