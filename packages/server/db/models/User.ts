@@ -22,6 +22,14 @@ export class User extends Model {
   @Column(DataType.INTEGER)
   yandex_id!: number
 
+  @Column(DataType.VIRTUAL)
+  get user_name(): string {
+    return this.getDataValue('display_name') || this.getDataValue('login')
+  }
+  set user_name(value: string) {
+    this.setDataValue('user_name', value)
+  }
+
   @AllowNull(false)
   @Column
   login!: string

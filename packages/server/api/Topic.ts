@@ -21,9 +21,13 @@ TopicApi.get('/', checkAuthMiddleware, (_: Request, res: Response) => {
 
 TopicApi.post('/', checkAuthMiddleware, (req: Request, res: Response) => {
   req.body.user_id = res.locals.user.id
-  Topic.create(req.body)
-    .then(topic => res.status(201).send({ id: topic.id }))
-    .catch(err => res.status(500).end(err.message))
+  Topic.create(req.body, { include: [{ model: User }] })
+    .then(topic =>
+      Topic.findByPk(topic.id, { include: [{ model: User }] }).then($topic =>
+        res.status(201).send($topic)
+      )
+    )
+    .catch(err => res.status(500).send(err.message))
 })
 
 TopicApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
