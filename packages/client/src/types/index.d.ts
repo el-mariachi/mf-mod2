@@ -1,5 +1,3 @@
-import { RootState } from '@store/index'
-
 declare global {
   export type User = {
     id: number
@@ -152,11 +150,17 @@ declare global {
     [key in string]: T
   }
 
-  type SceneProps = {
+  export type SceneProps = {
     onExit?: () => void
   }
+
+  type RootStore = EnhancedStore<{
+    game: GameSlice
+    hero: HeroSlice
+    user: UserSlice
+  }>
   interface Window {
-    __PRELOADED_STATE__?: RootState
+    __PRELOADED_STATE__?: RootStore
   }
 
   type ForumUser = {

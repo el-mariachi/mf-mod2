@@ -23,8 +23,13 @@ export default defineConfig({
         __dirname + '../../../',
         'node_modules/bootstrap/scss/bootstrap'
       ),
+      '@bootstrap-utils': path.resolve(
+        __dirname + '../../../',
+        'node_modules/bootstrap/scss/bootstrap-utilities'
+      ),
       '@images': path.resolve('../../', __dirname, 'src/assets/images'),
       '@fonts': path.resolve('../../', __dirname, 'src/assets/fonts'),
+      '@sprites': path.resolve('../../', __dirname, 'src/assets/sprites'),
     },
   },
 })

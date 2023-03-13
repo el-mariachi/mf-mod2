@@ -1,0 +1,128 @@
+@import '@vars';
+
+$gameUISprite: '/src/assets/sprites/ui.png';
+$gameModalBorderTop: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ4IDc5LjE2NDAzNiwgMjAxOS8wOC8xMy0wMTowNjo1NyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkYyNDk5Qjg0QUQzQzExRUQ4M0NDRjNGOEM1M0Y1QTg5IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkYyNDk5Qjg1QUQzQzExRUQ4M0NDRjNGOEM1M0Y1QTg5Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RjI0OTlCODJBRDNDMTFFRDgzQ0NGM0Y4QzUzRjVBODkiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RjI0OTlCODNBRDNDMTFFRDgzQ0NGM0Y4QzUzRjVBODkiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7MwUGvAAAAKklEQVR42mLgYuM8zQAk/jMlugUzMDEAARPDe1YYa/AQEEcysjAxAAQYALGyBUwfPMjpAAAAAElFTkSuQmCC';
+$gameModalBorderRight: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ4IDc5LjE2NDAzNiwgMjAxOS8wOC8xMy0wMTowNjo1NyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjRFREU1NzFDQUQzQzExRUQ4ODMxRTcyQUMxMzYyRjA5IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjRFREU1NzFEQUQzQzExRUQ4ODMxRTcyQUMxMzYyRjA5Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NEVERTU3MUFBRDNDMTFFRDg4MzFFNzJBQzEzNjJGMDkiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NEVERTU3MUJBRDNDMTFFRDg4MzFFNzJBQzEzNjJGMDkiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6jMmM5AAAAMElEQVR42mLk5uL+///PP4ZE0wgGZPDrPQeYXnpnAVzsx+8fLf/+///LgBtMAwgwADkVERglIqx0AAAAAElFTkSuQmCC';
+$gameModalBorderBottom: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAUCAYAAABMDlehAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ4IDc5LjE2NDAzNiwgMjAxOS8wOC8xMy0wMTowNjo1NyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjJEMDhFMjAyQUQzRDExRUQ5QTZDQUI3OEU2RjgyMUVDIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjJEMDhFMjAzQUQzRDExRUQ5QTZDQUI3OEU2RjgyMUVDIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MkQwOEUyMDBBRDNEMTFFRDlBNkNBQjc4RTZGODIxRUMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MkQwOEUyMDFBRDNEMTFFRDlBNkNBQjc4RTZGODIxRUMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6sxqhFAAAAPElEQVR42mLg5uL+z/T/zz8GpkTTCAYmBiBAIn6954CwGLjYOP8jJJj//vvLwvTv//+/6DpQCRAQAwgwALGdDz4an8AMAAAAAElFTkSuQmCC';
+$gameModalBorderLeft: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ4IDc5LjE2NDAzNiwgMjAxOS8wOC8xMy0wMTowNjo1NyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIxLjAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjE4N0E1MjM3QUQzRDExRURCNUE5RTc2QjIwNUY0MzkwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjE4N0E1MjM4QUQzRDExRURCNUE5RTc2QjIwNUY0MzkwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTg3QTUyMzVBRDNEMTFFREI1QTlFNzZCMjA1RjQzOTAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTg3QTUyMzZBRDNEMTFFREI1QTlFNzZCMjA1RjQzOTAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5h06y+AAAAJklEQVR42mLkYuM8zcDAYJLoFswABu9ZGZDB/NMrGBhZmBgAAgwAavEFIWuMcvAAAAAASUVORK5CYII=';
+
+.game-ui-modal {
+  height: 80vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+  z-index: 10;
+  color: $dirty-pink-color;
+}
+
+.game-ui-modal_active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.game-ui-modal__box::before,
+.game-ui-modal__box::after,
+.game-ui-modal__boxWrapper::before,
+.game-ui-modal__boxWrapper::after {
+  content: '';
+  background: url($gameUISprite) 0 0 no-repeat;
+  display: block;
+  position: absolute;
+}
+
+.game-ui-modal__box {
+  position: relative;
+  padding: 0 20px 0 12px;
+  background: url($gameModalBorderTop) top repeat-x,
+    url($gameModalBorderBottom) bottom repeat-x;
+  background-clip: content-box;
+
+  &::before {
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 36px;
+  }
+
+  &::after {
+    background-position: -32px 0;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 36px;
+  }
+
+  .game-ui-modal__boxWrapper {
+    margin: 0 -20px 0 -12px;
+    padding: 36px 0 20px 0;
+    background: url($gameModalBorderLeft) left repeat-y,
+      url($gameModalBorderRight) right repeat-y;
+    background-clip: content-box;
+
+    &::before {
+      background-position: 0 -38px;
+      bottom: 0;
+      left: 0;
+      width: 12px;
+      height: 20px;
+    }
+
+    &::after {
+      background-position: -32px -38px;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .game-ui-modal__header {
+    display: flex;
+    margin-top: -36px;
+    padding: 0 50px 0 20px;
+
+    .game-ui-modal__caption {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: black;
+      text-shadow: rgba(188, 153, 167, 0.35) -1px -1px 0px;
+      font: 700 18px/36px 'Minecraft';
+    }
+
+    .game-ui-modal__close-btn {
+      display: block;
+      z-index: 11;
+      margin: 0;
+      border: none;
+      color: black;
+      background: url($gameUISprite) 0 -58px no-repeat;
+      text-decoration: none;
+      font-size: 1rem;
+      width: 18px;
+      height: 18px;
+      text-indent: -99999px;
+      position: absolute;
+      top: 9px;
+      right: 19px;
+    }
+  }
+
+  .game-ui-modal__content {
+    width: 100%;
+    height: fit-content;
+    background: $dark-purple-color;
+    background-clip: content-box;
+    padding: 0 20px 0 10px;
+
+    .game-ui-modal__contentWrapper {
+      padding: 40px 45px;
+    }
+  }
+}

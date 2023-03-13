@@ -1,34 +1,81 @@
-import ForumTopic from '@components/ForumTopic'
-import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
-import { selectTopics, selectForumLoadingStatus } from '@store/selectors'
-import { loadTopic } from '@store/slices/forum'
-import { useEffect } from 'react'
+import { FC, HTMLAttributes, ReactNode } from 'react'
+import classNames from 'classnames'
+import ForumTopic, { ForumTopicProps } from '@components/ForumTopic'
+import { Button, Pagination } from 'react-bootstrap'
+import avatar from '@images/king.png'
 import './ForumTopicsList.scss'
-import BootstrapSpinner from '@components/BootstrapSpinner'
-import { LoadingStatus } from '@constants/user'
-import ErrorBox from '@components/ErrorBox'
 
-function ForumTopicsList() {
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    dispatch(loadTopic())
-  }, [])
-
-  const topics = useAppSelector(selectTopics)
-  const loadingStatus = useAppSelector(selectForumLoadingStatus)
-  console.log('loadingStatus', loadingStatus)
-
-  return (
-    <>
-      {loadingStatus === LoadingStatus.Loading && <BootstrapSpinner />}
-      {loadingStatus === LoadingStatus.Succeeded && <ErrorBox />}
-      <ul className="forum-topic-list d-flex flex-column">
-        {topics.map((topic, index) => (
-          <ForumTopic key={index} topic={topic} />
-        ))}
-      </ul>
-    </>
+const mockActivePage = 2
+const mockPagination: ReactNode[] = []
+for (let number = 1; number <= 5; number++) {
+  mockPagination.push(
+    <Pagination.Item key={number} active={number === mockActivePage}>
+      {number}
+    </Pagination.Item>
   )
 }
 
+export type ForumTopicsListProps = HTMLAttributes<HTMLDivElement> & {
+  mock2addTopic: () => void
+  mock2topic: () => void
+}
+const ForumTopicsList: FC<ForumTopicsListProps> = ({
+  mock2addTopic,
+  mock2topic,
+  className: cls,
+  ...attrs
+}) => {
+  const mockTopics: ForumTopicProps[] = [
+    {
+      author: 'Петр',
+      avatar,
+      isOwner: true,
+      title: 'Тема от Петра',
+      dateCreate: new Date(2023, 0, 18, 12, 5),
+      msgCount: 4,
+      dateLastMsg: new Date(2023, 2, 10, 18, 45),
+      mock2topic,
+    },
+    {
+      author: 'Антон',
+      avatar,
+      title: 'Тема от Антона',
+      dateCreate: new Date(2023, 2, 11, 18, 34),
+      mock2topic,
+    },
+    {
+      author: 'Стас',
+      avatar,
+      title: 'Тема от Стаса с более длиннным названием',
+      dateCreate: new Date(2023, 2, 2, 10, 42),
+      mock2topic,
+    },
+    {
+      author: 'Настя',
+      avatar,
+      title: '!!!',
+      dateCreate: new Date(2023, 1, 9, 13, 18),
+      mock2topic,
+    },
+  ]
+
+  return (
+    // onClick={mock2topic}
+    <div className={classNames(cls, 'forum-topic-list')} {...attrs}>
+      <div className="forum-topic-list__buttons d-flex justify-content-sm-end">
+        <Button onClick={mock2addTopic}>Создать тему</Button>
+      </div>
+      <ul className="forum-topic-list__list d-flex flex-column mt-4 mt-sm-5">
+        {mockTopics.map((topicProps, index) => (
+          <li key={index} className="forum-topic-list__topic-container border">
+            <ForumTopic className="forum-topic-list__topic" {...topicProps} />
+          </li>
+        ))}
+      </ul>
+      <Pagination className="forum-topic-list__pagination">
+        {mockPagination}
+      </Pagination>
+    </div>
+  )
+}
 export default ForumTopicsList

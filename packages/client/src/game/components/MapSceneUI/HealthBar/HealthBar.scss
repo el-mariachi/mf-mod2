@@ -1,0 +1,20 @@
+$bar-maxval-color: rgb(74, 34, 70);
+$bar-curval-color: rgb(146, 104, 125);
+
+.health-bar {
+  margin-top: auto;
+  padding-left: 1rem;
+
+  &__bar {
+    width: 125px;
+    height: fit-content;
+    padding: 0;
+    border-bottom: 3px solid $bar-maxval-color;
+
+    div {
+      height: 3px;
+      padding: 0;
+      background: $bar-curval-color;
+    }
+  }
+}

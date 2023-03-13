@@ -6,12 +6,15 @@ import {
   ChatLeftTextFill,
   PersonSquare,
   InfoSquareFill,
+  PauseBtn,
+  PencilFill,
+  TrashFill,
 } from 'react-bootstrap-icons'
 import classNames from 'classnames'
 import './Icon.scss'
 import logo from '@images/Y_log_30_bordo_transp.svg'
 
-const OauthYandexIcon =  () => <img width="32px" src={logo} />
+const OauthYandexIcon = () => <img width="32px" src={logo} />
 
 const icons = {
   Dice3Fill,
@@ -20,7 +23,10 @@ const icons = {
   PersonSquare,
   XSquareFill,
   InfoSquareFill,
-  OauthYandexIcon
+  PauseBtn,
+  PencilFill,
+  TrashFill,
+  OauthYandexIcon,
 }
 
 export type IconName = keyof typeof icons

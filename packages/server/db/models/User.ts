@@ -8,7 +8,7 @@ import {
   PrimaryKey,
   HasMany,
 } from 'sequelize-typescript'
-import { UserPreference } from './UserPreference'
+import { UserTheme } from '@models/UserTheme'
 import { Topic } from './Topic'
 import { Comment } from './Comment'
 
@@ -17,10 +17,12 @@ import { Comment } from './Comment'
   paranoid: false,
   tableName: 'users',
 })
+
 export class User extends Model {
   @PrimaryKey
+  @AllowNull(false)
   @Column(DataType.INTEGER)
-  yandex_id!: number
+  declare yandex_id: number
 
   @Column(DataType.VIRTUAL)
   get user_name(): string {
@@ -40,12 +42,12 @@ export class User extends Model {
   @Column
   avatar!: string
 
-  @HasOne(() => UserPreference)
-  user_preference!: UserPreference
+  @HasOne(() => UserTheme)
+  declare user_theme: number
 
   @HasMany(() => Topic)
   topics!: Topic[]
 
   @HasMany(() => Comment)
-  messages!: Comment[]
-}
+  messages!: Comment[]  
+}  

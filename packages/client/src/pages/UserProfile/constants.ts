@@ -64,7 +64,7 @@ const profileFormInputs = [
   },
 ]
 
-export type ProfileFormFields = typeof profileFormInputs[number]['name']
+export type ProfileFormFields = (typeof profileFormInputs)[number]['name']
 export type ProfileFormStruct = Record<ProfileFormFields, string>
 
 const profileDefaultValues: ProfileFormStruct = {

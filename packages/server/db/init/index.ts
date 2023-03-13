@@ -1,6 +1,7 @@
-import { Theme } from '../models/Theme'
 import dotenv from 'dotenv'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
+import { Theme } from '@models/Theme'
+
 dotenv.config()
 
 const {
@@ -27,11 +28,25 @@ export const sequelize = new Sequelize(sequelizeOptions)
 export async function dbConnect() {
   try {
     await sequelize.authenticate()
-    //await sequelize.sync() // Creates/updates tables in db
+    await sequelize.sync() // Creates/updates tables in db
     console.log('✅ DB Connection successful')
-    await Theme.bulkCreate([{ name: 'light' }, { name: 'dark' }], {
-      ignoreDuplicates: true,
-    })
+
+    try {
+      await Theme.bulkCreate(
+        [
+          { theme: 'default' },
+          { theme: 'acid' },
+          { theme: 'doomer' },
+          { theme: 'frozen' },
+          { theme: 'mint' },
+        ],
+        {
+          ignoreDuplicates: true,
+        }
+      )
+    } catch (error) {
+      console.log('⛔️ Theme creation failed')
+    }
   } catch (e) {
     console.error('❌ DB Connection error:', e)
   }

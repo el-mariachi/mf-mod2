@@ -6,9 +6,10 @@ import {
   AllowNull,
   Unique,
   Index,
-  HasMany,
+  HasOne,
+  Length,
 } from 'sequelize-typescript'
-import { UserPreference } from './UserPreference'
+import { UserTheme } from '@models/UserTheme'
 
 @Table({
   timestamps: false,
@@ -16,12 +17,16 @@ import { UserPreference } from './UserPreference'
   tableName: 'themes',
 })
 export class Theme extends Model {
+  @Index
   @Unique
   @AllowNull(false)
+  @Length({ max: 20, msg: 'Name must be under 20 characters' })
   @Column(DataType.STRING)
-  @Index
-  declare name: string
+  declare theme: string
 
-  @HasMany(() => UserPreference, 'id')
-  user_themes!: UserPreference
+  @Column(DataType.STRING)
+  declare description: string
+
+  @HasOne(() => UserTheme)
+  declare user_theme: number
 }

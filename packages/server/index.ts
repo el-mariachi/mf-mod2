@@ -1,25 +1,26 @@
 import dotenv from 'dotenv'
 import cors from 'cors'
-import bodyParser from 'body-parser'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
+import router from './router'
+import { dbConnect } from './db/init'
 
 dotenv.config()
 
 import express from 'express'
+// import { createClientAndConnect } from './db'
 import * as fs from 'fs'
 import * as path from 'path'
-import { dbConnect } from './db/init'
-import apiRouter from './routes/api'
 
 const isDev = () => process.env.NODE_ENV === 'development'
-dbConnect()
 
 async function startServer() {
   const app = express()
+  app.use(express.json())
   app.use(cors())
-  app.use(bodyParser.json())
   const port = Number(process.env.SERVER_PORT) || 3001
+  const viteHmrPort = Number(process.env.VITE_HMR_PORT)
+  const viteSsrHmrPort = Number(process.env.VITE_SSR_HMR_PORT)
 
   let distPath: string
   const srcPath = path.dirname(require.resolve('client'))
@@ -29,7 +30,7 @@ async function startServer() {
   let viteSSR: ViteDevServer
   if (isDev()) {
     vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, hmr: { port: viteHmrPort } },
       root: srcPath,
       appType: 'custom',
       define: {
@@ -37,7 +38,7 @@ async function startServer() {
       },
     })
     viteSSR = await createViteServer({
-      server: { middlewareMode: true, hmr: { port: 24680 } },
+      server: { middlewareMode: true, hmr: { port: viteSsrHmrPort } },
       root: srcPath,
       appType: 'custom',
       define: {
@@ -51,10 +52,7 @@ async function startServer() {
     ssrClientPath = require.resolve('client/dist-ssr/client.cjs')
   }
 
-  app.use('/api', apiRouter)
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)')
-  })
+  app.use('/api', router)
 
   if (!isDev()) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -107,6 +105,8 @@ async function startServer() {
       next(e)
     }
   })
+
+  await dbConnect()
 
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)

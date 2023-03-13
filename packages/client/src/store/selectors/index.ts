@@ -1,6 +1,6 @@
 import type { RootState } from '@store/index'
 import { computeScore } from '@utils/computeScore'
-import { TurnControllerState } from '@store/slices/game'
+import { LifeControllerState } from '@store/slices/game'
 
 // game slice selectors
 export const game = (state: RootState) => state.game
@@ -13,27 +13,19 @@ export const levelStats = (state: RootState) => ({
 export const currentScene = (state: RootState) => game(state).currentScene
 
 export const selectPaused = (state: RootState) =>
-  game(state).turnControllerState === TurnControllerState.PAUSED
+  game(state).lifeControllerState === LifeControllerState.PAUSED
 
 // add currentLevel stats to gameTotals
 export const selectGameTotals = (state: RootState) => {
-  const { gameTotals, levelStats } = game(state)
-  const totals = { ...gameTotals }
-  Object.keys(gameTotals).forEach(stat => {
-    const key = stat as keyof typeof gameTotals
-    totals[key] += levelStats[key]
-  })
-  return { gameTotals: totals, levelNum: game(state).currentLevel }
+  const { gameTotals } = game(state)
+  return { gameTotals, levelNum: game(state).currentLevel }
 }
 
 export const selectLevelScore = (state: RootState) =>
   computeScore(game(state).levelStats, game(state).currentLevel)
 
 export const selectGameScore = (state: RootState) => {
-  return (
-    computeScore(game(state).levelStats, game(state).currentLevel) +
-    game(state).score
-  )
+  return computeScore(game(state).gameTotals, game(state).currentLevel)
 }
 
 // result screen button selectors

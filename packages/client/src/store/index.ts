@@ -5,16 +5,29 @@ import heroSlice from '@store/slices/hero'
 import forumSlice from '@store/slices/forum'
 
 import { gameInitialState } from '@constants/game'
-import { userInitialState } from '@constants/user'
 import { heroInitialState } from '@constants/hero'
+import { userInitialState } from '@constants/user'
 import { forumInitialState } from '@constants/forum'
+
+const fallBackState = {
+  game: gameInitialState,
+  hero: heroInitialState,
+  user: userInitialState,
+  forum: forumInitialState,
+}
 
 export const store = configureStore({
   reducer: {
-    game: gameSlice(gameInitialState),
-    user: userSlice(userInitialState),
-    hero: heroSlice(heroInitialState),
-    forum: forumSlice(forumInitialState),
+    game: gameSlice,
+    user: userSlice,
+    hero: heroSlice,
+    forum: forumSlice,
+  },
+  preloadedState: RENDERED_ON_SERVER
+    ? fallBackState
+    : window.__PRELOADED_STATE__,
+  devTools: {
+    name: 'The real McCoy',
   },
 })
 

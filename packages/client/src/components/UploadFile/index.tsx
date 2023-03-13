@@ -35,7 +35,10 @@ export default ({ options }: UploadFileProps) => {
           <Button className="mb-1 me-2" onClick={onSubmit}>
             Выбрать
           </Button>
-          <Button variant="outline-primary" className="mb-1" onClick={handleClose}>
+          <Button
+            variant="outline-primary"
+            className="mb-1"
+            onClick={handleClose}>
             Отмена
           </Button>
         </Modal.Footer>
