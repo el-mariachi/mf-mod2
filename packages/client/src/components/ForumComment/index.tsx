@@ -42,7 +42,7 @@ const ForumComment: FC<ForumCommentProps> = ({
       <div className="d-sm-flex align-items-start">
         <ForumAvatar
           image={avatar}
-          title={`Аватар ${author}`}
+          alt={`Аватар ${author}`}
           className="flex-grow-0 me-3 forum-comment__avatar"
         />
         <div>

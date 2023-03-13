@@ -51,7 +51,7 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
           <ForumAvatar
             image={avatar}
             size="large"
-            title={`Аватар ${author}`}
+            alt={`Аватар ${author}`}
             className="flex-grow-0 me-4 forum-topic-detail__avatar"
           />
           <div className="forum-topic-detail__about">

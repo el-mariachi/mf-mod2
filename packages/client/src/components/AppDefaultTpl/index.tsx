@@ -20,7 +20,7 @@ const AppDefaultTpl: FC<AppDefaultTplProps> = ({
   return (
     <div
       className={classNames(
-        'w-100 h-100 d-flex position-fixed',
+        'app-wrapper w-100 h-100 d-flex position-fixed',
         centered
           ? 'align-items-center justify-content-center'
           : 'pt-4 overflow-auto',

@@ -150,10 +150,6 @@ declare global {
     [key in string]: T
   }
 
-  export type SceneProps = {
-    onExit?: () => void
-  }
-
   type RootStore = EnhancedStore<{
     game: GameSlice
     hero: HeroSlice

@@ -348,7 +348,7 @@ export default class Sprite implements Types.AnimatableOnCanvas {
   protected _processMotions(motions: Types.SpriteMotions) {
     // let`s define substituitions for motions if we dnt have a full animation set
     ;['look', 'move', 'attack', 'damage', 'destruction'].forEach(type => {
-      ;['right', 'left', 'top', 'bottom'].forEach(dir => {
+      ;['top', 'bottom', 'right', 'left'].forEach(dir => {
         const dirCap = dir[0].toUpperCase() + dir.slice(1)
         const isStandingMotion = ['damage', 'destruction'].includes(type)
         const isVerticalDir = ['top', 'bottom'].includes(dir)
