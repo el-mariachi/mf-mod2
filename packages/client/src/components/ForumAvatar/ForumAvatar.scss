@@ -1,0 +1,17 @@
+.forum-avatar {
+  &_size_ {
+    &small .forum-avatar__image {
+      width: 40px;
+      height: 40px;
+      padding: 2px;
+    }
+    &regular .forum-avatar__image {
+      width: 75px;
+      height: 75px;
+    }
+    &large .forum-avatar__image {
+      width: 125px;
+      height: 125px;
+    }
+  }
+}

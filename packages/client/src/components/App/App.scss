@@ -1,6 +1,6 @@
+@import '@vars';
+
 .app {
-  &[data-theme='default'] > * {
-  }
   &[data-theme='acid'] > * {
     filter: hue-rotate(10deg) saturate(250%) contrast(115%) brightness(1.2);
   }
@@ -13,4 +13,11 @@
   &[data-theme='mint'] > * {
     filter: saturate(150%) invert(85%) brightness(0.95) contrast(1.25);
   }
+}
+
+/* bootstrap css-vars overrides */
+:root {
+  --bs-link-color: #{$primary};
+  --bs-link-hover-color: #{$primary};
+  --bs-link-active-color: #{$primary};
 }
