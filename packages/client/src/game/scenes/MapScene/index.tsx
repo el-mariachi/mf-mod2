@@ -80,10 +80,10 @@ function MapScene() {
   /** canvas добавляются при создания слоя Layer. Сделано для того, чтобы не
       обращаться к каждому слою через ref */
   return (
-    <>
+    <div className="map-scene">
       <MapSceneUI map={mapRef.current.cells} />
       <div ref={layersRef} className="map-scene__layers"></div>
-    </>
+    </div>
   )
 }
 

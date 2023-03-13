@@ -1,20 +1,23 @@
 .forum-topic {
-  &__container {
-    padding: 10px;
-    cursor: pointer;
-    &:hover {
-      background-color: #f0f8ff;
+  &__created {
+    font-size: 0.9rem;
+
+    p {
+      width: 120px;
     }
   }
-  &__avatar {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-  }
-  &__data {
-    margin-left: 10px;
+
+  &__messages {
+    font-size: 0.9rem;
+
     p {
-      margin: 0;
+      width: 120px;
+    }
+  }
+
+  &__actions {
+    .btn {
+      font-size: 0.75rem;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { muteRes } from '@utils/index'
-import { restUsersApi } from './restApi'
+import { restUsersApi } from '@api/index'
 
 type ProfileData = Omit<User, 'id' | 'avatar'>
 
