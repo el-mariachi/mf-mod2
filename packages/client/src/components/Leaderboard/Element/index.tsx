@@ -3,6 +3,7 @@ import { Button, Collapse } from 'react-bootstrap'
 import dummyAvatarImg from '@images/king.png'
 import { useState } from 'react'
 import { MsecondsToHMS } from '@utils/secondsFormat'
+import ForumAvatar from '@components/ForumAvatar'
 
 function Lb_User({
   place,
@@ -37,9 +38,11 @@ function Lb_User({
             <li className="list-group-item">Шаги: {steps} </li>
             <li className="list-group-item">Убитых врагов: {killCount} </li>
           </ul>
-          <img
-            src={dummyAvatarImg}
-            className="rounded-circle flex-2 d-inline-block lb-avatar border border-2"></img>
+          <ForumAvatar
+            image={dummyAvatarImg}
+            alt={`Аватар ${nickname}`}
+            className="lb-avatar"
+          />
         </div>
       </Collapse>
     </>
