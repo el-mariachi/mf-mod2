@@ -1,5 +1,5 @@
 import { muteRes } from '@utils/index'
-import { restAuthApi } from '@api/restApi'
+import { restAuthApi } from '@api/index'
 
 export const signUp = (data: SignupData) =>
   restAuthApi.post<User>('/signup', data)

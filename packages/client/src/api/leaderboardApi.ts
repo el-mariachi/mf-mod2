@@ -1,4 +1,4 @@
-import { restLeaderboardApi } from '@api/restApi'
+import { restLeaderboardApi } from '@api/index'
 import { GameStats } from '@constants/game'
 import { TEAM_NAME_LB_API } from '@constants/api'
 

@@ -1,30 +1,38 @@
-import {Row, Button} from 'react-bootstrap'
+import { FC, HTMLAttributes } from 'react'
+import { Button } from 'react-bootstrap'
+import classNames from 'classnames'
 import Icon from '@components/Icon'
 import oauth from '@services/oauthController'
-import './OauthBox.css'
+import './OauthBox.scss'
 
-
-const OauthBox = () => {
+export type OauthBoxProps = HTMLAttributes<HTMLDivElement> & {
+  note: string
+}
+const OauthBox: FC<OauthBoxProps> = ({
+  note = 'Войти с помощью',
+  className: cls,
+  ...attrs
+}) => {
   const handleClick = (e: React.MouseEvent) => {
-    const oauthServiceName = e.currentTarget.getAttribute('data-oservice') as string;
+    const oauthServiceName = e.currentTarget.getAttribute(
+      'data-oservice'
+    ) as string
     oauth(oauthServiceName)
   }
-
   return (
-    <>
-      <Row className="mt-4 align-items-center oauth-box">
-        <div className="w-auto fs-6">Войти с помощью: </div>
-        <Button
-          onClick={handleClick}
-          data-oservice="yandex"
-          variant="link"
-          className="w-auto"
-          title="яндекс id">
-          <Icon iconName="OauthYandexIcon" className="me-2" />
-        </Button>
-      </Row>
-    </>
+    <div
+      className={classNames('d-inline-flex align-items-center oauth-box', cls)}
+      {...attrs}>
+      <div className="w-auto fs-6">{note}</div>
+      <Button
+        onClick={handleClick}
+        data-oservice="yandex"
+        variant="link"
+        className="w-auto"
+        title="Яндекс ID">
+        <Icon iconName="OauthYandexIcon" />
+      </Button>
+    </div>
   )
 }
-
 export default OauthBox
