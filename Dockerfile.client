@@ -23,8 +23,13 @@ WORKDIR /app
 COPY --from=builder /app/packages/client/dist/ /app/
 COPY --from=builder /app/packages/client/sw.js /app/
 COPY --from=builder /app/packages/client/nginx.conf /etc/nginx/nginx.conf
+<<<<<<< HEAD
 COPY /home/user/team7-onebit-dungeon.ya-praktikum.tech/fullchain1.pem /etc/ssl/certs/fullchain.pem
 COPY /home/user/team7-onebit-dungeon.ya-praktikum.tech/privkey1.pem /etc/ssl/private/privkey.pem
+=======
+COPY /home/user/team7-onebit-dungeon.ya-praktikum.tech/fullchain.pem /etc/ssl/certs/fullchain.pem
+COPY /home/user/team7-onebit-dungeon.ya-praktikum.tech/privkey.pem /etc/ssl/private/privkey.pem
+>>>>>>> 2b452c1f6ecc7d7bdad47cc7348c6e0536270100
 
 EXPOSE $CLIENT_PORT
 CMD [ "nginx", "-g", "daemon off;" ]
