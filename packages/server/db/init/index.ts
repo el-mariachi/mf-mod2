@@ -28,7 +28,7 @@ export const sequelize = new Sequelize(sequelizeOptions)
 export async function dbConnect() {
   try {
     await sequelize.authenticate()
-    await sequelize.sync() // Creates/updates tables in db
+    //await sequelize.sync() // Creates/updates tables in db
     console.log('✅ DB Connection successful')
 
     try {

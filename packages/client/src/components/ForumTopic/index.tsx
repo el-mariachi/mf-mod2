@@ -5,6 +5,8 @@ import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
 import './ForumTopic.scss'
+import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
+import { removeTopic } from '@store/slices/forum'
 
 export type ForumTopicProps = HTMLAttributes<HTMLDivElement> & {
   author: string

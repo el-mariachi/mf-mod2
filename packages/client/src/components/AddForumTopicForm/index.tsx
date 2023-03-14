@@ -1,3 +1,5 @@
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { addTopic } from '@store/slices/forum'
 import { FC, HTMLAttributes, useState } from 'react'
 import classNames from 'classnames'
 import { Button, Col, Form, Row } from 'react-bootstrap'
@@ -50,6 +52,18 @@ const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
         setReadOnly(false)
         mock2topic()
       })
+  }
+
+  const [title, setTitle] = useState('')
+  const dispatch = useAppDispatch()
+
+  const handleSubmitTopic = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    dispatch(addTopic(title))
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value)
   }
 
   const formControls = inputData.map((controlProps, index) => (

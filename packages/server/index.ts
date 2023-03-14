@@ -14,8 +14,6 @@ import * as path from 'path'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
-// createClientAndConnect()
-
 async function startServer() {
   const app = express()
   app.use(express.json())
