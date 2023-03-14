@@ -7,10 +7,26 @@ const KeysToGameEvents: { [key: string]: GameEvent } = {
   ArrowRight: GameEvent.Right,
   ArrowUp: GameEvent.Up,
   ArrowDown: GameEvent.Down,
-  KeyA: GameEvent.Left,
-  KeyD: GameEvent.Right,
-  KeyW: GameEvent.Up,
-  KeyS: GameEvent.Down,
+  A: GameEvent.Left,
+  Ф: GameEvent.Left,
+  D: GameEvent.Right,
+  В: GameEvent.Right,
+  W: GameEvent.Up,
+  Ц: GameEvent.Up,
+  S: GameEvent.Down,
+  Ы: GameEvent.Down,
+  P: GameEvent.Pause,
+  З: GameEvent.Pause,
+  R: GameEvent.Restart,
+  К: GameEvent.Restart,
+  I: GameEvent.Inventory,
+  Ш: GameEvent.Inventory,
+  C: GameEvent.CharacterInfo,
+  С: GameEvent.CharacterInfo,
+  Q: GameEvent.Exit,
+  Й: GameEvent.Exit,
+  F: GameEvent.Fullscreen,
+  А: GameEvent.Fullscreen,
 }
 
 export const useGameController = (
@@ -18,7 +34,8 @@ export const useGameController = (
 ) => {
   function keydownHandler(e: KeyboardEvent) {
     const pressTime = Date.now()
-    const gameEvent = KeysToGameEvents[e.key] as GameEvent
+    const gameEvent = (KeysToGameEvents[e.key] ||
+      KeysToGameEvents[e.key.toUpperCase()]) as GameEvent
     if (gameEvent) {
       setGameAction([gameEvent, pressTime])
     }

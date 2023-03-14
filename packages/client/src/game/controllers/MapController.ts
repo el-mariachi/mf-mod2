@@ -1,5 +1,5 @@
 import GameObject from '@game/objects/GameObject'
-import GameObjects from '@game/objects'
+import gameObjects from '@game/objects'
 // TODO need to load dynamically by levelNum from store
 import level1 from '@game/data/levels/1/map.json'
 import { LayerRecord } from './LayerController'
@@ -159,7 +159,7 @@ class MapController {
         /** в одной ячейке может находится несколько объектов, поэтому ячейка - это массив */
         const items = Array.isArray(item) ? item : [item]
         const objects = items.reduce<GameObject[]>((prev, id) => {
-          const Entity = GameObjects[id]
+          const Entity = gameObjects[id]
           prev.push(new Entity())
           return prev
         }, [])

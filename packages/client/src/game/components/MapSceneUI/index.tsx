@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import MapController from '@game/controllers/MapController'
 import GameUIButton from '@game/components/GameUIButton'
@@ -16,17 +16,22 @@ import chestIcn from '@images/chest_icn.png'
 import heroThumb from '@images/knight-head.png'
 import './MapSceneUI.scss'
 
-enum ModalType {
-  menu,
-  info,
-  inventory,
+export enum ModalType {
+  menu = 'menu',
+  info = 'info',
+  inventory = 'inventory',
 }
 export type MapSceneUIProps = {
   map: MapController['cells']
+  showModal?: ModalType | null
 }
-const MapSceneUI: FC<MapSceneUIProps> = ({ map }) => {
+const MapSceneUI: FC<MapSceneUIProps> = ({ map, showModal }) => {
   const [modalType, setModalType] = useState<ModalType | null>(null)
   const closeModal = () => setModalType(null)
+
+  useEffect(() => {
+    setModalType(showModal || null)
+  }, [showModal])
 
   let modal = null
   switch (modalType) {

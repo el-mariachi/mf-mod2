@@ -5,9 +5,11 @@ import { restartLevel } from '@store/slices/game'
 
 export type RestartButtonProps = GameUIButtonProps & {
   onClick?: () => void
+  showShortcut?: boolean
 }
 export const RestartButton: FC<RestartButtonProps> = ({
   onClick: onRestart,
+  showShortcut = false,
   ...props
 }) => {
   const dispatch = useAppDispatch()
@@ -18,7 +20,7 @@ export const RestartButton: FC<RestartButtonProps> = ({
         dispatch(restartLevel())
       }}
       {...props}>
-      Restart level
+      Restart level{showShortcut ? ' (R)' : ''}
     </GameUIButton>
   )
 }

@@ -15,7 +15,7 @@ const CharInfoModal: FC<CharInfoModalProps> = ({ close, hero, ...props }) => {
   const { display_name } = useAppSelector(selectUserData)
 
   return (
-    <GameUIModal close={closeModal} title="Character info" {...props}>
+    <GameUIModal close={closeModal} title="Character info (C)" {...props}>
       <div className="d-flex map-scene-ui__char-info">
         <img src={heroImg} />
         <div className="map-scene-ui__char-info-props">

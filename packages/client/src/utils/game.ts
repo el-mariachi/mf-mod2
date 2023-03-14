@@ -287,3 +287,22 @@ export const actualizePosition = (unit: Types.Unit) => {
     }
   }
 }
+
+export const toggleFullscreen = (flag?: boolean) => {
+  if (RENDERED_ON_SERVER) {
+    return null
+  }
+  const toggle = flag ?? !document.fullscreenElement
+  if (toggle) {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      return true
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen()
+      return false
+    }
+  }
+  return null
+}

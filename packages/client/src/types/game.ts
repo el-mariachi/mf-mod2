@@ -363,9 +363,11 @@ export enum GameEvent {
   Down = 'MOVE_DOWN',
   Fullscreen = 'FULLSCREEN',
   Pause = 'PAUSE',
-  Escape = 'ESCAPE',
+  Exit = 'Exit',
+  Restart = 'Restart',
+  Inventory = 'Inventory',
+  CharacterInfo = 'CharacterInfo',
   Mute = 'MUTE',
-  Resume = 'RESUME',
 }
 export const MapGameEvents2Direction = {
   [GameEvent.Left]: AxisDirection.left,

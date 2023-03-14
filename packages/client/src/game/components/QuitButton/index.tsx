@@ -7,9 +7,11 @@ import ROUTES from '@constants/routes'
 
 export type QuitButtonProps = GameUIButtonProps & {
   onClick?: () => void
+  showShortcut?: boolean
 }
 export const QuitButton: FC<QuitButtonProps> = ({
   onClick: onQuit,
+  showShortcut = false,
   ...props
 }) => {
   const dispatch = useAppDispatch()
@@ -22,7 +24,7 @@ export const QuitButton: FC<QuitButtonProps> = ({
         navigate(ROUTES.LEADERBOARD)
       }}
       {...props}>
-      Exit
+      Quit game{showShortcut ? ' (Q)' : ''}
     </GameUIButton>
   )
 }
