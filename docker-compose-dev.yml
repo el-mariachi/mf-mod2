@@ -30,7 +30,7 @@ services:
         - onebit
 
     postgres:
-      container_name: prakticum-postgres
+      container_name: prakticum-postgres-dev
       image: postgres:14
       restart: always
       ports:
