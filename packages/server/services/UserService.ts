@@ -1,9 +1,9 @@
 import { Op } from 'sequelize'
-import type { BaseRESTService } from './BaseService'
-import { User } from '../db/models/User'
-import { Theme } from '../db/models/Theme'
-import { UserTheme } from '../db/models/UserTheme'
-import { sequelize } from '../db/init'
+import type { BaseRESTService } from '@services/BaseService'
+import { User } from '@models/User'
+import { Theme } from '@models/Theme'
+import { UserTheme } from '@models/UserTheme'
+import { sequelize } from '@db/init'
 
 interface FindRequest {
   yandex_id?: number

@@ -7,7 +7,7 @@ import {
   PrimaryKey,
   HasOne,
 } from 'sequelize-typescript'
-import { UserTheme } from './UserTheme'
+import { UserTheme } from '@models/UserTheme'
 
 @Table({
   timestamps: false,

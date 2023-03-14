@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
-import { ThemeService } from '../services/ThemeService'
-import { combineValidationErrors } from '../utils/index'
+import { ThemeService } from '@services/ThemeService'
+import { combineValidationErrors } from '@utils/index'
 const themeService = new ThemeService()
 
 class ThemeAPI {
