@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import { ThemeAPI } from '@api/ThemeAPI'
-import { bodyValidator } from '@validators/bodyValidator'
-import { paramsValidator } from '@validators/paramsValidator'
+import { ThemeAPI } from '../api/ThemeAPI'
+import { bodyValidator } from '../validators/bodyValidator'
+import { paramsValidator } from '../validators/paramsValidator'
 import {
   findThemeValidations,
   createThemeValidations,
   deleteThemeValidations,
-} from '@validators/themeValidations'
+} from '../validators/themeValidations'
 
 export const themeRoutes = (router: Router) => {
   const themesRouter = Router()

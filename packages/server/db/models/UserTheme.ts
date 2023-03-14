@@ -7,8 +7,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript'
-import { User } from '@models/User'
-import { Theme } from '@models/Theme'
+import { User } from './User'
+import { Theme } from './Theme'
 
 @Table({
   timestamps: false,

@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
-import { UserService } from '@services/UserService'
-import { ThemeService } from '@services/ThemeService'
-import { UserThemeService } from '@services/UserThemeService'
+import { UserService } from '../services/UserService'
+import { ThemeService } from '../services/ThemeService'
+import { UserThemeService } from '../services/UserThemeService'
 
 const userService = new UserService()
 const userThemeService = new UserThemeService()

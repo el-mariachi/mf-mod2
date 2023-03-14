@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { UserAPI } from '@api/UserAPI'
-import { bodyValidator } from '@validators/bodyValidator'
-import { paramsValidator } from '@validators/paramsValidator'
+import { UserAPI } from '../api/UserAPI'
+import { bodyValidator } from '../validators/bodyValidator'
+import { paramsValidator } from '../validators/paramsValidator'
 import {
   findUserValidations,
   createUserValidations,
   deleteUserValidations,
   setUserThemeValidations,
-} from '@validators/userValidations'
+} from '../validators/userValidations'
 
 export const userRoutes = (router: Router) => {
   const usersRouter = Router()

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import type { BaseRESTService } from '@services/BaseService'
-import { Theme } from '@models/Theme'
+import type { BaseRESTService } from './BaseService'
+import { Theme } from '../db/models/Theme'
 
 interface FindRequest {
   id?: number

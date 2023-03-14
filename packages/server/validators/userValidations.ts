@@ -1,7 +1,7 @@
-import type { Theme } from '@models/Theme'
-import type { User } from '@models/User'
-import type { BodyValidatorRules } from '@validators/bodyValidator'
-import type { ParamsValidatorRules } from '@validators/paramsValidator'
+import type { Theme } from '../db/models/Theme'
+import type { User } from '../db/models/User'
+import type { BodyValidatorRules } from './bodyValidator'
+import type { ParamsValidatorRules } from './paramsValidator'
 
 export const findUserValidations: ParamsValidatorRules = [
   {

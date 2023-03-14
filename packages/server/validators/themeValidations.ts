@@ -1,6 +1,6 @@
-import type { Theme } from '@models/Theme'
-import type { BodyValidatorRules } from '@validators/bodyValidator'
-import type { ParamsValidatorRules } from '@validators/paramsValidator'
+import type { Theme } from '../db/models/Theme'
+import type { BodyValidatorRules } from './bodyValidator'
+import type { ParamsValidatorRules } from './paramsValidator'
 
 export const findThemeValidations: ParamsValidatorRules = [
   {

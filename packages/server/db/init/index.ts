@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
-import { Theme } from '@models/Theme'
+import { Theme } from '../models/Theme'
 
 dotenv.config()
 
