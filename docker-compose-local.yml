@@ -6,7 +6,7 @@ services:
       image: prakticum-client-local
       build:
           context: .
-          dockerfile: Dockerfile-local.client
+          dockerfile: Dockerfile.clientloc
           args:
             CLIENT_PORT: ${CLIENT_PORT}
       restart: always

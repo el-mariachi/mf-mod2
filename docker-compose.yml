@@ -20,7 +20,6 @@ services:
         - SERVER_PORT=${SERVER_PORT}
       volumes:
         - onebit_logs:/var/log/nginx
-        - ./packages/client/nginx_configs:/etc/nginx/conf.d
       networks:
         - onebit
 
