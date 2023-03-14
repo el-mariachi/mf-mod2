@@ -8,6 +8,8 @@ let restLeaderboardApi: MockApi | RestApi
 let restOauthApi: MockApi | RestApi
 let restAppThemesApi: MockApi | RestApi
 let restAppUserApi: MockApi | RestApi
+let restTopicApi: MockApi | RestApi
+let restCommentApi: MockApi | RestApi
 
 if (RENDERED_ON_SERVER) {
   restAuthApi = new MockApi()
@@ -17,6 +19,8 @@ if (RENDERED_ON_SERVER) {
   restLeaderboardApi = new MockApi()
   restAppThemesApi = new MockApi()
   restAppUserApi = new MockApi()
+  restTopicApi = new MockApi()
+  restCommentApi = new MockApi()
 } else {
   restAuthApi = new RestApi('/auth')
   restUsersApi = new RestApi('/user')
@@ -26,6 +30,8 @@ if (RENDERED_ON_SERVER) {
   restLeaderboardApi = new RestApi('/leaderboard')
   restAppThemesApi = new RestApi('/themes', { withCredentials: false }, '/api')
   restAppUserApi = new RestApi('/user', { withCredentials: false }, '/api')
+  restTopicApi = new RestApi('/topic')
+  restCommentApi = new RestApi('/comment')
 }
 
 export {
@@ -36,4 +42,6 @@ export {
   restOauthApi,
   restAppThemesApi,
   restAppUserApi,
+  restTopicApi,
+  restCommentApi,
 }

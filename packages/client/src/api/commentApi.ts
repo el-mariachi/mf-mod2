@@ -1,4 +1,4 @@
-import { restCommentApi } from './restApi'
+import { restCommentApi } from '@api/index'
 
 export const getComments = () => restCommentApi.get<TopicComment>('/')
 

@@ -1,18 +1,18 @@
 import { createTopic } from '@services/topicController'
-import { forumInitialState, ForumSlice } from '@constants/forum'
+import { forumInitialState } from '@constants/forum'
 import { LoadingStatus } from '@constants/user'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { deleteTopic, getTopic } from '@services/topicController'
+import { deleteTopic, getTopics } from '@services/topicController'
 
 export const loadTopic = createAsyncThunk('forum/loadTopic', async () => {
-  const topics = (await getTopic()) as unknown as Topic[]
+  const topics = await getTopics()
   return topics
 })
 
 export const addTopic = createAsyncThunk(
   'forum/addTopic',
   async (title: string) => {
-    return await createTopic(title)
+    return (await createTopic(title)) as Topic
   }
 )
 
@@ -25,41 +25,40 @@ export const removeTopic = createAsyncThunk(
 )
 
 const forumSlice = createSlice({
-    name: 'forum',
-    initialState: forumInitialState,
-    reducers: {},
-    extraReducers: builder => {
-      builder
-        .addCase(addTopic.fulfilled, (state, action) => {
-          state.topics = [...state.topics, action.payload]
-        })
-        .addCase(loadTopic.fulfilled, (state, action) => {
-          state.topics = action.payload
-        })
-        .addCase(removeTopic.fulfilled, (state, action) => {
-          const topic = action.payload 
-          state.topics = state.topics.filter(item => item.id !== topic.id)
-        })
-        .addMatcher(
-          action => action.type.endsWith('/pending'),
-          state => {
-            state.loadingStatus = LoadingStatus.Loading
-          }
-        )
-        .addMatcher(
-          action => action.type.endsWith('/rejected'),
-          state => {
-            state.loadingStatus = LoadingStatus.Failed
-          }
-        )
-        .addMatcher(
-          action => action.type.endsWith('/fulfilled'),
-          state => {
-            state.loadingStatus = LoadingStatus.Succeeded
-          }
-        )
-    },
-  })
+  name: 'forum',
+  initialState: forumInitialState,
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(addTopic.fulfilled, (state, action) => {
+        state.topics.push(action.payload)
+      })
+      .addCase(loadTopic.fulfilled, (state, action) => {
+        state.topics = action.payload
+      })
+      .addCase(removeTopic.fulfilled, (state, action) => {
+        const topic = action.payload
+        state.topics = state.topics.filter(item => item.id !== topic.id)
+      })
+      .addMatcher(
+        action => action.type.endsWith('/pending'),
+        state => {
+          state.loadingStatus = LoadingStatus.Loading
+        }
+      )
+      .addMatcher(
+        action => action.type.endsWith('/rejected'),
+        state => {
+          state.loadingStatus = LoadingStatus.Failed
+        }
+      )
+      .addMatcher(
+        action => action.type.endsWith('/fulfilled'),
+        state => {
+          state.loadingStatus = LoadingStatus.Succeeded
+        }
+      )
+  },
+})
 
-  export default forumSlice.reducer
-  
+export default forumSlice.reducer

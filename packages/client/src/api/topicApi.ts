@@ -1,6 +1,6 @@
-import { restTopicApi } from './restApi'
+import { restTopicApi } from '@api/index'
 
-export const getTopics = () => restTopicApi.get<Topic>('/')
+export const getTopics = () => restTopicApi.get<Topic[]>('/')
 
 export const getTopic = (id: number) => restTopicApi.get<Topic>(`/${id}`)
 
