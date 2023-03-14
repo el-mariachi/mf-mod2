@@ -50,6 +50,7 @@ export default class ViewFactory {
       view = new AnimatableView(sprite, position)
       /** создаем View неповижных предметов*/
     } else {
+      // TODO GameObjectSprite ?
       const sprite = new CellSprite(this.ctx, spriteImage, {
         position: position,
         originPosition: spritePos as Types.Coords,

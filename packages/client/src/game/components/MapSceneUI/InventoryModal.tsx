@@ -11,7 +11,7 @@ const InventoryModal: FC<InventoryModalProps> = ({ close, hero, ...props }) => {
   const closeModal = useGameModalClose(close)
 
   return (
-    <GameUIModal close={closeModal} title="Inventory" {...props}>
+    <GameUIModal close={closeModal} title="Inventory (I)" {...props}>
       <div className="map-scene-ui__inventory">
         {hero ? (
           <ul className="mb-4">

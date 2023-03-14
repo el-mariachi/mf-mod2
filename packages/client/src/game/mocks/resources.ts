@@ -1,6 +1,5 @@
-// TODO decent resources will work out with TS-111
+// TODO decent resources manager will work out with TS-111
 
-// game resources
 import heroSprite from '@sprites/knight.png'
 import skeletonSprite from '@sprites/skeleton.png'
 import tilesetSprite from '@sprites/tileset.png'

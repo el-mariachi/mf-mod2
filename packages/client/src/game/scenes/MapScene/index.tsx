@@ -1,13 +1,17 @@
 import { useEffect, useState, useRef } from 'react'
 import * as Types from '@type/game'
-import { useAppSelector } from 'hooks/redux_typed_hooks'
+import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
+import { useNavigate } from 'react-router-dom'
 import MapController from '@game/controllers/MapController'
 import { createLayers, LayerRecord } from '@game/controllers/LayerController'
 import { useGameController } from '@hooks/useGameController'
 import LifeController from '@game/controllers/LifeController'
-import MapSceneUI from '@game/components/MapSceneUI'
+import MapSceneUI, { ModalType } from '@game/components/MapSceneUI'
 import { selectPaused } from '@store/selectors'
+import { restartLevel, exitGame } from '@store/slices/game'
 import { width, height } from '@utils/winsize'
+import { toggleFullscreen } from '@utils/game'
+import ROUTES from '@constants/routes'
 import './MapScene.scss'
 
 function MapScene() {
@@ -21,7 +25,15 @@ function MapScene() {
   const layersRef = useRef<HTMLDivElement>(null)
   const lifeRef = useRef({} as LifeController)
   const mapRef = useRef({} as MapController)
+
   const paused = useAppSelector(selectPaused)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const [showModal, setShowModal] = useState<ModalType | null>(null)
+  const toggleModal = (modalType: ModalType) => {
+    setShowModal(showModal != modalType ? modalType : null)
+  }
 
   /** создаем три слоя canvas для разных типов игровых объектов*/
   useEffect(() => {
@@ -56,14 +68,34 @@ function MapScene() {
   useEffect(() => {
     if (gameAction) {
       const [gameEvent]: Types.GameAction = gameAction
-      if (
-        lifeRef.current &&
-        lifeRef.current instanceof LifeController &&
-        Types.MoveGameEvents.includes(gameEvent)
-      ) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        lifeRef.current.turn(Types.MapGameEvents2Direction[gameEvent])
+      if (lifeRef.current && lifeRef.current instanceof LifeController) {
+        if (Types.MoveGameEvents.includes(gameEvent)) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          lifeRef.current.turn(Types.MapGameEvents2Direction[gameEvent])
+        } else {
+          switch (gameEvent) {
+            case Types.GameEvent.Pause:
+              toggleModal(ModalType.menu)
+              break
+            case Types.GameEvent.CharacterInfo:
+              toggleModal(ModalType.info)
+              break
+            case Types.GameEvent.Inventory:
+              toggleModal(ModalType.inventory)
+              break
+            case Types.GameEvent.Restart:
+              dispatch(restartLevel())
+              break
+            case Types.GameEvent.Exit:
+              dispatch(exitGame())
+              navigate(ROUTES.LEADERBOARD)
+              break
+            case Types.GameEvent.Fullscreen:
+              toggleFullscreen()
+              break
+          }
+        }
       }
     }
   }, [gameAction])
@@ -81,7 +113,7 @@ function MapScene() {
       обращаться к каждому слою через ref */
   return (
     <div className="map-scene">
-      <MapSceneUI map={mapRef.current.cells} />
+      <MapSceneUI map={mapRef.current.cells} showModal={showModal} />
       <div ref={layersRef} className="map-scene__layers"></div>
     </div>
   )
