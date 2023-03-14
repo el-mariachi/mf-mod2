@@ -5,6 +5,7 @@ import {
 } from 'http-proxy-middleware'
 import { YA_API_BASE_URL } from '../constants/api'
 import { User } from '@models/User'
+import { UserTheme } from '@db/models/UserTheme'
 
 const getUserFromBuffer = (buffer: Buffer) => {
   try {
@@ -20,9 +21,17 @@ const insertUserInDbIfNotExists = (user: Record<string, string>) => {
     login: user.login,
     display_name: user.display_name,
     avatar: user.avatar,
-  }).catch(err => {
-    throw err
   })
+    .then(([user]) => {
+      UserTheme.findOrCreate({
+        where: { user_id: user.yandex_id, theme_id: 1 },
+      }).catch(err => {
+        throw err
+      })
+    })
+    .catch(err => {
+      throw err
+    })
 }
 
 export const proxy: RequestHandler = async (req, res, next) =>
@@ -36,7 +45,11 @@ export const proxy: RequestHandler = async (req, res, next) =>
     onProxyRes: responseInterceptor(async responseBuffer => {
       const user = getUserFromBuffer(responseBuffer)
       if (user) {
-        insertUserInDbIfNotExists(user)
+        try {
+          insertUserInDbIfNotExists(user)
+        } catch (err) {
+          console.log('err', err)
+        }
       }
       return responseBuffer
     }),

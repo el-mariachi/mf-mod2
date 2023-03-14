@@ -1,7 +1,6 @@
 import type { RequestHandler } from 'express'
 import axios from 'axios'
 import { YA_API_BASE_URL, API_TIMEOUT } from '../constants/api'
-import { User } from '../db/models/User'
 
 const axiosInstance = axios.create({
   baseURL: YA_API_BASE_URL,
@@ -22,17 +21,7 @@ export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
     .then(response => {
       const user = response.data
       res.locals.user = user
-      /** вставляем в базу данных пользователя, если его еще там нет */
-      User.upsert({
-        yandex_id: user.id,
-        login: user.login,
-        display_name: user.display_name,
-        avatar: user.avatar,
-      })
-        .then(() => next())
-        .catch(err => {
-          throw err
-        })
+      next()
     })
     .catch(err => {
       res.status(err.status ?? 401).json({
