@@ -5,10 +5,16 @@ import Form from 'react-bootstrap/Form'
 import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
 import { getLBData } from '@services/leaderboardController'
 import { MsecondsToHMS } from '@utils/secondsFormat'
+import Leaderboard from '@pages/Leaderboard'
+import insertionSort from '@utils/insertionSort'
 
 const inputData: LeaderboardDataResp[] = []
 
-enum SortedVal {
+if (!Array.prototype.customSort) {
+  Array.prototype.customSort = insertionSort
+}
+
+export enum SortedVal {
   score = 'score',
   coins = 'coins',
   steps = 'steps',
@@ -38,45 +44,23 @@ function LeaderboardList() {
   switch (sortMode) {
     case 0:
       sortedVal = SortedVal.score
-      lbData.sort((a, b) => {
-        return b.data.score - a.data.score
-      })
+      lbData.customSort(lbData, sortedVal)
       break
     case 1:
       sortedVal = SortedVal.coins
-      lbData.sort((a, b) => {
-        return b.data.coins - a.data.coins
-      })
+      lbData.customSort(lbData, sortedVal)
       break
     case 2:
       sortedVal = SortedVal.steps
-      lbData.sort((a, b) => {
-        if (b.data.steps > a.data.steps) {
-          return -1
-        } else if (b.data.steps < a.data.steps) {
-          return 1
-        } else {
-          return 0
-        }
-      })
+      lbData.customSort(lbData, sortedVal)
       break
     case 3:
       sortedVal = SortedVal.time
-      lbData.sort((a, b) => {
-        if (b.data.time > a.data.time) {
-          return -1
-        } else if (b.data.time < a.data.time) {
-          return 1
-        } else {
-          return 0
-        }
-      })
+      lbData.customSort(lbData, sortedVal)
       break
     case 4:
       sortedVal = SortedVal.kills
-      lbData.sort((a, b) => {
-        return b.data.killCount - a.data.killCount
-      })
+      lbData.customSort(lbData, sortedVal)
       break
   }
 
