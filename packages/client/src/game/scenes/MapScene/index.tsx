@@ -39,7 +39,7 @@ function MapScene() {
   useEffect(() => {
     const removeKeyboardListener = useGameController(setGameAction)
     const layers: LayerRecord = createLayers(
-      ['static', 'active', 'effetcs'],
+      ['static', 'active', 'effects'],
       [width, height]
     )
     setLayers(layers)
