@@ -14,7 +14,7 @@ declare global {
 
   interface Array<T> {
     customSort(
-      arr: LeaderboardDataResp[],
+      this: LeaderboardDataResp[],
       sortVal: SortedVal
     ): LeaderboardDataResp[]
   }

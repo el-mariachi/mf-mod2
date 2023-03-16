@@ -2,58 +2,30 @@ import { LeaderboardDataResp } from '@api/leaderboardApi'
 import { SortedVal } from '@components/Leaderboard/List'
 
 export default function insertionSort(
-  arr: LeaderboardDataResp[],
+  this: LeaderboardDataResp[],
   sortVal: SortedVal
 ) {
-  for (let k = 0; k < arr.length; k++) {
-    const insertIndex = findInsertionIndex(arr, k, sortVal)
-    shiftElements(arr, insertIndex, k)
-    console.log(arr)
+  for (let k = 0; k < this.length; k++) {
+    const insertIndex = findInsertionIndex(this, k, sortVal)
+    shiftElements(this, insertIndex, k)
   }
-
-  return arr
+  return this
 }
 function findInsertionIndex(
   arr: LeaderboardDataResp[],
   i: number,
   sortVal: SortedVal
 ) {
-  switch (sortVal) {
-    case SortedVal.score:
-      for (let k = 0; k < i; k++) {
-        if (arr[k].data.score < arr[i].data.score) {
-          return k
-        }
+  for (let k = 0; k < i; k++) {
+    if (sortVal == SortedVal.time) {
+      if (arr[k].data[sortVal] > arr[i].data[sortVal]) {
+        return k
       }
-      break
-    case SortedVal.time:
-      for (let k = 0; k < i; k++) {
-        if (arr[k].data.time > arr[i].data.time) {
-          return k
-        }
+    } else {
+      if (arr[k].data[sortVal] < arr[i].data[sortVal]) {
+        return k
       }
-      break
-    case SortedVal.kills:
-      for (let k = 0; k < i; k++) {
-        if (arr[k].data.killCount < arr[i].data.killCount) {
-          return k
-        }
-      }
-      break
-    case SortedVal.coins:
-      for (let k = 0; k < i; k++) {
-        if (arr[k].data.coins < arr[i].data.coins) {
-          return k
-        }
-      }
-      break
-    case SortedVal.steps:
-      for (let k = 0; k < i; k++) {
-        if (arr[k].data.steps < arr[i].data.steps) {
-          return k
-        }
-      }
-      break
+    }
   }
   return i
 }

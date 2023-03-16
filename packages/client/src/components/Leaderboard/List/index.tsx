@@ -44,24 +44,23 @@ function LeaderboardList() {
   switch (sortMode) {
     case 0:
       sortedVal = SortedVal.score
-      lbData.customSort(lbData, sortedVal)
       break
     case 1:
       sortedVal = SortedVal.coins
-      lbData.customSort(lbData, sortedVal)
       break
     case 2:
       sortedVal = SortedVal.steps
-      lbData.customSort(lbData, sortedVal)
       break
     case 3:
       sortedVal = SortedVal.time
-      lbData.customSort(lbData, sortedVal)
       break
     case 4:
       sortedVal = SortedVal.kills
-      lbData.customSort(lbData, sortedVal)
       break
+  }
+
+  if (lbData.length > 0) {
+    lbData.customSort(sortedVal)
   }
 
   return (
