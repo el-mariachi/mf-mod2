@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
 
 	# Позволяет запускать при push в main (и при commit и при merge) 
-	# push:
-	    # branches:
-	      # - main
+	push:
+	    branches:
+	      - deploy
 
 # Определяем процесс (состоит из нескольких последовательных/параллельных джобов)
 jobs:
