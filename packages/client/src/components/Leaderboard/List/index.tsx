@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form'
 import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
 import { getLBData } from '@services/leaderboardController'
 import { MsecondsToHMS } from '@utils/secondsFormat'
-import Leaderboard from '@pages/Leaderboard'
 import insertionSort from '@utils/insertionSort'
 
 const inputData: LeaderboardDataResp[] = []
@@ -68,9 +67,9 @@ function LeaderboardList() {
           {lbData.map(user => {
             counter++
             const val =
-                sortMode == SortedVal.time
-                    ? MsecondsToHMS(user.data[sortMode])?.toString()
-                    : user.data[sortMode]?.toString()
+              sortMode == SortedVal.time
+                ? MsecondsToHMS(user.data[sortMode])?.toString()
+                : user.data[sortMode]?.toString()
             return (
               <Lb_User
                 key={user?.data.nickname ? user?.data.nickname : 0}

@@ -1,4 +1,4 @@
-import { restOauthApi } from '@api/restApi'
+import { restOauthApi } from '@api/index'
 
 type OauthSigninRequestData = {
   code: string

@@ -13,8 +13,8 @@ import {
   LifeControllerState,
   GameIntaractions,
   noInteraction,
-  TEAM_NAME_LB_API,
 } from '@constants/game'
+import { TEAM_NAME_LB_API } from '@constants/api'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 import { selectHeroIsDead } from '@store/selectors'
 import leaderboardApi, { LeaderboardData } from '@api/leaderboardApi'
@@ -194,9 +194,6 @@ export const finishLevel =
         ratingFieldName: 'score',
         teamName: TEAM_NAME_LB_API,
       }
-
-      console.log('Sending store data to server...')
-      console.log(lbData)
 
       putLBData(lbData)
     }

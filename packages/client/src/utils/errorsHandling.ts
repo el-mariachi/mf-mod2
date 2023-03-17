@@ -13,22 +13,17 @@ export const enum AppErrorCode {
   dev,
   userInput,
 }
-export type AppError = Error & {
-  cause: {
-    code: AppErrorCode
-    msg: string
-    additional?: string
-  }
-}
 export function createAppError(
   msg: string,
   code = 0,
   module = '',
   additional?: string
 ) {
-  return new Error(module ? `${module}: ${msg}` : msg, {
-    cause: { code, msg, additional },
-  }) as AppError
+  return new AppError(module ? `${module}: ${msg}` : msg, {
+    code,
+    msg,
+    additional,
+  })
 }
 export function apiErrorHandler(error: Error): never {
   if (!('cause' in error)) {
@@ -36,7 +31,7 @@ export function apiErrorHandler(error: Error): never {
     throw createAppError(error.message, AppErrorCode.unknown)
   }
 
-  const { code, msg, additional } = (error as AppError).cause
+  const { code, msg, additional } = ((<unknown>error) as AppError).cause
 
   if (AppErrorCode.userInput == code) {
     // wrong data input from user, just pass it through to form
@@ -45,10 +40,14 @@ export function apiErrorHandler(error: Error): never {
     // wrong data input from user, defined by server
     throw createAppError(msg, AppErrorCode.userInput)
   } else if (AppErrorCode.restApiAuth == code) {
+    // unauthorized user
     store.dispatch(clearUser())
     throw createAppError(msg, AppErrorCode.userInput, 'auth form', additional)
+  } else if (code >= AppErrorCode.restApiAccess) {
+    // known dev (api) error
+    throw createAppError(msg, code)
   }
-  // dev (api) error
+  // unknown dev (api) error
   else throw createAppError(msg, AppErrorCode.dev, 'rest api', additional)
 }
 export function formUserErrorHandler(
@@ -65,4 +64,52 @@ export function pickUserError(error: AppError) {
   const { code, msg } = error.cause
 
   return AppErrorCode.userInput == code ? msg : null
+}
+export function serverErrorHandler(
+  error: AppError,
+  handler: (msg: string) => void
+) {
+  const serverError = pickServerError(error)
+  if (serverError) {
+    handler(serverError)
+  }
+  // client-side error`ll be shown only in console (by RestApi.request)
+}
+export function pickServerError(error: AppError) {
+  const { code, msg } = error.cause
+
+  return code >= 500 && code < 600 ? msg : null
+}
+type AppErrorCause = {
+  code: AppErrorCode
+  msg: string
+  additional?: string
+  message: string // for compatibility with Error object
+  name: string
+}
+export class AppError extends Error {
+  constructor(
+    message: string, // for compatibility with Error object
+    protected _cause: Omit<AppErrorCause, 'name' | 'message'>
+  ) {
+    super(message)
+  }
+  get cause() {
+    return {
+      ...this._cause,
+      ...{
+        message: this.message,
+        name: this.name,
+      },
+    }
+  }
+  static create(
+    // sugar
+    msg: string,
+    code = 0,
+    module = '',
+    additional?: string
+  ) {
+    return createAppError(msg, code, module, additional)
+  }
 }

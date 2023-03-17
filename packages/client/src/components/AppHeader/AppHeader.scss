@@ -2,9 +2,14 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
 
   &__ {
+    &logo-area {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
     &logo-image-box {
       margin-right: 10px;
     }
@@ -26,6 +31,12 @@
       &-sstring {
         font-size: 23px;
       }
+    }
+
+    &nav-area {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
 }

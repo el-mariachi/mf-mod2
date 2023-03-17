@@ -30,12 +30,15 @@ const FormControl: FC<FormControlProps> = ({
       : undefined
   return (
     <Form.Group as={Row} className="mb-3" controlId={`${formName}-${name}`}>
-      <Form.Label column sm="3">
-        {label}
-      </Form.Label>
-      <Col sm={9}>
+      {label ? (
+        <Form.Label column sm="3">
+          {label}
+        </Form.Label>
+      ) : null}
+      <Col sm={label ? 9 : 12}>
         <Form.Control
           type={type}
+          as={'textarea' == type ? type : undefined}
           isInvalid={errors[name] !== undefined}
           placeholder={placeholder}
           {...register(name, {

@@ -7,6 +7,8 @@ import {
   PersonSquare,
   InfoSquareFill,
   PauseBtn,
+  PencilFill,
+  TrashFill,
 } from 'react-bootstrap-icons'
 import classNames from 'classnames'
 import './Icon.scss'
@@ -22,6 +24,8 @@ const icons = {
   XSquareFill,
   InfoSquareFill,
   PauseBtn,
+  PencilFill,
+  TrashFill,
   OauthYandexIcon,
 }
 

@@ -3,10 +3,10 @@ import axios, {
   AxiosRequestConfig,
   AxiosError,
   isAxiosError,
+  AxiosResponse,
 } from 'axios'
 import { AppErrorCode, createAppError } from '@utils/errorsHandling'
 import { API_BASE_URL, API_TIMEOUT } from '@constants/api'
-import { MockApi } from '@api/ssrApiMock'
 
 enum RestApiMethods {
   get = 'get',
@@ -16,8 +16,13 @@ enum RestApiMethods {
 }
 type RestApiOpts = AxiosRequestConfig
 type RestApiData = FormData | PlainObject
+type RestApiResponse<T> = AxiosResponse<T> & {
+  data: {
+    reason: string
+  }
+}
 
-class RestApi {
+export default class RestApi {
   protected _http: AxiosInstance
 
   constructor(
@@ -69,7 +74,9 @@ class RestApi {
       .then(response => response.data as T)
       .catch((error: AxiosError | Error) => {
         const rawMsg = error.message
-        const response = isAxiosError(error) ? error.response : null
+        const response = isAxiosError(error)
+          ? (error.response as RestApiResponse<T>)
+          : null
         const request = isAxiosError(error) ? error.request : null
 
         let msg = rawMsg
@@ -77,8 +84,9 @@ class RestApi {
 
         if (response) {
           const statusCode = response.status
-          msg = response.data?.reason
-
+          if (response?.data?.reason) {
+            msg = response.data.reason as string
+          }
           switch (statusCode) {
             case AppErrorCode.restApiRequest:
             case 409:
@@ -123,33 +131,4 @@ class RestApi {
         throw createAppError(msg, code, 'rest api', rawMsg)
       })
   }
-}
-
-let restAuthApi: MockApi | RestApi
-let restUsersApi: MockApi | RestApi
-let restResourceApi: MockApi | RestApi
-let restLeaderboardApi: MockApi | RestApi
-let restOauthApi: MockApi | RestApi
-
-if (RENDERED_ON_SERVER) {
-  restAuthApi = new MockApi()
-  restUsersApi = new MockApi()
-  restResourceApi = new MockApi()
-  restOauthApi = new MockApi()
-  restLeaderboardApi = new MockApi()
-} else {
-  restAuthApi = new RestApi('/auth')
-  restUsersApi = new RestApi('/user')
-  restResourceApi = new RestApi('/resources')
-  restLeaderboardApi = new RestApi('/leaderboard')
-  restOauthApi = new RestApi('/oauth/yandex')
-  restLeaderboardApi = new RestApi('/leaderboard')
-}
-
-export {
-  restAuthApi,
-  restUsersApi,
-  restResourceApi,
-  restLeaderboardApi,
-  restOauthApi,
 }

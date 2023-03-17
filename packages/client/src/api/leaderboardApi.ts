@@ -1,5 +1,6 @@
-import { restLeaderboardApi } from '@api/restApi'
-import { GameStats, TEAM_NAME_LB_API } from '@constants/game'
+import { restLeaderboardApi } from '@api/index'
+import { GameStats } from '@constants/game'
+import { TEAM_NAME_LB_API } from '@constants/api'
 
 export type LeaderboardData = {
   data: GameStats & { score: number; nickname: string }
