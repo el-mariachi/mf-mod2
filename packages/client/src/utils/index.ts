@@ -30,3 +30,11 @@ export const delay = (time: number, callback?: () => void) =>
     callback?.()
     setTimeout(res, time)
   })
+
+export const getOAuthRedirectUrl = (defaultUrl: string) => {
+  if (window.location.hostname === 'localhost') {
+    return `http://localhost:3000`
+  } else {
+    return defaultUrl
+  }
+}
