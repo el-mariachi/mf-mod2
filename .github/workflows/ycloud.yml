@@ -21,15 +21,13 @@ jobs:
       # Запускает предварительную проверку 
 			# Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
       # Авторизация в Яндекс.Облаке (здесь ничего не меняем)
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
           yc-sa-json-credentials: "${{ secrets.YC_SA_JSON_CREDENTIALS }}"
-
 			# Построение образа и отправка его в Container Registry
-      - name: Build, tag, and push image to Yandex Cloud Container Registry
+      - name: "Build, tag, and push image to Yandex Cloud Container Registry"
         env:
 					# Здесь указываем идентификатор регистра (о нём позднее)
           CR_REGISTRY: crpc8d2nuco96mg2a5f4
