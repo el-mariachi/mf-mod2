@@ -60,10 +60,7 @@ this.addEventListener('fetch', event => {
 this.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      return Promise.all(cacheNames.filter(name => {
-        console.log(`Deleting SW cache ${name}`)
-        return true
-      }).map(name => caches.delete(name)))
+      return Promise.all(cacheNames.map(name => caches.delete(name)))
     })
   )
 })
