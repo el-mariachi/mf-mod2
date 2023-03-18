@@ -26,7 +26,6 @@ jobs:
         uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
           yc-sa-json-credentials: "${{ secrets.YC_SA_JSON_CREDENTIALS }}"
-			# Построение образа и отправка его в Container Registry
       - name: "Build, tag, and push image to Yandex Cloud Container Registry"
         env:
 					# Здесь указываем идентификатор регистра (о нём позднее)
