@@ -28,21 +28,15 @@ jobs:
           yc-sa-json-credentials: "${{ secrets.YC_SA_JSON_CREDENTIALS }}"
       - name: "Build, tag, and push image to Yandex Cloud Container Registry"
         env:
-					# Здесь указываем идентификатор регистра (о нём позднее)
           CR_REGISTRY: crpc8d2nuco96mg2a5f4
-					# Здесь указываем название репозитория (впрочем оно далее не используется)
           CR_REPOSITORY: onebit
-					# Здесь ничего не меняем (формирует уникальное название для образа) но тоже не используется
           IMAGE_TAG: "${{ github.sha }}"
-					# Далее указываем все прочие нужные нам перееменные среды
           CLIENT_PORT: 3000
           SERVER_PORT: 3001
           POSTGRES_USER: "${{ secrets.POSTGRES_USER }}"
           POSTGRES_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
           POSTGRES_DB: postgres
           POSTGRES_PORT: 5432
-				# Всё описание выше было лишь подготовкой
-				# Тем не менее, оставшиеся шаги более не должны вызывать вопросы
         run: |
           docker compose build
           docker tag prakticum-client:latest cr.yandex/$CR_REGISTRY/prakticum-client:latest
