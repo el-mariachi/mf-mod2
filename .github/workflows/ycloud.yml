@@ -45,16 +45,15 @@ jobs:
 					# Далее указываем все прочие нужные нам перееменные среды
           CLIENT_PORT: 3000
           SERVER_PORT: 3001
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: postgres
           POSTGRES_PORT: 5432
 				# Всё описание выше было лишь подготовкой
 				# Тем не менее, оставшиеся шаги более не должны вызывать вопросы
         run: |
-          docker compose build client
+          docker compose build
           docker tag prakticum-client:latest cr.yandex/$CR_REGISTRY/prakticum-client:latest
           docker push cr.yandex/$CR_REGISTRY/prakticum-client:latest
-          docker compose build server
           docker tag prakticum-server:latest cr.yandex/$CR_REGISTRY/prakticum-server:latest
           docker push cr.yandex/$CR_REGISTRY/prakticum-server:latest
