@@ -17,7 +17,7 @@ const Main = () => {
         Тут будет описание игры. Lorem ipsum dolor sit amet consectetur
         adipisicing elit. Possimus nam suscipit nisi minima beatae quis, debitis
         nemo dolore ratione exercitationem dolores rerum impedit natus totam
-        veniam est laboriosam. Doloribus, obcaecati!
+        барбамбия киргуду!
       </p>
 
       <p>
