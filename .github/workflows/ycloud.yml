@@ -7,9 +7,10 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
@@ -31,3 +32,20 @@ jobs:
           docker push cr.yandex/$CR_REGISTRY/prakticum-client:latest
           docker tag prakticum-server:latest cr.yandex/$CR_REGISTRY/prakticum-server:latest
           docker push cr.yandex/$CR_REGISTRY/prakticum-server:latest
+  load:
+    name: Update
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to VPS and create new containers from new images
+        uses: appleboy/ssh-action@master
+        with:
+          host: '${{ secrets.VPS_HOST }}'
+          username: '${{ secrets.VPS_USERNAME }}'
+          key: '${{ secrets.VPS_KEY }}'
+          script: |
+            cd /home/user
+            docker pull cr.yandex/crpc8d2nuco96mg2a5f4/prakticum-client:latest
+            docker pull cr.yandex/crpc8d2nuco96mg2a5f4/prakticum-server:latest
+            docker-compose up -d --force-recreate --no-deps client server
+            docker image prune --all --force

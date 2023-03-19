@@ -31,7 +31,7 @@ const Main = () => {
         Тут будет информация как играть. Lorem ipsum dolor sit amet consectetur
         adipisicing elit. Possimus nam suscipit nisi minima beatae quis, debitis
         nemo dolore ratione exercitationem dolores rerum impedit natus totam
-        veniam est laboriosam. Doloribus, obcaecati!
+        veniam est laboriosam. барбамбия киргуду!
       </p>
 
       <Button className="text-center main__btn-start" onClick={play}>
