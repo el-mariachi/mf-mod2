@@ -18,6 +18,10 @@ import { appThemeDefault } from '@constants/ui'
 import { serverErrorHandler } from '@utils/errorsHandling'
 import { isArraysEqual } from '@utils/isEqual'
 import './App.scss'
+import ForumTopicDetail from '@components/ForumTopicDetail'
+import AddForumTopicForm from '@components/AddForumTopicForm'
+import EditForumTopicForm from '@components/EditForumTopicForm'
+import ForumTopicsList from '@components/ForumTopicsList'
 
 function App() {
   const setAppTheme = (themeName: string, themesList?: string[]) => {
@@ -140,7 +144,12 @@ function App() {
                 />
               }
             />
-            <Route path={ROUTES.FORUM} element={<ForumPage />} />
+            <Route path={ROUTES.FORUM} element={<ForumPage />}>
+              <Route index element={<ForumTopicsList />} />
+              <Route path="topic/new" element={<AddForumTopicForm />} />
+              <Route path="topic/edit/:id" element={<EditForumTopicForm />} />
+              <Route path="topic/:id" element={<ForumTopicDetail />} />
+            </Route>
           </Routes>
         </AppContainerContext.Provider>
       </div>

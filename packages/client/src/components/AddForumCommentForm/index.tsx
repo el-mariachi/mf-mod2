@@ -1,25 +1,31 @@
-import { FC, HTMLAttributes, useState } from 'react'
+import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import FormControl from '@components/FormControl'
 import SpinnerButton from '@components/SpinnerButton'
 import { Form } from 'react-bootstrap'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
-import { delay } from '@utils/index'
 import { minMax } from '@utils/validations'
 import './AddForumCommentForm.scss'
+import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
+import { addComment } from '@store/slices/forum'
+import { selectForum } from '@store/selectors'
+import { LoadingStatus } from '@constants/user'
 
 export type AddForumCommentFormProps = HTMLAttributes<HTMLDivElement> & {
   respondTo?: string
+  topicId: number
 }
 type ForumCommentStruct = Record<'comment', string>
 const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
   respondTo,
+  topicId,
   className: cls,
   ...attrs
 }) => {
-  const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
+  const dispatch = useAppDispatch()
+  const { loadingStatus } = useAppSelector(selectForum)
 
   const {
     register,
@@ -35,18 +41,9 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
 
   const formSubmit: SubmitHandler<ForumCommentStruct> = data => {
     clearErrors()
-    setLoading(true)
     setReadOnly(true)
-
-    delay(1000)
-      .then(() => {
-        // TODO
-      })
-      .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
-      .finally(() => {
-        setLoading(false)
-        setReadOnly(false)
-      })
+    const comment = { text: data.comment, topic_id: topicId }
+    dispatch(addComment(comment))
   }
 
   return (
@@ -59,7 +56,7 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
           errors={errors}
           readOnly={readOnly}
           controlProps={{
-            name: 'topic_comment',
+            name: 'comment',
             label: '',
             type: 'textarea',
             placeholder: 'Текст комментария',
@@ -67,7 +64,9 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
           }}
         />
         <Form.Group>
-          <SpinnerButton loading={loading}>Отправить</SpinnerButton>
+          <SpinnerButton loading={loadingStatus === LoadingStatus.Loading}>
+            Отправить
+          </SpinnerButton>
         </Form.Group>
       </Form>
     </div>

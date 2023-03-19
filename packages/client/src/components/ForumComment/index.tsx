@@ -6,49 +6,49 @@ import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
 import './ForumComment.scss'
+import useForumUserIsOwner from '@hooks/useForumUserIsOwner'
+import { useAppDispatch } from '@hooks/redux_typed_hooks'
+import { removeComment } from '@store/slices/forum'
 
 export type ForumCommentProps = HTMLAttributes<HTMLDivElement> & {
-  author: string
-  avatar?: string
-  isOwner?: boolean
-  dateCreate: Date
-  respondTo?: string
+  comment: TopicComment
 }
 const ForumComment: FC<ForumCommentProps> = ({
-  author,
-  avatar,
-  isOwner = false,
-  dateCreate,
-  respondTo,
+  comment,
   className: cls,
   children: text,
   ...attrs
 }) => {
+  const { user, created_at } = comment
+  const { user_name, avatar } = user as ForumUser
+  const isOwner = useForumUserIsOwner(user as ForumUser)
+  const dateCreate = new Date(created_at)
+  const respondTo = `@Стас ${datePrettify(new Date(2023, 1, 27, 6, 17), true)}`
   const [doResponse, setDoResponse] = useState(false)
+  const dispatch = useAppDispatch()
 
   const onEdit = (e: React.SyntheticEvent) => {
     // TODO
     e.preventDefault()
-    console.log('edit comment')
   }
   const onDelete = (e: React.SyntheticEvent) => {
     // TODO
     e.preventDefault()
-    console.log('delete comment')
+    dispatch(removeComment(comment))
   }
 
   return (
     <div className={classNames(cls, 'forum-comment p-3 border')} {...attrs}>
       <div className="d-sm-flex align-items-start">
         <ForumAvatar
-          image={avatar}
-          alt={`Аватар ${author}`}
+          image={avatar === null ? undefined : avatar}
+          alt={`Аватар ${user_name}`}
           className="flex-grow-0 me-3 forum-comment__avatar"
         />
         <div>
           <div className="forum-comment__about mb-1">
             <span className="fw-bold m-0 forum-comment__author me-2">
-              {author}
+              {user_name}
             </span>
             <span className="text-nowrap text-muted forum-comment__date-create">
               {datePrettify(dateCreate, true)}
@@ -89,7 +89,8 @@ const ForumComment: FC<ForumCommentProps> = ({
         )}
       </div>
       <AddForumCommentForm
-        respondTo={`@${author}${datePrettify(dateCreate, true)}`}
+        topicId={1}
+        respondTo={`@${user_name}${datePrettify(dateCreate, true)}`}
         className={classNames('forum-comment__add-form mt-3', {
           'd-none': !doResponse,
         })}
