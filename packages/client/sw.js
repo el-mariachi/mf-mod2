@@ -2,7 +2,6 @@ const CACHE_NAME = 'my-site-cache-v1'
 
 const URLS = [
   '/',
-  '/game',
   '/sign-up',
   '/sign-in',
   '/leaderboard',
@@ -61,7 +60,7 @@ this.addEventListener('fetch', event => {
 this.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      return Promise.all(cacheNames.filter().map(name => caches.delete(name)))
+      return Promise.all(cacheNames.map(name => caches.delete(name)))
     })
   )
 })
