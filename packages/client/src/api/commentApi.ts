@@ -1,11 +1,12 @@
 import { restCommentApi } from '@api/index'
 
-export const getComments = () => restCommentApi.get<TopicComment>('/')
+export const getComments = (topicId: number) =>
+  restCommentApi.get<TopicComment[]>(`/?topic_id=${topicId}`)
 
 export const getComment = (id: number) =>
   restCommentApi.get<TopicComment>(`/${id}`)
 
-export const createComment = (comment: Omit<TopicComment, 'id' | 'user_id'>) =>
+export const createComment = (comment: Partial<TopicComment>) =>
   restCommentApi.post<TopicComment>('/', comment)
 
 export const updateComment = (comment: TopicComment) =>
