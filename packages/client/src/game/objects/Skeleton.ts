@@ -2,13 +2,13 @@ import * as Types from '@type/game'
 import PatrolMonsterAi from '@game/ai/PatrolMonsterAI'
 import { skeletonMotions } from '@game/animations/skeleton'
 import _Warrior from './Warrior'
-import skeletonSrc from '@sprites/skeleton.png'
+import resources from '@game/mocks/resources'
 import { initResource } from '@utils/game'
 
 export default class Skeleton extends _Warrior implements Types.Npc {
   brain: PatrolMonsterAi
   name = Types.GameUnitName.skeleton
-  spriteSrc = skeletonSrc
+  spriteSrc = resources.images['skeleton'].src
   motions = skeletonMotions
   protected _strength = 50
   protected _criticalAttackChance = 0.5

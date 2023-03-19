@@ -1,10 +1,10 @@
 import GameObject from './GameObject'
-import tileset from '@sprites/tileset.png'
+import resources from '@game/mocks/resources'
 import * as Types from '@type/game'
 
 export default class Wall extends GameObject {
   name = Types.GameEntourageName.wall
-  spriteSrc = tileset
+  spriteSrc = resources.images['tileset'].src
   spritePos = [8, 7] as Types.Coords
   crossable = false
   static = true

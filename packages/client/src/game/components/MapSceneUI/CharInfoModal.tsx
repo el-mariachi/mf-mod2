@@ -5,7 +5,7 @@ import { selectUserData } from '@store/selectors'
 import useGameModalClose from '@hooks/useGameModalClose'
 import GameUIModal, { GameUIModalProps } from '@game/components/GameUIModal'
 import GameUIButton from '@game/components/GameUIButton'
-import heroImg from '@images/knight.png'
+import heroImg from '@images/knight-picture.png'
 
 export type CharInfoModalProps = GameUIModalProps & {
   hero?: Hero

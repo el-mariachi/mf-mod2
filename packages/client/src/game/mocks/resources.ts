@@ -14,7 +14,7 @@ import stepsIcn from '@images/steps_icn.png'
 import joystickIcn from '@images/joystick_icn.png'
 import scrollIcn from '@images/scroll_icn.png'
 
-import knightImg from '@images/knight.png'
+import knightImg from '@images/knight-picture.png'
 import knightHeadImg from '@images/knight-head.png'
 
 const images = [
