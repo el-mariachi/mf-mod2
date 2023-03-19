@@ -1,3 +1,5 @@
+@import '@vars';
+
 .main-page {
   &__jumbotron {
     position: relative;
@@ -6,6 +8,12 @@
     &-button {
       position: absolute;
       animation: flickerButton 1.75s ease-in-out infinite;
+
+      &:hover {
+        animation: none;
+        background-color: $primary;
+        filter: saturate(110%) contrast(120%) brightness(1.25);
+      }
     }
 
     &_makedead {
