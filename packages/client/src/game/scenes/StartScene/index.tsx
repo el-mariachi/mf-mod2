@@ -3,12 +3,16 @@ import { BG_COLOR } from '@constants/ui'
 import { useFonts } from '@hooks/useFonts'
 import { useAppDispatch } from 'hooks/redux_typed_hooks'
 import { startGame } from '@store/slices/game'
-import { width, height, center } from '@utils/winsize'
+import { useWinSize } from '@hooks/useWinSize'
 import { Text } from '@utils/fillCanvas'
+import { calcCenter } from '@utils/game'
 import './StartScene.scss'
 
 // TODO unactual func for now, need work out a task and implement
 function StartScene() {
+  const winSize = useWinSize()
+  const [width, height] = winSize
+  const center = calcCenter(winSize)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fontLoaded = useFonts()
 
@@ -32,8 +36,8 @@ function StartScene() {
 
         ctx.fillStyle = BG_COLOR
         ctx.fillRect(0, 0, width, height)
-        text.fill('One Bit', center.width, center.height)
-        text.fill('Dungeon', center.width, center.height + 45, {
+        text.fill('One Bit', center[0], center[1])
+        text.fill('Dungeon', center[0], center[1] + 45, {
           font: '700 40px Minecraft',
         })
       }

@@ -194,7 +194,20 @@ export interface LevelMapCell {
   addObject(gameObject: GameObjectDef): GameObjectDef
   extract(gameObject: GameObjectDef): GameObjectDef
 }
-export type LevelMap = LevelMapCell[][]
+export type LevelMap = LevelMapCell[][] & {
+  set winSize(size: Size)
+  get rowsCount(): number
+  get colsCount(): number
+  get size(): Size
+  get coords(): Coords
+  onCanvasCoords(onMapCoords: Coords): Coords
+  onMapCoords(onCanvasCoords: Coords): Coords
+  actualizeCoords(coords: Coords, size?: Size): Coords
+  isCoordsActual(coords: Coords): boolean
+  getArea(area: Area): LevelMap
+  getCellsAround(rel: Coords, size: number): LevelMapCells
+}
+export type LevelMapCells = LevelMapCell[]
 
 // semantic aliases
 export type BehaviorDef = BehaviorMotion
@@ -212,6 +225,7 @@ export interface GameObjectViewDef {
   position: Coords
   render(): void
   toggle(flag?: boolean): void
+  actualizeOnCanvas(map: LevelMap): void
   update?(dt: number): void
   do?(behavior: ViewBehaviorDef): AnimatedBehaviorProcess
   idle?(dir?: AxisDirection): void

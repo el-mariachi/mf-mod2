@@ -4,7 +4,8 @@ import gameObjects from '@game/objects'
 import level1 from '@game/data/levels/1/map.json'
 import { LayerRecord } from './LayerController'
 import * as Types from '@type/game'
-import { isHero, isNpc } from '@utils/game'
+import * as Utils from '@utils/game'
+import { defaultWinSize } from '@constants/game'
 
 /** ячейка игровой матрицы */
 export class Cell implements Types.LevelMapCell {
@@ -28,9 +29,8 @@ export class Cell implements Types.LevelMapCell {
     return element
   }
 }
-
 /** массив ячеек игровой матрицы, с методами группировки игровых объектов */
-export const Cells = class extends Array implements Types.LevelMap {
+export const Cells = class extends Array implements Types.LevelMapCells {
   _notAnimatedObjects = []
   filterObjects(condition: (object: GameObject) => boolean) {
     return this.reduce((prev, cell) => {
@@ -52,17 +52,19 @@ export const Cells = class extends Array implements Types.LevelMap {
   }
   get hero() {
     return this.heroCell.gameObjects.find((gameObject: GameObject) =>
-      isHero(gameObject)
+      Utils.isHero(gameObject)
     )
   }
   get heroCell() {
-    return this.filterCellsByObject((object: GameObject) => isHero(object))[0]
+    return this.filterCellsByObject((object: GameObject) =>
+      Utils.isHero(object)
+    )[0]
   }
   get NpcCells() {
-    return this.filterCellsByObject((object: GameObject) => isNpc(object))
+    return this.filterCellsByObject((object: GameObject) => Utils.isNpc(object))
   }
   get Npc() {
-    return this.filterObjects((object: GameObject) => isNpc(object))
+    return this.filterObjects((object: GameObject) => Utils.isNpc(object))
   }
   get notAnimatedObjectsTuple() {
     /** кеширование не анимированных сущностей */
@@ -79,10 +81,10 @@ export const Cells = class extends Array implements Types.LevelMap {
     )
   }
 }
-
-export const zeroLevelMap = [[new Cell([], [0, 0])]] as Types.LevelMap
-
-export const Matrix = class extends Array {
+/** игровая матрица */
+export const Matrix = class extends Array implements Types.LevelMap {
+  protected _winSize?: Types.Size
+  // TODO use getMapCellsAround
   nearbyCells(
     cell: Types.LevelMapCell,
     radius = 1,
@@ -127,14 +129,86 @@ export const Matrix = class extends Array {
     }
     return cells
   }
+  set winSize(size: Types.Size) {
+    this._winSize = size
+  }
+  get winSize() {
+    return this._winSize ?? defaultWinSize
+  }
+  get rowsCount() {
+    return this.length
+  }
+  get colsCount() {
+    return this[0].length
+  }
+  get size() {
+    return Utils.cellCoords2PixelCoords(this.cellSize) as Types.Size
+  }
+  get cellSize() {
+    return [this.colsCount, this.rowsCount] as Types.Size
+  }
+  get coords() {
+    const center = Utils.calcCenter(this.winSize)
+    return Utils.roundCoords([
+      center[0] - this.size[0] / 2,
+      center[1] - this.size[1] / 2,
+    ])
+  }
+  onCanvasCoords(onMapCoords: Types.Coords) {
+    return Utils.addCoords(onMapCoords, this.coords)
+  }
+  onMapCoords(onCanvasCoords: Types.Coords) {
+    return Utils.subtractCoords(onCanvasCoords, this.coords)
+  }
+  actualizeCoords(coords: Types.Coords, size = this.cellSize) {
+    return Utils.actualizeCoords(coords, Utils.subtractCoords(size, [1, 1]))
+  }
+  isCoordsActual(coords: Types.Coords) {
+    return Utils.isCoordsEqual(coords, this.actualizeCoords(coords))
+  }
+  getArea(area: Types.Area) {
+    let [areaFrom, areaTo] = area
+    areaFrom = this.actualizeCoords(areaFrom)
+    areaTo = this.actualizeCoords(areaTo)
+
+    const [fromCol, frowRow] = areaFrom
+    const [toCol, toRow] = areaTo
+
+    const mapArea: Types.LevelMap = new Matrix()
+    for (let row = frowRow; row <= toRow; row++) {
+      if (!mapArea[row]) {
+        mapArea[row] = []
+      }
+      for (let col = fromCol; col <= toCol; col++) {
+        mapArea[row][col] = this[row][col]
+      }
+    }
+    return mapArea
+  }
+  getCellsAround(rel: Types.Coords, size: number) {
+    if (!this.isCoordsActual(rel)) {
+      return []
+    }
+    const area = Utils.getArea(rel, size)
+    return this.getArea(area)
+      .flat(1)
+      .filter(
+        cell => !Utils.isCoordsEqual(Utils.rowcol2coords(cell.position), rel)
+      )
+  }
+  static initZeroMap() {
+    const zeroMap = new Matrix()
+    zeroMap[0] = [new Cell([], [0, 0])]
+    return zeroMap
+  }
 }
+export const zeroLevelMap = Matrix.initZeroMap()
 
 type LevelInstance = Array<Array<Array<number>>>
 
 type MapControllerPropsType = {
   layers: LayerRecord
   level: number
-  size: Types.Size
 }
 
 class MapController {
@@ -171,12 +245,11 @@ class MapController {
         this.cells.push(cell)
       }
     }
-    const mapSize: [number, number] = [this.map.length, this.map[0].length]
-    this.layers.static.drawBackground(...mapSize)
-    /** draw([tuple : [gameObject, cellPosition]])
+    this.layers.static.drawBackground(this.map)
+    /** drawViews(map, [tuple : [gameObject, cellPosition]])
      * создаем View для каждого объекта и размещаем в слое в соответствии с его типом*/
-    this.layers.static.draw(this.cells.notAnimatedObjectsTuple)
-    this.layers.active.draw(this.cells.animatedObjectsTuple)
+    this.layers.static.drawViews(this.map, this.cells.notAnimatedObjectsTuple)
+    this.layers.active.drawViews(this.map, this.cells.animatedObjectsTuple)
   }
 }
 

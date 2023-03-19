@@ -32,9 +32,9 @@ export default class PatrolMonsterAi extends DullAi {
     const subject = this._npc
     const curPos = this._position
 
-    const heroCell = Utils.getMapCellsAround(this._knownMap, curPos, 1).find(
-      cell => cell.gameObjects.some(item => Utils.isHero(item))
-    )
+    const heroCell = this._knownMap
+      .getCellsAround(curPos, 1)
+      .find(cell => cell.gameObjects.some(item => Utils.isHero(item)))
     if (heroCell) {
       const heroPos = Utils.rowcol2coords(heroCell.position)
       const dir = Utils.defineAxisDir(curPos, heroPos)
@@ -53,7 +53,7 @@ export default class PatrolMonsterAi extends DullAi {
     }
     const dir = Utils.defineAxisDir(curPos, this._goal)
     if (dir) {
-      const nextPos = Utils.actualizeCellCoords(
+      const nextPos = this._knownMap.actualizeCoords(
         Utils.nearestCoords(curPos, dir)
       )
       if (!Utils.isCoordsEqual(curPos, nextPos)) {

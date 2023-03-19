@@ -9,12 +9,13 @@ import LifeController from '@game/controllers/LifeController'
 import MapSceneUI, { ModalType } from '@game/components/MapSceneUI'
 import { selectPaused } from '@store/selectors'
 import { restartLevel, exitGame } from '@store/slices/game'
-import { width, height } from '@utils/winsize'
+import { useWinSize } from '@hooks/useWinSize'
 import { toggleFullscreen } from '@utils/game'
 import ROUTES from '@constants/routes'
 import './MapScene.scss'
 
 function MapScene() {
+  const winSize = useWinSize()
   const [gameAction, setGameAction] = useState(
     [] as unknown as Types.GameAction
   )
@@ -22,6 +23,7 @@ function MapScene() {
     LayerRecord,
     React.Dispatch<React.SetStateAction<LayerRecord>>
   ] = useState({})
+
   const layersRef = useRef<HTMLDivElement>(null)
   const lifeRef = useRef({} as LifeController)
   const mapRef = useRef({} as MapController)
@@ -40,10 +42,9 @@ function MapScene() {
     const removeKeyboardListener = useGameController(setGameAction)
     const layers: LayerRecord = createLayers(
       ['static', 'active', 'effects'],
-      [width, height]
+      winSize
     )
     setLayers(layers)
-
     return removeKeyboardListener
   }, [])
 
@@ -56,14 +57,19 @@ function MapScene() {
       })
     }
     if (Object.keys(layers).length !== 0) {
-      mapRef.current = new MapController({
-        layers,
-        level: 1,
-        size: [width, height],
-      })
+      mapRef.current = new MapController({ layers, level: 1 })
       lifeRef.current = new LifeController(mapRef.current)
     }
   }, [layers])
+
+  useEffect(() => {
+    if (mapRef.current && mapRef.current instanceof MapController) {
+      mapRef.current.map.winSize = winSize
+      Object.values(mapRef.current.layers).forEach(layer =>
+        layer.redraw(mapRef.current.map)
+      )
+    }
+  }, [winSize])
 
   useEffect(() => {
     if (gameAction) {

@@ -1,16 +1,15 @@
 import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
-import CellSprite from '@game/sprite/CellSprite'
 import GameObject from '@game/objects/GameObject'
 import UnitView from '@game/views/UnitView'
 import GameObjectView from '@game/views/GameObjectView'
 import AnimatableView from '@game/views/AnimatableView'
 
 export default class ViewFactory {
-  ctx: CanvasRenderingContext2D
-  constructor(ctx: CanvasRenderingContext2D) {
-    this.ctx = ctx
-  }
+  constructor(
+    public ctx: CanvasRenderingContext2D,
+    protected _map: Types.LevelMap
+  ) {}
   createView(
     gameObject: GameObject,
     position: Types.Coords
@@ -33,7 +32,13 @@ export default class ViewFactory {
     /** создаем View персонажей*/
     let view!: GameObjectView
     if (name in Types.GameUnitName) {
-      const sprite = new GameObjectSprite(this.ctx, spriteImage, motions)
+      const sprite = new GameObjectSprite(
+        this.ctx,
+        spriteImage,
+        this._map,
+        null,
+        motions
+      )
       const viewOpts = []
       switch (name) {
         case Types.GameUnitName.skeleton:
@@ -46,12 +51,17 @@ export default class ViewFactory {
       view = new UnitView(sprite, position, ...viewOpts)
       /** создаем View анимированных предметов */
     } else if (animated) {
-      const sprite = new GameObjectSprite(this.ctx, spriteImage, motions)
+      const sprite = new GameObjectSprite(
+        this.ctx,
+        spriteImage,
+        this._map,
+        null,
+        motions
+      )
       view = new AnimatableView(sprite, position)
       /** создаем View неповижных предметов*/
     } else {
-      // TODO GameObjectSprite ?
-      const sprite = new CellSprite(this.ctx, spriteImage, {
+      const sprite = new GameObjectSprite(this.ctx, spriteImage, this._map, {
         position: position,
         originPosition: spritePos as Types.Coords,
       })

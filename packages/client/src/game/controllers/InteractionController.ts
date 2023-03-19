@@ -13,7 +13,6 @@ import {
 export default class InteractionController {
   constructor(
     protected _statistic: StatisticController,
-    // TODO here need LevelMap type
     protected _map: MapController['map'],
     protected _hero: Types.Hero
   ) {}
