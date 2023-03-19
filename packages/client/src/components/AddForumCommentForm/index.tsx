@@ -2,7 +2,7 @@ import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import FormControl from '@components/FormControl'
 import SpinnerButton from '@components/SpinnerButton'
-import { Form } from 'react-bootstrap'
+import { Button, Form } from 'react-bootstrap'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 import { minMax } from '@utils/validations'
@@ -13,19 +13,24 @@ import { selectForum } from '@store/selectors'
 import { LoadingStatus } from '@constants/user'
 
 export type AddForumCommentFormProps = HTMLAttributes<HTMLDivElement> & {
-  respondTo?: string
+  comment?: TopicComment
   topicId: number
+  parentId?: number
+  setEditMode?: (boolean) => void
 }
-type ForumCommentStruct = Record<'comment', string>
+type ForumCommentStruct = Record<'text', string>
 const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
-  respondTo,
+  parentId,
+  comment: commentToEdit,
   topicId,
   className: cls,
+  setEditMode,
   ...attrs
 }) => {
   const [readOnly, setReadOnly] = useState(false)
   const dispatch = useAppDispatch()
   const { loadingStatus } = useAppSelector(selectForum)
+  const editMode = commentToEdit ? true : false
 
   const {
     register,
@@ -34,16 +39,27 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
     clearErrors,
     formState: { errors },
   } = useForm<ForumCommentStruct>({
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    ...{
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+    },
+    ...(editMode && { values: { text: commentToEdit?.text ?? '' } }),
   })
+
   const [submitError, setSubmitError] = useState('')
 
-  const formSubmit: SubmitHandler<ForumCommentStruct> = data => {
+  const formSubmit: SubmitHandler<ForumCommentStruct> = ({ text }) => {
     clearErrors()
     setReadOnly(true)
-    const comment = { text: data.comment, topic_id: topicId }
-    dispatch(addComment(comment))
+    if (commentToEdit) {
+      dispatch(editComment({ ...commentToEdit, text }))
+    } else {
+      const comment = {
+        ...{ text, topic_id: topicId },
+        ...(parentId && { parent_id: parentId }),
+      }
+      dispatch(addComment(comment))
+    }
   }
 
   return (
@@ -56,7 +72,7 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
           errors={errors}
           readOnly={readOnly}
           controlProps={{
-            name: 'comment',
+            name: 'text',
             label: '',
             type: 'textarea',
             placeholder: 'Текст комментария',
@@ -67,6 +83,14 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
           <SpinnerButton loading={loadingStatus === LoadingStatus.Loading}>
             Отправить
           </SpinnerButton>
+          {editMode && (
+            <Button
+              className="ms-2"
+              variant="secondary"
+              onClick={() => setEditMode && setEditMode(false)}>
+              Отменить
+            </Button>
+          )}
         </Form.Group>
       </Form>
     </div>

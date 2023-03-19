@@ -1,6 +1,6 @@
 import { FC, HTMLAttributes, useState } from 'react'
 import classNames from 'classnames'
-import { Button } from 'react-bootstrap'
+import { Button, Form } from 'react-bootstrap'
 import AddForumCommentForm from '@components/AddForumCommentForm'
 import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
@@ -9,30 +9,35 @@ import './ForumComment.scss'
 import useForumUserIsOwner from '@hooks/useForumUserIsOwner'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { removeComment } from '@store/slices/forum'
+import { minMax } from '@utils/validations'
+import { useForm } from 'react-hook-form'
+import FormControl from '@components/FormControl'
 
 export type ForumCommentProps = HTMLAttributes<HTMLDivElement> & {
   comment: TopicComment
 }
+type ForumCommentStruct = Record<'comment', string>
+
 const ForumComment: FC<ForumCommentProps> = ({
   comment,
   className: cls,
-  children: text,
+  children: text = '',
   ...attrs
 }) => {
-  const { user, created_at } = comment
+  const { user, created_at, topic_id } = comment
   const { user_name, avatar } = user as ForumUser
   const isOwner = useForumUserIsOwner(user as ForumUser)
   const dateCreate = new Date(created_at)
   const respondTo = `@Стас ${datePrettify(new Date(2023, 1, 27, 6, 17), true)}`
   const [doResponse, setDoResponse] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const dispatch = useAppDispatch()
 
   const onEdit = (e: React.SyntheticEvent) => {
-    // TODO
     e.preventDefault()
+    setEditMode(true)
   }
   const onDelete = (e: React.SyntheticEvent) => {
-    // TODO
     e.preventDefault()
     dispatch(removeComment(comment))
   }
@@ -58,7 +63,11 @@ const ForumComment: FC<ForumCommentProps> = ({
             <div className="fst-italic forum-comment__respond">{respondTo}</div>
           ) : null}
           <div className="forum-comment__text">
-            <p className="p-0">{text}</p>
+            {editMode ? (
+              <AddForumCommentForm comment={comment} topicId={topic_id} setEditMode={setEditMode} />
+            ) : (
+              <p className="p-0">{text}</p>
+            )}
           </div>
         </div>
       </div>
@@ -89,8 +98,8 @@ const ForumComment: FC<ForumCommentProps> = ({
         )}
       </div>
       <AddForumCommentForm
-        topicId={1}
-        respondTo={`@${user_name}${datePrettify(dateCreate, true)}`}
+        topicId={topic_id}
+        parentId={comment.id}
         className={classNames('forum-comment__add-form mt-3', {
           'd-none': !doResponse,
         })}

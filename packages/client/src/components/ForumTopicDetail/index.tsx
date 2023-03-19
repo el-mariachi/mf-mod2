@@ -32,6 +32,7 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
   const [topic, setTopic] = useState<Topic>()
   const { user, title, content, created_at, updated_at, cmnt_count } =
     topic || ({} as Topic)
+  const [totalPages, setTotalPages] = useState(cmnt_count)
   const isOwner = useForumUserIsOwner(user)
   const [doResponse, setDoResponse] = useState(false)
   const removed = useRef(false)
@@ -52,6 +53,9 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
       dispatch(loadTopic(topicId))
     }
     setDoResponse(false)
+    if (topic?.comments) {
+      setTotalPages(topic.comments.length)
+    }
   }, [topics])
 
   const onEdit = (e: React.SyntheticEvent) => {
@@ -63,6 +67,7 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
     removed.current = true
     dispatch(removeTopic(topicId))
   }
+
   if (topic) {
     return (
       <div className={classNames(cls, 'forum-topic-detail')} {...attrs}>
@@ -91,13 +96,13 @@ const ForumTopicDetail: FC<ForumTopicDetailProps> = ({
                 <div className="lh-sm text-muted forum-topic-detail__messages">
                   <p className="m-0">
                     Сообщений:{' '}
-                    {cmnt_count ? (
-                      cmnt_count
+                    {totalPages ? (
+                      totalPages
                     ) : (
                       <span className="text-nowrap">пока нет</span>
                     )}
                   </p>
-                  {cmnt_count && dateLastMsg ? (
+                  {totalPages && dateLastMsg ? (
                     <p className="m-0">
                       Последнее:{' '}
                       <span className="text-nowrap">

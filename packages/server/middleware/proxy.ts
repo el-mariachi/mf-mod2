@@ -9,7 +9,11 @@ import { UserTheme } from '@db/models/UserTheme'
 
 const getUserFromBuffer = (buffer: Buffer) => {
   try {
-    return JSON.parse(buffer.toString())
+    const user = JSON.parse(buffer.toString())
+    if ('reason' in user) {
+      throw Error
+    }
+    return user
   } catch (e) {
     return null
   }
@@ -34,23 +38,27 @@ const insertUserInDbIfNotExists = (user: Record<string, string>) => {
     })
 }
 
-export const proxy: RequestHandler = async (req, res, next) =>
-  createProxyMiddleware({
+export const proxy: RequestHandler = async (req, res, next) => {
+  return createProxyMiddleware({
     target: YA_API_BASE_URL,
     pathRewrite: { '/api': '' },
     changeOrigin: true,
     cookieDomainRewrite: { 'ya-praktikum.tech': req.hostname },
-    logLevel: 'silent',
+    logLevel: 'debug',
     selfHandleResponse: true,
     onProxyRes: responseInterceptor(async responseBuffer => {
-      const user = getUserFromBuffer(responseBuffer)
-      if (user) {
-        try {
-          insertUserInDbIfNotExists(user)
-        } catch (err) {
-          console.log('err', err)
+      if (req.url.endsWith('/auth/user')) {
+        const user = getUserFromBuffer(responseBuffer)
+        if (user) {
+          try {
+            insertUserInDbIfNotExists(user)
+          } catch (err) {
+            console.log('err', err)
+          }
         }
       }
+
       return responseBuffer
     }),
   })(req, res, next)
+}
