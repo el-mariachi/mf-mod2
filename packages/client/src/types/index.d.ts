@@ -175,15 +175,19 @@ declare global {
     topic_id: number
     topic?: Topic
     parent_id?: number
-    parent?: Comment
+    parent?: TopicComment
+    created_at: string
+    updated_at: string    
   }
 
   type Topic = {
     id: number
     title: string
+    content: string
     user_id: number
     user: ForumUser
     comments?: TopicComment[]
+    cmnt_count?: number
     created_at: string
     updated_at: string
   }

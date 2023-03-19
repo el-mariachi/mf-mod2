@@ -56,5 +56,7 @@ export const selectHeroResources = (state: RootState) => state.hero.resources
 export const selectHeroIsDead = (state: RootState) => state.hero.health === 0
 
 /**forum*/
+export const selectForum = (state: RootState) => state.forum
 export const selectTopics = (state: RootState) => state.forum.topics
-export const selectForumLoadingStatus = (state: RootState) => state.forum.loadingStatus
+export const selectForumLoadingStatus = (state: RootState) =>
+  state.forum.loadingStatus
