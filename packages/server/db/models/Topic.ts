@@ -22,6 +22,9 @@ export class Topic extends Model {
   @Column(DataType.STRING)
   title!: string
 
+  @Column(DataType.TEXT)
+  content!: string
+
   @ForeignKey(() => User)
   @AllowNull(false)
   @Column(DataType.INTEGER)
