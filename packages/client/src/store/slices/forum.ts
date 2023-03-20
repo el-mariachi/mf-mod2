@@ -3,18 +3,12 @@ import { forumInitialState, forumLink } from '@constants/forum'
 import { LoadingStatus } from '@constants/user'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { deleteTopic, getTopic, getTopics } from '@services/topicController'
-import { createComment, deleteComment } from '@services/commentController'
+import {
+  createComment,
+  deleteComment,
+  updateComment,
+} from '@services/commentController'
 import { getComments } from '@api/commentApi'
-
-type LoadCommentsProps = {
-  topicId: number
-  page: number
-}
-
-const isTopicsAreAlreadyThere = (
-  { page, topics }: { page: number; topics: Topic[] },
-  rows: Topic[]
-) => topics.length + rows.length > page * 10
 
 export const loadTopic = createAsyncThunk(
   'forum/loadTopic',
@@ -68,6 +62,14 @@ export const addComment = createAsyncThunk(
   'forum/addComment',
   async (comment: Partial<TopicComment>) =>
     (await createComment(comment)) as TopicComment
+)
+
+export const editComment = createAsyncThunk(
+  'forum/editComment',
+  async (comment: TopicComment) => {
+    await updateComment(comment)
+    return comment
+  }
 )
 
 export const removeComment = createAsyncThunk(
@@ -128,6 +130,16 @@ const forumSlice = createSlice({
         if (topic) {
           topic.comments ??= []
           topic.comments.push(comment)
+        }
+      })
+      .addCase(editComment.fulfilled, (state, action) => {
+        const comment = action.payload as TopicComment
+        const topic = state.topics.find(item => item.id === comment.topic_id)
+        if (topic && topic.comments) {
+          const _comments = topic.comments.filter(
+            item => item.id !== comment.id
+          )
+          topic.comments = [..._comments, comment]
         }
       })
       .addCase(removeComment.fulfilled, (state, action) => {
