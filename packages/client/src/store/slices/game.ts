@@ -17,7 +17,11 @@ import {
 import { TEAM_NAME_LB_API } from '@constants/api'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 import { selectHeroIsDead } from '@store/selectors'
-import leaderboardApi, { LeaderboardData, LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
+import leaderboardApi, {
+  LeaderboardData,
+  LeaderboardDataReq,
+  LeaderboardDataResp,
+} from '@api/leaderboardApi'
 import { getLBData, putLBData } from '@services/leaderboardController'
 import ROUTES from '@constants/routes'
 import { useNavigate } from 'react-router-dom'
@@ -173,7 +177,7 @@ export const restartLevel =
         ratingFieldName: 'score',
         teamName: TEAM_NAME_LB_API,
       }
-      putLBData(lbData);
+      putLBData(lbData)
       dispatch(showStartScene())
     }
   }
@@ -203,21 +207,23 @@ export const finishLevel =
         limit: 10,
       }
 
-      getLBData(req).then((data : LeaderboardDataResp[]) => {
-        let el = data.filter(user => user.data.nickname == getState().user.data.display_name)[0];
-        if(!el || el.data.score < getState().game.score){
+      getLBData(req).then((data: LeaderboardDataResp[]) => {
+        const el = data.filter(
+          user => user.data.nickname == getState().user.data.display_name
+        )[0]
+        if (!el || el.data.score < getState().game.score) {
           putLBData(lbData).then(() => {
-            if(window.Notification && Notification.permission !== 'denied') {
-              Notification.requestPermission(function(status) {
-                let n = new Notification('One Bit Dungeon', {
+            if (window.Notification && Notification.permission !== 'denied') {
+              Notification.requestPermission(function (status) {
+                const n = new Notification('One Bit Dungeon', {
                   body: 'Congratulations! Your data was saved, check the leaderboard!',
                   tag: 'one-bit-not',
-                  icon: '../../../assets/images/knight-head.png'
-                });
+                  icon: '../../../assets/images/knight-head.png',
+                })
                 n.onclick = () => {
-                  window.location.assign('/leaderboard');
+                  window.location.assign('/leaderboard')
                 }
-              });
+              })
             }
           })
         }
