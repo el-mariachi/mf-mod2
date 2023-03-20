@@ -4,7 +4,7 @@ import * as Types from '@type/game'
 
 export default class TrapDoor extends GameObject {
   name = Types.GameEntourageName.wall
-  spriteSrc = resources.images['tileset'].src
+  spriteImage = resources.images['tileset']
   spritePos = [9, 3] as Types.Coords
   crossable = false
   static = true

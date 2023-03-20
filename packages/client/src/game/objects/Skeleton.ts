@@ -8,7 +8,7 @@ import { initResource } from '@utils/game'
 export default class Skeleton extends _Warrior implements Types.Npc {
   brain: PatrolMonsterAi
   name = Types.GameUnitName.skeleton
-  spriteSrc = resources.images['skeleton'].src
+  spriteImage = resources.images['skeleton']
   motions = skeletonMotions
   protected _strength = 50
   protected _criticalAttackChance = 0.5

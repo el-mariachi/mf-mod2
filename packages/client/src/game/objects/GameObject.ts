@@ -4,7 +4,7 @@ import * as Types from '@type/game'
 export default class GameObject implements Types.GameObjectDef {
   name!: Types.GameObjectName
   view!: Types.GameObjectViewDef
-  spriteSrc = resources.images['tileset'].src
+  spriteImage = resources.images['tileset']
   spritePos?: Types.Coords
   motions?: Types.CellSpriteMotions
   cell?: Types.LevelMapCell

@@ -14,11 +14,7 @@ export default class ViewFactory {
     gameObject: GameObject,
     position: Types.Coords
   ): Types.GameObjectViewDef {
-    const { spriteSrc, spritePos } = gameObject
-    const spriteImage = new Image()
-    spriteImage.src = spriteSrc
-
-    const { name, animated, motions } = gameObject
+    const { spriteImage, spritePos, name, animated, motions } = gameObject
     if (
       motions &&
       !(Types.IdleMotionType.idle in motions) &&
@@ -28,7 +24,6 @@ export default class ViewFactory {
       motions[Types.IdleMotionType.idle] =
         motions[Types.IdleMotionType.look2bottom]
     }
-
     /** создаем View персонажей*/
     let view!: GameObjectView
     if (name in Types.GameUnitName) {

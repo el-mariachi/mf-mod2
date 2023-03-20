@@ -4,7 +4,7 @@ import * as Types from '@type/game'
 
 export default class Gate extends GameObject {
   name = Types.GameEntourageName.gate
-  spriteSrc = resources.images['tileset'].src
+  spriteImage = resources.images['tileset']
   crossable = false
   static = true
   animated = true

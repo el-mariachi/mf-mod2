@@ -5,7 +5,7 @@ import itemsMotions from '@game/animations/items'
 
 export default class Coin extends GameObject {
   name = Types.GameItemName.chest
-  spriteSrc = resources.images['items'].src
+  spriteImage = resources.images['items']
   motions = itemsMotions.chest
   crossable = true
   static = true

@@ -5,7 +5,7 @@ import resources from '@game/mocks/resources'
 
 export default class Knight extends _Hero {
   heroClass = Types.HeroClass.knight
-  spriteSrc = resources.images['knight'].src
+  spriteImage = resources.images['knight']
   motions = knightMotions
   // TODO further, the belows will calculate and depends on level, equipments, weapons, etc
   get strength() {
