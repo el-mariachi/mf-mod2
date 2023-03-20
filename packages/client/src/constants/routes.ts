@@ -7,6 +7,7 @@ enum ROUTES {
   PROFILE = '/profile',
   FORUM = '/forum',
   SERVER_ERROR = '/500',
+  NO_ROUTE = '/404',
 }
 
 export default ROUTES

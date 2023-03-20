@@ -95,6 +95,7 @@ export default class RestApi {
               break
 
             case AppErrorCode.restApiAuth:
+            case 407:  
               code = statusCode
               msg ||= 'unauthorized'
               break
@@ -104,14 +105,19 @@ export default class RestApi {
               msg ||= 'have no access'
               break
 
-            case AppErrorCode.restApiUrl:
+            case AppErrorCode.restApiNoResource:
               code = statusCode
-              msg ||= 'non-existent url'
+              msg ||= 'non-existent resource'
               break
+
+            case AppErrorCode.restApiDependency:
+              code = statusCode
+              msg ||= 'data dependencies or logic error'
+              break  
 
             case AppErrorCode.restApiServer:
               code = statusCode
-              msg ||= 'unexpected error'
+              msg ||= 'unexpected server error'
               break
 
             default:
@@ -122,10 +128,6 @@ export default class RestApi {
           msg = 'no response was received'
         } else {
           code = AppErrorCode.dev
-        }
-
-        if (code != AppErrorCode.restApiAuth) {
-          console.error(msg, rawMsg, error)
         }
 
         throw createAppError(msg, code, 'rest api', rawMsg)
