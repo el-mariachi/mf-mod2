@@ -53,7 +53,11 @@ const UserProfile = () => {
       setModalOptions({})
 
       if (passwords) {
-        await updatePassword(passwords)
+        try {
+          await updatePassword(passwords)
+        } catch (error) {
+          formUserErrorHandler(error as AppError, setSubmitError)
+        }
       }
     }
     updateProfile(formData)

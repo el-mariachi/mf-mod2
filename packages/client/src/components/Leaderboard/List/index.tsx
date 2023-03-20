@@ -5,6 +5,13 @@ import Form from 'react-bootstrap/Form'
 import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
 import { getLBData } from '@services/leaderboardController'
 import { MsecondsToHMS } from '@utils/secondsFormat'
+import {
+  clientSideErrorHandler,
+  serverErrorHandler,
+} from '@utils/errorsHandling'
+import { muteRes } from '@utils/index'
+import { useNavigate } from 'react-router-dom'
+import ROUTES from '@constants/routes'
 
 const inputData: LeaderboardDataResp[] = []
 
@@ -19,6 +26,7 @@ enum SortedVal {
 function LeaderboardList() {
   const [sortMode, setSortMode] = useState(0)
   const [lbData, setLbData] = useState(inputData)
+  const navigate = useNavigate()
 
   const req: LeaderboardDataReq = {
     ratingFieldName: 'score',
@@ -27,9 +35,14 @@ function LeaderboardList() {
   }
 
   useEffect(() => {
-    getLBData(req).then((data: LeaderboardDataResp[]) => {
-      setLbData(data)
-    })
+    getLBData(req)
+      .then((data: LeaderboardDataResp[]) => {
+        setLbData(data)
+      })
+      .catch(error => {
+        clientSideErrorHandler(error, muteRes)
+        serverErrorHandler(error, () => navigate(ROUTES.SERVER_ERROR))
+      })
   }, [])
 
   let counter = 0

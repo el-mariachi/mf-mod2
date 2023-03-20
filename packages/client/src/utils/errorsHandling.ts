@@ -27,7 +27,10 @@ export function createAppError(
     additional,
   })
 }
-export function apiErrorHandler(error: Error, redefineNoResourceError = false): never {
+export function apiErrorHandler(
+  error: Error,
+  redefineNoResourceError = false
+): never {
   if (!('cause' in error)) {
     // dev (in code, no api) error
     throw createAppError(error.message, AppErrorCode.unknown)
@@ -47,7 +50,10 @@ export function apiErrorHandler(error: Error, redefineNoResourceError = false): 
     if (redefineNoResourceError) {
       throw createAppError(msg, AppErrorCode.restApiRequest, additional) // known dev error
     } else throw createAppError(msg, code) // 404 error
-  } else if (code == AppErrorCode.restApiAccess || code > AppErrorCode.restApiAccess) {
+  } else if (
+    code == AppErrorCode.restApiAccess ||
+    code > AppErrorCode.restApiAccess
+  ) {
     // known dev error
     throw createAppError(msg, code)
   }
@@ -80,8 +86,7 @@ export function noRouteErrorHandler(
   handler: (msg: string) => void
 ) {
   const { code, msg } = error.cause
-  if (AppErrorCode.noRoute == code)
-  {
+  if (AppErrorCode.noRoute == code) {
     handler(msg)
   }
 }
@@ -93,7 +98,7 @@ export function clientSideErrorHandler(
   if (clientSideError) {
     handler(clientSideError)
     devErrorHandler(error)
-  }  
+  }
 }
 export function pickClientSideError(error: AppError) {
   const { code, msg } = error.cause
@@ -115,7 +120,7 @@ export function pickServerError(error: AppError) {
 
   return code >= 500 && code < 600 ? msg : null
 }
-export function devErrorHandler (error: AppError) {
+export function devErrorHandler(error: AppError) {
   const { code, msg, additional } = error.cause
   if (code != AppErrorCode.restApiAuth) {
     console.error(code, msg, additional, error)

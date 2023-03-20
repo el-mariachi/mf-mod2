@@ -15,15 +15,23 @@ import { SignInWithOauth } from '@services/oauthController'
 import appThemesController from '@services/appThemesController'
 import { AppContainerContext, AppThemeContext } from 'context'
 import { appThemeDefault } from '@constants/ui'
-import { serverErrorHandler } from '@utils/errorsHandling'
+import {
+  noRouteErrorHandler,
+  clientSideErrorHandler,
+  serverErrorHandler,
+} from '@utils/errorsHandling'
 import { isArraysEqual } from '@utils/isEqual'
-import './App.scss'
 import ForumTopicDetail from '@components/ForumTopicDetail'
 import AddForumTopicForm from '@components/AddForumTopicForm'
 import EditForumTopicForm from '@components/EditForumTopicForm'
 import ForumTopicsList from '@components/ForumTopicsList'
+import { muteRes } from '@utils/index'
+import './App.scss'
 
 function App() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const setAppTheme = (themeName: string, themesList?: string[]) => {
     if (
       themesList &&
@@ -51,9 +59,10 @@ function App() {
       appThemeName.current = themeName
       appThemesController
         .setTheme(themeName)
-        .catch(error =>
-          serverErrorHandler(error, () => navigate(ROUTES.SERVER_ERROR))
-        )
+        .catch(error => {
+          clientSideErrorHandler(error, () => alert('Что-то пошло не так...'))
+          serverErrorHandler(error, () => alert('Что-то пошло не так...'))
+        })
         .finally(() => localStorage.setItem('activeTheme', themeName)) // local storage as fallback
       setTheme({
         active: themeName,
@@ -70,8 +79,6 @@ function App() {
     list: appThemesList.current,
   })
 
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   useEffect(() => {
     let storedThemesList: string[] | null
     const serializedThemesList = localStorage.getItem('themesList')
@@ -109,9 +116,11 @@ function App() {
           }
         })
       )
-      .catch(error =>
+      .catch(error => {
+        noRouteErrorHandler(error, () => navigate(ROUTES.NO_ROUTE))
+        clientSideErrorHandler(error, muteRes)
         serverErrorHandler(error, () => navigate(ROUTES.SERVER_ERROR))
-      )
+      })
   }, [])
 
   const refAppContainer = useRef<HTMLDivElement>(null)

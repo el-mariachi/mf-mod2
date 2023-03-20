@@ -17,14 +17,14 @@ export default new (class {
           return theme
         })
       })
-      .catch(error => apiErrorHandler(error))
+      .catch(apiErrorHandler)
   }
   getTheme() {
     if (this._userId) {
       return appUsersApi
         .getAppUser(this._userId)
         .then(userData => userData.user_theme?.theme.theme || '')
-        .catch(error => apiErrorHandler(error))
+        .catch(error => apiErrorHandler(error, true))
     }
     return Promise.resolve('')
   }
@@ -33,7 +33,7 @@ export default new (class {
       const themeId = this._themes[themeName]
       return appUsersApi
         .setAppUserTheme(this._userId, themeId)
-        .catch(error => apiErrorHandler(error))
+        .catch(error => apiErrorHandler(error, true))
     }
     return Promise.resolve()
   }

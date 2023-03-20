@@ -95,7 +95,7 @@ export default class RestApi {
               break
 
             case AppErrorCode.restApiAuth:
-            case 407:  
+            case 407:
               code = statusCode
               msg ||= 'unauthorized'
               break
@@ -113,7 +113,7 @@ export default class RestApi {
             case AppErrorCode.restApiDependency:
               code = statusCode
               msg ||= 'data dependencies or logic error'
-              break  
+              break
 
             case AppErrorCode.restApiServer:
               code = statusCode
