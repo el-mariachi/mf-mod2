@@ -17,21 +17,21 @@ const Main = () => {
         Тут будет описание игры. Lorem ipsum dolor sit amet consectetur
         adipisicing elit. Possimus nam suscipit nisi minima beatae quis, debitis
         nemo dolore ratione exercitationem dolores rerum impedit natus totam
-        барбамбия киргуду!
+        veniam est laboriosam. Doloribus, obcaecati!
       </p>
 
       <p>
         Тут будет информация как играть. Lorem ipsum dolor sit amet consectetur
         adipisicing elit. Possimus nam suscipit nisi minima beatae quis, debitis
         nemo dolore ratione exercitationem dolores rerum impedit natus totam
-        veniam est laboriosam. барбамбия киргуду!
+        veniam est laboriosam. Doloribus, obcaecati!
       </p>
 
       <p>
         Тут будет информация как играть. Lorem ipsum dolor sit amet consectetur
         adipisicing elit. Possimus nam suscipit nisi minima beatae quis, debitis
         nemo dolore ratione exercitationem dolores rerum impedit natus totam
-        veniam est laboriosam. барбамбия киргуду!
+        veniam est laboriosam. Doloribus, obcaecati!
       </p>
 
       <Button className="text-center main__btn-start" onClick={play}>
