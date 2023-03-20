@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express'
 import {
   createProxyMiddleware,
   responseInterceptor,
+  fixRequestBody,
 } from 'http-proxy-middleware'
 import { YA_API_BASE_URL } from '../constants/api'
 import { User } from '@models/User'
@@ -60,5 +61,6 @@ export const proxy: RequestHandler = async (req, res, next) => {
 
       return responseBuffer
     }),
+    onProxyReq: fixRequestBody,
   })(req, res, next)
 }
