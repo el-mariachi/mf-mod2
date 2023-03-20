@@ -1,0 +1,51 @@
+name: Push To Yandex Cloud CR
+on:
+  push:
+    branches:
+      - deploy
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v1.1.0
+        with:
+          yc-sa-json-credentials: '${{ secrets.YC_SA_JSON_CREDENTIALS }}'
+      - name: 'Build, tag, and push image to Yandex Cloud Container Registry'
+        env:
+          CR_REGISTRY: crpc8d2nuco96mg2a5f4
+          CR_REPOSITORY: onebit
+          IMAGE_TAG: '${{ github.sha }}'
+          CLIENT_PORT: 3000
+          SERVER_PORT: 3001
+          POSTGRES_USER: '${{ secrets.POSTGRES_USER }}'
+          POSTGRES_PASSWORD: '${{ secrets.POSTGRES_PASSWORD }}'
+          POSTGRES_DB: postgres
+          POSTGRES_PORT: 5432
+        run: |
+          docker compose build
+          docker tag prakticum-client:latest cr.yandex/$CR_REGISTRY/prakticum-client:latest
+          docker push cr.yandex/$CR_REGISTRY/prakticum-client:latest
+          docker tag prakticum-server:latest cr.yandex/$CR_REGISTRY/prakticum-server:latest
+          docker push cr.yandex/$CR_REGISTRY/prakticum-server:latest
+  load:
+    name: Update
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to VPS and create new containers from new images
+        uses: appleboy/ssh-action@master
+        with:
+          host: '${{ secrets.VPS_HOST }}'
+          username: '${{ secrets.VPS_USERNAME }}'
+          key: '${{ secrets.VPS_KEY }}'
+          script: |
+            cd /home/'${{ secrets.VPS_USERNAME }}'
+            docker pull cr.yandex/crpc8d2nuco96mg2a5f4/prakticum-client:latest
+            docker pull cr.yandex/crpc8d2nuco96mg2a5f4/prakticum-server:latest
+            docker-compose up -d --force-recreate --no-deps client server
+            docker image prune --all --force
