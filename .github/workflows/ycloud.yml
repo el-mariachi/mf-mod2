@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
-        uses: yc-actions/yc-cr-login@v0.1-alpha
+        uses: yc-actions/yc-cr-login@v1.1.0
         with:
           yc-sa-json-credentials: '${{ secrets.YC_SA_JSON_CREDENTIALS }}'
       - name: 'Build, tag, and push image to Yandex Cloud Container Registry'
@@ -44,7 +44,7 @@ jobs:
           username: '${{ secrets.VPS_USERNAME }}'
           key: '${{ secrets.VPS_KEY }}'
           script: |
-            cd /home/user
+            cd /home/'${{ secrets.VPS_USERNAME }}'
             docker pull cr.yandex/crpc8d2nuco96mg2a5f4/prakticum-client:latest
             docker pull cr.yandex/crpc8d2nuco96mg2a5f4/prakticum-server:latest
             docker-compose up -d --force-recreate --no-deps client server
