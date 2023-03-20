@@ -10,13 +10,15 @@ export type ForumAvatarProps = HTMLAttributes<HTMLDivElement> & {
   size?: 'small' | 'regular' | 'large' | 'auto'
 }
 const ForumAvatar: FC<ForumAvatarProps> = ({
-  image = dummyAvatarImg,
+  image,
   alt = 'Аватар',
   title = 'Аватар',
   size = 'regular',
   className: cls,
   ...attrs
 }) => {
+
+  const avatar_img = image? `/api/resources/${image}` : dummyAvatarImg
   return (
     <div
       className={classNames(cls, 'forum-avatar', {
@@ -31,7 +33,7 @@ const ForumAvatar: FC<ForumAvatarProps> = ({
         )}
         alt={alt}
         title={title}
-        src={image}
+        src={avatar_img}
       />
     </div>
   )

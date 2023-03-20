@@ -1,13 +1,5 @@
-import {
-  FC,
-  HTMLAttributes,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { FC, HTMLAttributes, useEffect, useRef } from 'react'
 import classNames from 'classnames'
-import { Pagination } from 'react-bootstrap'
 import ForumComment from '@components/ForumComment'
 import './ForumCommentsList.scss'
 import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
@@ -40,13 +32,8 @@ const ForumCommentsList: FC<ForumCommentsListProps> = ({
     } else {
       setCommentIsLoading(false)
     }
-  }, [topic.comments])
+  }, [])
 
-  /*comments.push(  {
-    user: {user_name: 'Петр', avatar: null, yandex_id:1},
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-    created_at: new Date(2023, 0, 18, 14, 33).toDateString(),
-  },)*/
   return (
     <div className={classNames(cls, 'forum-comments-list')} {...attrs}>
       <ul className="forum-comments-list__list d-flex flex-column mb-3">
@@ -55,7 +42,7 @@ const ForumCommentsList: FC<ForumCommentsListProps> = ({
         ) : (
           comments.map((comment, index) => (
             <li key={index} className="forum-comments-list__comment">
-              <ForumComment comment={comment}>{comment.text}</ForumComment>
+              <ForumComment topic={topic} comment={comment}>{comment.text}</ForumComment>
             </li>
           ))
         )}

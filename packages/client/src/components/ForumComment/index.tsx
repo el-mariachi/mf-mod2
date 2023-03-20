@@ -1,6 +1,6 @@
-import { FC, HTMLAttributes, useState } from 'react'
+import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import classNames from 'classnames'
-import { Button, Form } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import AddForumCommentForm from '@components/AddForumCommentForm'
 import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
@@ -9,17 +9,25 @@ import './ForumComment.scss'
 import useForumUserIsOwner from '@hooks/useForumUserIsOwner'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
 import { removeComment } from '@store/slices/forum'
-import { minMax } from '@utils/validations'
-import { useForm } from 'react-hook-form'
-import FormControl from '@components/FormControl'
 
 export type ForumCommentProps = HTMLAttributes<HTMLDivElement> & {
   comment: TopicComment
+  topic: Topic
 }
-type ForumCommentStruct = Record<'comment', string>
+
+const getRespondComment = (topic: Topic, parent_id: number) => {
+  const respondComment = topic?.comments?.find(item => item.id === parent_id)
+  if (respondComment) {
+    return `@${respondComment?.user?.user_name} ${datePrettify(
+      new Date(respondComment.created_at),
+      true
+    )}`
+  }
+}
 
 const ForumComment: FC<ForumCommentProps> = ({
   comment,
+  topic,
   className: cls,
   children: text = '',
   ...attrs
@@ -28,7 +36,7 @@ const ForumComment: FC<ForumCommentProps> = ({
   const { user_name, avatar } = user as ForumUser
   const isOwner = useForumUserIsOwner(user as ForumUser)
   const dateCreate = new Date(created_at)
-  const respondTo = `@Стас ${datePrettify(new Date(2023, 1, 27, 6, 17), true)}`
+  const respondTo = getRespondComment(topic, comment.parent_id as number)
   const [doResponse, setDoResponse] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const dispatch = useAppDispatch()
@@ -41,6 +49,11 @@ const ForumComment: FC<ForumCommentProps> = ({
     e.preventDefault()
     dispatch(removeComment(comment))
   }
+
+  useEffect(() => {
+    setDoResponse(false)
+    setEditMode(false)
+  }, [topic])
 
   return (
     <div className={classNames(cls, 'forum-comment p-3 border')} {...attrs}>
@@ -63,16 +76,23 @@ const ForumComment: FC<ForumCommentProps> = ({
             <div className="fst-italic forum-comment__respond">{respondTo}</div>
           ) : null}
           <div className="forum-comment__text">
-            {editMode ? (
-              <AddForumCommentForm comment={comment} topicId={topic_id} setEditMode={setEditMode} />
-            ) : (
-              <p className="p-0">{text}</p>
-            )}
+            {
+              /**  редактировать текущий кооментарий */
+              editMode ? (
+                <AddForumCommentForm comment={comment} topicId={topic_id} />
+              ) : (
+                <p className="p-0">{text}</p>
+              )
+            }
           </div>
         </div>
       </div>
       <div className="forum-comment-buttons d-flex justify-content-sm-end">
-        {isOwner ? (
+        {editMode ? (
+          <Button size="sm" onClick={() => setEditMode(false)}>
+            Не редактировать
+          </Button>
+        ) : isOwner ? (
           <div className="forum-comment__actions">
             <Button
               onClick={onEdit}
@@ -97,6 +117,7 @@ const ForumComment: FC<ForumCommentProps> = ({
           </Button>
         )}
       </div>
+      {/** Добавить комментарий к текущему комментарию*/}
       <AddForumCommentForm
         topicId={topic_id}
         parentId={comment.id}
