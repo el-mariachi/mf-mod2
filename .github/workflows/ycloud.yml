@@ -2,7 +2,7 @@ name: Push To Yandex Cloud CR
 on:
   push:
     branches:
-      - dev-deploy
+      - deploy
   workflow_dispatch:
 
 jobs:
