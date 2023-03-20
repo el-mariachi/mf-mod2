@@ -35,7 +35,7 @@ class UserAPI {
     const { id } = body
     const user = await userService.find({ yandex_id })
     if (user === null) {
-      return response.status(404).end(`No such user`)
+      return response.status(424).end(`No such user`)
     }
     const theme = await themeService.find({ id })
     if (theme === null) {

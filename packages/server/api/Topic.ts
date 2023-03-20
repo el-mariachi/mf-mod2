@@ -32,7 +32,7 @@ TopicApi.get('/:id', (req: Request, res: Response) => {
   }).then(topic =>
     topic
       ? res.status(200).json(topic)
-      : res.status(404).json({ type: 'error', message: 'Topic not found' })
+      : res.status(404).end('Topic not found')
   )
 })
 
@@ -93,7 +93,7 @@ TopicApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
     .then(result => {
       const [count] = result
       if (count === 0) {
-        res.status(404).json({ type: 'error', message: 'Topic not found' })
+        res.status(404).end('Topic not found')
       } else {
         res.status(200).json(1)
       }

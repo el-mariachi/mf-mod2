@@ -10,7 +10,7 @@ CommentApi.get('/:id', (req: Request, res: Response) => {
     comment =>
       comment
         ? res.status(200).json(comment)
-        : res.status(404).json({ type: 'error', message: 'Comment not found' })
+        : res.status(404).end('Comment not found')
   )
 })
 
@@ -43,7 +43,7 @@ CommentApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
     .then(result => {
       const [count, comments] = result
       if (count === 0) {
-        res.status(404).json({ type: 'error', message: 'Comment not found' })
+        res.status(404).end('Comment not found') 
       } else {
         res.status(200).json(comments[0])
       }
