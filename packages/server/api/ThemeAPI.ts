@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express'
 import { ThemeService } from '@services/ThemeService'
-import { combineValidationErrors } from '@utils/index'
+import { processDBErrors } from '@utils/processDBErrors'
+import type { BaseError } from 'sequelize'
 const themeService = new ThemeService()
 
 class ThemeAPI {
@@ -22,9 +23,8 @@ class ThemeAPI {
       await themeService.create(body)
       return response.status(201).end('Success')
     } catch (error) {
-      return response
-        .status(500)
-        .json({ reason: combineValidationErrors(error) })
+      const { code, message } = processDBErrors(error as BaseError)
+      return response.status(code).json({ reason: message })
     }
   }
   public static delete = async (request: Request, response: Response) => {
