@@ -5,7 +5,7 @@ import { Size } from '@type/game'
 export const useWinSize = (initialSize = defaultMapSize) => {
   const [size, setSize] = useState(initialSize)
 
-  let resized: NodeJS.Timeout
+  let resized: ReturnType<typeof setTimeout>
   const windowResizeHandler = (e: Event) => {
     const targetWindow = e.currentTarget as Window
     // wait for the end of resizing

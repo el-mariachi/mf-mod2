@@ -5,25 +5,25 @@
 Проект по созданию браузерной игры на 
 - TypeScript, 
 - Canvas API,  
-и игрового сайта с использованием в клиентской части:
+и игрового сайта с использованием в клиентской части:  
 - React & Redux,
 - React-Router, 
 - Redux-toolkit, 
 - SCSS,
 - Axios, 
-- OAuth,
+- OAuth,  
 а также браузерных Web API: 
 - Web Workers
 - Performance API, 
 - Fullscreen API, 
 - Notifications API, 
-- localStorage;
+- localStorage;  
 использованием в серверной части:
 - ExpressJS,
 - SSR (custom),
 - Nginx,
 - PostgreSQL, 
-- Sequelize;
+- Sequelize;  
 использованием для сборки и проч.:
 - NodeJS, 
 - Lerna,
@@ -64,9 +64,8 @@ yarn dev — запуск проекта, выполнить в packages/server
 Выполнить последовательно
 ```
 yarn bootstrap — для установки зависимостей и создания нужных папок 
-make run — сборка в production-режиме 
-make run-dev — сборка в development-режиме 
-make stop — остановка контейнеров
+make run-local — сборка в production-режиме для локального запуска (3000й порт). Запуск в контейнерах с nginx в качестве основного сервера. Требуется сгенерировать сертификаты для HTTPS и разместить их в соответствии с Dockerfile.clientloc. Для остановки выполнить make stop-local для остановки.
+make run-dev — сборка в development-режиме для локального запуска (3000й порт). Запускается сервер в контейнере с пробросом папок с исходниками в контейнер для отладки, а также postgres и админка. Для остановки выполнить make stop-dev
 ```
 
 #### Прочие команды
