@@ -5,10 +5,15 @@ import Form from 'react-bootstrap/Form'
 import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
 import { getLBData } from '@services/leaderboardController'
 import { MsecondsToHMS } from '@utils/secondsFormat'
+import insertionSort from '@utils/insertionSort'
 
 const inputData: LeaderboardDataResp[] = []
 
-enum SortedVal {
+if (!Array.prototype.customSort) {
+  Array.prototype.customSort = insertionSort
+}
+
+export enum SortedVal {
   score = 'score',
   coins = 'coins',
   steps = 'steps',
@@ -17,7 +22,7 @@ enum SortedVal {
 }
 
 function LeaderboardList() {
-  const [sortMode, setSortMode] = useState(0)
+  const [sortMode, setSortMode] = useState(SortedVal.score)
   const [lbData, setLbData] = useState(inputData)
 
   const req: LeaderboardDataReq = {
@@ -33,51 +38,9 @@ function LeaderboardList() {
   }, [])
 
   let counter = 0
-  let sortedVal = SortedVal.score
 
-  switch (sortMode) {
-    case 0:
-      sortedVal = SortedVal.score
-      lbData.sort((a, b) => {
-        return b.data.score - a.data.score
-      })
-      break
-    case 1:
-      sortedVal = SortedVal.coins
-      lbData.sort((a, b) => {
-        return b.data.coins - a.data.coins
-      })
-      break
-    case 2:
-      sortedVal = SortedVal.steps
-      lbData.sort((a, b) => {
-        if (b.data.steps > a.data.steps) {
-          return -1
-        } else if (b.data.steps < a.data.steps) {
-          return 1
-        } else {
-          return 0
-        }
-      })
-      break
-    case 3:
-      sortedVal = SortedVal.time
-      lbData.sort((a, b) => {
-        if (b.data.time > a.data.time) {
-          return -1
-        } else if (b.data.time < a.data.time) {
-          return 1
-        } else {
-          return 0
-        }
-      })
-      break
-    case 4:
-      sortedVal = SortedVal.kills
-      lbData.sort((a, b) => {
-        return b.data.killCount - a.data.killCount
-      })
-      break
+  if (lbData.length > 0) {
+    lbData.customSort(sortMode)
   }
 
   return (
@@ -89,14 +52,14 @@ function LeaderboardList() {
         <Form.Select
           id="sortSelect"
           onChange={e => {
-            setSortMode(Number(e.currentTarget.value))
+            setSortMode(e.currentTarget.value as SortedVal)
           }}
           className="flex-1">
-          <option value="0">Счет</option>
-          <option value="1">Монеты</option>
-          <option value="2">Шаги</option>
-          <option value="3">Время</option>
-          <option value="4">Враги</option>
+          <option value={SortedVal.score}>Счет</option>
+          <option value={SortedVal.coins}>Монеты</option>
+          <option value={SortedVal.steps}>Шаги</option>
+          <option value={SortedVal.time}>Время</option>
+          <option value={SortedVal.kills}>Враги</option>
         </Form.Select>
       </div>
       <div className="overflow-auto">
@@ -104,9 +67,9 @@ function LeaderboardList() {
           {lbData.map(user => {
             counter++
             const val =
-              sortedVal == SortedVal.time
-                ? MsecondsToHMS(user.data[sortedVal])?.toString()
-                : user.data[sortedVal]?.toString()
+              sortMode == SortedVal.time
+                ? MsecondsToHMS(user.data[sortMode])?.toString()
+                : user.data[sortMode]?.toString()
             return (
               <Lb_User
                 key={user?.data.nickname ? user?.data.nickname : 0}

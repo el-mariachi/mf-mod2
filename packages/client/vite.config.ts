@@ -15,6 +15,14 @@ export default defineConfig({
     RENDERED_ON_SERVER: false,
   },
   plugins: [react(), tsconfigPaths()],
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: `assets/[name][extname]`,
+        entryFileNames: `assets/[name].js`,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve('../../', __dirname, 'src'),

@@ -1,6 +1,6 @@
 import oauthApi from '@api/oauthApi'
 import { API_OAUTH_REDIRECT_URL, API_YANDEX_OAUTH_URL } from '@constants/api'
-
+import { getOAuthRedirectUrl } from '@utils/index'
 interface Strategy {
   authenticate(args: unknown[]): Promise<boolean>
 }
@@ -9,11 +9,15 @@ export const signInWithYandex = () => {
   const code = new URLSearchParams(window.location.search).get('code')
   if (code) {
     return new Promise((resolve, reject) => {
-      window.history.pushState({}, '', API_OAUTH_REDIRECT_URL)
+      window.history.pushState(
+        {},
+        '',
+        getOAuthRedirectUrl(API_OAUTH_REDIRECT_URL)
+      )
       return oauthApi
         .signInWithYandexId({
           code,
-          redirect_uri: API_OAUTH_REDIRECT_URL,
+          redirect_uri: getOAuthRedirectUrl(API_OAUTH_REDIRECT_URL),
         })
         .then(resolve)
         .catch(reject)
@@ -32,7 +36,7 @@ class Authenticator {
   use(serviceName: string, strategy: Strategy) {
     this.strategies[serviceName] = strategy
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async authenticate(serviceName: string, ...args: any) {
     if (!this.strategies[serviceName]) {
       console.error('Политика аутентификации не установлена!')
@@ -46,11 +50,14 @@ class Authenticator {
 class YandexStrategy implements Strategy {
   async authenticate() {
     const { service_id } = await oauthApi.getYandexServiceId(
-      API_OAUTH_REDIRECT_URL
+      getOAuthRedirectUrl(API_OAUTH_REDIRECT_URL)
     )
     const url = new URL(API_YANDEX_OAUTH_URL)
     url.searchParams.set('client_id', service_id)
-    url.searchParams.set('redirect_uri', API_OAUTH_REDIRECT_URL)
+    url.searchParams.set(
+      'redirect_uri',
+      getOAuthRedirectUrl(API_OAUTH_REDIRECT_URL)
+    )
     window.location.href = url.href
     return true
   }

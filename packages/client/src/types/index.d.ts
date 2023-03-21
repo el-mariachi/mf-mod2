@@ -1,3 +1,5 @@
+import { LeaderboardDataResp } from '@api/leaderboardApi'
+
 declare global {
   export type User = {
     id: number
@@ -8,6 +10,13 @@ declare global {
     avatar: string
     phone: string
     email: string
+  }
+
+  interface Array<T> {
+    customSort(
+      this: LeaderboardDataResp[],
+      sortVal: SortedVal
+    ): LeaderboardDataResp[]
   }
 
   type UserDTO = {
