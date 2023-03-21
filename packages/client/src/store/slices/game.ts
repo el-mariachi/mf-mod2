@@ -8,7 +8,7 @@ import SCENES from '@constants/scenes'
 import { RootState } from '@store/index'
 import { resetHeroResources } from '@store/slices/hero'
 import { computeScore } from '@utils/computeScore'
-import knightImg from '../../assets/images/knight.png'
+import knightImg from '@images/knight.png'
 import {
   gameInitialState,
   LifeControllerState,
@@ -24,6 +24,7 @@ import leaderboardApi, {
   LeaderboardDataResp,
 } from '@api/leaderboardApi'
 import { getLBData, putLBData } from '@services/leaderboardController'
+import callNotification from '@utils/scoreNotification'
 
 const updateTotals = (state: GameSlice) => {
   state.gameTotals.coins += state.levelStats.coins
@@ -200,35 +201,8 @@ export const finishLevel =
         teamName: TEAM_NAME_LB_API,
       }
 
-      const req: LeaderboardDataReq = {
-        ratingFieldName: 'score',
-        cursor: 0,
-        limit: 10,
-      }
+      callNotification(getState().user, getState().game, lbData);
 
-      getLBData(req).then((data: LeaderboardDataResp[]) => {
-        const el = data.filter(
-          user => user.data.nickname == getState().user.data.display_name
-        )[0]
-        if (!el || el.data.score < getState().game.score) {
-          putLBData(lbData).then(() => {
-            if (window.Notification) {
-              Notification.requestPermission().then((status) => {
-                if(status !== 'denied'){
-                  const n = new Notification('One Bit Dungeon', {
-                    body: 'Congratulations! Your data was saved, check the leaderboard!',
-                    icon: knightImg,
-                  })
-                  n.onclick = () => {
-                    window.location.assign('/leaderboard')
-                  }
-                  setTimeout(function() { n.close() }, 2000);
-                }
-              })
-            }
-          })
-        }
-      })
     }
   }
 export const nextLevel =
