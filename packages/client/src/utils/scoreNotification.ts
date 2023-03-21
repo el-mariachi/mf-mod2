@@ -1,6 +1,6 @@
 import { getLBData, putLBData } from '@services/leaderboardController'
 import { LeaderboardData, LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
-import knightImg from '../assets/images/knight.png'
+import knightImg from '@images/knight.png'
 import { UserSlice } from '@constants/user'
 import { GameSlice } from '@constants/game'
 

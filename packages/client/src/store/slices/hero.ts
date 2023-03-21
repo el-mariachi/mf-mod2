@@ -5,7 +5,6 @@ import {
   AnyAction,
 } from '@reduxjs/toolkit'
 import type { RootState } from '@store/index'
-// import { die } from '@store/slices/game'
 import { createRangeKeeper } from '@utils/index'
 import { heroPresets, heroInitialState } from '@constants/hero'
 import type { HeroSlice } from '@constants/hero'

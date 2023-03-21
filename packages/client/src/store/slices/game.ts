@@ -8,7 +8,6 @@ import SCENES from '@constants/scenes'
 import { RootState } from '@store/index'
 import { resetHeroResources } from '@store/slices/hero'
 import { computeScore } from '@utils/computeScore'
-import knightImg from '@images/knight.png'
 import {
   gameInitialState,
   LifeControllerState,
