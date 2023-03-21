@@ -36,7 +36,7 @@ TopicApi.get('/:id', (req: Request, res: Response) => {
   )
 })
 
-TopicApi.get('/', checkAuthMiddleware, (req: Request, res: Response) => {
+TopicApi.get('/', (req: Request, res: Response) => {
   const { page = 1 } = req.query
   Topic.findAndCountAll({
     attributes: {
