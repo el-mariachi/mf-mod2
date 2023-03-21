@@ -14,7 +14,6 @@ const useGameModalClose = (onClose?: () => void) => {
 
   return () => {
     onClose?.()
-    dispatch(resumeGame())
   }
 }
 export default useGameModalClose
