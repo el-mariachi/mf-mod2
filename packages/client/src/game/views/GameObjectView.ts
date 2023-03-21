@@ -1,13 +1,14 @@
 import * as Types from '@type/game'
 import GameObjectSprite from '@game/sprite/GameObjectSprite'
+import { cellCoords2PixelCoords, isCoordsEqual } from '@utils/game'
 
 export default class GameObjectView
   implements Types.DrawableOnCanvas, Types.GameObjectViewDef
 {
+  protected _positionCache: Types.Coords = [0, 0]
   constructor(protected _sprite: GameObjectSprite, position?: Types.Coords) {
     if (position) {
       this.position = position
-      this.render()
     }
   }
   get sprite() {
@@ -21,6 +22,7 @@ export default class GameObjectView
   }
   set position(position: Types.Coords) {
     this.sprite.cellGeometry = { position }
+    this._positionCache = position
     this.render()
   }
   get size() {
@@ -31,5 +33,15 @@ export default class GameObjectView
   }
   toggle(flag?: boolean) {
     this.sprite.toggle(flag)
+  }
+  actualizeOnCanvas(map: Types.LevelMap) {
+    const curPosition = this.sprite.position
+    const position = map.onCanvasCoords(
+      cellCoords2PixelCoords(this._positionCache)
+    )
+    if (!isCoordsEqual(curPosition, position)) {
+      this.sprite.geometry = { position }
+      this.render()
+    }
   }
 }

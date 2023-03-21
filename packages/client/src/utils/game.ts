@@ -1,7 +1,6 @@
 import { MAP_CELL } from '@constants/game'
 import * as Types from '@type/game'
 import { roundArrValues, createRangeKeeper } from '@utils/index'
-import { center } from '@utils/winsize'
 
 export const cellCoords2PixelCoords = (coords: Types.Coords) =>
   coords.map(coord => cells2pixels(coord)) as Types.Coords
@@ -48,15 +47,12 @@ export const nextCoordsByVector = (
         break
     }
   }
-  return nextCoords
+  return nextCoords as Types.Coords
 }
 export const addCoords = (coords: Types.Coords, add: Types.Coords) =>
   [coords[0] + add[0], coords[1] + add[1]] as Types.Coords
 export const subtractCoords = (coords: Types.Coords, subtract: Types.Coords) =>
   [coords[0] - subtract[0], coords[1] - subtract[1]] as Types.Coords
-// DEPRECATED relCoords
-export const relCoords = (rel: Types.Coords, coords: Types.Coords) =>
-  addCoords(rel, coords)
 export const isCoordsEqual = (coordsA: Types.Coords, coordsB: Types.Coords) =>
   coordsA[0] == coordsB[0] && coordsA[1] == coordsB[1]
 export const calcSpeed = (
@@ -89,18 +85,8 @@ export const calcLineMoveCoord = (
 ) => rel + speed * duration
 export const roundCoords = (coords: Types.Coords) =>
   roundArrValues<Types.Coords>(coords)
-// TODO temporary hack for mapSize definition
-export const mapSize = () => [384, 672] as Types.Size
-export const mapCellSize = () => pixelCoords2CellCoords(mapSize()) as Types.Size
-export const mapCoords = () =>
-  roundCoords([
-    center.width - mapSize()[0] / 2,
-    center.height - mapSize()[1] / 2,
-  ])
-export const onCanvasCoords = (onMapCoords: Types.Coords) =>
-  addCoords(onMapCoords, mapCoords())
-export const onMapCoords = (onCanvasCoords: Types.Coords) =>
-  subtractCoords(onCanvasCoords, mapCoords())
+export const calcCenter = (size: Types.Size) =>
+  [Math.floor(size[0] / 2), Math.floor(size[1] / 2)] as Types.Coords
 export const coords2rowcol = ([x, y]: Types.Coords) => [y, x] as Types.Coords
 export const rowcol2coords = ([row, col]: Types.Coords) =>
   [col, row] as Types.Coords // the same operation as above, just for semantic
@@ -147,19 +133,11 @@ export const nearestCoords = (
   rel: Types.Coords,
   direction: Types.AxisDirection
 ) => nextCoordsByVector(rel, { direction, length: 1 }) as Types.Coords
-export const actualizeCoords = (coords: Types.Coords, size = mapSize()) => {
+export const actualizeCoords = (coords: Types.Coords, size: Types.Size) => {
   const horMapKeeper = createRangeKeeper(0, size[0])
   const vertMapKeeper = createRangeKeeper(0, size[1])
   return [horMapKeeper(coords[0]), vertMapKeeper(coords[1])] as Types.Coords
 }
-export const actualizeCellCoords = (
-  coords: Types.Coords,
-  size = mapCellSize()
-) => {
-  return actualizeCoords(coords, subtractCoords(size, [1, 1]))
-}
-export const isCoordsActual = (coords: Types.Coords) =>
-  isCoordsEqual(coords, actualizeCellCoords(coords))
 export const getArea = (rel: Types.Coords, size: number) => {
   size = Math.round(size)
   if (size <= 0) {
@@ -168,37 +146,7 @@ export const getArea = (rel: Types.Coords, size: number) => {
   const areaSize = [size, size] as Types.Coords
   return [subtractCoords(rel, areaSize), addCoords(rel, areaSize)] as Types.Area
 }
-export const getMapArea = (levelMap: Types.LevelMap, area: Types.Area) => {
-  let [areaFrom, areaTo] = area
-  areaFrom = actualizeCellCoords(areaFrom)
-  areaTo = actualizeCellCoords(areaTo)
 
-  const [fromCol, frowRow] = areaFrom
-  const [toCol, toRow] = areaTo
-  const mapArea: Types.LevelMap = []
-  for (let row = frowRow; row <= toRow; row++) {
-    if (!mapArea[row]) {
-      mapArea[row] = []
-    }
-    for (let col = fromCol; col <= toCol; col++) {
-      mapArea[row][col] = levelMap[row][col]
-    }
-  }
-  return mapArea
-}
-export const getMapCellsAround = (
-  levelMap: Types.LevelMap,
-  rel: Types.Coords,
-  size: number
-) => {
-  if (!isCoordsActual(rel)) {
-    return []
-  }
-  const area = getArea(rel, size)
-  return getMapArea(levelMap, area)
-    .flat(1)
-    .filter(cell => !isCoordsEqual(rowcol2coords(cell.position), rel))
-}
 // DEPRICATED, duplicate defineDir above
 export const defineDirection = (
   curPos: Types.Coords,
@@ -286,4 +234,23 @@ export const actualizePosition = (unit: Types.Unit) => {
       unit.view.render()
     }
   }
+}
+
+export const toggleFullscreen = (flag?: boolean) => {
+  if (RENDERED_ON_SERVER) {
+    return null
+  }
+  const toggle = flag ?? !document.fullscreenElement
+  if (toggle) {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      return true
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen()
+      return false
+    }
+  }
+  return null
 }

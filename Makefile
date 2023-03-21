@@ -8,8 +8,13 @@ run-db:
 	docker compose -f docker-compose-db.yml up -d
 run-admin:
 	docker compose -f docker-compose-admin.yml up -d
-stop:
-	docker compose stop
-	docker compose down
+stop-local:
+	docker compose -f docker-compose-local.yml stop
+stop-dev:
+	docker compose -f docker-compose-dev.yml stop
+stop-db:
+	docker compose -f docker-compose-db.yml stop
+stop-admin:
+	docker compose -f docker-compose-admin.yml stop
 inspect:
 	docker run --rm -it prakticum-client-local bash

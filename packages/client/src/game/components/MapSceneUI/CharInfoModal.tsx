@@ -5,7 +5,7 @@ import { selectUserData } from '@store/selectors'
 import useGameModalClose from '@hooks/useGameModalClose'
 import GameUIModal, { GameUIModalProps } from '@game/components/GameUIModal'
 import GameUIButton from '@game/components/GameUIButton'
-import heroImg from '@images/knight.png'
+import heroImg from '@images/knight-picture.png'
 
 export type CharInfoModalProps = GameUIModalProps & {
   hero?: Hero
@@ -15,7 +15,7 @@ const CharInfoModal: FC<CharInfoModalProps> = ({ close, hero, ...props }) => {
   const { display_name } = useAppSelector(selectUserData)
 
   return (
-    <GameUIModal close={closeModal} title="Character info" {...props}>
+    <GameUIModal close={closeModal} title="Character info (C)" {...props}>
       <div className="d-flex map-scene-ui__char-info">
         <img src={heroImg} />
         <div className="map-scene-ui__char-info-props">

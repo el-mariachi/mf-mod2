@@ -5,21 +5,21 @@ export default class GameObjectSprite extends CellSprite {
   constructor(
     ctx: CanvasRenderingContext2D,
     atlas: Types.SpriteAtlas,
+    map: Types.LevelMap,
+    initGeometry?: Types.CellSpriteGeometry | null,
     motions?: Types.CellSpriteMotions
   ) {
-    let originPosition: Types.Coords = [0, 0]
-    // by default get origin from idle motion first frame
-    if (motions && Types.IdleMotionType.idle in motions) {
-      originPosition = motions[Types.IdleMotionType.idle].originPosition
+    let initSpriteGeometry: Types.CellSpriteGeometry = {
+      position: [0, 0],
+      originPosition: [0, 0],
     }
-    super(
-      ctx,
-      atlas,
-      {
-        position: [0, 0], // position would be given by view
-        originPosition,
-      },
-      motions
-    )
+    if (initGeometry) {
+      initSpriteGeometry = initGeometry
+    } else if (motions && Types.IdleMotionType.idle in motions) {
+      // by default get origin from idle motion first frame
+      initSpriteGeometry.originPosition =
+        motions[Types.IdleMotionType.idle].originPosition
+    }
+    super(ctx, atlas, map, initSpriteGeometry, motions)
   }
 }

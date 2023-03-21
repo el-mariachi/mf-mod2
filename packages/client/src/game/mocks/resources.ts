@@ -1,6 +1,5 @@
-// TODO decent resources will work out with TS-111
+// TODO decent resources manager will work out with TS-111
 
-// game resources
 import heroSprite from '@sprites/knight.png'
 import skeletonSprite from '@sprites/skeleton.png'
 import tilesetSprite from '@sprites/tileset.png'
@@ -15,7 +14,7 @@ import stepsIcn from '@images/steps_icn.png'
 import joystickIcn from '@images/joystick_icn.png'
 import scrollIcn from '@images/scroll_icn.png'
 
-import knightImg from '@images/knight.png'
+import knightImg from '@images/knight-picture.png'
 import knightHeadImg from '@images/knight-head.png'
 
 const images = [
