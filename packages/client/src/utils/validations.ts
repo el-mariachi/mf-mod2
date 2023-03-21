@@ -14,7 +14,7 @@ const noSpecialChars = (v: string) =>
 
 const minMax = (min: number, max: number) => {
   return (v: string) =>
-    new RegExp(`^.{${String(min)},${String(max)}}$`).test(v) ||
+    new RegExp(`^.{${String(min)},${String(max)}}$`, 'm').test(v) ||
     `Должно быть от ${String(min)} до ${String(max)} знаков`
 }
 

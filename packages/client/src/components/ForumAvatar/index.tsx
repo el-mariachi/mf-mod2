@@ -2,6 +2,7 @@ import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
 import dummyAvatarImg from '@images/king.png'
 import './ForumAvatar.scss'
+import { getFile } from '@api/resourceApi'
 
 export type ForumAvatarProps = HTMLAttributes<HTMLDivElement> & {
   image?: string
@@ -18,7 +19,7 @@ const ForumAvatar: FC<ForumAvatarProps> = ({
   ...attrs
 }) => {
 
-  const avatar_img = image? `/api/resources/${image}` : dummyAvatarImg
+  const avatar_img = image? getFile(image) : dummyAvatarImg
   return (
     <div
       className={classNames(cls, 'forum-avatar', {

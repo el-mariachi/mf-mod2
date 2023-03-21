@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 
 export const checkAuthMiddleware: RequestHandler = async (req, res, next) => {
   axiosInstance
-    .get(YA_API_BASE_URL + '/auth/user', {
+    .get('/auth/user', {
       headers: {
         Cookie: req.headers.cookie,
       },

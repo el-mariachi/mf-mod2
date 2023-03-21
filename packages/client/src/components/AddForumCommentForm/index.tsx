@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, useState } from 'react'
+import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import FormControl from '@components/FormControl'
 import SpinnerButton from '@components/SpinnerButton'
@@ -26,21 +26,29 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
 }) => {
   const [readOnly, setReadOnly] = useState(false)
   const dispatch = useAppDispatch()
-  const { loadingStatus } = useAppSelector(selectForum)
+  const { loadingStatus, topics } = useAppSelector(selectForum)
   const editMode = commentToEdit ? true : false
 
   const {
     register,
     handleSubmit,
     clearErrors,
+    resetField,
     formState: { errors },
   } = useForm<ForumCommentStruct>({
     ...{
       mode: 'onTouched',
       reValidateMode: 'onChange',
+      defaultValues: { text: '' },
     },
     ...(editMode && { values: { text: commentToEdit?.text ?? '' } }),
   })
+
+  /** обновляем форму после добавления коммента */
+  useEffect(() => {
+    resetField('text')
+    setReadOnly(false)
+  }, [topics])
 
   const formSubmit: SubmitHandler<ForumCommentStruct> = ({ text }) => {
     clearErrors()
@@ -74,7 +82,7 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
         />
         <Form.Group>
           <SpinnerButton loading={loadingStatus === LoadingStatus.Loading}>
-            {editMode? 'Изменить' : 'Отправить'}
+            {editMode ? 'Изменить' : 'Отправить'}
           </SpinnerButton>
         </Form.Group>
       </Form>
