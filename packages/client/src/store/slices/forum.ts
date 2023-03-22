@@ -9,18 +9,34 @@ import {
   updateComment,
 } from '@services/commentController'
 import { getComments } from '@api/commentApi'
+import {
+  AppError,
+  clientSideErrorHandler,
+  serverErrorHandler,
+} from '@utils/errorsHandling'
 
 export const loadTopic = createAsyncThunk(
   'forum/loadTopic',
-  async (id: number) => {
-    const topic = await getTopic(id)
-    return topic
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const topic = await getTopic(id)
+      return topic
+    } catch (error) {
+      return rejectWithValue(error)
+    }
   }
 )
 
 export const loadTopics = createAsyncThunk(
   'forum/loadTopics',
-  async (page: number) => await getTopics(page)
+  async (page: number, { rejectWithValue }) => {
+    try {
+      const topics = await getTopics(page)
+      return topics
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
 )
 
 export const addTopic = createAsyncThunk(
@@ -38,27 +54,39 @@ export const addTopic = createAsyncThunk(
 
 export const editTopic = createAsyncThunk(
   'forum/updateTopic',
-  async (topic: Topic) => {
-    ;(await updateTopic(topic)) as Topic
-    window.history.back()
+  async (topic: Topic, { rejectWithValue }) => {
+    try {
+      await updateTopic(topic)
+      window.history.back()
+    } catch (error) {
+      rejectWithValue(error)
+    }
     return topic
   }
 )
 
 export const removeTopic = createAsyncThunk(
   'forum/removeTopic',
-  async (id: number) => {
-    await deleteTopic(id)
-    window.history.pushState({}, '', forumLink.list)
-    return id
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await deleteTopic(id)
+      window.history.pushState({}, '', forumLink.list)
+      return id
+    } catch (error) {
+      return rejectWithValue(error)
+    }
   }
 )
 
 export const loadComments = createAsyncThunk(
   'forum/loadComments',
-  async (topic: Topic) => {
-    const comments = await getComments(topic.id)
-    return { topicId: topic.id, comments }
+  async (topic: Topic, { rejectWithValue }) => {
+    try {
+      const comments = await getComments(topic.id)
+      return { topicId: topic.id, comments }
+    } catch (error) {
+      return rejectWithValue(error)
+    }
   }
 )
 
@@ -174,6 +202,17 @@ const forumSlice = createSlice({
         action => /^forum.*?\/rejected/.test(action.type),
         state => {
           state.loadingStatus = LoadingStatus.Failed
+        }
+      )
+      .addMatcher(
+        action =>
+          /^forum\/(loadTopics?|removeTopic|loadComments|removeComment)\/rejected/.test(
+            action.type
+          ),
+        (_, action) => {
+          const error = action.payload as AppError
+          clientSideErrorHandler(error, () => alert('Что-то пошло не так...'))
+          serverErrorHandler(error, () => alert('Что-то пошло не так...'))
         }
       )
       .addMatcher(
