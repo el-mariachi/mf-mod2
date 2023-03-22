@@ -77,7 +77,7 @@ function LeaderboardList() {
       </div>
       <div className="overflow-auto">
         <Stack gap={2}>
-          {lbData.map(user => {
+          {lbData.map((user, idx) => {
             counter++
             const val =
               sortMode == SortedVal.time
@@ -85,7 +85,7 @@ function LeaderboardList() {
                 : user.data[sortMode]?.toString()
             return (
               <Lb_User
-                key={user?.data.nickname ? user?.data.nickname : 0}
+                key={idx}
                 place={counter}
                 nickname={
                   user?.data.nickname ? user?.data.nickname : '[username]'

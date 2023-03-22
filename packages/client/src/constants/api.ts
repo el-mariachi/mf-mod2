@@ -1,14 +1,14 @@
-const API_HOST = import.meta.env.PROD
-  ? 'https://team7-onebit-dungeon.ya-praktikum.tech'
-  : 'http://localhost:3001'
-const API_BASE_URL = `${API_HOST}/api`
+const API_PORT = __SERVER_PORT__ || 3001
+const API_BASE_URL = `/api`
 const API_TIMEOUT = 5000
-const API_OAUTH_REDIRECT_URL = API_HOST
+/** Для редиректа зарегистрирован адрес localhost:3000
+ * Поэтому OAuth можно использовать только запустив проект в контейнерах client, server, postgres
+ */
+const API_OAUTH_REDIRECT_URL = `http://localhost:${API_PORT}`
 const API_YANDEX_OAUTH_URL = `https://oauth.yandex.ru/authorize?response_type=code`
 export const TEAM_NAME_LB_API = 'team-seven'
 
 export {
-  API_HOST,
   API_BASE_URL,
   API_TIMEOUT,
   API_OAUTH_REDIRECT_URL,

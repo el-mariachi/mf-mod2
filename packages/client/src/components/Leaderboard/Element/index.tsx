@@ -1,6 +1,6 @@
 import LeaderboardProps from '../Props'
 import { Button, Collapse } from 'react-bootstrap'
-import dummyAvatarImg from '@images/king.png'
+// import dummyAvatarImg from '@images/king.png'
 import { useState } from 'react'
 import { MsecondsToHMS } from '@utils/secondsFormat'
 import ForumAvatar from '@components/ForumAvatar'
@@ -39,7 +39,7 @@ function Lb_User({
             <li className="list-group-item">Убитых врагов: {killCount} </li>
           </ul>
           <ForumAvatar
-            image={dummyAvatarImg}
+            // image={dummyAvatarImg}
             alt={`Аватар ${nickname}`}
             className="lb-avatar"
           />
