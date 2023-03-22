@@ -4,28 +4,13 @@ import { MsecondsToHMS } from '@utils/secondsFormat'
 import { useAppSelector, useAppDispatch } from 'hooks/redux_typed_hooks'
 import { nextLevel, startGame } from '@store/slices/game'
 import * as SELECTORS from '@store/selectors'
-import { width, height, center } from '@utils/winsize'
+import { useWinSize } from '@hooks/useWinSize'
 import SceneCanvas from '@game/components/SceneCanvas'
 import GameUIButton from '@game/components/GameUIButton'
 import RestartButton from '@game/components/RestartButton'
 import QuitButton from '@game/components/QuitButton'
+import { calcCenter } from '@utils/game'
 import './ResultScene.scss'
-
-const margin = width * 0.4 > 200 ? 200 : width * 0.4
-function _RenderStroke(
-  ctx: CanvasRenderingContext2D,
-  lStr: string,
-  rStr: string | number,
-  coords: Coords,
-  bold = false
-) {
-  ctx.fillStyle = UI.COLOR_ALMOST_WHITE
-  ctx.font = `${bold ? '700' : '400'} 24px Minecraft`
-  ctx.textAlign = 'left'
-  ctx.fillText(lStr, coords[0] - margin, coords[1])
-  ctx.textAlign = 'right'
-  ctx.fillText(String(rStr), coords[0] + margin, coords[1])
-}
 
 function ResultScene() {
   const { levelNum, gameTotals } = useAppSelector(SELECTORS.selectGameTotals)
@@ -39,6 +24,26 @@ function ResultScene() {
     time: totalTime,
     steps: totalSteps,
   } = gameTotals
+
+  const winSize = useWinSize()
+  const [width, height] = winSize
+  const center = calcCenter(winSize)
+  const renderStroke = (
+    ctx: CanvasRenderingContext2D,
+    lStr: string,
+    rStr: string | number,
+    coords: Coords,
+    bold = false
+  ) => {
+    const margin = width * 0.4 > 200 ? 200 : width * 0.4
+    ctx.fillStyle = UI.COLOR_ALMOST_WHITE
+    ctx.font = `${bold ? '700' : '400'} 24px Minecraft`
+    ctx.textAlign = 'left'
+    ctx.fillText(lStr, coords[0] - margin, coords[1])
+    ctx.textAlign = 'right'
+    ctx.fillText(String(rStr), coords[0] + margin, coords[1])
+  }
+
   const score = useAppSelector(SELECTORS.selectLevelScore)
   const totalScore = useAppSelector(SELECTORS.selectGameScore)
   const dispatch = useAppDispatch()
@@ -69,48 +74,48 @@ function ResultScene() {
     ctx.font = '700 28px Minecraft'
 
     curHeight -= 207
-    ctx.fillText(`Level ${levelNum}:`, center.width, curHeight)
+    ctx.fillText(`Level ${levelNum}:`, center[0], curHeight)
 
     ctx.fillStyle = isLevelCompleted ? UI.COLOR_YELLOW : UI.COLOR_DIRTY_PINK
     ctx.font = `700 ${isLevelCompleted ? '43px' : '36px'} Minecraft`
 
     curHeight += 40
-    ctx.fillText(resultMessage, center.width, curHeight)
+    ctx.fillText(resultMessage, center[0], curHeight)
 
     curHeight += 24 * 2 + 25
-    _RenderStroke(
+    renderStroke(
       ctx,
       'score',
       isGameCompleted ? totalScore : score,
-      [center.width, curHeight],
+      [center[0], curHeight],
       true
     )
 
     curHeight += 24 * 2
-    _RenderStroke(
+    renderStroke(
       ctx,
       'killed enemies',
       isGameCompleted ? totalKillCount : killCount,
-      [center.width, curHeight]
+      [center[0], curHeight]
     )
 
     curHeight += 24 * 2
-    _RenderStroke(ctx, 'gathered coins', isGameCompleted ? totalCoins : coins, [
-      center.width,
+    renderStroke(ctx, 'gathered coins', isGameCompleted ? totalCoins : coins, [
+      center[0],
       curHeight,
     ])
 
     curHeight += 24 * 2
-    _RenderStroke(
+    renderStroke(
       ctx,
       'time spent',
       isGameCompleted ? MsecondsToHMS(totalTime) : MsecondsToHMS(time),
-      [center.width, curHeight]
+      [center[0], curHeight]
     )
 
     curHeight += 24 * 2
-    _RenderStroke(ctx, 'steps', isGameCompleted ? totalSteps : steps, [
-      center.width,
+    renderStroke(ctx, 'steps', isGameCompleted ? totalSteps : steps, [
+      center[0],
       curHeight,
     ])
   }

@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { AnimatableOnCanvas } from '@type/game'
 import Canvas from '@components/Canvas'
-import { height, width } from '@utils/winsize'
 
 export type animatableOnCanvasFabric = (
   ctx: CanvasRenderingContext2D
@@ -18,7 +17,7 @@ const getAnimationDrawer =
       const now = performance.now()
       const dt = (now - lastAnimationTime) / 1000
 
-      ctx.clearRect(0, 0, width, height)
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
       views.forEach(view => {
         view.update(dt)

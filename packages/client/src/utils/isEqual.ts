@@ -1,17 +1,5 @@
-function isArray(value: unknown): value is [] {
-  return Array.isArray(value)
-}
-function isArrayOrObject(value: unknown): value is [] | PlainObject {
-  return isPlainObject(value) || isArray(value)
-}
-export function isPlainObject(value: unknown): value is PlainObject {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    value.constructor === Object &&
-    Object.prototype.toString.call(value) === '[object Object]'
-  )
-}
+import { isArrayOrObject } from '@utils/index'
+
 export function isObjectsEqual(a: PlainObject, b: PlainObject) {
   if (Object.keys(a).length !== Object.keys(b).length) {
     return false

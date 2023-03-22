@@ -4,7 +4,8 @@ import useLoginStatus from '@hooks/useLoginStatus'
 import { Navigate } from 'react-router-dom'
 import ROUTES from '@constants/routes'
 import { LoadingStatus, Logged } from '@store/slices/user'
-import Spinner from '@components/Spinner'
+import { Spinner } from 'react-bootstrap'
+import { COLOR_ALMOST_WHITE } from '@constants/ui'
 
 type LoggedInCheckOptions = {
   userRequired: boolean
@@ -37,7 +38,13 @@ const LoggedInCheck =
         needToRedirect = false
       }
       return isLoading ? (
-        <Spinner />
+        <Spinner
+          as="span"
+          animation="border"
+          role="status"
+          aria-hidden="true"
+          color={COLOR_ALMOST_WHITE}
+        />
       ) : needToRedirect ? (
         <Navigate to={escapeRoute} />
       ) : (

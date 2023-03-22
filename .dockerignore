@@ -4,5 +4,7 @@ node_modules
 .vscode
 docs
 Dockerfile*
-docker-compose.yml
+docker-compose*
 .DS_Store
+nginx_config
+tmp

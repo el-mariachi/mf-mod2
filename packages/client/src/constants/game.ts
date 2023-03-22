@@ -101,7 +101,5 @@ export const gameInitialState: GameSlice = {
   score: 0,
 }
 
-export const defaultMapSize = {
-  width: 384,
-  height: 672,
-}
+export const defaultMapSize = [384, 672] as Types.Size
+export const defaultWinSize = defaultMapSize

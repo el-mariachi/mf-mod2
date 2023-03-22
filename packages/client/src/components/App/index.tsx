@@ -6,7 +6,7 @@ import Leaderboard from '@pages/Leaderboard'
 import UserProfile from '@pages/UserProfile'
 import ServicePage from '@pages/ServicePage'
 import SignUp from '@pages/SignUp'
-import Main from '@pages/Main'
+import MainPage from '@pages/MainPage'
 import ROUTES from '@constants/routes'
 import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch } from '@hooks/redux_typed_hooks'
@@ -18,6 +18,10 @@ import { appThemeDefault } from '@constants/ui'
 import { serverErrorHandler } from '@utils/errorsHandling'
 import { isArraysEqual } from '@utils/isEqual'
 import './App.scss'
+import ForumTopicDetail from '@components/ForumTopicDetail'
+import AddForumTopicForm from '@components/AddForumTopicForm'
+import EditForumTopicForm from '@components/EditForumTopicForm'
+import ForumTopicsList from '@components/ForumTopicsList'
 
 function App() {
   const setAppTheme = (themeName: string, themesList?: string[]) => {
@@ -116,7 +120,7 @@ function App() {
       <div ref={refAppContainer} className="app" data-theme={theme.active}>
         <AppContainerContext.Provider value={refAppContainer}>
           <Routes>
-            <Route path={ROUTES.ROOT} element={<Main />} />
+            <Route path={ROUTES.ROOT} element={<MainPage />} />
             <Route path={ROUTES.GAME} element={<GamePage />} />
             <Route path={ROUTES.SIGN_UP} element={<SignUp />} />
             <Route path={ROUTES.SIGN_IN} element={<SignIn />} />
@@ -140,7 +144,12 @@ function App() {
                 />
               }
             />
-            <Route path={ROUTES.FORUM} element={<ForumPage />} />
+            <Route path={ROUTES.FORUM} element={<ForumPage />}>
+              <Route index element={<ForumTopicsList />} />
+              <Route path="topic/new" element={<AddForumTopicForm />} />
+              <Route path="topic/edit/:id" element={<EditForumTopicForm />} />
+              <Route path="topic/:id" element={<ForumTopicDetail />} />
+            </Route>
           </Routes>
         </AppContainerContext.Provider>
       </div>

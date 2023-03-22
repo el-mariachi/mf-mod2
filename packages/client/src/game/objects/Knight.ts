@@ -1,11 +1,11 @@
 import * as Types from '@type/game'
 import _Hero from './Hero'
 import { knightMotions } from '@game/animations/knight'
-import knightSrc from '@sprites/knight.png'
+import resources from '@game/mocks/resources'
 
 export default class Knight extends _Hero {
   heroClass = Types.HeroClass.knight
-  spriteSrc = knightSrc
+  spriteImage = resources.images['knight']
   motions = knightMotions
   // TODO further, the belows will calculate and depends on level, equipments, weapons, etc
   get strength() {

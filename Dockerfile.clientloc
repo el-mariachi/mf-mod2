@@ -1,0 +1,31 @@
+ARG NODE_VERSION=18.15
+ARG CLIENT_PORT=3001
+
+FROM node:$NODE_VERSION-buster as base
+
+WORKDIR /app
+
+FROM base as builder
+
+COPY package.json yarn.lock /app/
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn bootstrap
+RUN rm -rf /app/packages/client/dist/ && rm -rf /app/packages/client/dist-ssr/
+WORKDIR /app/packages/client
+RUN yarn build:client
+
+FROM nginx:latest as production
+WORKDIR /app
+
+COPY --from=builder /app/packages/client/dist/ /app/
+COPY --from=builder /app/packages/client/sw.js /app/
+COPY --from=builder /app/packages/client/nginx-local.conf /etc/nginx/nginx.conf
+COPY ssl/nginx.crt /etc/ssl/certs/
+COPY ssl/nginx.key /etc/ssl/private/
+COPY ssl/dhparam.pem /etc/ssl/private/
+
+EXPOSE $CLIENT_PORT
+CMD [ "nginx", "-g", "daemon off;" ]

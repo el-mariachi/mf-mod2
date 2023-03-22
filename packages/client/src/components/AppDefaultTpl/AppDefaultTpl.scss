@@ -2,9 +2,24 @@
 
 .app-def-tpl {
   background: $bg-color;
+  overflow: hidden auto;
 
   &__wrapper {
     width: 760px;
     min-width: 360px;
+    min-height: 100%;
+
+    header {
+      padding-top: 2rem;
+    }
+    main {
+      border-bottom: 3rem $bg-color solid;
+    }
+  }
+
+  &_centered {
+    .app-def-tpl__wrapper {
+      min-height: auto;
+    }
   }
 }
