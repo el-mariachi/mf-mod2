@@ -17,8 +17,13 @@ import {
 import { TEAM_NAME_LB_API } from '@constants/api'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 import { selectHeroIsDead } from '@store/selectors'
-import leaderboardApi, { LeaderboardData } from '@api/leaderboardApi'
-import { putLBData } from '@services/leaderboardController'
+import leaderboardApi, {
+  LeaderboardData,
+  LeaderboardDataReq,
+  LeaderboardDataResp,
+} from '@api/leaderboardApi'
+import { getLBData, putLBData } from '@services/leaderboardController'
+import callNotification from '@utils/scoreNotification'
 
 const updateTotals = (state: GameSlice) => {
   state.gameTotals.coins += state.levelStats.coins
@@ -171,7 +176,7 @@ export const restartLevel =
         ratingFieldName: 'score',
         teamName: TEAM_NAME_LB_API,
       }
-      leaderboardApi.pushLeaderboardData(lbData)
+      putLBData(lbData)
       // instant switch and return map scene to reinit level
       dispatch(showLoadScene())
       setTimeout(() => dispatch(showMapScene()), 1)
@@ -197,7 +202,8 @@ export const finishLevel =
         teamName: TEAM_NAME_LB_API,
       }
 
-      putLBData(lbData)
+      callNotification(getState().user, getState().game, lbData);
+
     }
   }
 export const nextLevel =
