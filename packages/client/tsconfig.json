@@ -28,7 +28,8 @@
       "@store/*": ["store/*"],
       "@constants/*": ["constants/*"],
       "@type/*": ["types/*"],
-      "@images/*": ["assets/images/*"]
+      "@images/*": ["assets/images/*"],
+      "@sprites/*": ["assets/sprites/*"]
     }
   },
   "include": ["src", "src/test/jest-setup.ts"],
