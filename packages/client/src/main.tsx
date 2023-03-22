@@ -4,14 +4,14 @@ import { BrowserRouter } from 'react-router-dom'
 import './main.scss' // it must be before App for correct style overriding
 import App from '@components/App'
 import ErrorBoundary from '@services/ErrorBoundary'
+import { SSRProvider } from 'react-bootstrap'
 import { Provider } from 'react-redux'
-// import startServiceWorker from '@services/ServiceWorkers/swStart'
+import startServiceWorker from '@services/ServiceWorkers/swStart'
 
 import { store } from '@store/index'
 delete window.__PRELOADED_STATE__
 
-ReactDOM.hydrateRoot(
-  document.getElementById('root') as HTMLElement,
+const app = (
   <React.StrictMode>
     <BrowserRouter>
       <ErrorBoundary>
@@ -23,5 +23,9 @@ ReactDOM.hydrateRoot(
   </React.StrictMode>
 )
 
-// TODO need to fix in TS-125
-// startServiceWorker({ always: false })
+ReactDOM.hydrateRoot(
+  document.getElementById('root') as HTMLElement,
+  RENDERED_ON_SERVER ? <SSRProvider>{app}</SSRProvider> : app
+)
+
+startServiceWorker({ always: false })

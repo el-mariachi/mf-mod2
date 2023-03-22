@@ -35,6 +35,10 @@
     },
     "outDir": "dist",
   },
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true
+  },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }

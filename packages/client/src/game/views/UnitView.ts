@@ -3,6 +3,8 @@ import GameObjectSprite from '@game/sprite/GameObjectSprite'
 import AnimatableView from '@game/views/AnimatableView'
 import Behaviors, { getViewBehaviorAnimationParams } from '@game/behaviors'
 import { DEF_FRAME_PER_SECOND_SPEED } from '@constants/game'
+import { nextCoordsByVector } from '@utils/game'
+import { cloneDeep } from '@utils/cloneDeep'
 
 export default class UnitView extends AnimatableView {
   protected _lastAnimation: Types.AnimatedBehaviorProcess | null = null
@@ -37,9 +39,20 @@ export default class UnitView extends AnimatableView {
           ? this._animationsSpeed[type]
           : DEF_FRAME_PER_SECOND_SPEED
     }
+    const initAnimationParam =
+      cloneDeep<Types.CellSpriteAnimationParams>(animationParams)
+    const animationTo = initAnimationParam?.to || null
     return (this._lastAnimation = this._sprite
       .animate(animationParams)
       .then(res => {
+        if (animationTo) {
+          if (!Array.isArray(animationTo)) {
+            this._positionCache = nextCoordsByVector(
+              this._positionCache,
+              animationTo
+            )
+          } else this._positionCache = animationTo
+        }
         if (thenIdle) {
           this.idle(
             dir && dir in Types.AxisDirection
