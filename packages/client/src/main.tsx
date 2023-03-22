@@ -6,7 +6,7 @@ import App from '@components/App'
 import ErrorBoundary from '@services/ErrorBoundary'
 import { SSRProvider } from 'react-bootstrap'
 import { Provider } from 'react-redux'
-// import startServiceWorker from '@services/ServiceWorkers/swStart'
+import startServiceWorker from '@services/ServiceWorkers/swStart'
 
 import { store } from '@store/index'
 delete window.__PRELOADED_STATE__
@@ -28,4 +28,4 @@ ReactDOM.hydrateRoot(
   RENDERED_ON_SERVER ? <SSRProvider>{app}</SSRProvider> : app
 )
 
-// startServiceWorker({ always: false })
+startServiceWorker({ always: false })
