@@ -23,7 +23,7 @@
 
 /* bootstrap css-vars overrides */
 :root {
-  --bs-link-color: #{$primary};
-  --bs-link-hover-color: #{$primary};
-  --bs-link-active-color: #{$primary};
+  --bs-link-color: #{$primary} !important;
+  --bs-link-hover-color: #{$primary} !important;
+  --bs-link-active-color: #{$primary} !important;
 }

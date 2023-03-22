@@ -8,6 +8,7 @@ import {
   deleteUserValidations,
   setUserThemeValidations,
 } from '@validators/userValidations'
+import { checkAuthMiddleware } from '../middleware/checkAuth'
 
 export const userRoutes = (router: Router) => {
   const usersRouter = Router()
@@ -15,7 +16,12 @@ export const userRoutes = (router: Router) => {
 
   const userRouter = Router()
   userRouter
-    .get('/:id', paramsValidator(findUserValidations), UserAPI.find)
+    .get(
+      '/:id',
+      paramsValidator(findUserValidations),
+      checkAuthMiddleware,
+      UserAPI.find
+    )
     .post(
       '/:id/theme',
       bodyValidator(setUserThemeValidations),

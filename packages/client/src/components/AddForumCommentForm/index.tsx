@@ -1,65 +1,79 @@
-import { FC, HTMLAttributes, useState } from 'react'
+import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import FormControl from '@components/FormControl'
 import SpinnerButton from '@components/SpinnerButton'
 import { Form } from 'react-bootstrap'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
-import { delay } from '@utils/index'
 import { minMax } from '@utils/validations'
 import './AddForumCommentForm.scss'
+import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
+import { addComment, editComment } from '@store/slices/forum'
+import { selectForum } from '@store/selectors'
+import { LoadingStatus } from '@constants/user'
 
 export type AddForumCommentFormProps = HTMLAttributes<HTMLDivElement> & {
-  respondTo?: string
+  comment?: TopicComment
+  topicId: number
+  parentId?: number
 }
-type ForumCommentStruct = Record<'comment', string>
+type ForumCommentStruct = Record<'text', string>
 const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
-  respondTo,
+  parentId,
+  comment: commentToEdit,
+  topicId,
   className: cls,
   ...attrs
 }) => {
-  const [loading, setLoading] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
+  const dispatch = useAppDispatch()
+  const { loadingStatus, topics } = useAppSelector(selectForum)
+  const editMode = commentToEdit ? true : false
 
   const {
     register,
     handleSubmit,
-    setError,
     clearErrors,
+    resetField,
     formState: { errors },
   } = useForm<ForumCommentStruct>({
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    ...{
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+      defaultValues: { text: '' },
+    },
+    ...(editMode && { values: { text: commentToEdit?.text ?? '' } }),
   })
-  const [submitError, setSubmitError] = useState('')
 
-  const formSubmit: SubmitHandler<ForumCommentStruct> = data => {
+  /** обновляем форму после добавления коммента */
+  useEffect(() => {
+    resetField('text')
+    setReadOnly(false)
+  }, [topics])
+
+  const formSubmit: SubmitHandler<ForumCommentStruct> = ({ text }) => {
     clearErrors()
-    setLoading(true)
     setReadOnly(true)
-
-    delay(1000)
-      .then(() => {
-        // TODO
-      })
-      .catch((error: AppError) => formUserErrorHandler(error, setSubmitError))
-      .finally(() => {
-        setLoading(false)
-        setReadOnly(false)
-      })
+    if (commentToEdit) {
+      dispatch(editComment({ ...commentToEdit, text }))
+    } else {
+      const comment = {
+        ...{ text, topic_id: topicId },
+        ...(parentId && { parent_id: parentId }),
+      }
+      dispatch(addComment(comment))
+    }
   }
 
   return (
     <div className={classNames(cls, 'add-forum-comment-form')} {...attrs}>
       <Form onSubmit={handleSubmit(formSubmit)}>
-        {submitError ? <p className="text-danger mb-3">{submitError}</p> : null}
         <FormControl
           formName="forumCommentForum"
           register={register}
           errors={errors}
           readOnly={readOnly}
           controlProps={{
-            name: 'topic_comment',
+            name: 'text',
             label: '',
             type: 'textarea',
             placeholder: 'Текст комментария',
@@ -67,7 +81,9 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
           }}
         />
         <Form.Group>
-          <SpinnerButton loading={loading}>Отправить</SpinnerButton>
+          <SpinnerButton loading={loadingStatus === LoadingStatus.Loading}>
+            {editMode ? 'Изменить' : 'Отправить'}
+          </SpinnerButton>
         </Form.Group>
       </Form>
     </div>

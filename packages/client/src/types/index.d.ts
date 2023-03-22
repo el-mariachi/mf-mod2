@@ -167,6 +167,39 @@ declare global {
   interface Window {
     __PRELOADED_STATE__?: RootStore
   }
+
+  type ForumUser = {
+    yandex_id: number
+    user_name: string
+    login: string | null
+    display_name: string | null
+    avatar: string | null
+  }
+
+  type TopicComment = {
+    id: number
+    text: string
+    user_id: number
+    user?: ForumUser
+    topic_id: number
+    topic?: Topic
+    parent_id?: number
+    parent?: TopicComment
+    created_at: string
+    updated_at: string    
+  }
+
+  type Topic = {
+    id: number
+    title: string
+    content: string
+    user_id: number
+    user: ForumUser
+    comments?: TopicComment[]
+    cmnt_count?: number
+    created_at: string
+    updated_at: string
+  }
 }
 
 export {}

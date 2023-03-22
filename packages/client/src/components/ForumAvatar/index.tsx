@@ -2,6 +2,7 @@ import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
 import dummyAvatarImg from '@images/king.png'
 import './ForumAvatar.scss'
+import { getFile } from '@api/resourceApi'
 
 export type ForumAvatarProps = HTMLAttributes<HTMLDivElement> & {
   image?: string
@@ -10,13 +11,15 @@ export type ForumAvatarProps = HTMLAttributes<HTMLDivElement> & {
   size?: 'small' | 'regular' | 'large' | 'auto'
 }
 const ForumAvatar: FC<ForumAvatarProps> = ({
-  image = dummyAvatarImg,
+  image,
   alt = 'Аватар',
   title = 'Аватар',
   size = 'regular',
   className: cls,
   ...attrs
 }) => {
+
+  const avatar_img = image? getFile(image) : dummyAvatarImg
   return (
     <div
       className={classNames(cls, 'forum-avatar', {
@@ -31,7 +34,7 @@ const ForumAvatar: FC<ForumAvatarProps> = ({
         )}
         alt={alt}
         title={title}
-        src={image}
+        src={avatar_img}
       />
     </div>
   )

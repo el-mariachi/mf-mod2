@@ -1,43 +1,26 @@
 import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
-import { Button } from 'react-bootstrap'
-import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
 import './ForumTopic.scss'
 
-export type ForumTopicProps = HTMLAttributes<HTMLDivElement> & {
-  author: string
-  avatar?: string
-  isOwner?: boolean
-  title: string
-  dateCreate: Date
-  msgCount?: number
-  dateLastMsg?: Date
-  mock2topic: () => void
-}
+export type ForumTopicProps = Omit<HTMLAttributes<HTMLDivElement>, 'id'> & Topic
 const ForumTopic: FC<ForumTopicProps> = ({
-  author,
-  avatar,
-  isOwner = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  id,
+  user,
   title,
-  dateCreate,
-  msgCount,
-  dateLastMsg,
-  mock2topic,
+  created_at,
+  updated_at,
+  cmnt_count,
   className: cls,
   ...attrs
 }) => {
-  const onEdit = (e: React.SyntheticEvent) => {
-    // TODO
-    e.preventDefault()
-    console.log('edit topic')
-  }
-  const onDelete = (e: React.SyntheticEvent) => {
-    // TODO
-    e.preventDefault()
-    console.log('delete topic')
-  }
+  const { avatar, user_name } = user || {}
+  const msgCount = cmnt_count
+  const dateCreate = new Date(created_at)
+  const dateLastMsg = new Date(updated_at)
+
   return (
     <div
       className={classNames(
@@ -46,45 +29,25 @@ const ForumTopic: FC<ForumTopicProps> = ({
       )}
       {...attrs}>
       <ForumAvatar
-        image={avatar}
-        alt={`Аватар ${author}`}
+        image={avatar === null ? undefined : avatar}
+        alt={`Аватар ${user_name}`}
         title={`Перейти к топику ${title}`}
-        onClick={mock2topic}
+        onClick={() => ''}
         className="flex-grow-0 me-3 interactive forum-topic__avatar"
       />
       <div className="flex-grow-1 me-3 forum-topic__about">
         <p className="fw-bold m-0 forum-topic__title">
           <span
             className="interactive"
-            onClick={mock2topic}
+            onClick={() => ''}
             title={`Перейти к топику ${title}`}>
             {title}
           </span>
         </p>
-        {isOwner ? (
-          <div className="forum-topic__actions">
-            <Button
-              onClick={onEdit}
-              variant="link"
-              className="p-0 me-2 text-nowrap d-inline-flex align-items-center"
-              title={`Редактировать тему ${title}`}>
-              <Icon iconName="PencilFill" size={16} className="me-1" />
-              <span className="">редактировать</span>
-            </Button>
-            <Button
-              onClick={onDelete}
-              variant="link"
-              className="p-0 text-nowrap d-inline-flex align-items-center"
-              title={`Удалить тему ${title}`}>
-              <Icon iconName="TrashFill" size={16} className="me-1" />
-              удалить
-            </Button>
-          </div>
-        ) : null}
       </div>
       <div className="flex-grow-0 me-1 lh-sm text-muted forum-topic__created">
         <p className="m-0">
-          Автор: <span className="text-truncate">{author}</span>
+          Автор: <span className="text-truncate">{user_name}</span>
         </p>
         <p className="m-0">
           Создана:{' '}
