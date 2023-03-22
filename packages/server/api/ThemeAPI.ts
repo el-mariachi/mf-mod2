@@ -15,7 +15,7 @@ class ThemeAPI {
     if (theme !== null) {
       return response.status(200).json(theme)
     }
-    return response.status(404).send('Theme not found')
+    return response.status(404).json({ reason: 'Theme not found' })
   }
   public static create = async (request: Request, response: Response) => {
     const { body } = request
@@ -32,12 +32,12 @@ class ThemeAPI {
     try {
       const deleted = await themeService.delete(body)
       if (deleted === 0) {
-        return response.status(404).end(`No such theme`)
+        return response.status(404).json({ reason: `No such theme` })
       } else {
         return response.status(200).end(`Success. Deleted ${deleted} record(s)`)
       }
     } catch (error) {
-      return response.status(500).end('Failed to delete theme')
+      return response.status(500).end({ reason: 'Failed to delete theme' })
     }
   }
 }

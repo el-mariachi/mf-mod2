@@ -18,7 +18,7 @@ class UserAPI {
     if (user !== null) {
       return response.status(200).json(user)
     }
-    return response.status(404).send('User not found')
+    return response.status(404).json({ reason: 'User not found' })
   }
   public static create = async (request: Request, response: Response) => {
     const { body } = request
@@ -26,7 +26,7 @@ class UserAPI {
       await userService.create(body)
       return response.status(201).end('Success')
     } catch (error) {
-      return response.status(500).end('Failed to create user')
+      return response.status(500).json({ reason: 'Failed to create user' })
     }
   }
   public static setTheme = async (request: Request, response: Response) => {
@@ -35,11 +35,11 @@ class UserAPI {
     const { id } = body
     const user = await userService.find({ yandex_id })
     if (user === null) {
-      return response.status(424).end(`No such user`)
+      return response.status(424).json({ reason: `No such user` })
     }
     const theme = await themeService.find({ id })
     if (theme === null) {
-      return response.status(404).end(`No such theme`)
+      return response.status(404).json({ reason: `No such theme` })
     }
     if (user.user_theme === null) {
       // Create
@@ -47,7 +47,7 @@ class UserAPI {
         await userThemeService.create({ user_id: yandex_id, theme_id: id })
         return response.status(201).end('Success')
       } catch (error) {
-        return response.status(500).end('Database error')
+        return response.status(500).json({ reason: 'Database error' })
       }
     } else {
       // Update
@@ -58,7 +58,7 @@ class UserAPI {
         })
         return response.status(200).end(`Updated ${updated} record(s)`)
       } catch (error) {
-        return response.status(500).end('Database error')
+        return response.status(500).json({ reason: 'Database error' })
       }
     }
   }
@@ -67,12 +67,12 @@ class UserAPI {
     try {
       const deleted = await userService.delete(body)
       if (deleted === 0) {
-        return response.status(404).end(`No such user`)
+        return response.status(404).json({ reason: `No such user` })
       } else {
         return response.status(200).end(`Success. Deleted ${deleted} user(s)`)
       }
     } catch (error) {
-      return response.status(500).end('Failed to delete user')
+      return response.status(500).json({ reason: 'Failed to delete user' })
     }
   }
 }

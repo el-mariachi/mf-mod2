@@ -10,7 +10,7 @@ CommentApi.get('/:id', (req: Request, res: Response) => {
     comment =>
       comment
         ? res.status(200).json(comment)
-        : res.status(404).end('Comment not found')
+        : res.status(404).json({ reason: 'Comment not found' })
   )
 })
 
@@ -21,7 +21,7 @@ CommentApi.get('/', (req: Request, res: Response) => {
     include: [{ model: User }],
   })
     .then(comment => res.status(200).json(comment))
-    .catch(err => res.status(500).end(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })
 
 CommentApi.post('/', checkAuthMiddleware, (req: Request, res: Response) => {
@@ -32,7 +32,7 @@ CommentApi.post('/', checkAuthMiddleware, (req: Request, res: Response) => {
         $comment => res.status(201).send($comment)
       )
     })
-    .catch(err => res.status(500).end(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })
 
 CommentApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
@@ -43,12 +43,12 @@ CommentApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
     .then(result => {
       const [count, comments] = result
       if (count === 0) {
-        res.status(404).end('Comment not found') 
+        res.status(404).end('Comment not found')
       } else {
         res.status(200).json(comments[0])
       }
     })
-    .catch(err => res.status(500).end(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })
 
 CommentApi.delete(
@@ -57,6 +57,6 @@ CommentApi.delete(
   (req: Request, res: Response) => {
     Comment.destroy({ where: { id: req.params.id } })
       .then(comment => res.status(201).json(comment))
-      .catch(err => res.status(500).end(err.message))
+      .catch(err => res.status(500).json({ reason: err.message }))
   }
 )
