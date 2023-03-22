@@ -29,6 +29,11 @@ export const store = configureStore({
   devTools: {
     name: 'The real McCoy',
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 })
 
 export type RootState = ReturnType<typeof store.getState>

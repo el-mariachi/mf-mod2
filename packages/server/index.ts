@@ -11,6 +11,7 @@ import express from 'express'
 // import { createClientAndConnect } from './db'
 import * as fs from 'fs'
 import * as path from 'path'
+import { xssValidationMiddleware } from './middleware/xss'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -52,7 +53,7 @@ async function startServer() {
     ssrClientPath = require.resolve('client/dist-ssr/client.cjs')
   }
 
-  app.use('/api', router)
+  app.use('/api', xssValidationMiddleware, router)
 
   if (!isDev()) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

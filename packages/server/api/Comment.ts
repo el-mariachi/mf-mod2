@@ -14,7 +14,7 @@ CommentApi.get('/:id', (req: Request, res: Response) => {
   )
 })
 
-CommentApi.get('/', checkAuthMiddleware, (req: Request, res: Response) => {
+CommentApi.get('/', (req: Request, res: Response) => {
   const { topic_id } = req.query
   Comment.findAll({
     where: { topic_id },

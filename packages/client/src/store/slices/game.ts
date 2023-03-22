@@ -17,8 +17,13 @@ import {
 import { TEAM_NAME_LB_API } from '@constants/api'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 import { selectHeroIsDead } from '@store/selectors'
-import leaderboardApi, { LeaderboardData } from '@api/leaderboardApi'
-import { putLBData } from '@services/leaderboardController'
+import leaderboardApi, {
+  LeaderboardData,
+  LeaderboardDataReq,
+  LeaderboardDataResp,
+} from '@api/leaderboardApi'
+import { getLBData, putLBData } from '@services/leaderboardController'
+import callNotification from '@utils/scoreNotification'
 
 const updateTotals = (state: GameSlice) => {
   state.gameTotals.coins += state.levelStats.coins
@@ -59,7 +64,6 @@ const gameSlice = createSlice({
       state.lifeControllerState = LifeControllerState.PAUSED
     },
     resumeGame(state) {
-      state.currentScene = SCENES.MAP_SCENE
       state.lifeControllerState = LifeControllerState.RUNNING
     },
     exitGame(state) {
@@ -67,8 +71,8 @@ const gameSlice = createSlice({
       state.lifeControllerState = LifeControllerState.PAUSED
       state.levelStats = gameInitialState.levelStats
     },
+    // DEPRICATED
     die(state) {
-      // DEPRICATED
       state.lifeControllerState = LifeControllerState.PAUSED
       state.currentScene = SCENES.RESULT_SCENE
     },
@@ -80,12 +84,13 @@ const gameSlice = createSlice({
     },
     // scenes
     showLoadScene(state) {
-      // TODO скорее всего, не нужно здесь
       state.currentScene = SCENES.LOAD_SCENE
     },
     showStartScene(state) {
-      // Используется в хуке useNavToGame. Возможно будет удаляться
       state.currentScene = SCENES.START_SCENE
+    },
+    showMapScene(state) {
+      state.currentScene = SCENES.MAP_SCENE
     },
     showResultScene(state) {
       state.currentScene = SCENES.RESULT_SCENE
@@ -137,7 +142,7 @@ export const {
   clearInteractions,
 } = gameSlice.actions
 
-export const { showLoadScene, showStartScene, showResultScene } =
+export const { showLoadScene, showStartScene, showMapScene, showResultScene } =
   gameSlice.actions
 
 export const { resetTotals, updateStats, cancelLevelStats } = gameSlice.actions
@@ -171,8 +176,10 @@ export const restartLevel =
         ratingFieldName: 'score',
         teamName: TEAM_NAME_LB_API,
       }
-      leaderboardApi.pushLeaderboardData(lbData)
-      dispatch(showStartScene())
+      putLBData(lbData)
+      // instant switch and return map scene to reinit level
+      dispatch(showLoadScene())
+      setTimeout(() => dispatch(showMapScene()), 1)
     }
   }
 export const finishLevel =
@@ -195,7 +202,8 @@ export const finishLevel =
         teamName: TEAM_NAME_LB_API,
       }
 
-      putLBData(lbData)
+      callNotification(getState().user, getState().game, lbData);
+
     }
   }
 export const nextLevel =

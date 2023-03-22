@@ -1,11 +1,11 @@
 import GameObject from './GameObject'
-import itemsSrc from '@sprites/items.png'
+import resources from '@game/mocks/resources'
 import * as Types from '@type/game'
 import itemsMotions from '@game/animations/items'
 
 export default class Coin extends GameObject {
   name = Types.GameItemName.chest
-  spriteSrc = itemsSrc
+  spriteImage = resources.images['items']
   motions = itemsMotions.chest
   crossable = true
   static = true

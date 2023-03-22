@@ -1,12 +1,9 @@
-const API_PORT = __SERVER_PORT__ || 3001
-const API_HOST = `http://localhost`
-const API_BASE_URL = `${API_HOST}:${API_PORT}/api`
+const API_HOST = import.meta.env.PROD
+  ? 'https://team7-onebit-dungeon.ya-praktikum.tech'
+  : 'http://localhost:3001'
+const API_BASE_URL = `${API_HOST}/api`
 const API_TIMEOUT = 5000
-/** Для редиректа зарегистрирован адрес localhost:3000
- * TODO Если будет домен, нужно будет его зарегистрировать у наставника, 
- * если нет зарегистрировать localhost:3001
- */
-const API_OAUTH_REDIRECT_URL = `http://localhost:${API_PORT}`
+const API_OAUTH_REDIRECT_URL = API_HOST
 const API_YANDEX_OAUTH_URL = `https://oauth.yandex.ru/authorize?response_type=code`
 export const TEAM_NAME_LB_API = 'team-seven'
 

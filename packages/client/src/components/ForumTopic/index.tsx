@@ -1,21 +1,15 @@
 import { FC, HTMLAttributes } from 'react'
 import classNames from 'classnames'
-import { Button } from 'react-bootstrap'
-import Icon from '@components/Icon'
 import ForumAvatar from '@components/ForumAvatar'
 import { datePrettify } from '@utils/datePrettify'
 import './ForumTopic.scss'
-import { forumLink } from '@constants/forum'
-import { Link } from 'react-router-dom'
-import { removeTopic } from '@store/slices/forum'
-import { useAppDispatch } from '@hooks/redux_typed_hooks'
 
 export type ForumTopicProps = Omit<HTMLAttributes<HTMLDivElement>, 'id'> & Topic
 const ForumTopic: FC<ForumTopicProps> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   id,
   user,
   title,
-  content,
   created_at,
   updated_at,
   cmnt_count,
@@ -26,7 +20,6 @@ const ForumTopic: FC<ForumTopicProps> = ({
   const msgCount = cmnt_count
   const dateCreate = new Date(created_at)
   const dateLastMsg = new Date(updated_at)
-  const dispatch = useAppDispatch()
 
   return (
     <div

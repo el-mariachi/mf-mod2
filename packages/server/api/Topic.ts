@@ -36,7 +36,7 @@ TopicApi.get('/:id', (req: Request, res: Response) => {
   )
 })
 
-TopicApi.get('/', checkAuthMiddleware, (req: Request, res: Response) => {
+TopicApi.get('/', (req: Request, res: Response) => {
   const { page = 1 } = req.query
   Topic.findAndCountAll({
     attributes: {
@@ -64,7 +64,6 @@ TopicApi.get('/', checkAuthMiddleware, (req: Request, res: Response) => {
   })
     .then(response => {
       const data = response
-      console.log('DATA___________', data)
       if (data.count && data.count.length) {
         res.status(200).json({ count: data.count.length, rows: data.rows })
       } else {

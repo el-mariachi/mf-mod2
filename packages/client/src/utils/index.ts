@@ -30,3 +30,26 @@ export const delay = (time: number, callback?: () => void) =>
     callback?.()
     setTimeout(res, time)
   })
+
+export function isPlainObject(value: unknown): value is PlainObject {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    value.constructor === Object &&
+    Object.prototype.toString.call(value) === '[object Object]'
+  )
+}
+export function isArray(value: unknown): value is [] {
+  return Array.isArray(value)
+}
+export function isArrayOrObject(value: unknown): value is [] | PlainObject {
+  return isPlainObject(value) || isArray(value)
+}
+
+export const getOAuthRedirectUrl = (defaultUrl: string) => {
+  if (window.location.hostname === 'localhost') {
+    return `http://localhost:3000`
+  } else {
+    return defaultUrl
+  }
+}
