@@ -12,8 +12,7 @@ import { selectForum } from '@store/selectors'
 export type AddForumTopicFormProps = HTMLAttributes<HTMLDivElement>
 import { Link } from 'react-router-dom'
 import { LoadingStatus } from '@constants/user'
-import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
-import { SerializedError } from '@reduxjs/toolkit'
+import { formUserErrorHandler } from '@utils/errorsHandling'
 
 const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
   className: cls,
@@ -47,11 +46,7 @@ const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
     dispatch(addTopic(data))
       .unwrap()
       .catch(error => {
-        const { message, code } = error as SerializedError
-        formUserErrorHandler(
-          AppError.create(message || '', Number(code)),
-          setSubmitError
-        )
+        formUserErrorHandler(error, setSubmitError)
       })
   }
 

@@ -25,10 +25,14 @@ export const loadTopics = createAsyncThunk(
 
 export const addTopic = createAsyncThunk(
   'forum/addTopic',
-  async (topic: Partial<Topic>) => {
-    const _topic = (await createTopic(topic)) as Topic
-    window.history.back()
-    return _topic
+  async (topic: Partial<Topic>, { rejectWithValue }) => {
+    try {
+      const _topic = (await createTopic(topic)) as Topic
+      window.history.back()
+      return _topic
+    } catch (error) {
+      return rejectWithValue(error)
+    }
   }
 )
 
@@ -60,15 +64,25 @@ export const loadComments = createAsyncThunk(
 
 export const addComment = createAsyncThunk(
   'forum/addComment',
-  async (comment: Partial<TopicComment>) =>
-    (await createComment(comment)) as TopicComment
+  async (comment: Partial<TopicComment>, { rejectWithValue }) => {
+    try {
+      const newComment: TopicComment = await createComment(comment)
+      return newComment
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
 )
 
 export const editComment = createAsyncThunk(
   'forum/editComment',
-  async (comment: TopicComment) => {
-    await updateComment(comment)
-    return comment
+  async (comment: TopicComment, { rejectWithValue }) => {
+    try {
+      await updateComment(comment)
+      return comment
+    } catch (error) {
+      return rejectWithValue(error)
+    }
   }
 )
 

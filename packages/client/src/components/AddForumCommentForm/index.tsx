@@ -11,7 +11,6 @@ import { addComment, editComment } from '@store/slices/forum'
 import { selectForum } from '@store/selectors'
 import { LoadingStatus } from '@constants/user'
 import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
-import { SerializedError } from '@reduxjs/toolkit'
 
 export type AddForumCommentFormProps = HTMLAttributes<HTMLDivElement> & {
   comment?: TopicComment
@@ -67,11 +66,8 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
         await dispatch(addComment(comment)).unwrap()
       }
     } catch (error) {
-      const { message, code } = error as SerializedError
-      formUserErrorHandler(
-        AppError.create(message || '', Number(code)),
-        setSubmitError
-      )
+      const appError = error as AppError
+      formUserErrorHandler(appError, setSubmitError)
     }
   }
 
