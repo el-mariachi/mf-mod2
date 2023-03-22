@@ -12,12 +12,15 @@ import { selectForum } from '@store/selectors'
 export type AddForumTopicFormProps = HTMLAttributes<HTMLDivElement>
 import { Link } from 'react-router-dom'
 import { LoadingStatus } from '@constants/user'
+import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
+import { SerializedError } from '@reduxjs/toolkit'
 
 const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
   className: cls,
   ...attrs
 }) => {
   const [readOnly, setReadOnly] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const { loadingStatus, topics } = useAppSelector(selectForum)
   const {
     register,
@@ -42,6 +45,14 @@ const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
     clearErrors()
     setReadOnly(true)
     dispatch(addTopic(data))
+      .unwrap()
+      .catch(error => {
+        const { message, code } = error as SerializedError
+        formUserErrorHandler(
+          AppError.create(message || '', Number(code)),
+          setSubmitError
+        )
+      })
   }
 
   const formControls = inputData.map((controlProps, index) => (
@@ -59,6 +70,7 @@ const AddForumTopicForm: FC<AddForumTopicFormProps> = ({
     <div className={classNames(cls, 'add-forum-topic-form')} {...attrs}>
       <h2 className="h4 fw-light mb-4">Создание новой темы</h2>
       <Form onSubmit={handleSubmit(formSubmit)}>
+        {submitError ? <p className="text-danger mb-4">{submitError}</p> : null}
         {formControls}
         <Form.Group as={Row}>
           <Col sm={{ span: 9, offset: 3 }}>
