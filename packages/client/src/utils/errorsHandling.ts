@@ -6,12 +6,14 @@ export const enum AppErrorCode {
   restApiRequest = 400,
   restApiAuth,
   restApiAccess = 403,
-  restApiUrl,
+  restApiNoResource,
+  restApiDependency = 424,
   restApiServer = 500,
   wsApi = 600,
   default = 700,
   dev,
   userInput,
+  noRoute,
 }
 export function createAppError(
   msg: string,
@@ -25,38 +27,47 @@ export function createAppError(
     additional,
   })
 }
-export function apiErrorHandler(error: Error): never {
+export function apiErrorHandler(
+  error: Error,
+  redefineNoResourceError = false
+): never {
   if (!('cause' in error)) {
     // dev (in code, no api) error
     throw createAppError(error.message, AppErrorCode.unknown)
   }
-
   const { code, msg, additional } = ((<unknown>error) as AppError).cause
-
   if (AppErrorCode.userInput == code) {
     // wrong data input from user, just pass it through to form
     throw error
   } else if (AppErrorCode.restApiRequest == code) {
-    // wrong data input from user, defined by server
-    throw createAppError(msg, AppErrorCode.userInput)
+    // wrong data input from user (defined by server) or bad request (=dev error)
+    throw createAppError(msg, AppErrorCode.restApiRequest)
   } else if (AppErrorCode.restApiAuth == code) {
     // unauthorized user
     store.dispatch(clearUser())
     throw createAppError(msg, AppErrorCode.userInput, 'auth form', additional)
-  } else if (code >= AppErrorCode.restApiAccess) {
-    // known dev (api) error
+  } else if (code == AppErrorCode.restApiNoResource) {
+    if (redefineNoResourceError) {
+      throw createAppError(msg, AppErrorCode.restApiRequest, additional) // known dev error
+    } else throw createAppError(msg, code) // 404 error
+  } else if (
+    code == AppErrorCode.restApiAccess ||
+    code > AppErrorCode.restApiAccess
+  ) {
+    // known dev error
     throw createAppError(msg, code)
   }
-  // unknown dev (api) error
+  // unknown dev error
   else throw createAppError(msg, AppErrorCode.dev, 'rest api', additional)
 }
 export function formUserErrorHandler(
   error: AppError,
   handler: (msg: string) => void
 ) {
-  let userError = pickUserError(error)
+  let userError = pickUserError(error) || pickRequestError(error) // for now cant differ user input error from bad client code for request
   if (!userError) {
     userError = 'При отправке формы возникла неизвестная ошибка'
+    devErrorHandler(error)
   }
   handler(userError)
 }
@@ -65,6 +76,35 @@ export function pickUserError(error: AppError) {
 
   return AppErrorCode.userInput == code ? msg : null
 }
+export function pickRequestError(error: AppError) {
+  const { code, msg } = error.cause
+
+  return AppErrorCode.restApiRequest == code ? msg : null
+}
+export function noRouteErrorHandler(
+  error: AppError,
+  handler: (msg: string) => void
+) {
+  const { code, msg } = error.cause
+  if (AppErrorCode.noRoute == code) {
+    handler(msg)
+  }
+}
+export function clientSideErrorHandler(
+  error: AppError,
+  handler: (msg: string) => void
+) {
+  const clientSideError = pickClientSideError(error)
+  if (clientSideError) {
+    handler(clientSideError)
+    devErrorHandler(error)
+  }
+}
+export function pickClientSideError(error: AppError) {
+  const { code, msg } = error.cause
+
+  return code >= 400 && code < 500 ? msg : null
+}
 export function serverErrorHandler(
   error: AppError,
   handler: (msg: string) => void
@@ -72,13 +112,19 @@ export function serverErrorHandler(
   const serverError = pickServerError(error)
   if (serverError) {
     handler(serverError)
+    devErrorHandler(error)
   }
-  // client-side error`ll be shown only in console (by RestApi.request)
 }
 export function pickServerError(error: AppError) {
   const { code, msg } = error.cause
 
   return code >= 500 && code < 600 ? msg : null
+}
+export function devErrorHandler(error: AppError) {
+  const { code, msg, additional } = error.cause
+  if (code != AppErrorCode.restApiAuth) {
+    console.error(code, msg, additional, error)
+  }
 }
 type AppErrorCause = {
   code: AppErrorCode

@@ -32,7 +32,7 @@ TopicApi.get('/:id', (req: Request, res: Response) => {
   }).then(topic =>
     topic
       ? res.status(200).json(topic)
-      : res.status(404).json({ type: 'error', message: 'Topic not found' })
+      : res.status(404).json({ reason: 'Topic not found' })
   )
 })
 
@@ -70,7 +70,7 @@ TopicApi.get('/', (req: Request, res: Response) => {
         throw Error('topic count error')
       }
     })
-    .catch(err => res.status(500).end(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })
 
 TopicApi.post('/', checkAuthMiddleware, (req: Request, res: Response) => {
@@ -81,7 +81,7 @@ TopicApi.post('/', checkAuthMiddleware, (req: Request, res: Response) => {
         res.status(201).send($topic)
       )
     )
-    .catch(err => res.status(500).send(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })
 
 TopicApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
@@ -92,16 +92,16 @@ TopicApi.put('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
     .then(result => {
       const [count] = result
       if (count === 0) {
-        res.status(404).json({ type: 'error', message: 'Topic not found' })
+        res.status(404).end('Topic not found')
       } else {
         res.status(200).json(1)
       }
     })
-    .catch(err => res.status(500).end(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })
 
 TopicApi.delete('/:id', checkAuthMiddleware, (req: Request, res: Response) => {
   Topic.destroy({ where: { id: req.params.id } })
     .then(topic => res.status(200).json(topic))
-    .catch(err => res.status(500).end(err.message))
+    .catch(err => res.status(500).json({ reason: err.message }))
 })

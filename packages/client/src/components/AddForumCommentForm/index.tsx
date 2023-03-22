@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@hooks/redux_typed_hooks'
 import { addComment, editComment } from '@store/slices/forum'
 import { selectForum } from '@store/selectors'
 import { LoadingStatus } from '@constants/user'
+import { AppError, formUserErrorHandler } from '@utils/errorsHandling'
 
 export type AddForumCommentFormProps = HTMLAttributes<HTMLDivElement> & {
   comment?: TopicComment
@@ -25,6 +26,7 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
   ...attrs
 }) => {
   const [readOnly, setReadOnly] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const dispatch = useAppDispatch()
   const { loadingStatus, topics } = useAppSelector(selectForum)
   const editMode = commentToEdit ? true : false
@@ -50,23 +52,29 @@ const AddForumCommentForm: FC<AddForumCommentFormProps> = ({
     setReadOnly(false)
   }, [topics])
 
-  const formSubmit: SubmitHandler<ForumCommentStruct> = ({ text }) => {
+  const formSubmit: SubmitHandler<ForumCommentStruct> = async ({ text }) => {
     clearErrors()
     setReadOnly(true)
-    if (commentToEdit) {
-      dispatch(editComment({ ...commentToEdit, text }))
-    } else {
-      const comment = {
-        ...{ text, topic_id: topicId },
-        ...(parentId && { parent_id: parentId }),
+    try {
+      if (commentToEdit) {
+        await dispatch(editComment({ ...commentToEdit, text })).unwrap()
+      } else {
+        const comment = {
+          ...{ text, topic_id: topicId },
+          ...(parentId && { parent_id: parentId }),
+        }
+        await dispatch(addComment(comment)).unwrap()
       }
-      dispatch(addComment(comment))
+    } catch (error) {
+      const appError = error as AppError
+      formUserErrorHandler(appError, setSubmitError)
     }
   }
 
   return (
     <div className={classNames(cls, 'add-forum-comment-form')} {...attrs}>
       <Form onSubmit={handleSubmit(formSubmit)}>
+        {submitError ? <p className="text-danger mb-4">{submitError}</p> : null}
         <FormControl
           formName="forumCommentForum"
           register={register}

@@ -17,12 +17,8 @@ import {
 import { TEAM_NAME_LB_API } from '@constants/api'
 import type { GameSlice, GameStats, GameIntaractionDef } from '@constants/game'
 import { selectHeroIsDead } from '@store/selectors'
-import leaderboardApi, {
-  LeaderboardData,
-  LeaderboardDataReq,
-  LeaderboardDataResp,
-} from '@api/leaderboardApi'
-import { getLBData, putLBData } from '@services/leaderboardController'
+import { LeaderboardData } from '@api/leaderboardApi'
+import { putLBData } from '@services/leaderboardController'
 import callNotification from '@utils/scoreNotification'
 
 const updateTotals = (state: GameSlice) => {
@@ -202,8 +198,7 @@ export const finishLevel =
         teamName: TEAM_NAME_LB_API,
       }
 
-      callNotification(getState().user, getState().game, lbData);
-
+      callNotification(getState().user, getState().game, lbData)
     }
   }
 export const nextLevel =

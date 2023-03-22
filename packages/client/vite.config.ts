@@ -22,6 +22,7 @@ export default defineConfig({
         entryFileNames: `assets/[name].js`,
       },
     },
+    assetsInlineLimit: 1024,
   },
   resolve: {
     alias: {

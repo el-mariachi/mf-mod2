@@ -11,9 +11,9 @@ const createTopic = (topic: Partial<Topic>) =>
   topicApi.createTopic(topic).catch(error => apiErrorHandler(error))
 
 const updateTopic = (topic: Topic) =>
-  topicApi.updateTopic(topic).catch(error => apiErrorHandler(error))
+  topicApi.updateTopic(topic).catch(error => apiErrorHandler(error, true))
 
 const deleteTopic = (id: number) =>
-  topicApi.deleteTopic(id).catch(error => apiErrorHandler(error))
+  topicApi.deleteTopic(id).catch(error => apiErrorHandler(error, true))
 
 export { getTopic, getTopics, createTopic, updateTopic, deleteTopic }

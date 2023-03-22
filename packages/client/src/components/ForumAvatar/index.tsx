@@ -18,8 +18,7 @@ const ForumAvatar: FC<ForumAvatarProps> = ({
   className: cls,
   ...attrs
 }) => {
-
-  const avatar_img = image? getFile(image) : dummyAvatarImg
+  const avatar_img = image ? getFile(image) : dummyAvatarImg
   return (
     <div
       className={classNames(cls, 'forum-avatar', {

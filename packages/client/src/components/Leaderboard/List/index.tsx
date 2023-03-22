@@ -5,6 +5,13 @@ import Form from 'react-bootstrap/Form'
 import { LeaderboardDataReq, LeaderboardDataResp } from '@api/leaderboardApi'
 import { getLBData } from '@services/leaderboardController'
 import { MsecondsToHMS } from '@utils/secondsFormat'
+import {
+  clientSideErrorHandler,
+  serverErrorHandler,
+} from '@utils/errorsHandling'
+import { muteRes } from '@utils/index'
+import { useNavigate } from 'react-router-dom'
+import ROUTES from '@constants/routes'
 import insertionSort from '@utils/insertionSort'
 
 const inputData: LeaderboardDataResp[] = []
@@ -24,6 +31,7 @@ export enum SortedVal {
 function LeaderboardList() {
   const [sortMode, setSortMode] = useState(SortedVal.score)
   const [lbData, setLbData] = useState(inputData)
+  const navigate = useNavigate()
 
   const req: LeaderboardDataReq = {
     ratingFieldName: 'score',
@@ -32,9 +40,14 @@ function LeaderboardList() {
   }
 
   useEffect(() => {
-    getLBData(req).then((data: LeaderboardDataResp[]) => {
-      setLbData(data)
-    })
+    getLBData(req)
+      .then((data: LeaderboardDataResp[]) => {
+        setLbData(data)
+      })
+      .catch(error => {
+        clientSideErrorHandler(error, muteRes)
+        serverErrorHandler(error, () => navigate(ROUTES.SERVER_ERROR))
+      })
   }, [])
 
   let counter = 0
@@ -64,7 +77,7 @@ function LeaderboardList() {
       </div>
       <div className="overflow-auto">
         <Stack gap={2}>
-          {lbData.map(user => {
+          {lbData.map((user, idx) => {
             counter++
             const val =
               sortMode == SortedVal.time
@@ -72,7 +85,7 @@ function LeaderboardList() {
                 : user.data[sortMode]?.toString()
             return (
               <Lb_User
-                key={user?.data.nickname ? user?.data.nickname : 0}
+                key={idx}
                 place={counter}
                 nickname={
                   user?.data.nickname ? user?.data.nickname : '[username]'
