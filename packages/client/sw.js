@@ -29,10 +29,11 @@ this.addEventListener('fetch', event => {
   if (
     url.startsWith('chrome-extension') ||
     url.includes('extension') ||
-    !(url.indexOf('http') === 0)
-  ) return;
-  const fetchRequest = event.request.clone()
-  if (fetchRequest.method !== 'GET') {
+    !(url.indexOf('http') === 0) ||
+    (event.request.method !== 'GET') ||
+    (url.indexOf('auth') !== -1)
+  ) {
+    const fetchRequest = event.request.clone()
     return fetch(fetchRequest).then(resp => resp)
   }
   event.respondWith(
