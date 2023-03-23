@@ -1,4 +1,5 @@
 const CACHE_NAME = 'my-site-cache-v1'
+const CACHE_CONTENT_TYPES = ['document', 'script', 'style', 'font', 'image', 'audio', 'manifest']
 
 const URLS = [
   '/',
@@ -25,6 +26,9 @@ this.addEventListener('install', event => {
 })
 
 this.addEventListener('fetch', event => {
+  if (!CACHE_CONTENT_TYPES.includes(event.request.destination)) {
+    return
+  }
   const url = event.request.url
   if (
     url.startsWith('chrome-extension') ||
