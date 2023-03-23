@@ -23,7 +23,6 @@ export default defineConfig(() => {
           dir: 'dist-ssr',
         },
       },
-      assetsInlineLimit: 1024,
     },
     resolve: {
       alias: {
