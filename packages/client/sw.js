@@ -31,6 +31,10 @@ this.addEventListener('fetch', event => {
     url.includes('extension') ||
     !(url.indexOf('http') === 0)
   ) return;
+  const fetchRequest = event.request.clone()
+  if (fetchRequest.method !== 'GET') {
+    return fetch(fetchRequest).then(resp => resp)
+  }
   event.respondWith(
     caches
       .match(event.request)
@@ -47,7 +51,6 @@ this.addEventListener('fetch', event => {
           ) {
             return response
           }
-
           const responseToCache = response.clone()
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseToCache)
