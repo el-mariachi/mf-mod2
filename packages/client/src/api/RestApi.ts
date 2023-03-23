@@ -7,6 +7,7 @@ import axios, {
 } from 'axios'
 import { AppErrorCode, createAppError } from '@utils/errorsHandling'
 import { API_BASE_URL, API_TIMEOUT } from '@constants/api'
+import { getApiBaseUrl } from '@utils/index'
 
 enum RestApiMethods {
   get = 'get',
@@ -28,7 +29,7 @@ export default class RestApi {
   constructor(
     protected _apiPath = '',
     opts: RestApiOpts = {},
-    protected _apiBaseUrl = API_BASE_URL
+    protected _apiBaseUrl = getApiBaseUrl(API_BASE_URL)
   ) {
     delete opts.baseURL // must be passed explicitly by params
     this._http = axios.create({

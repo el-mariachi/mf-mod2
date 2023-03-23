@@ -53,3 +53,10 @@ export const getOAuthRedirectUrl = (defaultUrl: string) => {
     return defaultUrl
   }
 }
+export const getApiBaseUrl = (defaultUrl: string) => {
+  if (window.location.hostname === 'localhost') {
+    return `${window.location.origin}/api`
+  } else {
+    return defaultUrl
+  }
+}

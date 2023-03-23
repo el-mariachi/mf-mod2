@@ -36,10 +36,7 @@ this.addEventListener('fetch', event => {
     !(url.indexOf('http') === 0) ||
     (event.request.method !== 'GET') ||
     (url.indexOf('auth') !== -1)
-  ) {
-    const fetchRequest = event.request.clone()
-    return fetch(fetchRequest).then(resp => resp)
-  }
+  ) return;
   event.respondWith(
     caches
       .match(event.request)
